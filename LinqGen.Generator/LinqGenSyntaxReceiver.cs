@@ -10,14 +10,41 @@ namespace Cathei.LinqGen.Generator
 {
     public class LinqGenSyntaxReceiver : ISyntaxContextReceiver
     {
-        public struct GenerationItem
+        public readonly struct GenerationItem : IEquatable<GenerationItem>
         {
+            public readonly INamedTypeSymbol ElementTypeSymbol;
+            public readonly bool IsList;
 
+            public GenerationItem(INamedTypeSymbol elementTypeSymbol, bool isList)
+            {
+                ElementTypeSymbol = elementTypeSymbol;
+                IsList = isList;
+            }
+
+            public bool Equals(GenerationItem other)
+            {
+                return SymbolEqualityComparer.Default.Equals(ElementTypeSymbol, other.ElementTypeSymbol);
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is GenerationItem other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                return SymbolEqualityComparer.Default.GetHashCode(ElementTypeSymbol);
+            }
         }
 
-        public struct OperationItem
+        public readonly struct OperationItem
         {
+            public readonly INamespaceSymbol OpTypeSymbol;
 
+            public OperationItem(INamespaceSymbol opTypeSymbol)
+            {
+                OpTypeSymbol = opTypeSymbol;
+            }
         }
 
         public List<GenerationItem> Generations;
@@ -36,63 +63,42 @@ namespace Cathei.LinqGen.Generator
             if (CodeGenUtils.IsGenerationMethod(methodSymbol))
             {
                 AddGenerationItem(context, node, methodSymbol);
-                return;
             }
-
-            if (CodeGenUtils.IsOperationMethod(methodSymbol))
+            else if (CodeGenUtils.IsOperationMethod(methodSymbol))
             {
                 AddOperationItem(context, node, methodSymbol);
-                return;
             }
-
-
-
-            // context.SemanticModel.GetSymbolInfo(node.Expression).Symbol as I
-            // node.Name
-
-
-            // if (!(context.Node is InvocationExpressionSyntax node))
-            //     return;
-            //
-            // // var arguments = node.ArgumentList.Arguments;
-            //
-            // var methodSymbol = context.SemanticModel.GetSymbolInfo(node.Expression).Symbol as IMethodSymbol;
-            //
-            // if (CodeGenUtils.IsGenerationMethod())
-            // {
-            //     // it's a call to generate method
-            //     methodSymbol
-            //
-            //
-            //
-            //     return;
-            // }
-            //
-            // if (CodeGenUtils.MethodDefinedIn(methodSymbol, LinqGenAssemblyName, LinqGenStubTypeName))
-            // {
-            //     return;
-            // }
-
-
-            // design note 1.
-            // all the stub enumerable will be replaced
-
-            // design note 2.
-            // stub enumerable itself will be recursively solved by another
-
-
-
-            // context.SemanticModel.
-            // throw new NotImplementedException();
         }
 
         private void AddGenerationItem(
             GeneratorSyntaxContext context, MemberAccessExpressionSyntax node, IMethodSymbol methodSymbol)
         {
-            var callerTypeInfo = context.SemanticModel.GetTypeInfo(node.Expression);
-
-            if (callerTypeInfo.Type is null)
+            if (methodSymbol.TypeArguments[0] is not INamedTypeSymbol elementTypeSymbol)
+            {
+                // TODO: sorry, LinqGen does not support generic argument (yet)
                 return;
+            }
+
+            if (methodSymbol.Parameters[0].Type.MetadataName == "IList`1")
+            {
+                // IList
+
+            }
+            else
+            {
+                // IEnumerable
+
+            }
+
+
+
+
+            // var methodTypeInfo = context.SemanticModel.GetTypeInfo(node.Name);
+            //
+            // if (methodTypeInfo.Type is not INamedTypeSymbol callerTypeSymbol)
+            //     return;
+
+            // Generations.Add(new GenerationItem(callerTypeSymbol));
         }
 
         private void AddOperationItem(

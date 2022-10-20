@@ -11,8 +11,9 @@ namespace Cathei.LinqGen
         /// <summary>
         /// This will return empty stub, and will be replaced by generated method.
         /// Thus it should never be called on runtime.
+        /// Unused parameter ensures that the this version never called with overloading resolution.
         /// </summary>
-        public static StubEnumerable<T, Gen<T>> Generate<T>(this IEnumerable<T> enumerable)
+        public static StubEnumerable<T, Gen<T>> Generate<T>(this IEnumerable<T> enumerable, bool unused = false)
         {
             throw new NotImplementedException();
         }
@@ -20,8 +21,9 @@ namespace Cathei.LinqGen
         /// <summary>
         /// This will return empty stub, and will be replaced by generated method.
         /// Thus it should never be called on runtime.
+        /// Unused parameter ensures that the this version never called with overloading resolution.
         /// </summary>
-        public static StubEnumerable<T, GenList<T>> Generate<T>(this IList<T> enumerable)
+        public static StubEnumerable<T, GenList<T>> Generate<T>(this IList<T> enumerable, bool unused = false)
         {
             throw new NotImplementedException();
         }
