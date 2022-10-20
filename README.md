@@ -15,3 +15,6 @@ Which makes them not much faster than original Linq.
 Also, they have to have bunch of type information and tricks for type inference.
 Which makes your code hard to read and understand. The error messages or stack trace will be very messy as well.
 
+Using source generation also makes your code friendly for AOT platforms, such as Unity,
+which has [maximum generic depth](https://forum.unity.com/threads/il2cpp-max-nested-generic-types.540534/).
+
