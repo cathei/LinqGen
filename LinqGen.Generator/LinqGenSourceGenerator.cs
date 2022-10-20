@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis;
 
 namespace Cathei.LinqGen.Generator
 {
-    /*
     [Generator]
     public class LinqGenSourceGenerator : ISourceGenerator
     {
@@ -21,5 +20,4 @@ namespace Cathei.LinqGen.Generator
 
         }
     }
-    */
 }

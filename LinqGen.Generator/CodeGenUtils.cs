@@ -9,23 +9,34 @@ namespace Cathei.LinqGen.Generator
 {
     public static class CodeGenUtils
     {
-        public static bool MethodDefinedIn(IMethodSymbol symbol,
+        private const string LinqGenAssemblyName = "LinqGen";
+        private const string LinqGenExtensionsTypeName = "LinqGenExtensions";
+        private const string LinqGenStubTypeName = "StubEnumerable`1";
+        private const string LinqGenGenerateMethodName = "Generate`1";
+
+        private static bool IsMethodDefinedIn(IMethodSymbol symbol,
             string assemblyName, string containingTypeName)
         {
             return symbol.ContainingAssembly.Name == assemblyName &&
                    symbol.ContainingSymbol.MetadataName == containingTypeName;
         }
 
-        public static bool MethodDefinedAs(IMethodSymbol symbol,
+        private static bool IsMethodDefinedAs(IMethodSymbol symbol,
             string assemblyName, string containingTypeName, string methodName)
         {
-            return MethodDefinedIn(symbol, assemblyName, containingTypeName) &&
+            return IsMethodDefinedIn(symbol, assemblyName, containingTypeName) &&
                    symbol.MetadataName == methodName;
         }
 
-        public static bool IsGenerationMethod(IMethodSymbol symbol, )
+        public static bool IsGenerationMethod(IMethodSymbol symbol)
         {
+            return IsMethodDefinedAs(symbol,
+                LinqGenAssemblyName, LinqGenExtensionsTypeName, LinqGenGenerateMethodName);
+        }
 
+        public static bool IsOperationMethod(IMethodSymbol symbol)
+        {
+            return IsMethodDefinedIn(symbol, LinqGenAssemblyName, LinqGenStubTypeName);
         }
     }
 }

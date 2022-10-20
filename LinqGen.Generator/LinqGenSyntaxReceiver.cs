@@ -10,33 +10,45 @@ namespace Cathei.LinqGen.Generator
 {
     public class LinqGenSyntaxReceiver : ISyntaxContextReceiver
     {
-        // private const string LinqGenAssemblyName = "LinqGen";
-        // private const string LinqGenExtensionsTypeName = "LinqGenExtensions";
-        // private const string LinqGenStubTypeName = "StubEnumerable`1";
-        // private const string LinqGenGenerateMethodName = "Generate`1";
-
         public struct GenerationItem
         {
 
-
         }
 
-        // public List<>
-
-        public struct InvocationItem
+        public struct OperationItem
         {
 
         }
+
+        public List<GenerationItem> Generations;
+        public List<OperationItem> Operations;
 
         public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
         {
-            if (!(context.Node is MemberAccessExpressionSyntax node))
+            if (context.Node is not MemberAccessExpressionSyntax node)
                 return;
 
-            node.
+            var memberSymbolInfo = context.SemanticModel.GetSymbolInfo(node.Name);
+
+            if (memberSymbolInfo.Symbol is not IMethodSymbol methodSymbol)
+                return;
+
+            if (CodeGenUtils.IsGenerationMethod(methodSymbol))
+            {
+                AddGenerationItem(context, node, methodSymbol);
+                return;
+            }
+
+            if (CodeGenUtils.IsOperationMethod(methodSymbol))
+            {
+                AddOperationItem(context, node, methodSymbol);
+                return;
+            }
 
 
 
+            // context.SemanticModel.GetSymbolInfo(node.Expression).Symbol as I
+            // node.Name
 
 
             // if (!(context.Node is InvocationExpressionSyntax node))
@@ -73,5 +85,25 @@ namespace Cathei.LinqGen.Generator
             // context.SemanticModel.
             // throw new NotImplementedException();
         }
+
+        private void AddGenerationItem(
+            GeneratorSyntaxContext context, MemberAccessExpressionSyntax node, IMethodSymbol methodSymbol)
+        {
+            var callerTypeInfo = context.SemanticModel.GetTypeInfo(node.Expression);
+
+            if (callerTypeInfo.Type is null)
+                return;
+        }
+
+        private void AddOperationItem(
+            GeneratorSyntaxContext context, MemberAccessExpressionSyntax node, IMethodSymbol methodSymbol)
+        {
+            var callerTypeInfo = context.SemanticModel.GetTypeInfo(node.Expression);
+
+            if (callerTypeInfo.Type is null)
+                return;
+
+        }
+
     }
 }
