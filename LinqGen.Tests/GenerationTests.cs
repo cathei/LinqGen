@@ -1,19 +1,16 @@
 // LinqGen.Tests, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
+using System.Linq;
 using NUnit.Framework;
+using Cathei.LinqGen;
 
 namespace Cathei.LinqGen.Tests;
 
 public class GenerationTests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     [Test]
-    public void Test1()
+    public void TestGeneration()
     {
-        Assert.Pass();
+        var gen = Enumerable.Range(0, 10).Generate();
     }
 }

@@ -10,8 +10,8 @@ namespace Cathei.LinqGen.Generator
     public static class CodeGenUtils
     {
         private const string LinqGenAssemblyName = "LinqGen";
-        private const string LinqGenExtensionsTypeName = "LinqGenExtensions";
-        private const string LinqGenStubTypeName = "StubEnumerable`1";
+        private const string LinqGenStubExtensionsTypeName = "StubExtensions";
+        private const string LinqGenStubEnumerableTypeName = "StubEnumerable`2";
         private const string LinqGenGenerateMethodName = "Generate`1";
 
         private static bool IsMethodDefinedIn(IMethodSymbol symbol,
@@ -31,12 +31,18 @@ namespace Cathei.LinqGen.Generator
         public static bool IsGenerationMethod(IMethodSymbol symbol)
         {
             return IsMethodDefinedAs(symbol,
-                LinqGenAssemblyName, LinqGenExtensionsTypeName, LinqGenGenerateMethodName);
+                LinqGenAssemblyName, LinqGenStubExtensionsTypeName, LinqGenGenerateMethodName);
         }
 
         public static bool IsOperationMethod(IMethodSymbol symbol)
         {
-            return IsMethodDefinedIn(symbol, LinqGenAssemblyName, LinqGenStubTypeName);
+            return IsMethodDefinedIn(symbol, LinqGenAssemblyName, LinqGenStubEnumerableTypeName);
+        }
+
+        public static bool IsStubEnumerable(INamedTypeSymbol symbol)
+        {
+            return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
+                   symbol.MetadataName == LinqGenStubEnumerableTypeName;
         }
     }
 }
