@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Cathei.LinqGen.Operations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -12,18 +13,12 @@ namespace Cathei.LinqGen.Generator
     {
         public static class Op
         {
-            public const string Gen = "Gen`1";
-            public const string GenList = "GenList`1";
-
-            public const string Select = "Select`2";
-            public const string Where = "Where`1";
-
-            public static readonly IReadOnlyDictionary<string, string> ShortName = new Dictionary<string, string>
+            public static readonly IReadOnlyDictionary<Type, string> ShortName = new Dictionary<Type, string>
             {
-                { Gen, "Ge" },
-                { GenList, "Gl" },
-                { Select, "Se" },
-                { Where, "Wh" },
+                { typeof(Gen<>), "Ge" },
+                { typeof(GenList<>), "Gl" },
+                { typeof(Select<,>), "Se" },
+                { typeof(Where<>), "Wh" },
             };
         }
     }

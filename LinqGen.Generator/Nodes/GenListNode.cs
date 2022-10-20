@@ -5,12 +5,12 @@ using Microsoft.CodeAnalysis;
 
 namespace Cathei.LinqGen.Generator
 {
-    public readonly struct GenerationItem : IEquatable<GenerationItem>
+    public class GenListNode : Node
     {
         public readonly INamedTypeSymbol ElementTypeSymbol;
         public readonly bool IsList;
 
-        public GenerationItem(INamedTypeSymbol elementTypeSymbol, bool isList)
+        public GenListNode(INamedTypeSymbol elementTypeSymbol, bool isList)
         {
             ElementTypeSymbol = elementTypeSymbol;
             IsList = isList;

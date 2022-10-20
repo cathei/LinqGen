@@ -13,7 +13,7 @@ namespace Cathei.LinqGen
         /// Thus it should never be called on runtime.
         /// Unused parameter ensures that the this version never called with overloading resolution.
         /// </summary>
-        public static StubEnumerable<T, Gen<T>> Generate<T>(this IEnumerable<T> enumerable, bool unused = false)
+        public static StubEnumerable<T, Gen<T>> Gen<T>(this IEnumerable<T> enumerable, bool unused = false)
         {
             throw new NotImplementedException();
         }
@@ -23,7 +23,7 @@ namespace Cathei.LinqGen
         /// Thus it should never be called on runtime.
         /// Unused parameter ensures that the this version never called with overloading resolution.
         /// </summary>
-        public static StubEnumerable<T, GenList<T>> Generate<T>(this IList<T> enumerable, bool unused = false)
+        public static StubEnumerable<T, GenList<T>> Gen<T>(this IList<T> enumerable, bool unused = false)
         {
             throw new NotImplementedException();
         }

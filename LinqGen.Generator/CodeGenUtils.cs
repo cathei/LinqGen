@@ -12,7 +12,7 @@ namespace Cathei.LinqGen.Generator
         private const string LinqGenAssemblyName = "LinqGen";
         private const string LinqGenStubExtensionsTypeName = "StubExtensions";
         private const string LinqGenStubEnumerableTypeName = "StubEnumerable`2";
-        private const string LinqGenGenerateMethodName = "Generate";
+        private const string LinqGenGenerateMethodName = "Gen";
 
         private static bool IsMethodDefinedIn(IMethodSymbol symbol,
             string assemblyName, string containingTypeName)
