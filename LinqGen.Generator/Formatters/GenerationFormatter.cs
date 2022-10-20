@@ -15,9 +15,16 @@ using System.Collections.Generic;
 
 namespace Cathei.LinqGen.Hidden
 {{
-    public readonly struct {0}_{1}
+    using Operations;
+
+    public readonly struct {0}_{1} : ILinqGenEnumerable<{2}, NoOp>
     {{
-        private IEnumerable<{2}> source;
+        private readonly IEnumerable<{2}> source;
+
+        internal {0}_{1}(IEnumerable<{2}> source)
+        {{
+            this.source = source;
+        }}
 
         public IEnumerator<{2}> GetEnumerator() => source.GetEnumerator();
     }}
@@ -27,9 +34,10 @@ namespace Cathei.LinqGen
 {{
     using Hidden;
 
-    public static class LinqGenExtensions
+    public static partial class LinqGenExtensions
     {{
-        public static {0}_{1} Generate(IEnumerable<{2}> source) => new(source);
+        public static {0}_{1} Generate(this IEnumerable<{2}> source)
+            => new {0}_{1}(source);
     }}
 }}
 ";

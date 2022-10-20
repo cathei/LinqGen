@@ -12,6 +12,12 @@ namespace Cathei.LinqGen.Operations
     // Select<Where<Gen<int>>, double>
     public interface ILinqGenOperation { }
 
+    /// <summary>
+    /// NoOp will be used far all actual implementation.
+    /// Since StubEnumerable will be used for code generation, we don't need type information.
+    /// </summary>
+    public abstract class NoOp : ILinqGenOperation { }
+
     public abstract class Gen<T> : ILinqGenOperation { }
 
     public abstract class GenList<T> : ILinqGenOperation { }

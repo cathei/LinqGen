@@ -16,7 +16,7 @@ namespace Cathei.LinqGen.Generator
             public const string GenList = "GenList`1";
 
             public const string Select = "Select`2";
-            public const string Where = "GenList`1";
+            public const string Where = "Where`1";
 
             public static readonly IReadOnlyDictionary<string, string> ShortName = new Dictionary<string, string>
             {

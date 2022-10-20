@@ -6,7 +6,7 @@ using Cathei.LinqGen.Operations;
 
 namespace Cathei.LinqGen
 {
-    public static class StubExtensions
+    public static partial class StubExtensions
     {
         /// <summary>
         /// This will return empty stub, and will be replaced by generated method.

@@ -13,10 +13,11 @@ namespace Cathei.LinqGen.Generator
 
         public void Execute(GeneratorExecutionContext context)
         {
-            context.AddSource("Log.g.cs", "/* Started */");
+            StringBuilder logBuilder = new();
 
+            logBuilder.AppendLine("// Started");
 
-            var syntaxReceiver = new LinqGenSyntaxReceiver();
+            var syntaxReceiver = new LinqGenSyntaxReceiver(logBuilder);
 
             foreach (var syntaxTree in context.Compilation.SyntaxTrees)
             {
@@ -40,16 +41,19 @@ namespace Cathei.LinqGen.Generator
                     GenerationFormatter.Format(builder, item, id);
                 }
 
-                context.AddSource($"LinqGen.Generations.{id}.g.cs", builder.ToString());
+                context.AddSource($"LinqGen.Generation.{id}.g.cs", builder.ToString());
                 id++;
             }
 
             foreach (var item in syntaxReceiver.Operations)
             {
-                context.AddSource($"LinqGen.Generations.{id}.g.cs", "/* Empty */");
+                context.AddSource($"LinqGen.Operation.{id}.g.cs", "/* Empty */");
                 id++;
-
             }
+
+            logBuilder.AppendLine("// Ended");
+
+            context.AddSource("Log.g.cs", logBuilder.ToString());
         }
     }
 }

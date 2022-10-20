@@ -12,13 +12,13 @@ namespace Cathei.LinqGen.Generator
         private const string LinqGenAssemblyName = "LinqGen";
         private const string LinqGenStubExtensionsTypeName = "StubExtensions";
         private const string LinqGenStubEnumerableTypeName = "StubEnumerable`2";
-        private const string LinqGenGenerateMethodName = "Generate`1";
+        private const string LinqGenGenerateMethodName = "Generate";
 
         private static bool IsMethodDefinedIn(IMethodSymbol symbol,
             string assemblyName, string containingTypeName)
         {
             return symbol.ContainingAssembly.Name == assemblyName &&
-                   symbol.ContainingSymbol.MetadataName == containingTypeName;
+                   symbol.ContainingType.MetadataName == containingTypeName;
         }
 
         private static bool IsMethodDefinedAs(IMethodSymbol symbol,
@@ -36,7 +36,7 @@ namespace Cathei.LinqGen.Generator
 
         public static bool IsOperationMethod(IMethodSymbol symbol)
         {
-            return IsMethodDefinedIn(symbol, LinqGenAssemblyName, LinqGenStubEnumerableTypeName);
+            return IsMethodDefinedIn(symbol, LinqGenAssemblyName, LinqGenStubExtensionsTypeName);
         }
 
         public static bool IsStubEnumerable(INamedTypeSymbol symbol)
