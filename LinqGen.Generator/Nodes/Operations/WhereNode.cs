@@ -9,7 +9,7 @@ namespace Cathei.LinqGen.Generator
 {
     public class WhereNode : OpNode
     {
-        private string ArgumentTypeName;
+        private readonly string ArgumentTypeName;
 
         public WhereNode(INamedTypeSymbol elementSymbol, INamedTypeSymbol? parentSymbol,
             ITypeSymbol argumentSymbol) : base(elementSymbol, parentSymbol)

@@ -24,11 +24,17 @@ namespace Cathei.LinqGen.Generator
                     return new GenListNode(expression.ElementSymbol);
 
                 case "Select`2":
+                case "SelectStruct`2":
+                case "SelectAt`2":
+                case "SelectAtStruct`2":
                     if (!expression.TryGetArgumentType(0, out argumentType))
                         break;
                     return new SelectNode(expression.ElementSymbol, expression.ParentSymbol, argumentType);
 
                 case "Where`1":
+                case "WhereAt`1":
+                case "WhereStruct`1":
+                case "WhereAtStruct`1":
                     if (!expression.TryGetArgumentType(0, out argumentType))
                         break;
                     return new WhereNode(expression.ElementSymbol, expression.ParentSymbol, argumentType);

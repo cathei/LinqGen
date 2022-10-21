@@ -9,7 +9,7 @@ namespace Cathei.LinqGen.Generator
 {
     public class SelectNode : OpNode
     {
-        private string ArgumentTypeName;
+        private readonly string ArgumentTypeName;
 
         public SelectNode(INamedTypeSymbol elementSymbol, INamedTypeSymbol? parentSymbol,
             ITypeSymbol argumentSymbol) : base(elementSymbol, parentSymbol)
@@ -25,12 +25,12 @@ namespace Cathei.LinqGen.Generator
                 yield return member;
 
             yield return new Template.MemberInfo(
-                Template.MemberKind.Both, ArgumentTypeName, "selector");
+                Template.MemberKind.Both, ArgumentTypeName, "select");
         }
 
         public override void RenderGetCurrentBody(StringBuilder builder)
         {
-            builder.Append("return selector.Invoke(source.Current);");
+            builder.Append("return select.Invoke(source.Current);");
         }
     }
 }

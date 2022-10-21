@@ -25,6 +25,18 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class Select<TParent, TOut> : ILinqGenOperation { }
 
+    public abstract class SelectAt<TParent, TOut> : ILinqGenOperation { }
+
+    public abstract class SelectStruct<TParent, TOut> : ILinqGenOperation { }
+
+    public abstract class SelectAtStruct<TParent, TOut> : ILinqGenOperation { }
+
     public abstract class Where<TParent> : ILinqGenOperation { }
+
+    public abstract class WhereAt<TParent> : ILinqGenOperation { }
+
+    public abstract class WhereStruct<TParent> : ILinqGenOperation { }
+
+    public abstract class WhereAtStruct<TParent> : ILinqGenOperation { }
 
 }
