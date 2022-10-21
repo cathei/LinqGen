@@ -1,6 +1,7 @@
 ﻿// LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
 using System;
+using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 
@@ -28,32 +29,26 @@ namespace Cathei.LinqGen.Generator
             StringBuilder builder = new();
             int id = 0;
 
-            foreach (var item in syntaxReceiver.Generations)
-            {
-                builder.Clear();
+            syntaxReceiver.ResolveHierarchy();
 
-                if (item.IsList)
-                {
-                    GenerationListFormatter.Format(builder, item, id);
-                }
-                else
-                {
-                    GenerationFormatter.Format(builder, item, id);
-                }
-
-                context.AddSource($"LinqGen.Generation.{id}.g.cs", builder.ToString());
-                id++;
-            }
-
-            foreach (var item in syntaxReceiver.Operations)
-            {
-                context.AddSource($"LinqGen.Operation.{id}.g.cs", "/* Empty */");
-                id++;
-            }
+            foreach (var node in syntaxReceiver.Roots)
+                RenderNodeRecursive(node, context, builder, ref id);
 
             logBuilder.AppendLine("// Ended");
 
             context.AddSource("Log.g.cs", logBuilder.ToString());
+        }
+
+        private void RenderNodeRecursive(Node node, GeneratorExecutionContext context, StringBuilder builder, ref int id)
+        {
+            node.Render(builder, id++);
+            context.AddSource($"LinqGen.{node.ClassName}.g.cs", builder.ToString());
+
+            if (node.Children != null)
+            {
+                foreach (var child in node.Children)
+                    RenderNodeRecursive(child, context, builder, ref id);
+            }
         }
     }
 }

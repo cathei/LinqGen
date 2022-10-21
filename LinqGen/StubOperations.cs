@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Cathei.LinqGen.Operations
+namespace Cathei.LinqGen.Hidden
 {
     // Operation is type hint for LinqGen.
     // For example, for code like this:
@@ -15,6 +15,7 @@ namespace Cathei.LinqGen.Operations
     /// <summary>
     /// NoOp will be used far all actual implementation.
     /// Since StubEnumerable will be used for code generation, we don't need type information.
+    /// TODO: we could improve NoOp to hold type information so we can access LinqGen struct from other assembly
     /// </summary>
     public abstract class NoOp : ILinqGenOperation { }
 

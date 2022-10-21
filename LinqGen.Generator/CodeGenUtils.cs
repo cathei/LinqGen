@@ -10,9 +10,9 @@ namespace Cathei.LinqGen.Generator
     public static class CodeGenUtils
     {
         private const string LinqGenAssemblyName = "LinqGen";
-        private const string LinqGenStubExtensionsTypeName = "StubExtensions";
-        private const string LinqGenStubEnumerableTypeName = "StubEnumerable`2";
-        private const string LinqGenGenerateMethodName = "Gen";
+        private const string LinqGenStubExtensionsTypeName = nameof(StubExtensions);
+        private const string LinqGenStubEnumerableTypeName = "Stub`2";
+        private const string LinqGenStubInterfaceTypeName = "IStub`2";
 
         private static bool IsMethodDefinedIn(IMethodSymbol symbol,
             string assemblyName, string containingTypeName)
@@ -28,21 +28,27 @@ namespace Cathei.LinqGen.Generator
                    symbol.MetadataName == methodName;
         }
 
-        public static bool IsGenerationMethod(IMethodSymbol symbol)
-        {
-            return IsMethodDefinedAs(symbol,
-                LinqGenAssemblyName, LinqGenStubExtensionsTypeName, LinqGenGenerateMethodName);
-        }
-
-        public static bool IsOperationMethod(IMethodSymbol symbol)
+        public static bool IsStubMethod(IMethodSymbol symbol)
         {
             return IsMethodDefinedIn(symbol, LinqGenAssemblyName, LinqGenStubExtensionsTypeName);
         }
+
+        // public static bool IsGenerationMethod(IMethodSymbol symbol)
+        // {
+        //     return IsMethodDefinedAs(symbol,
+        //         LinqGenAssemblyName, LinqGenStubExtensionsTypeName, LinqGenGenerateMethodName);
+        // }
 
         public static bool IsStubEnumerable(INamedTypeSymbol symbol)
         {
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
                    symbol.MetadataName == LinqGenStubEnumerableTypeName;
+        }
+
+        public static bool IsStubInterface(INamedTypeSymbol symbol)
+        {
+            return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
+                   symbol.MetadataName == LinqGenStubInterfaceTypeName;
         }
     }
 }
