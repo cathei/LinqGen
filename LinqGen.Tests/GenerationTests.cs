@@ -30,6 +30,7 @@ public class GenerationTests
         {
 
 
+
         }
 
         var t = Enumerable.Repeat(new MyTempStruct<int>(), 10).Gen();

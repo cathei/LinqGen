@@ -49,6 +49,31 @@ namespace Cathei.LinqGen.Generator
                    symbol.MetadataName == LinqGenStubInterfaceTypeName;
         }
 
+        // known predefined type names
+        public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));
+
+        // known generic interface names
+        public static readonly GenericNameSyntax EnumerableInterfaceName = GenericName("IEnumerable");
+        public static readonly GenericNameSyntax EnumeratorInterfaceName = GenericName("IEnumerator");
+        public static readonly GenericNameSyntax ListInterfaceName = GenericName("IList");
+
+        // known method names
+        public static readonly IdentifierNameSyntax InvokeName = IdentifierName("Invoke");
+        public static readonly IdentifierNameSyntax MoveNextName = IdentifierName("MoveNext");
+        public static readonly IdentifierNameSyntax DisposeName = IdentifierName("Dispose");
+        public static readonly IdentifierNameSyntax GetEnumeratorName = IdentifierName("GetEnumerator");
+
+        // known property names
+        public static readonly IdentifierNameSyntax CurrentName = IdentifierName("Current");
+        public static readonly IdentifierNameSyntax CountName = IdentifierName("Count");
+
+        // custom variable names
+        public static readonly IdentifierNameSyntax ParentName = IdentifierName("parent");
+        public static readonly IdentifierNameSyntax SourceName = IdentifierName("source");
+        public static readonly IdentifierNameSyntax IndexName = IdentifierName("index");
+        public static readonly IdentifierNameSyntax SelectorName = IdentifierName("select");
+        public static readonly IdentifierNameSyntax PredicateName = IdentifierName("predicate");
+
         public static readonly SyntaxTokenList ThisTokenList = TokenList(Token(SyntaxKind.ThisKeyword));
         public static readonly SyntaxTokenList PrivateTokenList = TokenList(Token(SyntaxKind.PrivateKeyword));
         public static readonly SyntaxTokenList PrivateReadOnlyTokenList =

@@ -10,7 +10,7 @@ namespace Cathei.LinqGen.Hidden
     /// Stub interface for seamless code generation.
     /// The extensions are not actually implemented, only used for source generation.
     /// </summary>
-    public interface IStub<T, TOp>
+    public interface IStub<T, TSignature>
     {
     }
 
@@ -19,8 +19,8 @@ namespace Cathei.LinqGen.Hidden
     /// For value types, the parameter interface will be replaced with actual type to avoid boxing.
     /// Use AsEnumerable to safely box generated type and store as IEnumerable.
     /// </summary>
-    public abstract class Stub<T, TOp> : IStub<T, TOp>
-        where TOp : ILinqGenOperation
+    public abstract class Stub<T, TSignature> : IStub<T, TSignature>
+        where TSignature : IStubSignature
     {
     }
 }

@@ -4,6 +4,8 @@ using System;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Cathei.LinqGen.Generator
 {
@@ -30,9 +32,13 @@ namespace Cathei.LinqGen.Generator
 
                 syntaxReceiver.ResolveHierarchy();
 
+                IdentifierNameSyntax assemblyName =
+                    SyntaxFactory.IdentifierName(context.Compilation.Assembly.Name.Replace('.', '_'));
+
                 int id = 0;
+
                 foreach (var node in syntaxReceiver.Roots)
-                    RenderNodeRecursive(node, context, ref id);
+                    RenderNodeRecursive(node, context, assemblyName, ref id);
             }
             catch (Exception ex)
             {
@@ -49,15 +55,16 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        private void RenderNodeRecursive(Instruction instruction, GeneratorExecutionContext context, ref int id)
+        private void RenderNodeRecursive(Instruction instruction,
+            GeneratorExecutionContext context, IdentifierNameSyntax assemblyName, ref int id)
         {
-            var sourceText = instruction.Render(id++);
-            context.AddSource($"LinqGen.{instruction.ClassName}.g.cs", sourceText);
+            var sourceText = instruction.Render(assemblyName, id++);
+            context.AddSource($"LinqGen.{id}.g.cs", sourceText);
 
             if (instruction.Downstream != null)
             {
                 foreach (var downstream in instruction.Downstream)
-                    RenderNodeRecursive(downstream, context, ref id);
+                    RenderNodeRecursive(downstream, context, assemblyName, ref id);
             }
         }
     }

@@ -19,8 +19,4 @@
       <ProjectReference Include="..\LinqGen\LinqGen.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Instructions\Evaluations" />
-    </ItemGroup>
-
 </Project>

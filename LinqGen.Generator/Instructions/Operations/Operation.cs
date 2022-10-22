@@ -12,12 +12,12 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public class Operation : Instruction
+    /// <summary>
+    /// Operation take LinqGen enumerable as input, and produces another LinqGen enumerable as output
+    /// </summary>
+    public class Operation : Generation
     {
-        public Operation(INamedTypeSymbol elementSymbol, INamedTypeSymbol? parentSymbol) :
-            base(elementSymbol, parentSymbol) { }
-
-        public override IdentifierNameSyntax MethodName { get; } = IdentifierName(nameof(StubExtensions.Select));
+        public Operation(in LinqGenExpression expression) : base(expression) { }
 
         public override IEnumerable<MemberInfo> GetMemberInfos()
         {

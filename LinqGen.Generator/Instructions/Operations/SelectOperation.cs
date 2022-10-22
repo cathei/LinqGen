@@ -16,13 +16,10 @@ namespace Cathei.LinqGen.Generator
     {
         protected readonly NameSyntax ArgumentTypeName;
 
-        public SelectOperation(INamedTypeSymbol elementSymbol, INamedTypeSymbol? parentSymbol,
-            ITypeSymbol argumentSymbol) : base(elementSymbol, parentSymbol)
+        public SelectOperation(in LinqGenExpression expression, ITypeSymbol argumentSymbol) : base(expression)
         {
             ArgumentTypeName = ParseName(argumentSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
         }
-
-        public override IdentifierNameSyntax MethodName { get; } = IdentifierName(nameof(StubExtensions.Select));
 
         public override IEnumerable<MemberInfo> GetMemberInfos()
         {

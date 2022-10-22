@@ -12,79 +12,49 @@ namespace Cathei.LinqGen.Generator
 {
     using static SyntaxFactory;
 
-    // When generic expression is
-    // StubEnumerable<T, ResultOp> Extension(this StubEnumerable<T, SourceOp> x)
-    // ResultOp is a child of SourceOp
+    /// <summary>
+    /// Instruction is all kind of method that can performed on LinqGen enumerable
+    /// Generation is Something => LinqGenEnumerable
+    /// Operation is LinqGenEnumerable => LinqGenEnumerable
+    /// Evaluation is LinqGenEnumerable => SomethingElse
+    /// </summary>
     public abstract class Instruction
     {
-        // known predefined type names
-        public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));
+        protected Instruction(in LinqGenExpression expression) : this(expression.UpstreamSymbol) { }
 
-        // known generic interface names
-        public static readonly GenericNameSyntax EnumerableInterfaceName = GenericName("IEnumerable");
-        public static readonly GenericNameSyntax EnumeratorInterfaceName = GenericName("IEnumerator");
-        public static readonly GenericNameSyntax ListInterfaceName = GenericName("IList");
-
-        // known method names
-        public static readonly IdentifierNameSyntax InvokeName = IdentifierName("Invoke");
-        public static readonly IdentifierNameSyntax MoveNextName = IdentifierName("MoveNext");
-        public static readonly IdentifierNameSyntax DisposeName = IdentifierName("Dispose");
-        public static readonly IdentifierNameSyntax GetEnumeratorName = IdentifierName("GetEnumerator");
-
-        // known property names
-        public static readonly IdentifierNameSyntax CurrentName = IdentifierName("Current");
-        public static readonly IdentifierNameSyntax CountName = IdentifierName("Count");
-
-        // custom variable names
-        public static readonly IdentifierNameSyntax ParentName = IdentifierName("parent");
-        public static readonly IdentifierNameSyntax SourceName = IdentifierName("source");
-        public static readonly IdentifierNameSyntax IndexName = IdentifierName("index");
-        public static readonly IdentifierNameSyntax SelectorName = IdentifierName("select");
-        public static readonly IdentifierNameSyntax PredicateName = IdentifierName("predicate");
-
-        protected Instruction(INamedTypeSymbol elementSymbol, INamedTypeSymbol? parentSymbol)
+        protected Instruction(INamedTypeSymbol? upstreamSymbol)
         {
-            ElementName = ParseName(elementSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
-            ParentSymbol = parentSymbol;
+            UpstreamSymbol = upstreamSymbol;
         }
 
-        public INamedTypeSymbol? ParentSymbol { get; }
+        public INamedTypeSymbol? UpstreamSymbol { get; }
 
-        public Instruction? Upstream { get; private set; }
-
+        public Instruction? Upstream { get; protected set; }
         public List<Instruction>? Downstream { get; private set; }
-
-        public void SetParent(Instruction parent)
-        {
-            Upstream = parent;
-
-            Upstream.Downstream ??= new List<Instruction>();
-            Upstream.Downstream.Add(this);
-        }
+        public Dictionary<IMethodSymbol, Evaluation>? Evaluations { get; set; }
 
         /// <summary>
         /// The class name cached for child class rendering
         /// </summary>
-        public IdentifierNameSyntax? ClassName { get; private set; }
+        public IdentifierNameSyntax? ClassName { get; protected set; }
 
-        public NameSyntax ElementName { get; }
-
-        public abstract IdentifierNameSyntax MethodName { get; }
-
-        public abstract IEnumerable<MemberInfo> GetMemberInfos();
-
-        public SourceText Render(int id)
+        public virtual void SetUpstream(Instruction upstream)
         {
-            ClassName = IdentifierName($"{MethodName}_{id}");
-            return Template.Render(this);
+            Upstream = upstream;
+
+            upstream.Downstream ??= new List<Instruction>();
+            upstream.Downstream.Add(this);
         }
 
-        public virtual BlockSyntax RenderConstructorBody() => SyntaxFactory.Block();
+        public virtual IEnumerable<TypeParameterSyntax> GetTypeParameters()
+        {
+            if (Upstream == null)
+                yield break;
 
-        public abstract BlockSyntax RenderMoveNextBody();
+            foreach (var syntax in Upstream.GetTypeParameters())
+                yield return syntax;
+        }
 
-        public abstract BlockSyntax RenderCurrentGetBody();
-
-        public virtual BlockSyntax RenderDisposeBody() => SyntaxFactory.Block();
+        public abstract SourceText Render(IdentifierNameSyntax assemblyName, int id);
     }
 }

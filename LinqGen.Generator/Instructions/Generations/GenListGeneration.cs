@@ -13,12 +13,9 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public class GenListGeneration : Instruction
+    public class GenListGeneration : Generation
     {
-        public GenListGeneration(INamedTypeSymbol elementSymbol) :
-            base(elementSymbol, null) { }
-
-        public override IdentifierNameSyntax MethodName { get; } = IdentifierName(nameof(StubExtensions.Gen));
+        public GenListGeneration(in LinqGenExpression expression) : base(expression) { }
 
         public override IEnumerable<MemberInfo> GetMemberInfos()
         {

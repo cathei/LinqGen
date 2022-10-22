@@ -17,13 +17,10 @@ namespace Cathei.LinqGen.Generator
     {
         protected readonly NameSyntax ArgumentTypeName;
 
-        public WhereOperation(INamedTypeSymbol elementSymbol, INamedTypeSymbol? parentSymbol,
-            ITypeSymbol argumentSymbol) : base(elementSymbol, parentSymbol)
+        public WhereOperation(in LinqGenExpression expression, ITypeSymbol argumentSymbol) : base(expression)
         {
             ArgumentTypeName = ParseName(argumentSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
         }
-
-        public override IdentifierNameSyntax MethodName { get; } = IdentifierName(nameof(StubExtensions.Where));
 
         public override IEnumerable<MemberInfo> GetMemberInfos()
         {

@@ -11,33 +11,46 @@ namespace Cathei.LinqGen.Generator
 {
     public static class InstructionFactory
     {
-        public static Instruction? Create(StringBuilder logBuilder, ref LinqGenExpression expression)
+        /// <summary>
+        /// The Instruction instance must be unique per signature (per generic arguments combination).
+        /// </summary>
+        public static Instruction? Create(StringBuilder logBuilder, in LinqGenExpression expression)
         {
             ITypeSymbol? argumentType;
 
-            switch (expression.OpSymbol.MetadataName)
+            if (expression.SignatureSymbol != null)
             {
-                case "Gen`1":
-                    return new GenGeneration(expression.ElementSymbol);
+                switch (expression.SignatureSymbol.MetadataName)
+                {
+                    case "Gen`1":
+                        return new GenGeneration(expression);
 
-                case "GenList`1":
-                    return new GenListGeneration(expression.ElementSymbol);
+                    case "GenList`1":
+                        return new GenListGeneration(expression);
 
-                case "Select`2":
-                case "SelectStruct`2":
-                case "SelectAt`2":
-                case "SelectAtStruct`2":
-                    if (!expression.TryGetArgumentType(0, out argumentType))
-                        break;
-                    return new SelectOperation(expression.ElementSymbol, expression.ParentSymbol, argumentType);
+                    case "Select`2":
+                    case "SelectStruct`2":
+                    case "SelectAt`2":
+                    case "SelectAtStruct`2":
+                        if (!expression.TryGetArgumentType(0, out argumentType))
+                            break;
+                        return new SelectOperation(expression, argumentType);
 
-                case "Where`1":
-                case "WhereAt`1":
-                case "WhereStruct`1":
-                case "WhereAtStruct`1":
-                    if (!expression.TryGetArgumentType(0, out argumentType))
-                        break;
-                    return new WhereOperation(expression.ElementSymbol, expression.ParentSymbol, argumentType);
+                    case "Where`1":
+                    case "WhereAt`1":
+                    case "WhereStruct`1":
+                    case "WhereAtStruct`1":
+                        if (!expression.TryGetArgumentType(0, out argumentType))
+                            break;
+                        return new WhereOperation(expression, argumentType);
+                }
+            }
+            else
+            {
+                // switch (expression.UpstreamSymbol.met)
+                // {
+                //
+                // }
             }
 
             // not yet implemented

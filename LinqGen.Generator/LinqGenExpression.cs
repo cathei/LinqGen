@@ -1,36 +1,36 @@
 ﻿// LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Cathei.LinqGen.Generator
 {
+    using static CodeGenUtils;
+
     public readonly struct LinqGenExpression
     {
         public SemanticModel SemanticModel { get; }
         public InvocationExpressionSyntax InvocationSyntax { get; }
         public MemberAccessExpressionSyntax MemberAccessSyntax { get; }
         public IMethodSymbol MethodSymbol { get; }
-        public INamedTypeSymbol ReturnTypeSymbol { get; }
-        public INamedTypeSymbol ElementSymbol { get; }
-        public INamedTypeSymbol OpSymbol { get; }
-        public INamedTypeSymbol? ParentSymbol { get; }
+        public ITypeSymbol? ElementSymbol { get; }
+        public INamedTypeSymbol? SignatureSymbol { get; }
+        public INamedTypeSymbol? UpstreamSymbol { get; }
 
         private LinqGenExpression(SemanticModel semanticModel, InvocationExpressionSyntax invocationSyntax,
             MemberAccessExpressionSyntax memberAccessSyntax, IMethodSymbol methodSymbol,
-            INamedTypeSymbol returnTypeSymbol, INamedTypeSymbol elementSymbol, INamedTypeSymbol opSymbol,
-            INamedTypeSymbol? parentSymbol)
+            ITypeSymbol? elementSymbol, INamedTypeSymbol? signatureSymbol, INamedTypeSymbol? upstreamSymbol)
         {
             SemanticModel = semanticModel;
             InvocationSyntax = invocationSyntax;
             MemberAccessSyntax = memberAccessSyntax;
             MethodSymbol = methodSymbol;
-            ReturnTypeSymbol = returnTypeSymbol;
             ElementSymbol = elementSymbol;
-            OpSymbol = opSymbol;
-            ParentSymbol = parentSymbol;
+            SignatureSymbol = signatureSymbol;
+            UpstreamSymbol = upstreamSymbol;
         }
 
         public static bool TryParse(SemanticModel semanticModel,
@@ -46,55 +46,77 @@ namespace Cathei.LinqGen.Generator
 
             var memberSymbolInfo = semanticModel.GetSymbolInfo(memberAccessSyntax.Name);
 
-            if (memberSymbolInfo.Symbol is not IMethodSymbol methodSymbol ||
-                !CodeGenUtils.IsStubMethod(methodSymbol))
+            if (memberSymbolInfo.Symbol is not IMethodSymbol methodSymbol || !IsStubMethod(methodSymbol))
             {
                 // not a stub method
                 return false;
             }
 
-            if (methodSymbol.ReturnType is not INamedTypeSymbol returnTypeSymbol ||
-                returnTypeSymbol.TypeArguments[0] is not INamedTypeSymbol elementSymbol ||
-                returnTypeSymbol.TypeArguments[1] is not INamedTypeSymbol opSymbol)
+            ITypeSymbol? elementSymbol = null;
+            INamedTypeSymbol? signatureSymbol = null;
+
+            // returning stub enumerable
+            if (methodSymbol.ReturnType is INamedTypeSymbol returnTypeSymbol && IsStubEnumerable(returnTypeSymbol))
             {
-                // something is wrong
-                // TODO: sorry, LinqGen does not support enumerating over generic argument (yet)
-                return false;
+                elementSymbol = returnTypeSymbol.TypeArguments[0];
+
+                if (elementSymbol is ITypeParameterSymbol)
+                {
+                    // TODO: sorry, LinqGen does not support enumerating over generic argument (yet)
+                    return false;
+                }
+
+                signatureSymbol = returnTypeSymbol.TypeArguments[1] as INamedTypeSymbol;
+
+                if (signatureSymbol == null)
+                {
+                    // something is wrong
+                    return false;
+                }
             }
 
             if (methodSymbol.ReceiverType is not INamedTypeSymbol parameterTypeSymbol)
             {
-                // this parameter of method is not NamedTypeSymbol (should not be possible)
+                // first parameter (this) of method is not NamedTypeSymbol (should not be possible)
                 return false;
             }
 
-            INamedTypeSymbol? parentSymbol = null;
+            INamedTypeSymbol? upstreamSymbol = null;
 
-            // this means it is not generation method and parent type is required
-            if (CodeGenUtils.IsStubInterface(parameterTypeSymbol))
+            // this means it takes LinqGen enumerable as input, and upstream type is required
+            if (IsStubInterface(parameterTypeSymbol))
             {
                 var callerTypeInfo = semanticModel.GetTypeInfo(memberAccessSyntax.Expression);
 
-                if (callerTypeInfo.Type is not INamedTypeSymbol callerTypeSymbol ||
-                    !CodeGenUtils.IsStubEnumerable(callerTypeSymbol))
+                if (callerTypeInfo.Type is not INamedTypeSymbol callerTypeSymbol)
                 {
-                    // not called from Stub enumerable.
-                    // currently LinqGen does not support generated LinqGen enumerable from another assembly.
+                    // How did this happen? Presumably from generic type parameter?
                     return false;
                 }
 
-                parentSymbol = callerTypeSymbol.TypeArguments[1] as INamedTypeSymbol;
-
-                if (parentSymbol == null)
+                if (IsStubEnumerable(callerTypeSymbol))
                 {
-                    // should not be possible here
-                    return false;
+                    // called from stub enumerable.
+                    // meaning that upstream is getting generated as well
+                    upstreamSymbol = callerTypeSymbol.TypeArguments[1] as INamedTypeSymbol;
+
+                    if (upstreamSymbol == null)
+                    {
+                        // should not be possible here
+                        return false;
+                    }
+                }
+                else
+                {
+                    // not called from Stub enumerable.
+                    // meaning that upstream is compiled type, so let's use the type directly
+                    upstreamSymbol = callerTypeSymbol;
                 }
             }
 
             result = new LinqGenExpression(
                 semanticModel, invocationSyntax, memberAccessSyntax,
-                methodSymbol, returnTypeSymbol, elementSymbol, opSymbol, parentSymbol);
+                methodSymbol, elementSymbol, signatureSymbol, upstreamSymbol);
 
             return true;
         }
@@ -121,6 +143,48 @@ namespace Cathei.LinqGen.Generator
             // uses parameter type instead
             result = MethodSymbol.Parameters[index].Type;
             return true;
+        }
+
+        public Key GetKey()
+        {
+            // generations only uses signature symbol
+            if (SignatureSymbol != null)
+                return new Key(SignatureSymbol);
+
+            // evaluations combine upstream symbol with method symbol to be unique
+            return new Key(UpstreamSymbol, MethodSymbol);
+        }
+
+        public readonly struct Key : IEqualityComparer<Key>
+        {
+            private static readonly SymbolEqualityComparer SymbolComparer = SymbolEqualityComparer.Default;
+
+            public readonly INamedTypeSymbol? SignatureSymbol;
+            public readonly IMethodSymbol? MethodSymbol;
+
+            public Key(INamedTypeSymbol? signatureSymbol)
+            {
+                SignatureSymbol = signatureSymbol;
+                MethodSymbol = null;
+            }
+
+            public Key(INamedTypeSymbol? signatureSymbol, IMethodSymbol? methodSymbol)
+            {
+                SignatureSymbol = signatureSymbol;
+                MethodSymbol = methodSymbol;
+            }
+
+            public bool Equals(Key x, Key y)
+            {
+                return SymbolComparer.Equals(x.SignatureSymbol, y.SignatureSymbol) &&
+                       SymbolComparer.Equals(x.MethodSymbol, y.MethodSymbol);
+            }
+
+            public int GetHashCode(Key obj)
+            {
+                return SymbolComparer.GetHashCode(obj.SignatureSymbol) ^
+                       SymbolComparer.GetHashCode(obj.MethodSymbol);
+            }
         }
     }
 }
