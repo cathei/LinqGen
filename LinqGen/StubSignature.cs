@@ -14,16 +14,13 @@ namespace Cathei.LinqGen.Hidden
 
     /// <summary>
     /// Compiled will be used far all actual implementation.
-    /// Since type information will be used for code generation, we don't need to keep it.
-    /// TODO: we could improve Compiled to hold type information so we can access LinqGen struct from other assembly
+    /// Since type information will be only used for code generation, we don't need to keep it after compiling.
     /// </summary>
     public abstract class Compiled : IStubSignature { }
 
     public abstract class Gen<T> : IStubSignature { }
 
     public abstract class GenList<T> : IStubSignature { }
-
-    // public abstract class GenStruct<T> : ILinqGenInstruction { }
 
     public abstract class Select<TUp, TOut> : IStubSignature { }
 

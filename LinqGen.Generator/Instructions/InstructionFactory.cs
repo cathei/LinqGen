@@ -20,26 +20,26 @@ namespace Cathei.LinqGen.Generator
 
             if (expression.SignatureSymbol != null)
             {
-                switch (expression.SignatureSymbol.MetadataName)
+                switch (expression.SignatureSymbol.Name)
                 {
-                    case "Gen`1":
+                    case "Gen":
                         return new GenGeneration(expression);
 
-                    case "GenList`1":
+                    case "GenList":
                         return new GenListGeneration(expression);
 
-                    case "Select`2":
-                    case "SelectStruct`2":
-                    case "SelectAt`2":
-                    case "SelectAtStruct`2":
+                    case "Select":
+                    case "SelectStruct":
+                    case "SelectAt":
+                    case "SelectAtStruct":
                         if (!expression.TryGetArgumentType(0, out argumentType))
                             break;
                         return new SelectOperation(expression, argumentType);
 
-                    case "Where`1":
-                    case "WhereAt`1":
-                    case "WhereStruct`1":
-                    case "WhereAtStruct`1":
+                    case "Where":
+                    case "WhereAt":
+                    case "WhereStruct":
+                    case "WhereAtStruct":
                         if (!expression.TryGetArgumentType(0, out argumentType))
                             break;
                         return new WhereOperation(expression, argumentType);
@@ -47,10 +47,22 @@ namespace Cathei.LinqGen.Generator
             }
             else
             {
-                // switch (expression.UpstreamSymbol.met)
-                // {
-                //
-                // }
+                switch (expression.MethodSymbol.Name)
+                {
+                    case "AsEnumerable":
+                        break;
+
+                    case "First":
+                    case "FirstOrDefault":
+                        break;
+
+                    case "Last":
+                    case "LastOrDefault":
+                        break;
+
+                    case "Single":
+                        break;
+                }
             }
 
             // not yet implemented
