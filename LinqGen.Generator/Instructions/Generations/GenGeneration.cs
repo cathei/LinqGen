@@ -12,7 +12,7 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public class GenGeneration : Generation
+    public class GenGeneration : CompilingGeneration
     {
         public GenGeneration(in LinqGenExpression expression) : base(expression) { }
 

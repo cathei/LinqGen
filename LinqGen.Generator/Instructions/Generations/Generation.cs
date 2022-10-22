@@ -13,36 +13,15 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
 
     /// <summary>
-    /// Generation is any instruction that produces LinqGen enumerable as output.
+    /// Common base class for CompilingGeneration and CompiledGeneration.
+    /// So they can provide metadata with same interfaces.
     /// </summary>
     public abstract class Generation : Instruction
     {
-        protected Generation(in LinqGenExpression expression) : base(expression)
-        {
-            ElementName = ParseName(expression.ElementSymbol!
-                .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+        public Generation(in LinqGenExpression expression) : base(expression) { }
 
-            MethodName = IdentifierName(expression.MethodSymbol.Name);
-        }
+        public Generation(INamedTypeSymbol upstreamSymbol) : base(upstreamSymbol) { }
 
-        public NameSyntax ElementName { get; }
-
-        public IdentifierNameSyntax MethodName { get; }
-
-        public abstract IEnumerable<MemberInfo> GetMemberInfos();
-
-        public override SourceText Render(IdentifierNameSyntax assemblyName, int id)
-        {
-            ClassName = IdentifierName($"{MethodName}_{id}");
-            return GenerationTemplate.Render(assemblyName, this);
-        }
-
-        public virtual BlockSyntax RenderConstructorBody() => SyntaxFactory.Block();
-
-        public abstract BlockSyntax RenderMoveNextBody();
-
-        public abstract BlockSyntax RenderCurrentGetBody();
-
-        public virtual BlockSyntax RenderDisposeBody() => SyntaxFactory.Block();
+        // public virtual bool CanSlice { get; }
     }
 }

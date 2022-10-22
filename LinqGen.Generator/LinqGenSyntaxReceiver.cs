@@ -75,7 +75,7 @@ namespace Cathei.LinqGen.Generator
                     !compiledGenerations.TryGetValue(upstreamKey, out upstream))
                 {
                     // okay we will need create compiled symbol here
-                    upstream = new CompiledGeneration();
+                    upstream = new CompiledGeneration(node.UpstreamSymbol);
                     compiledGenerations.Add(upstreamKey, upstream);
                 }
 

@@ -85,10 +85,10 @@ namespace Cathei.LinqGen
         private class Rewriter : CSharpSyntaxRewriter
         {
             private readonly IdentifierNameSyntax _assemblyName;
-            private readonly Generation _instruction;
+            private readonly CompilingGeneration _instruction;
             private readonly List<MemberInfo> _memberInfos;
 
-            public Rewriter(IdentifierNameSyntax assemblyName, Generation instruction)
+            public Rewriter(IdentifierNameSyntax assemblyName, CompilingGeneration instruction)
             {
                 _assemblyName = assemblyName;
                 _instruction = instruction;
@@ -302,7 +302,7 @@ namespace Cathei.LinqGen
             }
         }
 
-        public static SourceText Render(IdentifierNameSyntax assemblyName, Generation instruction)
+        public static SourceText Render(IdentifierNameSyntax assemblyName, CompilingGeneration instruction)
         {
             var root = InstructionTemplate.GetRoot();
 

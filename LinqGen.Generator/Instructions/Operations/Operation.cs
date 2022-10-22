@@ -15,7 +15,7 @@ namespace Cathei.LinqGen.Generator
     /// <summary>
     /// Operation take LinqGen enumerable as input, and produces another LinqGen enumerable as output
     /// </summary>
-    public class Operation : Generation
+    public class Operation : CompilingGeneration
     {
         public Operation(in LinqGenExpression expression) : base(expression) { }
 

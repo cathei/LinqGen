@@ -18,7 +18,7 @@ namespace Cathei.LinqGen.Generator
     /// </summary>
     public class CompiledGeneration : Instruction
     {
-        public CompiledGeneration() : base(null)
+        public CompiledGeneration(INamedTypeSymbol typeSymbol) : base(null)
         {
 
         }
