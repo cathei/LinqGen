@@ -13,9 +13,9 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
 
     /// <summary>
-    /// Generation is any instruction that produces LinqGen enumerable as output.
+    /// Generation is any instruction that produces enumerable as output.
     /// </summary>
-    public abstract class CompilingGeneration : Instruction
+    public abstract class CompilingGeneration : Generation
     {
         protected CompilingGeneration(in LinqGenExpression expression) : base(expression)
         {
@@ -29,11 +29,16 @@ namespace Cathei.LinqGen.Generator
 
         public IdentifierNameSyntax MethodName { get; }
 
+        /// <summary>
+        /// Non-qualified class name, Only used for current file rendering
+        /// </summary>
+        public IdentifierNameSyntax? IdentifierName { get; protected set; }
+
         public abstract IEnumerable<MemberInfo> GetMemberInfos();
 
         public override SourceText Render(IdentifierNameSyntax assemblyName, int id)
         {
-            ClassName = IdentifierName($"{MethodName}_{id}");
+            ClassName = IdentifierName = IdentifierName($"{MethodName}_{id}");
             return GenerationTemplate.Render(assemblyName, this);
         }
 

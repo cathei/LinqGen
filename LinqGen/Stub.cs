@@ -1,6 +1,7 @@
 ﻿// LinqGen, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Cathei.LinqGen.Hidden;
 
@@ -22,5 +23,15 @@ namespace Cathei.LinqGen.Hidden
     public abstract class Stub<T, TSignature> : IStub<T, TSignature>
         where TSignature : IStubSignature
     {
+    }
+
+    /// <summary>
+    /// Stub for AsEnumerable
+    /// </summary>
+    public abstract class BoxedStub<T, TSignature> : IEnumerable<T>
+    {
+        public IEnumerator<T> GetEnumerator() => throw new NotImplementedException();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

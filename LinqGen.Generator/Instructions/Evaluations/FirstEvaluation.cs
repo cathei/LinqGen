@@ -6,18 +6,21 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 
 namespace Cathei.LinqGen.Generator
 {
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public class SelectStructOperation : SelectOperation
+    public class FirstEvaluation : Evaluation
     {
-        public SelectStructOperation(in LinqGenExpression expression, ITypeSymbol argumentSymbol)
-            : base(expression, argumentSymbol)
-        { }
+        private readonly bool OrDefault;
 
-        public override int Arity => 1;
+        protected FirstEvaluation(in LinqGenExpression expression, bool orDefault) : base(expression)
+        {
+            OrDefault = orDefault;
+        }
+
     }
 }

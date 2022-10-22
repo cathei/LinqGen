@@ -14,9 +14,9 @@ namespace Cathei.LinqGen.Generator
 
     /// <summary>
     /// Instruction is all kind of method that can performed on LinqGen enumerable
-    /// Generation is Something => LinqGenEnumerable
-    /// Operation is LinqGenEnumerable => LinqGenEnumerable
-    /// Evaluation is LinqGenEnumerable => SomethingElse
+    /// Generation is Value => Enumerable
+    /// Operation is Enumerable => Enumerable
+    /// Evaluation is Enumerable => Non-Enumerable
     /// </summary>
     public abstract class Instruction
     {
@@ -29,32 +29,15 @@ namespace Cathei.LinqGen.Generator
 
         public INamedTypeSymbol? UpstreamSymbol { get; }
 
-        public Instruction? Upstream { get; protected set; }
-        public List<Instruction>? Downstream { get; private set; }
-        public Dictionary<IMethodSymbol, Evaluation>? Evaluations { get; set; }
+        public Generation? Upstream { get; protected set; }
 
         /// <summary>
-        /// The class name cached for child class rendering
+        /// The qualified class name cached for child class rendering
         /// </summary>
-        public IdentifierNameSyntax? ClassName { get; protected set; }
+        public NameSyntax? ClassName { get; protected set; }
 
-        public virtual void SetUpstream(Instruction upstream)
-        {
-            Upstream = upstream;
+        public virtual int Arity => 0;
 
-            upstream.Downstream ??= new List<Instruction>();
-            upstream.Downstream.Add(this);
-        }
-
-        public virtual IEnumerable<TypeParameterSyntax> GetTypeParameters()
-        {
-            if (Upstream == null)
-                yield break;
-
-            foreach (var syntax in Upstream.GetTypeParameters())
-                yield return syntax;
-        }
-
-        public abstract SourceText Render(IdentifierNameSyntax assemblyName, int id);
+        public int TotalArity => Arity + (Upstream?.TotalArity ?? 0);
     }
 }

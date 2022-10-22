@@ -23,6 +23,11 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
+        public static BoxedStub<T, AsEnumerable<TUp>> AsEnumerable<T, TUp>(this IStub<T, TUp> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
         public static Stub<T, Where<TUp>> Where<T, TUp>(
             this IStub<T, TUp> enumerable, Func<T, bool> predicate)
         {

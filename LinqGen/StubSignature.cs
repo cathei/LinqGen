@@ -22,6 +22,8 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class GenList<T> : IStubSignature { }
 
+    public abstract class AsEnumerable<TUp> : IStubSignature { }
+
     public abstract class Select<TUp, TOut> : IStubSignature { }
 
     public abstract class SelectAt<TUp, TOut> : IStubSignature { }

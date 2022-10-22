@@ -16,9 +16,10 @@ namespace Cathei.LinqGen.Generator
     {
         private readonly StringBuilder _logBuilder;
 
-        private readonly Dictionary<LinqGenExpression.Key, Instruction> _allInstructions = new();
+        private readonly Dictionary<INamedTypeSymbol, Generation> _generations = new(SymbolEqualityComparer.Default);
+        private readonly Dictionary<EvaluationKey, Evaluation> _evaluations = new();
 
-        public readonly List<Instruction> Roots = new();
+        public readonly List<Generation> Roots = new();
 
         public LinqGenSyntaxReceiver(StringBuilder logBuilder)
         {
@@ -37,50 +38,104 @@ namespace Cathei.LinqGen.Generator
             if (!LinqGenExpression.TryParse(semanticModel, invocationSyntax, out var expression))
                 return;
 
-            if (_allInstructions.ContainsKey(expression.GetKey()))
+            if (expression.IsGeneration())
             {
-                // already registered
-                return;
+                if (_generations.ContainsKey(expression.SignatureSymbol!))
+                {
+                    // already registered
+                    return;
+                }
+
+                var generation = InstructionFactory.CreateGeneration(_logBuilder, expression);
+
+                if (generation == null)
+                {
+                    // something is wrong
+                    _logBuilder.AppendFormat("/* Generation failed to create : {0} */\n",
+                        expression.SignatureSymbol!.Name);
+                    return;
+                }
+
+                _logBuilder.AppendFormat("/* Generation : {0} {1} */\n",
+                    generation.GetType().Name, expression.SignatureSymbol!.Name);
+
+                _generations.Add(expression.SignatureSymbol!, generation);
             }
-
-            var instruction = InstructionFactory.Create(_logBuilder, expression);
-
-            if (instruction == null)
+            else
             {
-                // something is wrong
-                _logBuilder.AppendFormat("/* Instruction failed to generate : {0} */\n", expression.MethodSymbol.Name);
-                return;
+                var key = new EvaluationKey(expression.UpstreamSymbol!, expression.MethodSymbol);
+
+                if (_evaluations.ContainsKey(key))
+                {
+                    // already registered
+                    return;
+                }
+
+                var evaluation = InstructionFactory.CreateEvaluation(_logBuilder, expression);
+
+                if (evaluation == null)
+                {
+                    // something is wrong
+                    _logBuilder.AppendFormat("/* Evaluation failed to create : {0} {1} */\n",
+                        expression.UpstreamSymbol!.Name, expression.MethodSymbol.Name);
+                    return;
+                }
+
+                _logBuilder.AppendFormat("/* Evaluation : {0} {1} */\n",
+                    evaluation.GetType().Name, expression.MethodSymbol.Name);
+
+                _evaluations.Add(key, evaluation);
             }
-
-            _logBuilder.AppendFormat("/* Instruction : {0} {1} */\n", instruction.GetType().Name, expression.MethodSymbol.Name);
-
-            _allInstructions.Add(expression.GetKey(), instruction);
         }
 
         public void ResolveHierarchy()
         {
-            var compiledGenerations = new Dictionary<LinqGenExpression.Key, Instruction>();
+            var compiledGenerations = new Dictionary<INamedTypeSymbol, Generation>(SymbolEqualityComparer.Default);
 
-            foreach (var node in _allInstructions.Values)
+            foreach (var generation in _generations.Values)
             {
-                if (node.UpstreamSymbol == null)
+                var upstreamSymbol = generation.UpstreamSymbol;
+
+                if (upstreamSymbol == null)
                 {
-                    Roots.Add(node);
+                    Roots.Add(generation);
                     continue;
                 }
 
-                var upstreamKey = new LinqGenExpression.Key(node.UpstreamSymbol);
-
-                if (!_allInstructions.TryGetValue(upstreamKey, out var upstream) &&
-                    !compiledGenerations.TryGetValue(upstreamKey, out upstream))
+                if (!_generations.TryGetValue(upstreamSymbol, out var upstream) &&
+                    !compiledGenerations.TryGetValue(upstreamSymbol, out upstream))
                 {
                     // okay we will need create compiled symbol here
-                    upstream = new CompiledGeneration(node.UpstreamSymbol);
-                    compiledGenerations.Add(upstreamKey, upstream);
+                    upstream = new CompiledGeneration(upstreamSymbol);
+                    compiledGenerations.Add(upstreamSymbol, upstream);
                 }
 
-                node.SetUpstream(upstream);
+                generation.SetUpstream(upstream);
             }
+
+            foreach (var evaluation in _evaluations.Values)
+            {
+                var upstreamSymbol = evaluation.UpstreamSymbol;
+
+                if (upstreamSymbol == null)
+                {
+                    // this should never happen
+                    continue;
+                }
+
+                if (!_generations.TryGetValue(upstreamSymbol, out var upstream) &&
+                    !compiledGenerations.TryGetValue(upstreamSymbol, out upstream))
+                {
+                    // okay we will need create compiled symbol here
+                    upstream = new CompiledGeneration(upstreamSymbol);
+                    compiledGenerations.Add(upstreamSymbol, upstream);
+                }
+
+                evaluation.SetUpstream(upstream);
+            }
+
+            // compiled generations are always root
+            Roots.AddRange(compiledGenerations.Values);
         }
     }
 }

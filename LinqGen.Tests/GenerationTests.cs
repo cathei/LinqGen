@@ -24,11 +24,12 @@ public class GenerationTests
             .Select(x => x / 10)
             .Gen()
             .Select(x => x / 10)
-            .Select(x => x * 100);
+            .Select(x => x * 100)
+            .AsEnumerable();
+
 
         foreach (var temp in gen)
         {
-
 
 
         }

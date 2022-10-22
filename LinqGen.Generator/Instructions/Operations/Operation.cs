@@ -13,7 +13,7 @@ namespace Cathei.LinqGen.Generator
     using static CodeGenUtils;
 
     /// <summary>
-    /// Operation take LinqGen enumerable as input, and produces another LinqGen enumerable as output
+    /// Operation take LinqGen enumerable as input, and produces another enumerable as output
     /// </summary>
     public class Operation : CompilingGeneration
     {

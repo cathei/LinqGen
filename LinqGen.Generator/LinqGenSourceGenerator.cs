@@ -55,15 +55,15 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        private void RenderNodeRecursive(Instruction instruction,
+        private void RenderNodeRecursive(Generation generation,
             GeneratorExecutionContext context, IdentifierNameSyntax assemblyName, ref int id)
         {
-            var sourceText = instruction.Render(assemblyName, id++);
+            var sourceText = generation.Render(assemblyName, id++);
             context.AddSource($"LinqGen.{id}.g.cs", sourceText);
 
-            if (instruction.Downstream != null)
+            if (generation.Downstream != null)
             {
-                foreach (var downstream in instruction.Downstream)
+                foreach (var downstream in generation.Downstream)
                     RenderNodeRecursive(downstream, context, assemblyName, ref id);
             }
         }

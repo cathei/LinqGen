@@ -1,7 +1,6 @@
 ﻿// LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -145,46 +144,9 @@ namespace Cathei.LinqGen.Generator
             return true;
         }
 
-        public Key GetKey()
+        public bool IsGeneration()
         {
-            // generations only uses signature symbol
-            if (SignatureSymbol != null)
-                return new Key(SignatureSymbol);
-
-            // evaluations combine upstream symbol with method symbol to be unique
-            return new Key(UpstreamSymbol, MethodSymbol);
-        }
-
-        public readonly struct Key : IEqualityComparer<Key>
-        {
-            private static readonly SymbolEqualityComparer SymbolComparer = SymbolEqualityComparer.Default;
-
-            public readonly INamedTypeSymbol? SignatureSymbol;
-            public readonly IMethodSymbol? MethodSymbol;
-
-            public Key(INamedTypeSymbol? signatureSymbol)
-            {
-                SignatureSymbol = signatureSymbol;
-                MethodSymbol = null;
-            }
-
-            public Key(INamedTypeSymbol? signatureSymbol, IMethodSymbol? methodSymbol)
-            {
-                SignatureSymbol = signatureSymbol;
-                MethodSymbol = methodSymbol;
-            }
-
-            public bool Equals(Key x, Key y)
-            {
-                return SymbolComparer.Equals(x.SignatureSymbol, y.SignatureSymbol) &&
-                       SymbolComparer.Equals(x.MethodSymbol, y.MethodSymbol);
-            }
-
-            public int GetHashCode(Key obj)
-            {
-                return SymbolComparer.GetHashCode(obj.SignatureSymbol) ^
-                       SymbolComparer.GetHashCode(obj.MethodSymbol);
-            }
+            return SignatureSymbol != null;
         }
     }
 }

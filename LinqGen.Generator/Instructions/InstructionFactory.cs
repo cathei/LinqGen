@@ -14,59 +14,60 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// The Instruction instance must be unique per signature (per generic arguments combination).
         /// </summary>
-        public static Instruction? Create(StringBuilder logBuilder, in LinqGenExpression expression)
+        public static Generation? CreateGeneration(StringBuilder logBuilder, in LinqGenExpression expression)
         {
             ITypeSymbol? argumentType;
 
-            if (expression.SignatureSymbol != null)
+            switch (expression.SignatureSymbol!.Name)
             {
-                switch (expression.SignatureSymbol.Name)
-                {
-                    case "Gen":
-                        return new GenGeneration(expression);
+                case "Gen":
+                    return new GenGeneration(expression);
 
-                    case "GenList":
-                        return new GenListGeneration(expression);
+                case "GenList":
+                    return new GenListGeneration(expression);
 
-                    case "Select":
-                    case "SelectStruct":
-                    case "SelectAt":
-                    case "SelectAtStruct":
-                        if (!expression.TryGetArgumentType(0, out argumentType))
-                            break;
-                        return new SelectOperation(expression, argumentType);
-
-                    case "Where":
-                    case "WhereAt":
-                    case "WhereStruct":
-                    case "WhereAtStruct":
-                        if (!expression.TryGetArgumentType(0, out argumentType))
-                            break;
-                        return new WhereOperation(expression, argumentType);
-                }
-            }
-            else
-            {
-                switch (expression.MethodSymbol.Name)
-                {
-                    case "AsEnumerable":
+                case "Select":
+                case "SelectStruct":
+                case "SelectAt":
+                case "SelectAtStruct":
+                    if (!expression.TryGetArgumentType(0, out argumentType))
                         break;
+                    return new SelectOperation(expression, argumentType);
 
-                    case "First":
-                    case "FirstOrDefault":
+                case "Where":
+                case "WhereAt":
+                case "WhereStruct":
+                case "WhereAtStruct":
+                    if (!expression.TryGetArgumentType(0, out argumentType))
                         break;
+                    return new WhereOperation(expression, argumentType);
 
-                    case "Last":
-                    case "LastOrDefault":
-                        break;
-
-                    case "Single":
-                        break;
-                }
+                case "AsEnumerable":
+                    return new AsEnumerableOperation(expression);
             }
 
             // not yet implemented
             return null;
         }
+
+        public static Evaluation? CreateEvaluation(StringBuilder logBuilder, in LinqGenExpression expression)
+        {
+            switch (expression.MethodSymbol.Name)
+            {
+                case "First":
+                case "FirstOrDefault":
+                    break;
+
+                case "Last":
+                case "LastOrDefault":
+                    break;
+
+                case "Single":
+                    break;
+            }
+
+            return null;
+        }
+
     }
 }

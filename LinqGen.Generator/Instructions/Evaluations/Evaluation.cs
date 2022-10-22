@@ -29,12 +29,15 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// Evaluation should not rendered individually. Instead it will be rendered with upstream.
         /// </summary>
-        public override void SetUpstream(Instruction parent)
+        public void SetUpstream(Generation upstream)
         {
-            Upstream = parent;
-
-            parent.Evaluations ??= new Dictionary<IMethodSymbol, Evaluation>(SymbolEqualityComparer.Default);
-            parent.Evaluations.Add(MethodSymbol, this);
+            Upstream = upstream;
+            Upstream.AddEvaluation(this);
         }
+
+        // public SourceText Render(IdentifierNameSyntax assemblyName, int id)
+        // {
+        //
+        // }
     }
 }

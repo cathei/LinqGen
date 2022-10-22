@@ -16,16 +16,19 @@ namespace Cathei.LinqGen.Generator
     /// Mock class for already compiled generation.
     /// Evaluation methods can still be added to it.
     /// </summary>
-    public class CompiledGeneration : Instruction
+    public class CompiledGeneration : Generation
     {
+        public INamedTypeSymbol TypeSymbol { get; }
+
         public CompiledGeneration(INamedTypeSymbol typeSymbol) : base(null)
         {
-
+            TypeSymbol = typeSymbol;
+            ClassName = ParseName(TypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
         }
 
         public override SourceText Render(IdentifierNameSyntax assemblyName, int id)
         {
-            // ClassName = IdentifierName($"{MethodName}_{id}");
+            // TODO
             // return GenerationTemplate.Render(assemblyName, this);
             return null;
         }
