@@ -55,8 +55,10 @@ namespace Cathei.LinqGen.Generator
             switch (expression.MethodSymbol.Name)
             {
                 case "First":
+                    return new FirstEvaluation(expression, false);
+
                 case "FirstOrDefault":
-                    break;
+                    return new FirstEvaluation(expression, true);
 
                 case "Last":
                 case "LastOrDefault":

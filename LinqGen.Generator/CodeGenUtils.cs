@@ -72,14 +72,24 @@ namespace Cathei.LinqGen.Generator
         // custom variable names
         public static readonly IdentifierNameSyntax ParentName = IdentifierName("parent");
         public static readonly IdentifierNameSyntax SourceName = IdentifierName("source");
+        public static readonly IdentifierNameSyntax IteratorName = IdentifierName("iter");
         public static readonly IdentifierNameSyntax IndexName = IdentifierName("index");
         public static readonly IdentifierNameSyntax SelectorName = IdentifierName("select");
         public static readonly IdentifierNameSyntax PredicateName = IdentifierName("predicate");
+
+        public static readonly TypeSyntax VarType = IdentifierName("var");
+
+        public static readonly SyntaxToken UsingKeywordToken = Token(SyntaxKind.UsingKeyword);
+        public static readonly SyntaxToken SemicolonToken = Token(SyntaxKind.SemicolonToken);
 
         public static readonly SyntaxTokenList ThisTokenList = TokenList(Token(SyntaxKind.ThisKeyword));
         public static readonly SyntaxTokenList PrivateTokenList = TokenList(Token(SyntaxKind.PrivateKeyword));
         public static readonly SyntaxTokenList PrivateReadOnlyTokenList =
             TokenList(Token(SyntaxKind.PrivateKeyword), Token(SyntaxKind.ReadOnlyKeyword));
+        public static readonly SyntaxTokenList PublicStaticTokenList =
+            TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword));
+
+        public static readonly ArgumentListSyntax EmptyArgumentList = SyntaxFactory.ArgumentList();
 
         public static InvocationExpressionSyntax InvocationExpression(
             ExpressionSyntax expression, IdentifierNameSyntax name)
@@ -130,6 +140,32 @@ namespace Cathei.LinqGen.Generator
         public static BracketedArgumentListSyntax BracketedArgumentList(ExpressionSyntax expression)
         {
             return SyntaxFactory.BracketedArgumentList(SingletonSeparatedList(Argument(expression)));
+        }
+
+        public static LocalDeclarationStatementSyntax UsingLocalDeclarationStatement(
+            SyntaxToken identifier, ExpressionSyntax initialValue)
+        {
+            return SyntaxFactory.LocalDeclarationStatement(default, UsingKeywordToken, default,
+                VariableDeclaration(identifier, initialValue), SemicolonToken);
+        }
+
+        public static VariableDeclarationSyntax VariableDeclaration(
+            SyntaxToken identifier, ExpressionSyntax initialValue)
+        {
+            return SyntaxFactory.VariableDeclaration(VarType, SingletonSeparatedList(
+                VariableDeclarator(identifier, default, EqualsValueClause(initialValue))));
+        }
+
+        public static ReturnStatementSyntax ReturnDefaultStatement()
+        {
+            return SyntaxFactory.ReturnStatement(
+                SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression));
+        }
+
+        public static ThrowStatementSyntax ThrowInvalidOperationStatement()
+        {
+            return SyntaxFactory.ThrowStatement(ObjectCreationExpression(
+                IdentifierName("InvalidOperationException"), EmptyArgumentList, default));
         }
 
         public static LiteralExpressionSyntax LiteralExpression(int value)

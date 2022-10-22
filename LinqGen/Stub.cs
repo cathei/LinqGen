@@ -26,9 +26,11 @@ namespace Cathei.LinqGen.Hidden
     }
 
     /// <summary>
-    /// Stub for AsEnumerable
+    /// Stub for AsEnumerable.
+    /// Note that this will not implement IStub, as it is the end of the call chain.
     /// </summary>
     public abstract class BoxedStub<T, TSignature> : IEnumerable<T>
+        where TSignature : IStubSignature
     {
         public IEnumerator<T> GetEnumerator() => throw new NotImplementedException();
 

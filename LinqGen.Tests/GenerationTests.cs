@@ -27,10 +27,16 @@ public class GenerationTests
             .Select(x => x * 100)
             .AsEnumerable();
 
+        int x = GenEnumerable.Range(0, 10)
+            .First();
+
+        int y = GenEnumerable.Range(0, 10)
+            .FirstOrDefault();
+
+
 
         foreach (var temp in gen)
         {
-
 
         }
 

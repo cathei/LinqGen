@@ -15,13 +15,13 @@ namespace Cathei.LinqGen.Generator
         public InvocationExpressionSyntax InvocationSyntax { get; }
         public MemberAccessExpressionSyntax MemberAccessSyntax { get; }
         public IMethodSymbol MethodSymbol { get; }
-        public ITypeSymbol? ElementSymbol { get; }
+        public ITypeSymbol ElementSymbol { get; }
         public INamedTypeSymbol? SignatureSymbol { get; }
         public INamedTypeSymbol? UpstreamSymbol { get; }
 
         private LinqGenExpression(SemanticModel semanticModel, InvocationExpressionSyntax invocationSyntax,
             MemberAccessExpressionSyntax memberAccessSyntax, IMethodSymbol methodSymbol,
-            ITypeSymbol? elementSymbol, INamedTypeSymbol? signatureSymbol, INamedTypeSymbol? upstreamSymbol)
+            ITypeSymbol elementSymbol, INamedTypeSymbol? signatureSymbol, INamedTypeSymbol? upstreamSymbol)
         {
             SemanticModel = semanticModel;
             InvocationSyntax = invocationSyntax;
@@ -54,7 +54,7 @@ namespace Cathei.LinqGen.Generator
             ITypeSymbol? elementSymbol = null;
             INamedTypeSymbol? signatureSymbol = null;
 
-            // returning stub enumerable
+            // returning stub enumerable, meaning it's compiling generation
             if (methodSymbol.ReturnType is INamedTypeSymbol returnTypeSymbol && IsStubEnumerable(returnTypeSymbol))
             {
                 elementSymbol = returnTypeSymbol.TypeArguments[0];
@@ -89,7 +89,7 @@ namespace Cathei.LinqGen.Generator
 
                 if (callerTypeInfo.Type is not INamedTypeSymbol callerTypeSymbol)
                 {
-                    // How did this happen? Presumably from generic type parameter?
+                    // How did this happen? Presumably from generic type parameter with constraint?
                     return false;
                 }
 
@@ -111,6 +111,18 @@ namespace Cathei.LinqGen.Generator
                     // meaning that upstream is compiled type, so let's use the type directly
                     upstreamSymbol = callerTypeSymbol;
                 }
+
+                if (signatureSymbol == null)
+                {
+                    // for evaluation, use upstream symbol's element type
+                    elementSymbol = parameterTypeSymbol.TypeArguments[0];
+                }
+            }
+
+            if (elementSymbol == null)
+            {
+                // should not be possible
+                return false;
             }
 
             result = new LinqGenExpression(

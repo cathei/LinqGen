@@ -28,9 +28,7 @@ namespace Cathei.LinqGen.Generator
 
         public override SourceText Render(IdentifierNameSyntax assemblyName, int id)
         {
-            // TODO
-            // return GenerationTemplate.Render(assemblyName, this);
-            return null;
+            return CompiledGenerationTemplate.Render(assemblyName, this);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Cathei.LinqGen.Hidden._Assembly_
 {
     // Enumerable is always readonly
     // Can be public as LinqGen support predefined enumerable
-    internal readonly struct _Enumerable_ : IStub<_Element_, Compiled>
+    public readonly struct _Enumerable_ : IStub<_Element_, Compiled>
     {
         internal _Enumerable_()
         {
@@ -73,7 +73,7 @@ namespace Cathei.LinqGen.Hidden._Assembly_
 namespace Cathei.LinqGen
 {
     // Extensions can be public as it is unique with assembly name
-    internal static partial class _Extensions_
+    public static partial class _Extensions_
     {
         public static _Enumerable_ _ExtensionMethod_()
         {
@@ -259,7 +259,8 @@ namespace Cathei.LinqGen
 
             private ClassDeclarationSyntax RewriteExtensionClass(ClassDeclarationSyntax node)
             {
-                return node.WithIdentifier(Identifier($"LinqGenExtensions_{_assemblyName.Identifier.ValueText}"));
+                return node.WithIdentifier(Identifier($"LinqGenExtensions_{_assemblyName.Identifier.ValueText}"))
+                    .AddMembers(GetExtensionMethods().ToArray());
             }
 
             private ConstructorDeclarationSyntax RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
@@ -300,6 +301,24 @@ namespace Cathei.LinqGen
                     .WithBody(Block(ReturnStatement(
                         ObjectCreationExpression(_instruction.IdentifierName!,
                             ArgumentList(GetArguments(MemberKind.Enumerable)), default))));
+            }
+
+            private IEnumerable<MemberDeclarationSyntax> GetExtensionMethods()
+            {
+                if (_instruction.Evaluations == null)
+                {
+                    // nothing to evaluate
+                    // downstream will have separated files
+                    yield break;
+                }
+
+                foreach (var evaluation in _instruction.Evaluations.Values)
+                {
+                    yield return MethodDeclaration(default, PublicStaticTokenList, evaluation.ReturnType,
+                        default, evaluation.MethodName.Identifier, default,
+                        ParameterList(evaluation.GetParameters()), default, evaluation.RenderMethodBody(),
+                        default, default);
+                }
             }
         }
 

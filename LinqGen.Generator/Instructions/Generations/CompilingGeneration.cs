@@ -19,7 +19,7 @@ namespace Cathei.LinqGen.Generator
     {
         protected CompilingGeneration(in LinqGenExpression expression) : base(expression)
         {
-            ElementName = ParseName(expression.ElementSymbol!
+            ElementName = ParseName(expression.ElementSymbol
                 .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
 
             MethodName = IdentifierName(expression.MethodSymbol.Name);

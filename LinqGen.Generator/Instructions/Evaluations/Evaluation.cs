@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.Text;
 namespace Cathei.LinqGen.Generator
 {
     using static SyntaxFactory;
+    using static CodeGenUtils;
 
     /// <summary>
     /// Evaluation takes LinqGen enumerable as input, but output is not LinqGen enumerable.
@@ -21,6 +22,9 @@ namespace Cathei.LinqGen.Generator
         {
             MethodSymbol = expression.MethodSymbol;
             MethodName = IdentifierName(MethodSymbol.Name);
+
+            ElementName = ParseName(expression.ElementSymbol
+                .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
         }
 
         public IMethodSymbol MethodSymbol { get; }
@@ -35,9 +39,15 @@ namespace Cathei.LinqGen.Generator
             Upstream.AddEvaluation(this);
         }
 
-        // public SourceText Render(IdentifierNameSyntax assemblyName, int id)
-        // {
-        //
-        // }
+        public NameSyntax ElementName { get; }
+
+        public abstract TypeSyntax ReturnType { get; }
+
+        public virtual IEnumerable<ParameterSyntax> GetParameters()
+        {
+            yield return Parameter(default, ThisTokenList, Upstream!.ClassName!, SourceName.Identifier, default);
+        }
+
+        public abstract BlockSyntax RenderMethodBody();
     }
 }

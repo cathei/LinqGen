@@ -17,10 +17,21 @@ namespace Cathei.LinqGen.Generator
     {
         private readonly bool OrDefault;
 
-        protected FirstEvaluation(in LinqGenExpression expression, bool orDefault) : base(expression)
+        public FirstEvaluation(in LinqGenExpression expression, bool orDefault) : base(expression)
         {
             OrDefault = orDefault;
+            ReturnType = ElementName;
         }
 
+        public override TypeSyntax ReturnType { get; }
+
+        public override BlockSyntax RenderMethodBody()
+        {
+            return Block(UsingLocalDeclarationStatement(
+                    IteratorName.Identifier, InvocationExpression(SourceName, GetEnumeratorName)),
+                IfStatement(InvocationExpression(IteratorName, MoveNextName),
+                    ReturnStatement(MemberAccessExpression(IteratorName, CurrentName))),
+                OrDefault ? ReturnDefaultStatement() : ThrowInvalidOperationStatement());
+        }
     }
 }
