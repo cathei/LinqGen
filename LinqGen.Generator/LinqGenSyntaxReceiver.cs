@@ -16,9 +16,9 @@ namespace Cathei.LinqGen.Generator
     {
         private readonly StringBuilder _logBuilder;
 
-        private readonly Dictionary<INamedTypeSymbol, Node> _allNodes = new(SymbolEqualityComparer.Default);
+        private readonly Dictionary<INamedTypeSymbol, Instruction> _instructions = new(SymbolEqualityComparer.Default);
 
-        public readonly List<Node> Roots = new();
+        public readonly List<Instruction> Roots = new();
 
         public LinqGenSyntaxReceiver(StringBuilder logBuilder)
         {
@@ -37,23 +37,24 @@ namespace Cathei.LinqGen.Generator
             if (!LinqGenExpression.TryParse(semanticModel, invocationSyntax, out var expression))
                 return;
 
-            if (_allNodes.ContainsKey(expression.OpSymbol))
+            if (_instructions.ContainsKey(expression.OpSymbol))
             {
                 // already registered
                 return;
             }
 
-            var node = NodeFactory.CreateNode(_logBuilder, ref expression);
+            var instruction = InstructionFactory.Create(_logBuilder, ref expression);
 
-            _logBuilder.AppendFormat("// Node : {0}\n", node?.GetType().Name);
-
-            if (node == null)
+            if (instruction == null)
             {
                 // something is wrong
+                _logBuilder.AppendFormat("/* Instruction Failed to generate : {0} */\n", expression.OpSymbol.Name);
                 return;
             }
 
-            _allNodes.Add(expression.OpSymbol, node);
+            _logBuilder.AppendFormat("/* Instruction : {0} {1} */\n", instruction.GetType().Name, expression.OpSymbol.Name);
+
+            _instructions.Add(expression.OpSymbol, instruction);
         }
 
         // private void AddGenerationNode(
@@ -117,10 +118,10 @@ namespace Cathei.LinqGen.Generator
 
         public void ResolveHierarchy()
         {
-            foreach (var node in _allNodes.Values)
+            foreach (var node in _instructions.Values)
             {
                 if (node.ParentSymbol != null &&
-                    _allNodes.TryGetValue(node.ParentSymbol, out var parent))
+                    _instructions.TryGetValue(node.ParentSymbol, out var parent))
                 {
                     node.SetParent(parent);
                 }

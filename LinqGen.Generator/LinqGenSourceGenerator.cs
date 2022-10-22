@@ -16,38 +16,48 @@ namespace Cathei.LinqGen.Generator
         {
             StringBuilder logBuilder = new();
 
-            logBuilder.AppendLine("// Started");
+            logBuilder.AppendLine("/* Started */");
 
-            var syntaxReceiver = new LinqGenSyntaxReceiver(logBuilder);
-
-            foreach (var syntaxTree in context.Compilation.SyntaxTrees)
+            try
             {
-                var semanticModel = context.Compilation.GetSemanticModel(syntaxTree);
-                syntaxReceiver.VisitSyntaxTree(semanticModel, syntaxTree);
+                var syntaxReceiver = new LinqGenSyntaxReceiver(logBuilder);
+
+                foreach (var syntaxTree in context.Compilation.SyntaxTrees)
+                {
+                    var semanticModel = context.Compilation.GetSemanticModel(syntaxTree);
+                    syntaxReceiver.VisitSyntaxTree(semanticModel, syntaxTree);
+                }
+
+                syntaxReceiver.ResolveHierarchy();
+
+                int id = 0;
+                foreach (var node in syntaxReceiver.Roots)
+                    RenderNodeRecursive(node, context, ref id);
             }
+            catch (Exception ex)
+            {
+                logBuilder.AppendFormat("/* Exception found: {0} */\n", ex);
+#if !DEBUG
+                throw;
+#endif
+            }
+            finally
+            {
+                logBuilder.AppendLine("/* Ended */");
 
-            StringBuilder builder = new();
-            int id = 0;
-
-            syntaxReceiver.ResolveHierarchy();
-
-            foreach (var node in syntaxReceiver.Roots)
-                RenderNodeRecursive(node, context, builder, ref id);
-
-            logBuilder.AppendLine("// Ended");
-
-            context.AddSource("Log.g.cs", logBuilder.ToString());
+                context.AddSource("Log.g.cs", logBuilder.ToString());
+            }
         }
 
-        private void RenderNodeRecursive(Node node, GeneratorExecutionContext context, StringBuilder builder, ref int id)
+        private void RenderNodeRecursive(Instruction instruction, GeneratorExecutionContext context, ref int id)
         {
-            node.Render(builder, id++);
-            context.AddSource($"LinqGen.{node.ClassName}.g.cs", builder.ToString());
+            var sourceText = instruction.Render(id++);
+            context.AddSource($"LinqGen.{instruction.ClassName}.g.cs", sourceText);
 
-            if (node.Children != null)
+            if (instruction.Downstream != null)
             {
-                foreach (var child in node.Children)
-                    RenderNodeRecursive(child, context, builder, ref id);
+                foreach (var downstream in instruction.Downstream)
+                    RenderNodeRecursive(downstream, context, ref id);
             }
         }
     }

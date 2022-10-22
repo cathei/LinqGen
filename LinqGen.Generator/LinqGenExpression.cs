@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Cathei.LinqGen.Generator
 {
-    public struct LinqGenExpression
+    public readonly struct LinqGenExpression
     {
         public SemanticModel SemanticModel { get; }
         public InvocationExpressionSyntax InvocationSyntax { get; }

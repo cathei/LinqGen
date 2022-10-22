@@ -9,19 +9,19 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Cathei.LinqGen.Generator
 {
-    public static class NodeFactory
+    public static class InstructionFactory
     {
-        public static Node? CreateNode(StringBuilder logBuilder, ref LinqGenExpression expression)
+        public static Instruction? Create(StringBuilder logBuilder, ref LinqGenExpression expression)
         {
             ITypeSymbol? argumentType;
 
             switch (expression.OpSymbol.MetadataName)
             {
                 case "Gen`1":
-                    return new GenNode(expression.ElementSymbol);
+                    return new GenGeneration(expression.ElementSymbol);
 
                 case "GenList`1":
-                    return new GenListNode(expression.ElementSymbol);
+                    return new GenListGeneration(expression.ElementSymbol);
 
                 case "Select`2":
                 case "SelectStruct`2":
@@ -29,7 +29,7 @@ namespace Cathei.LinqGen.Generator
                 case "SelectAtStruct`2":
                     if (!expression.TryGetArgumentType(0, out argumentType))
                         break;
-                    return new SelectNode(expression.ElementSymbol, expression.ParentSymbol, argumentType);
+                    return new SelectOperation(expression.ElementSymbol, expression.ParentSymbol, argumentType);
 
                 case "Where`1":
                 case "WhereAt`1":
@@ -37,7 +37,7 @@ namespace Cathei.LinqGen.Generator
                 case "WhereAtStruct`1":
                     if (!expression.TryGetArgumentType(0, out argumentType))
                         break;
-                    return new WhereNode(expression.ElementSymbol, expression.ParentSymbol, argumentType);
+                    return new WhereOperation(expression.ElementSymbol, expression.ParentSymbol, argumentType);
             }
 
             // not yet implemented

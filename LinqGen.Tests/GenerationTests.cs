@@ -8,6 +8,12 @@ namespace Cathei.LinqGen.Tests;
 
 public class GenerationTests
 {
+    public struct MyTempStruct<T>
+    {
+        public T value;
+    }
+
+
     [Test]
     public void TestGeneration()
     {
@@ -18,24 +24,21 @@ public class GenerationTests
             .Select(x => x / 10)
             .Gen()
             .Select(x => x / 10)
-            .Select(x => x / 10)
-            .Where(r => r % 2 == 1)
-            .Select(m => m * 3);
+            .Select(x => x * 100);
 
         foreach (var temp in gen)
         {
 
+
         }
 
-        var t = Enumerable.Repeat(0.1f, 10).Gen();
+        var t = Enumerable.Repeat(new MyTempStruct<int>(), 10).Gen();
         // var a = t.Select(x => 10);
         var b = t.Select(x => 10)
             .Where(x => x % 2 == 0)
-            .Select(x => x * 3)
             .Where(x => x / 10 == 1);
 
         var tt = Enumerable.Repeat(3m, 10).Gen();
-
 
     }
 }

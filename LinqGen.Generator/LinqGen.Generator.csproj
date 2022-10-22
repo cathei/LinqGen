@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Nodes\Evaluations" />
+      <Folder Include="Instructions\Evaluations" />
     </ItemGroup>
 
 </Project>
