@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -125,6 +126,11 @@ namespace Cathei.LinqGen.Generator
         public static ArgumentListSyntax ArgumentList(ExpressionSyntax expression)
         {
             return SyntaxFactory.ArgumentList(SingletonSeparatedList(Argument(expression)));
+        }
+
+        public static ArgumentListSyntax ArgumentList(params ExpressionSyntax[] expression)
+        {
+            return SyntaxFactory.ArgumentList(SeparatedList(expression.Select(Argument)));
         }
 
         public static ArgumentListSyntax ArgumentList(IEnumerable<ArgumentSyntax> arguments)

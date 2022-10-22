@@ -14,11 +14,16 @@ namespace Cathei.LinqGen.Generator
 
     public class SelectOperation : Operation
     {
-        protected readonly NameSyntax ArgumentTypeName;
+        protected readonly NameSyntax ParameterTypeName;
+        protected readonly bool WithIndex;
+        protected readonly bool WithStruct;
 
-        public SelectOperation(in LinqGenExpression expression, ITypeSymbol argumentSymbol) : base(expression)
+        public SelectOperation(in LinqGenExpression expression,
+            ITypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression)
         {
-            ArgumentTypeName = ParseName(argumentSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            ParameterTypeName = ParseName(parameterType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            WithIndex = withIndex;
+            WithStruct = withStruct;
         }
 
         public override IEnumerable<MemberInfo> GetMemberInfos()
@@ -26,14 +31,54 @@ namespace Cathei.LinqGen.Generator
             foreach (var member in base.GetMemberInfos())
                 yield return member;
 
-            yield return new MemberInfo(MemberKind.Both, ArgumentTypeName, SelectorName);
+            yield return new MemberInfo(MemberKind.Both,
+                WithStruct ? IdentifierName("T1") : ParameterTypeName, SelectorName);
+
+            if (WithIndex)
+                yield return new MemberInfo(MemberKind.Enumerator, IntType, IndexName);
+        }
+
+        public override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+        {
+            if (WithStruct)
+                yield return new TypeParameterInfo(ParameterTypeName);
+
+            foreach (var info in base.GetTypeParameterInfos())
+                yield return info;
+        }
+
+        public override BlockSyntax RenderConstructorBody()
+        {
+            if (WithIndex)
+            {
+                return base.RenderConstructorBody()
+                    .AddStatements(ExpressionStatement(SimpleAssignmentExpression(IndexName, LiteralExpression(-1))));
+            }
+
+            return base.RenderConstructorBody();
+        }
+
+        public override BlockSyntax RenderMoveNextBody()
+        {
+            if (WithIndex)
+            {
+                return Block(
+                    IfStatement(LogicalNotExpression(InvocationExpression(SourceName, MoveNextName)),
+                        ReturnStatement(FalseExpression())),
+                    ExpressionStatement(PreIncrementExpression(IndexName)),
+                    ReturnStatement(TrueExpression()));
+            }
+
+            return base.RenderMoveNextBody();
         }
 
         public override BlockSyntax RenderCurrentGetBody()
         {
             return Block(ReturnStatement(InvocationExpression(
                 MemberAccessExpression(SelectorName, InvokeName),
-                ArgumentList(MemberAccessExpression(SourceName, CurrentName)))));
+                WithIndex ?
+                    ArgumentList(MemberAccessExpression(SourceName, CurrentName), PreIncrementExpression(IndexName)) :
+                    ArgumentList(MemberAccessExpression(SourceName, CurrentName)))));
         }
     }
 }

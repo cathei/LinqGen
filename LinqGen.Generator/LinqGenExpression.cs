@@ -133,25 +133,14 @@ namespace Cathei.LinqGen.Generator
         }
 
         // index 0 is second argument because first argument is treated as caller when it's extension method
-        public bool TryGetArgumentType(int index, out ITypeSymbol result)
+        public bool TryGetParameterType(int index, out ITypeSymbol result)
         {
-            result = default!;
-
-            var arguments = InvocationSyntax.ArgumentList.Arguments;
-            if (arguments.Count <= index)
-                return false;
-
-            var argumentTypeInfo = SemanticModel.GetTypeInfo(arguments[index].Expression);
-
-            // prefer original argument type if possible
-            if (argumentTypeInfo.Type != null)
+            if (MethodSymbol.Parameters.Length <= index)
             {
-                result = argumentTypeInfo.Type;
-                return true;
+                result = default!;
+                return false;
             }
 
-            // we couldn't retrieve argument type (most likely lambda)
-            // uses parameter type instead
             result = MethodSymbol.Parameters[index].Type;
             return true;
         }

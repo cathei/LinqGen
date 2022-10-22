@@ -36,8 +36,10 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public NameSyntax? ClassName { get; protected set; }
 
-        public virtual int Arity => 0;
-
-        public int TotalArity => Arity + (Upstream?.TotalArity ?? 0);
+        /// <summary>
+        /// Note that derived class's type parameter info should precedence.
+        /// So we can easily indicate it with T1, T2...
+        /// </summary>
+        public virtual IEnumerable<TypeParameterInfo> GetTypeParameterInfos() => Array.Empty<TypeParameterInfo>();
     }
 }

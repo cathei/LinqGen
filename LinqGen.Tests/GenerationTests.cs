@@ -33,8 +33,6 @@ public class GenerationTests
         int y = GenEnumerable.Range(0, 10)
             .FirstOrDefault();
 
-
-
         foreach (var temp in gen)
         {
 

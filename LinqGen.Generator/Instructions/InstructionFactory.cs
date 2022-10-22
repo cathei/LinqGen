@@ -16,7 +16,7 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public static Generation? CreateGeneration(StringBuilder logBuilder, in LinqGenExpression expression)
         {
-            ITypeSymbol? argumentType;
+            ITypeSymbol? parameterType;
 
             switch (expression.SignatureSymbol!.Name)
             {
@@ -27,20 +27,44 @@ namespace Cathei.LinqGen.Generator
                     return new GenListGeneration(expression);
 
                 case "Select":
-                case "SelectStruct":
-                case "SelectAt":
-                case "SelectAtStruct":
-                    if (!expression.TryGetArgumentType(0, out argumentType))
+                    if (!expression.TryGetParameterType(0, out parameterType))
                         break;
-                    return new SelectOperation(expression, argumentType);
+                    return new SelectOperation(expression, parameterType, false, false);
+
+                case "SelectStruct":
+                    if (!expression.TryGetParameterType(0, out parameterType))
+                        break;
+                    return new SelectOperation(expression, parameterType, false, true);
+
+                case "SelectAt":
+                    if (!expression.TryGetParameterType(0, out parameterType))
+                        break;
+                    return new SelectOperation(expression, parameterType, true, false);
+
+                case "SelectAtStruct":
+                    if (!expression.TryGetParameterType(0, out parameterType))
+                        break;
+                    return new SelectOperation(expression, parameterType, true, true);
 
                 case "Where":
-                case "WhereAt":
-                case "WhereStruct":
-                case "WhereAtStruct":
-                    if (!expression.TryGetArgumentType(0, out argumentType))
+                    if (!expression.TryGetParameterType(0, out parameterType))
                         break;
-                    return new WhereOperation(expression, argumentType);
+                    return new WhereOperation(expression, parameterType, false, false);
+
+                case "WhereAt":
+                    if (!expression.TryGetParameterType(0, out parameterType))
+                        break;
+                    return new WhereOperation(expression, parameterType, true, false);
+
+                case "WhereStruct":
+                    if (!expression.TryGetParameterType(0, out parameterType))
+                        break;
+                    return new WhereOperation(expression, parameterType, false, true);
+
+                case "WhereAtStruct":
+                    if (!expression.TryGetParameterType(0, out parameterType))
+                        break;
+                    return new WhereOperation(expression, parameterType, true, true);
 
                 case "AsEnumerable":
                     return new AsEnumerableOperation(expression);
