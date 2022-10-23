@@ -76,6 +76,8 @@ namespace Cathei.LinqGen.Generator
 
         public static Evaluation? CreateEvaluation(StringBuilder logBuilder, in LinqGenExpression expression)
         {
+            ITypeSymbol? parameterType;
+
             switch (expression.MethodSymbol.Name)
             {
                 case "First":
@@ -90,6 +92,11 @@ namespace Cathei.LinqGen.Generator
 
                 case "Single":
                     break;
+
+                case "Sum":
+                    if (!expression.TryGetParameterType(0, out parameterType))
+                        break;
+                    return new SumEvaluation(expression, parameterType);
             }
 
             return null;

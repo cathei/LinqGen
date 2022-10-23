@@ -26,8 +26,11 @@ namespace Cathei.LinqGen.Generator
             ClassName = ParseName(TypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
         }
 
+        public IdentifierNameSyntax? IdentifierName { get; private set; }
+
         public override SourceText Render(IdentifierNameSyntax assemblyName, int id)
         {
+            IdentifierName = IdentifierName($"Compiled_{id}");
             return CompiledGenerationTemplate.Render(assemblyName, this);
         }
     }

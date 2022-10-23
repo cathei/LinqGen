@@ -28,3 +28,19 @@ After you write a Linq query with stub methods, then `LinqGen.Generator` runs an
 How is it possible, while modifying user code is not allowed with source generators?
 It's because everything `LinqGen.Generator` generates designed to be precede over stub methods on [overload resolution](https://learn.microsoft.com/en-us/dotnet/visual-basic/reference/language-specification/overload-resolution).
 
+## Supported methods (working-in-progress)
+### Operations
+* Select
+* Where
+
+### Evaluations
+* First
+* FirstOrDefault
+* Sum
+  * Supports duck typing with `+` operator overload
+
+### Etc
+* Gen
+    * Converts IEnumerable to LinqGen enumerable
+* AsEnumerable
+    * Converts LinqGen enumerable to IEnumerable

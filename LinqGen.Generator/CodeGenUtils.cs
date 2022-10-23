@@ -17,9 +17,10 @@ namespace Cathei.LinqGen.Generator
         private const string LinqGenAssemblyName = "LinqGen";
         private const string LinqGenStubExtensionsTypeName = nameof(StubExtensions);
 
-        private const string LinqGenStubEnumerableTypeName = "Stub`2";
-        private const string LinqGenBoxedStubEnumerableTypeName = "BoxedStub`2";
-        private const string LinqGenStubInterfaceTypeName = "IStub`2";
+        private const string LinqGenStubEnumerableTypeName = "Stub";
+        private const string LinqGenBoxedStubEnumerableTypeName = "BoxedStub";
+        private const string LinqGenStubInterfaceTypeName = "IStub";
+        private const string LinqGenStructFunctionTypeName = "IStructFunction";
 
         private static bool IsMethodDefinedIn(IMethodSymbol symbol,
             string assemblyName, string containingTypeName)
@@ -43,13 +44,19 @@ namespace Cathei.LinqGen.Generator
         public static bool IsStubEnumerable(INamedTypeSymbol symbol)
         {
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.MetadataName is LinqGenStubEnumerableTypeName or LinqGenBoxedStubEnumerableTypeName;
+                   symbol.Name is LinqGenStubEnumerableTypeName or LinqGenBoxedStubEnumerableTypeName;
         }
 
         public static bool IsStubInterface(INamedTypeSymbol symbol)
         {
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.MetadataName == LinqGenStubInterfaceTypeName;
+                   symbol.Name == LinqGenStubInterfaceTypeName;
+        }
+
+        public static bool IsStructFunction(ITypeSymbol symbol)
+        {
+            return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
+                   symbol is INamedTypeSymbol { Name: LinqGenStructFunctionTypeName };
         }
 
         // known predefined type names
@@ -77,8 +84,12 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax IndexName = IdentifierName("index");
         public static readonly IdentifierNameSyntax SelectorName = IdentifierName("select");
         public static readonly IdentifierNameSyntax PredicateName = IdentifierName("predicate");
+        public static readonly IdentifierNameSyntax InitialValueName = IdentifierName("initialValue");
 
         public static readonly TypeSyntax VarType = IdentifierName("var");
+
+        public static readonly LiteralExpressionSyntax DefaultLiteral =
+            SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression);
 
         public static readonly SyntaxToken UsingKeywordToken = Token(SyntaxKind.UsingKeyword);
         public static readonly SyntaxToken SemicolonToken = Token(SyntaxKind.SemicolonToken);
@@ -164,8 +175,7 @@ namespace Cathei.LinqGen.Generator
 
         public static ReturnStatementSyntax ReturnDefaultStatement()
         {
-            return SyntaxFactory.ReturnStatement(
-                SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression));
+            return SyntaxFactory.ReturnStatement(DefaultLiteral);
         }
 
         public static ThrowStatementSyntax ThrowInvalidOperationStatement()

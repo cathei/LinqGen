@@ -46,14 +46,15 @@ public class GenerationTests
             .Where(x => x % 2 == 0)
             .Where(x => x / 10 == 1);
 
-        var tt = Enumerable.Repeat(3m, 10).Gen();
+        var tt = Enumerable.Repeat(3m, 10).Gen().Sum();
     }
 
     private void Temp()
     {
         var a = GenEnumerable.Range(0, 10)
             .Where(new PredicateWithIndex())
-            .Select(new Selector());
+            .Select(new Selector())
+            .FirstOrDefault();
 
         var b = GenEnumerable.Range(0, 10)
             .Where(new Predicate())
@@ -67,7 +68,7 @@ public class GenerationTests
             .Where(new Predicate())
             .Where(new Predicate())
             .Where(new Predicate())
-            .Select(new Selector());
+            .Sum(new Selector());
 
         var c = GenEnumerable.Range(0, 10)
             .Select(new Selector())

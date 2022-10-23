@@ -32,5 +32,22 @@ namespace Cathei.LinqGen
         {
             throw new NotImplementedException();
         }
+
+        public static T Sum<T, TUp>(this IStub<T, TUp> enumerable, T? initialValue = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static TOut Sum<T, TUp, TOut>(this IStub<T, TUp> enumerable,
+            Func<T, TOut> func, TOut? initialValue = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static TOut Sum<T, TUp, TOut>(this IStub<T, TUp> enumerable,
+            IStructFunction<T, TOut> func, TOut? initialValue = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
