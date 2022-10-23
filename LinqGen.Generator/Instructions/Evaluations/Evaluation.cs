@@ -45,7 +45,8 @@ namespace Cathei.LinqGen.Generator
 
         public virtual IEnumerable<ParameterSyntax> GetParameters()
         {
-            yield return Parameter(default, ThisTokenList, Upstream!.ClassName!, SourceName.Identifier, default);
+            yield return Parameter(default, ThisTokenList,
+                UpstreamResolvedClassName, SourceName.Identifier, default);
         }
 
         public abstract BlockSyntax RenderMethodBody();

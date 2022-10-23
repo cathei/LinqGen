@@ -26,7 +26,7 @@ namespace Cathei.LinqGen.Generator
             WithStruct = withStruct;
         }
 
-        public override IEnumerable<MemberInfo> GetMemberInfos()
+        protected override IEnumerable<MemberInfo> GetMemberInfos()
         {
             foreach (var member in base.GetMemberInfos())
                 yield return member;
@@ -38,13 +38,10 @@ namespace Cathei.LinqGen.Generator
                 yield return new MemberInfo(MemberKind.Enumerator, IntType, IndexName);
         }
 
-        public override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
             if (WithStruct)
                 yield return new TypeParameterInfo(ParameterTypeName);
-
-            foreach (var info in base.GetTypeParameterInfos())
-                yield return info;
         }
 
         public override BlockSyntax RenderConstructorBody()

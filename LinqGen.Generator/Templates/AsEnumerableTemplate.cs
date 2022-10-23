@@ -46,8 +46,8 @@ namespace Cathei.LinqGen.Hidden._Assembly_
 
 namespace Cathei.LinqGen
 {
-    // Extensions can be public as it is unique with assembly name
-    public static partial class _Extensions_
+    // Extensions needs to be internal to prevent ambiguous resolution
+    internal static partial class _Extensions_
     {
         public static IEnumerable<_Element_> AsEnumerable(this _Upstream_ source)
         {
@@ -96,6 +96,18 @@ namespace Cathei.LinqGen
                 return base.VisitConstructorDeclaration(node);
             }
 
+            public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
+            {
+                switch (node.Identifier.ValueText)
+                {
+                    case "AsEnumerable":
+                        node = RewriteExtensionMethod(node);
+                        break;
+                }
+
+                return base.VisitMethodDeclaration(node);
+            }
+
             public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
             {
                 switch (node.Identifier.ValueText)
@@ -107,7 +119,7 @@ namespace Cathei.LinqGen
                         return _instruction.ElementName;
 
                     case "_Upstream_":
-                        return _instruction.Upstream!.ClassName;
+                        return _instruction.UpstreamResolvedClassName;
 
                     case "_Assembly_":
                         return _assemblyName;
@@ -118,7 +130,8 @@ namespace Cathei.LinqGen
 
             private ClassDeclarationSyntax RewriteEnumerableClass(ClassDeclarationSyntax node)
             {
-                return node.WithIdentifier(_instruction.IdentifierName!.Identifier);
+                return node.WithIdentifier(_instruction.IdentifierName!.Identifier)
+                    .WithTypeParameterList(_instruction.GetTypeParameters());
             }
 
             private ClassDeclarationSyntax RewriteExtensionClass(ClassDeclarationSyntax node)
@@ -129,6 +142,12 @@ namespace Cathei.LinqGen
             private ConstructorDeclarationSyntax RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
             {
                 return node.WithIdentifier(_instruction.IdentifierName!.Identifier);
+            }
+
+            private MethodDeclarationSyntax RewriteExtensionMethod(MethodDeclarationSyntax node)
+            {
+                return node.WithTypeParameterList(_instruction.GetTypeParameters())
+                    .WithConstraintClauses(_instruction.GetGenericConstraints());
             }
         }
 

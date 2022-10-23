@@ -72,8 +72,8 @@ namespace Cathei.LinqGen.Hidden._Assembly_
 
 namespace Cathei.LinqGen
 {
-    // Extensions can be public as it is unique with assembly name
-    public static partial class _Extensions_
+    // Extensions needs to be internal to prevent ambiguous resolution
+    internal static partial class _Extensions_
     {
         public static _Enumerable_ _ExtensionMethod_()
         {
@@ -87,13 +87,11 @@ namespace Cathei.LinqGen
         {
             private readonly IdentifierNameSyntax _assemblyName;
             private readonly CompilingGeneration _instruction;
-            private readonly List<MemberInfo> _memberInfos;
 
             public Rewriter(IdentifierNameSyntax assemblyName, CompilingGeneration instruction)
             {
                 _assemblyName = assemblyName;
                 _instruction = instruction;
-                _memberInfos = _instruction.GetMemberInfos().ToList();
             }
 
             public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
@@ -178,7 +176,9 @@ namespace Cathei.LinqGen
                 switch (node.Identifier.ValueText)
                 {
                     case "_Enumerable_":
-                        return _instruction.IdentifierName;
+                        if (_instruction.Arity == 0)
+                            return _instruction.IdentifierName;
+                        return GenericName(_instruction.IdentifierName!.Identifier, _instruction.GetTypeArguments()!);
 
                     case "_Element_":
                         return _instruction.ElementName;
@@ -190,71 +190,17 @@ namespace Cathei.LinqGen
                 return base.VisitIdentifierName(node);
             }
 
-            private IEnumerable<ParameterSyntax> GetParameters(MemberKind kind, bool firstThisParam)
-            {
-                foreach (var member in _memberInfos)
-                {
-                    if ((member.Kind & kind) != kind)
-                        continue;
-
-                    var param = member.AsParameter();
-
-                    if (firstThisParam)
-                    {
-                        param = param.WithModifiers(ThisTokenList);
-                        firstThisParam = false;
-                    }
-
-                    yield return param;
-                }
-            }
-
-            private IEnumerable<ArgumentSyntax> GetArguments(MemberKind kind)
-            {
-                foreach (var member in _memberInfos)
-                {
-                    if ((member.Kind & kind) != kind)
-                        continue;
-
-                    yield return member.AsArgument();
-                }
-            }
-
-            private IEnumerable<MemberDeclarationSyntax> GetFieldDeclarations(MemberKind kind, bool isReadOnly)
-            {
-                foreach (var member in _memberInfos)
-                {
-                    if ((member.Kind & kind) != kind)
-                        continue;
-
-                    var tokenList = isReadOnly ? PrivateReadOnlyTokenList : PrivateTokenList;
-                    yield return FieldDeclaration(default, tokenList, VariableDeclaration(
-                        member.Type, SingletonSeparatedList(VariableDeclarator(member.Name.Identifier))));
-                }
-            }
-
-            private IEnumerable<StatementSyntax> GetAssignments(MemberKind kind, IdentifierNameSyntax? source = null)
-            {
-                foreach (var member in _memberInfos)
-                {
-                    if ((member.Kind & kind) != kind)
-                        continue;
-
-                    yield return ExpressionStatement(SimpleAssignmentExpression(
-                        MemberAccessExpression(ThisExpression(), member.Name),
-                        source == null ? member.Name : MemberAccessExpression(source, member.Name)));
-                }
-            }
-
             private StructDeclarationSyntax RewriteEnumerableStruct(StructDeclarationSyntax node)
             {
                 return node.WithIdentifier(_instruction.IdentifierName!.Identifier)
-                    .AddMembers(GetFieldDeclarations(MemberKind.Enumerable, true).ToArray());
+                    .WithTypeParameterList(_instruction.GetTypeParameters())
+                    .WithConstraintClauses(_instruction.GetGenericConstraints())
+                    .AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerable, true).ToArray());
             }
 
             private StructDeclarationSyntax RewriteEnumeratorStruct(StructDeclarationSyntax node)
             {
-                return node.AddMembers(GetFieldDeclarations(MemberKind.Enumerator, false).ToArray());
+                return node.AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerator, false).ToArray());
             }
 
             private ClassDeclarationSyntax RewriteExtensionClass(ClassDeclarationSyntax node)
@@ -266,15 +212,15 @@ namespace Cathei.LinqGen
             private ConstructorDeclarationSyntax RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
             {
                 return node.WithIdentifier(_instruction.IdentifierName!.Identifier)
-                    .WithParameterList(ParameterList(GetParameters(MemberKind.Enumerable, false)))
-                    .WithBody(Block(GetAssignments(MemberKind.Enumerable)));
+                    .WithParameterList(ParameterList(_instruction.GetParameters(MemberKind.Enumerable, false)))
+                    .WithBody(Block(_instruction.GetAssignments(MemberKind.Enumerable)));
             }
 
             private ConstructorDeclarationSyntax RewriteEnumeratorConstructor(ConstructorDeclarationSyntax node)
             {
                 // assignment will be automatic if parameter kind is Both
                 return node.WithBody(Block(_instruction.RenderConstructorBody()
-                    .Statements.InsertRange(0, GetAssignments(MemberKind.Both, ParentName))));
+                    .Statements.InsertRange(0, _instruction.GetAssignments(MemberKind.Both, ParentName))));
             }
 
             private MethodDeclarationSyntax RewriteEnumeratorMoveNext(MethodDeclarationSyntax node)
@@ -296,11 +242,16 @@ namespace Cathei.LinqGen
 
             private MethodDeclarationSyntax RewriteExtensionMethod(MethodDeclarationSyntax node)
             {
-                return node.WithIdentifier(_instruction.MethodName.Identifier)
-                    .WithParameterList(ParameterList(GetParameters(MemberKind.Enumerable, true)))
-                    .WithBody(Block(ReturnStatement(
-                        ObjectCreationExpression(_instruction.IdentifierName!,
-                            ArgumentList(GetArguments(MemberKind.Enumerable)), default))));
+                // keep identifier name here so it can be visited later
+                var body = Block(ReturnStatement(
+                    ObjectCreationExpression(IdentifierName("_Enumerable_"),
+                        ArgumentList(_instruction.GetArguments(MemberKind.Enumerable)), default)));
+
+                return MethodDeclaration(
+                    node.AttributeLists, node.Modifiers, node.ReturnType, node.ExplicitInterfaceSpecifier,
+                    _instruction.MethodName.Identifier, _instruction.GetTypeParameters(),
+                    ParameterList(_instruction.GetParameters(MemberKind.Enumerable, true)),
+                    _instruction.GetGenericConstraints(), body, default, default);
             }
 
             private IEnumerable<MemberDeclarationSyntax> GetExtensionMethods()
@@ -315,9 +266,9 @@ namespace Cathei.LinqGen
                 foreach (var evaluation in _instruction.Evaluations.Values)
                 {
                     yield return MethodDeclaration(default, PublicStaticTokenList, evaluation.ReturnType,
-                        default, evaluation.MethodName.Identifier, default,
-                        ParameterList(evaluation.GetParameters()), default, evaluation.RenderMethodBody(),
-                        default, default);
+                        default, evaluation.MethodName.Identifier, evaluation.GetTypeParameters(),
+                        ParameterList(evaluation.GetParameters()), evaluation.GetGenericConstraints(),
+                        evaluation.RenderMethodBody(), default, default);
                 }
             }
         }

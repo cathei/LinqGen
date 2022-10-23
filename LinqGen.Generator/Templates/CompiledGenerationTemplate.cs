@@ -27,8 +27,8 @@ using Cathei.LinqGen.Hidden;
 
 namespace Cathei.LinqGen
 {
-    // Extensions can be public as it is unique with assembly name
-    public static partial class _Extensions_
+    // Extensions needs to be internal to prevent ambiguous resolution
+    internal static partial class _Extensions_
     {
 
     }
@@ -76,9 +76,9 @@ namespace Cathei.LinqGen
                 foreach (var evaluation in _instruction.Evaluations.Values)
                 {
                     yield return MethodDeclaration(default, PublicStaticTokenList, evaluation.ReturnType,
-                        default, evaluation.MethodName.Identifier, default,
-                        ParameterList(evaluation.GetParameters()), default, evaluation.RenderMethodBody(),
-                        default, default);
+                        default, evaluation.MethodName.Identifier, evaluation.GetTypeParameters(),
+                        ParameterList(evaluation.GetParameters()), evaluation.GetGenericConstraints(),
+                        evaluation.RenderMethodBody(), default, default);
                 }
             }
         }

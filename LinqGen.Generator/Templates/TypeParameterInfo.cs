@@ -21,7 +21,12 @@ namespace Cathei.LinqGen.Generator
             return TypeParameter(Identifier($"T{index}"));
         }
 
-        public TypeParameterConstraintClauseSyntax AsTypeConstraint(int index)
+        public TypeSyntax AsTypeArgument(int index)
+        {
+            return IdentifierName($"T{index}");
+        }
+
+        public TypeParameterConstraintClauseSyntax AsGenericConstraint(int index)
         {
             return TypeParameterConstraintClause(IdentifierName($"T{index}"),
                 SingletonSeparatedList((TypeParameterConstraintSyntax)TypeConstraint(ConstraintType)));

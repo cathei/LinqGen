@@ -17,7 +17,7 @@ namespace Cathei.LinqGen.Generator
     {
         public GenListGeneration(in LinqGenExpression expression) : base(expression) { }
 
-        public override IEnumerable<MemberInfo> GetMemberInfos()
+        protected override IEnumerable<MemberInfo> GetMemberInfos()
         {
             var typeList = TypeArgumentList(SingletonSeparatedList((TypeSyntax)ElementName));
 

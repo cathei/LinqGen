@@ -19,12 +19,12 @@ namespace Cathei.LinqGen.Generator
     {
         public Operation(in LinqGenExpression expression) : base(expression) { }
 
-        public override IEnumerable<MemberInfo> GetMemberInfos()
+        protected override IEnumerable<MemberInfo> GetMemberInfos()
         {
-            yield return new MemberInfo(MemberKind.Enumerable, Upstream!.ClassName!, SourceName);
+            yield return new MemberInfo(MemberKind.Enumerable, UpstreamResolvedClassName, SourceName);
 
             yield return new MemberInfo(MemberKind.Enumerator,
-                QualifiedName(Upstream!.ClassName!, IdentifierName("Enumerator")), SourceName);
+                QualifiedName(UpstreamResolvedClassName, IdentifierName("Enumerator")), SourceName);
         }
 
         public override BlockSyntax RenderConstructorBody()

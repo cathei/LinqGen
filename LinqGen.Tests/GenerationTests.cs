@@ -33,6 +33,8 @@ public class GenerationTests
         int y = GenEnumerable.Range(0, 10)
             .FirstOrDefault();
 
+
+
         foreach (var temp in gen)
         {
 
@@ -45,6 +47,62 @@ public class GenerationTests
             .Where(x => x / 10 == 1);
 
         var tt = Enumerable.Repeat(3m, 10).Gen();
+    }
 
+    private void Temp()
+    {
+        var a = GenEnumerable.Range(0, 10)
+            .Where(new PredicateWithIndex())
+            .Select(new Selector());
+
+        var b = GenEnumerable.Range(0, 10)
+            .Where(new Predicate())
+            .Where(new Predicate())
+            .Where(new Predicate())
+            .Where(new Predicate())
+            .Where(new Predicate())
+            .Where(new Predicate())
+            .Where(new Predicate())
+            .Where(new Predicate())
+            .Where(new Predicate())
+            .Where(new Predicate())
+            .Where(new Predicate())
+            .Select(new Selector());
+
+        var c = GenEnumerable.Range(0, 10)
+            .Select(new Selector())
+            .Select(x => x);
+    }
+
+    public struct Selector : IStructFunction<int, double>
+    {
+        public double Invoke(int arg)
+        {
+            return arg / 2.0;
+        }
+    }
+
+    public struct Predicate : IStructFunction<int, bool>
+    {
+        public bool Invoke(int arg)
+        {
+            return arg % 2 == 0;
+        }
+    }
+
+    public struct SelectorWithIndex : IStructFunction<int, int, double>
+    {
+        public double Invoke(int arg, int index)
+        {
+            return arg / 2.0 + index;
+        }
+    }
+
+    public struct PredicateWithIndex : IStructFunction<int, int, bool>
+    {
+        public bool Invoke(int arg, int index)
+        {
+            return arg % 2 == 0 && index % 2 == 0;
+        }
     }
 }
