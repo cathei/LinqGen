@@ -22,6 +22,7 @@ namespace Cathei.LinqGen.Generator
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Cathei.LinqGen;
 using Cathei.LinqGen.Hidden;
 using Cathei.LinqGen.Hidden._Assembly_;
@@ -32,26 +33,31 @@ namespace Cathei.LinqGen.Hidden._Assembly_
     // Can be public as LinqGen support predefined enumerable
     public readonly struct _Enumerable_ : IStub<_Element_, Compiled>
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal _Enumerable_()
         {
 
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator(this);
 
         public struct Enumerator : IEnumerator<_Element_>
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             internal Enumerator(in _Enumerable_ parent)
             {
 
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool MoveNext()
             {
             }
 
             public TReturn Current
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
 
@@ -62,6 +68,7 @@ namespace Cathei.LinqGen.Hidden._Assembly_
 
             void IEnumerator.Reset() => throw new NotSupportedException();
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Dispose()
             {
 
@@ -75,6 +82,7 @@ namespace Cathei.LinqGen
     // Extensions needs to be internal to prevent ambiguous resolution
     internal static partial class _Extensions_
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static _Enumerable_ _ExtensionMethod_()
         {
             return new _Enumerable_();
@@ -236,9 +244,10 @@ namespace Cathei.LinqGen
 
             private PropertyDeclarationSyntax RewriteEnumeratorCurrent(PropertyDeclarationSyntax node)
             {
+                var getAccessor = node.AccessorList!.Accessors[0].WithBody(_instruction.RenderCurrentGetBody());
+
                 return node.WithType(_instruction.ElementName)
-                    .WithAccessorList(AccessorList(SingletonList(AccessorDeclaration(
-                        SyntaxKind.GetAccessorDeclaration, _instruction.RenderCurrentGetBody()))));
+                    .WithAccessorList(AccessorList(SingletonList(getAccessor)));
             }
 
             private MethodDeclarationSyntax RewriteExtensionMethod(MethodDeclarationSyntax node)
@@ -266,8 +275,9 @@ namespace Cathei.LinqGen
 
                 foreach (var evaluation in _instruction.Evaluations.Values)
                 {
-                    yield return MethodDeclaration(default, PublicStaticTokenList, evaluation.ReturnType,
-                        default, evaluation.MethodName.Identifier, evaluation.GetTypeParameters(),
+                    yield return MethodDeclaration(new(AggressiveInliningAttributeList),
+                        PublicStaticTokenList, evaluation.ReturnType, default,
+                        evaluation.MethodName.Identifier, evaluation.GetTypeParameters(),
                         ParameterList(evaluation.GetParameters()), evaluation.GetGenericConstraints(),
                         evaluation.RenderMethodBody(), default, default);
                 }

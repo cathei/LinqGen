@@ -67,10 +67,10 @@ public class WhereSelectSum
         var selector = new Selector();
 
         return GenEnumerable
-               .Range(0, Count)
-               .Where(predicate)
-               .Select(selector)
-               .Sum();
+           .Range(0, Count)
+           .Where(predicate)
+           .Select(selector)
+           .Sum();
     }
 
     [Benchmark]

@@ -38,7 +38,7 @@ namespace Cathei.LinqGen.Generator
             if (!LinqGenExpression.TryParse(semanticModel, invocationSyntax, out var expression))
                 return;
 
-            if (expression.IsGeneration())
+            if (expression.IsCompilingGeneration())
             {
                 if (_generations.ContainsKey(expression.SignatureSymbol!))
                 {

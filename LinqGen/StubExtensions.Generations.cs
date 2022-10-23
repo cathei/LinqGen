@@ -28,6 +28,16 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
+        public static Stub<TOut, Compiled> Cast<TOut>(this IStub<Compiled> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<TOut, Compiled> OfType<TOut>(this IStub<Compiled> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
         public static Stub<T, Where<TUp>> Where<T, TUp>(
             this IStub<T, TUp> enumerable, Func<T, bool> predicate)
         {

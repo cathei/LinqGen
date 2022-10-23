@@ -103,6 +103,13 @@ namespace Cathei.LinqGen.Generator
 
         public static readonly ArgumentListSyntax EmptyArgumentList = SyntaxFactory.ArgumentList();
 
+        public static readonly AttributeListSyntax AggressiveInliningAttributeList =
+            AttributeList(SingletonSeparatedList(
+                Attribute(IdentifierName("MethodImpl"),
+                    AttributeArgumentList(SingletonSeparatedList(AttributeArgument(
+                        MemberAccessExpression(IdentifierName("MethodImplOptions"),
+                            IdentifierName("AggressiveInlining"))))))));
+
         public static InvocationExpressionSyntax InvocationExpression(
             ExpressionSyntax expression, IdentifierNameSyntax name)
         {

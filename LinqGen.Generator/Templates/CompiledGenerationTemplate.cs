@@ -22,6 +22,7 @@ namespace Cathei.LinqGen.Generator
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Cathei.LinqGen;
 using Cathei.LinqGen.Hidden;
 
@@ -76,8 +77,9 @@ namespace Cathei.LinqGen
 
                 foreach (var evaluation in _instruction.Evaluations.Values)
                 {
-                    yield return MethodDeclaration(default, PublicStaticTokenList, evaluation.ReturnType,
-                        default, evaluation.MethodName.Identifier, evaluation.GetTypeParameters(),
+                    yield return MethodDeclaration(new(AggressiveInliningAttributeList),
+                        PublicStaticTokenList, evaluation.ReturnType, default,
+                        evaluation.MethodName.Identifier, evaluation.GetTypeParameters(),
                         ParameterList(evaluation.GetParameters()), evaluation.GetGenericConstraints(),
                         evaluation.RenderMethodBody(), default, default);
                 }

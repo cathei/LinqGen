@@ -58,7 +58,7 @@ namespace Cathei.LinqGen.Generator
         private void RenderNodeRecursive(Generation generation,
             GeneratorExecutionContext context, IdentifierNameSyntax assemblyName, ref int id)
         {
-            var sourceText = generation.Render(assemblyName, id++);
+            var sourceText = generation.Render(assemblyName, ++id);
             context.AddSource($"LinqGen.{id}.g.cs", sourceText);
 
             if (generation.Downstream != null)

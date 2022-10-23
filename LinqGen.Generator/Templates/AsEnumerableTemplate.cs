@@ -22,6 +22,7 @@ namespace Cathei.LinqGen.Generator
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Cathei.LinqGen;
 using Cathei.LinqGen.Hidden;
 using Cathei.LinqGen.Hidden._Assembly_;
@@ -49,6 +50,7 @@ namespace Cathei.LinqGen
     // Extensions needs to be internal to prevent ambiguous resolution
     internal static partial class _Extensions_
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<_Element_> AsEnumerable(this _Upstream_ source)
         {
             return new _Enumerable_(source);
@@ -113,7 +115,9 @@ namespace Cathei.LinqGen
                 switch (node.Identifier.ValueText)
                 {
                     case "_Enumerable_":
-                        return _instruction.IdentifierName;
+                        if (_instruction.Arity == 0)
+                            return _instruction.IdentifierName;
+                        return GenericName(_instruction.IdentifierName!.Identifier, _instruction.GetTypeArguments()!);
 
                     case "_Element_":
                         return _instruction.ElementName;
@@ -131,7 +135,8 @@ namespace Cathei.LinqGen
             private ClassDeclarationSyntax RewriteEnumerableClass(ClassDeclarationSyntax node)
             {
                 return node.WithIdentifier(_instruction.IdentifierName!.Identifier)
-                    .WithTypeParameterList(_instruction.GetTypeParameters());
+                    .WithTypeParameterList(_instruction.GetTypeParameters())
+                    .WithConstraintClauses(_instruction.GetGenericConstraints());
             }
 
             private ClassDeclarationSyntax RewriteExtensionClass(ClassDeclarationSyntax node)

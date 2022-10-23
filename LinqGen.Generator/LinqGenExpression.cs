@@ -39,7 +39,7 @@ namespace Cathei.LinqGen.Generator
 
             if (invocationSyntax.Expression is not MemberAccessExpressionSyntax memberAccessSyntax)
             {
-                // not a extension method invocation
+                // not a method invocation
                 return false;
             }
 
@@ -145,7 +145,7 @@ namespace Cathei.LinqGen.Generator
             return true;
         }
 
-        public bool IsGeneration()
+        public bool IsCompilingGeneration()
         {
             return SignatureSymbol != null;
         }

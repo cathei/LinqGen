@@ -11,7 +11,14 @@ namespace Cathei.LinqGen.Hidden
     /// Stub interface for seamless code generation.
     /// The extensions are not actually implemented, only used for source generation.
     /// </summary>
-    public interface IStub<T, TSignature>
+    public interface IStub<TSignature> { }
+
+
+    /// <summary>
+    /// Stub interface for seamless code generation.
+    /// The extensions are not actually implemented, only used for source generation.
+    /// </summary>
+    public interface IStub<T, TSignature> : IStub<TSignature>
     {
     }
 
@@ -23,6 +30,11 @@ namespace Cathei.LinqGen.Hidden
     public abstract class Stub<T, TSignature> : IStub<T, TSignature>
         where TSignature : IStubSignature
     {
+        // because of generic argument this can't be extension method
+        public Stub<TOut, Cast<TSignature, TOut>> Cast<TOut>() => throw new NotImplementedException();
+
+        // because of generic argument this can't be extension method
+        public Stub<TOut, OfType<TSignature, TOut>> OfType<TOut>() => throw new NotImplementedException();
     }
 
     /// <summary>

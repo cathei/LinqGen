@@ -48,7 +48,7 @@ namespace Cathei.LinqGen.Generator
             if (FunctionType != null)
             {
                 yield return Parameter(default, default,
-                    WithStruct ? IdentifierName("T1") : ReturnType, SelectorName.Identifier, default);
+                    WithStruct ? IdentifierName("T1") : FunctionType, SelectorName.Identifier, default);
             }
 
             yield return Parameter(default, default,

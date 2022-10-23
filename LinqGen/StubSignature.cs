@@ -24,6 +24,10 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class AsEnumerable<TUp> : IStubSignature { }
 
+    public abstract class Cast<TUp, TOut> : IStubSignature { }
+
+    public abstract class OfType<TUp, TOut> : IStubSignature { }
+
     public abstract class Select<TUp, TOut> : IStubSignature { }
 
     public abstract class SelectAt<TUp, TOut> : IStubSignature { }

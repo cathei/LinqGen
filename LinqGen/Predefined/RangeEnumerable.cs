@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using Cathei.LinqGen.Hidden;
 
@@ -14,38 +15,45 @@ namespace Cathei.LinqGen.Hidden
         private readonly int start;
         private readonly int count;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public RangeEnumerable(int start, int count)
         {
             this.start = start;
             this.count = count;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator(this);
 
         public struct Enumerator : IEnumerator<int>
         {
-            private int start;
-            private int count;
-            private int index;
+            private int current;
+            private int end;
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public Enumerator(in RangeEnumerable parent)
             {
-                start = parent.start;
-                count = parent.count;
-                index = -1;
+                current = parent.start - 1;
+                end = parent.start + parent.count;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool MoveNext()
             {
-                return ++index < count;
+                return ++current < end;
             }
 
-            public int Current => start + index;
+            public int Current
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => current;
+            }
 
             object IEnumerator.Current => Current;
 
             public void Reset() => throw new NotImplementedException();
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Dispose() { }
         }
     }
@@ -55,6 +63,7 @@ namespace Cathei.LinqGen
 {
     public static partial class GenEnumerable
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RangeEnumerable Range(int start, int count)
         {
             return new RangeEnumerable(start, count);
