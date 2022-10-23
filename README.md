@@ -18,3 +18,13 @@ Which makes your code hard to read and understand. The error messages or stack t
 Using source generation also makes your code friendly for AOT platforms, such as Unity,
 which has [maximum generic depth](https://forum.unity.com/threads/il2cpp-max-nested-generic-types.540534/).
 
+## How does LinqGen work?
+
+LinqGen has two part of assembly, `LinqGen` and `LinqGen.Generator`.
+The `LinqGen` assembly contains a stub method and types, which helps you autocomplete and helps generator infer types.
+
+After you write a Linq query with stub methods, then `LinqGen.Generator` runs and replace the stub methods with generated methods.
+
+How is it possible, while modifying user code is not allowed with source generators?
+It's because everything `LinqGen.Generator` generates designed to be precede over stub methods on [overload resolution](https://learn.microsoft.com/en-us/dotnet/visual-basic/reference/language-specification/overload-resolution).
+
