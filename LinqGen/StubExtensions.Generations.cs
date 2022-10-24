@@ -13,12 +13,12 @@ namespace Cathei.LinqGen
     /// </summary>
     public static partial class StubExtensions
     {
-        public static Stub<T, Gen<T>> Gen<T>(this IEnumerable<T> enumerable, bool unused = false)
+        public static Stub<T, Gen> Gen<T>(this IEnumerable<T> enumerable, bool unused = false)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<T, GenList<T>> Gen<T>(this IList<T> enumerable, bool unused = false)
+        public static Stub<T, GenList> Gen<T>(this IList<T> enumerable, bool unused = false)
         {
             throw new NotImplementedException();
         }
@@ -29,13 +29,13 @@ namespace Cathei.LinqGen
         }
 
         // only used for auto completion, embedded stub never be public and this method should never be parsed.
-        public static Stub<TOut, Cast<IEmbeddedStub, TOut>> Cast<TOut>(this IEmbeddedStub enumerable)
-        {
-            throw new NotImplementedException();
-        }
+        // public static Stub<TOut, Cast<IEmbeddedStub>> Cast<TOut>(this IEmbeddedStub enumerable)
+        // {
+        //     throw new NotImplementedException();
+        // }
 
         // only used for auto completion, embedded stub never be public and this method should never be parsed.
-        public static Stub<TOut, OfType<IEmbeddedStub, TOut>> OfType<TOut>(this IEmbeddedStub enumerable)
+        public static Stub<TOut, OfType<IEmbeddedStub>> OfType<TOut>(this IEmbeddedStub enumerable)
         {
             throw new NotImplementedException();
         }

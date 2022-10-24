@@ -79,8 +79,8 @@ namespace Cathei.LinqGen
                 {
                     yield return MethodDeclaration(new(AggressiveInliningAttributeList),
                         PublicStaticTokenList, evaluation.ReturnType, default,
-                        evaluation.MethodName.Identifier, evaluation.GetTypeParameters(),
-                        ParameterList(evaluation.GetParameters()), evaluation.GetGenericConstraints(),
+                        evaluation.MethodName.Identifier, evaluation.GetTypeParameters(false),
+                        ParameterList(evaluation.GetParameters()), evaluation.GetGenericConstraints(false),
                         evaluation.RenderMethodBody(), default, default);
                 }
             }

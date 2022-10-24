@@ -58,7 +58,7 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
             if (WithStruct)
-                yield return new TypeParameterInfo(FunctionType!);
+                yield return new TypeParameterInfo(IdentifierName("T1"), FunctionType!);
         }
 
         public override BlockSyntax RenderMethodBody()

@@ -59,8 +59,7 @@ namespace Cathei.LinqGen.Generator
                     return _upstreamResolvedClassName;
                 }
 
-                int arityDiff = Arity - Upstream.Arity;
-                var upstreamArguments = Upstream.GetTypeArguments(arityDiff)!;
+                var upstreamArguments = GetTypeArguments(true)!;
 
                 _upstreamResolvedClassName = Upstream.ClassName switch
                 {
@@ -75,60 +74,116 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
+        public virtual bool SupportGenericElementOutput => Upstream?.SupportGenericElementOutput ?? true;
+
+        /// <summary>
+        /// Is input element type will be same as output element type?
+        /// </summary>
+        public virtual bool PreserveElementType => true;
+
+        private static readonly IdentifierNameSyntax GenericOutputElementName = IdentifierName("TElement");
+
+        /// <summary>
+        /// If generic output is not supported, this should be overriden as well
+        /// </summary>
+        public virtual TypeSyntax OutputElementType =>
+            SupportGenericElementOutput ? GenericOutputElementName : Upstream!.OutputElementType;
+
         protected virtual IEnumerable<TypeParameterInfo> GetTypeParameterInfos() => Array.Empty<TypeParameterInfo>();
 
         private List<TypeParameterInfo>? _typeParameters;
+        private List<TypeParameterInfo>? _upstreamTypeParameters;
 
         /// <summary>
-        /// Note that parameter order
+        /// Note the current instruction's parameters come first
         /// </summary>
-        private List<TypeParameterInfo> TypeParameters
+        private IReadOnlyList<TypeParameterInfo> TypeParameters
         {
             get
             {
-                if (_typeParameters != null)
-                    return _typeParameters;
-
-                var inst = this;
-                var result = new List<TypeParameterInfo>();
-
-                while (inst != null)
-                {
-                    result.AddRange(inst.GetTypeParameterInfos());
-                    inst = inst.Upstream;
-                }
-
-                return _typeParameters = result;
+                EnsureLoadTypeParameters();
+                return _typeParameters!;
             }
         }
 
         public int Arity => TypeParameters.Count;
 
-        public TypeParameterListSyntax? GetTypeParameters(int indexStart = 0)
+        private void EnsureLoadTypeParameters()
         {
-            if (Arity == 0)
-                return null;
+            if (_typeParameters != null)
+                return;
 
-            return TypeParameterList(SeparatedList(TypeParameters
-                .Select((x, i) => x.AsTypeParameter(i + indexStart + 1))));
+            _typeParameters = new List<TypeParameterInfo>();
+            _upstreamTypeParameters = new List<TypeParameterInfo>();
+
+            if (SupportGenericElementOutput)
+                _typeParameters.Add(new TypeParameterInfo(GenericOutputElementName, null));
+
+            _typeParameters.AddRange(GetTypeParameterInfos());
+
+            if (Upstream == null)
+                return;
+
+            var upstreamOriginalParameters = Upstream.TypeParameters;
+
+            int index = 0;
+
+            if (Upstream.SupportGenericElementOutput && PreserveElementType)
+            {
+                _upstreamTypeParameters.Add(new TypeParameterInfo(GenericOutputElementName, null));
+                index = 1;
+            }
+
+            while (index < upstreamOriginalParameters.Count)
+            {
+                // normalize the name
+                var info = new TypeParameterInfo(IdentifierName($"TUp{index}"),
+                    upstreamOriginalParameters[index].ConstraintType);
+
+                _typeParameters.Add(info);
+                _upstreamTypeParameters.Add(info);
+
+                index++;
+            }
         }
 
-        public TypeArgumentListSyntax? GetTypeArguments(int indexStart = 0)
+        public TypeParameterListSyntax? GetTypeParameters(bool upstream)
         {
-            if (Arity == 0)
+            EnsureLoadTypeParameters();
+
+            var parameters = upstream ? _upstreamTypeParameters : _typeParameters;
+
+            if (parameters!.Count == 0)
                 return null;
 
-            return TypeArgumentList(SeparatedList(TypeParameters
-                .Select((x, i) => x.AsTypeArgument(i + indexStart + 1))));
+            return TypeParameterList(SeparatedList(parameters
+                .Select((x) => x.AsTypeParameter())));
         }
 
-        public SyntaxList<TypeParameterConstraintClauseSyntax> GetGenericConstraints(int indexStart = 0)
+        public TypeArgumentListSyntax? GetTypeArguments(bool upstream)
         {
-            if (Arity == 0)
+            EnsureLoadTypeParameters();
+
+            var parameters = upstream ? _upstreamTypeParameters : _typeParameters;
+
+            if (parameters!.Count == 0)
+                return null;
+
+            return TypeArgumentList(SeparatedList(parameters
+                .Select((x) => x.AsTypeArgument())));
+        }
+
+        public SyntaxList<TypeParameterConstraintClauseSyntax> GetGenericConstraints(bool upstream)
+        {
+            EnsureLoadTypeParameters();
+
+            var parameters = upstream ? _upstreamTypeParameters : _typeParameters;
+
+            if (parameters!.Count == 0)
                 return default;
 
             return new SyntaxList<TypeParameterConstraintClauseSyntax>(
-                TypeParameters.Select((x, i) => x.AsGenericConstraint(i + indexStart + 1)!)
+                parameters.Select((x) => x.AsGenericConstraint()!)
                     .Where(x => x != null));
         }
     }

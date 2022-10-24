@@ -18,7 +18,7 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<MemberInfo> GetMemberInfos()
         {
-            var typeList = TypeArgumentList(SingletonSeparatedList((TypeSyntax)ElementName));
+            var typeList = TypeArgumentList(SingletonSeparatedList(OutputElementType));
 
             yield return new MemberInfo(
                 MemberKind.Enumerable, EnumerableInterfaceName.WithTypeArgumentList(typeList), SourceName);

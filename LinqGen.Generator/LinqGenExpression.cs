@@ -58,18 +58,12 @@ namespace Cathei.LinqGen.Generator
             if (methodSymbol.ReturnType is INamedTypeSymbol returnTypeSymbol && IsOutputStubEnumerable(returnTypeSymbol))
             {
                 elementSymbol = returnTypeSymbol.TypeArguments[0];
-
-                if (elementSymbol is ITypeParameterSymbol)
-                {
-                    // TODO: sorry, LinqGen does not support enumerating over generic argument (yet)
-                    return false;
-                }
-
                 signatureSymbol = returnTypeSymbol.TypeArguments[1] as INamedTypeSymbol;
 
                 if (signatureSymbol == null)
                 {
                     // something is wrong
+                    // generic signature is not allowed at the time
                     return false;
                 }
             }
@@ -87,35 +81,18 @@ namespace Cathei.LinqGen.Generator
             {
                 var callerTypeInfo = semanticModel.GetTypeInfo(memberAccessSyntax.Expression);
 
-                if (callerTypeInfo.Type is not INamedTypeSymbol callerTypeSymbol)
+                if (callerTypeInfo.Type is not INamedTypeSymbol callerTypeSymbol ||
+                    !TryParseStubInterface(callerTypeSymbol, out var upstreamElementSymbol, out upstreamSymbol))
                 {
-                    // How did this happen? Presumably from generic type parameter with constraint?
+                    // How did this happen?
+                    // TODO: Can we allow generic constrained upstream type?
                     return false;
-                }
-
-                if (IsOutputStubEnumerable(callerTypeSymbol))
-                {
-                    // called from stub enumerable.
-                    // meaning that upstream is compiling together.
-                    upstreamSymbol = callerTypeSymbol.TypeArguments[1] as INamedTypeSymbol;
-
-                    if (upstreamSymbol == null)
-                    {
-                        // should not be possible here
-                        return false;
-                    }
-                }
-                else
-                {
-                    // not called from Stub enumerable.
-                    // meaning that upstream is exported type, so let's use the type directly
-                    upstreamSymbol = callerTypeSymbol;
                 }
 
                 if (signatureSymbol == null)
                 {
                     // for evaluation, use upstream symbol's element type
-                    elementSymbol = receiverTypeSymbol.TypeArguments[0];
+                    elementSymbol = upstreamElementSymbol;
                 }
             }
 

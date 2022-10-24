@@ -48,10 +48,10 @@ namespace Cathei.LinqGen.Hidden
         where TSignature : IStubSignature
     {
         // because of generic argument this can't be extension method
-        public Stub<TOut, Cast<TSignature, TOut>> Cast<TOut>() => throw new NotImplementedException();
+        public Stub<TOut, Cast<TSignature>> Cast<TOut>() => throw new NotImplementedException();
 
         // because of generic argument this can't be extension method
-        public Stub<TOut, OfType<TSignature, TOut>> OfType<TOut>() => throw new NotImplementedException();
+        public Stub<TOut, OfType<TSignature>> OfType<TOut>() => throw new NotImplementedException();
     }
 
     /// <summary>

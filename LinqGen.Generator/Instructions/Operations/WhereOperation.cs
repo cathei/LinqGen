@@ -42,7 +42,7 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
             if (WithStruct)
-                yield return new TypeParameterInfo(ParameterTypeName);
+                yield return new TypeParameterInfo(IdentifierName("T1"), ParameterTypeName);
         }
 
         public override BlockSyntax RenderConstructorBody()

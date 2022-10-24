@@ -17,8 +17,7 @@ namespace Cathei.LinqGen.Generator
     /// </summary>
     public class Operation : CompilingGeneration
     {
-        public Operation(in LinqGenExpression expression, NameSyntax? elementNameOverride = null)
-            : base(expression, elementNameOverride) { }
+        public Operation(in LinqGenExpression expression) : base(expression) { }
 
         protected override IEnumerable<MemberInfo> GetMemberInfos()
         {

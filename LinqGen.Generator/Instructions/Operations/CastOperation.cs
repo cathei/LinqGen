@@ -16,16 +16,17 @@ namespace Cathei.LinqGen.Generator
     {
         private readonly bool SkipIfMismatch;
 
-        public CastOperation(in LinqGenExpression expression, bool skipIfMismatch)
-            : base(expression, IdentifierName("T1"))
+        public CastOperation(in LinqGenExpression expression, bool skipIfMismatch) : base(expression)
         {
             SkipIfMismatch = skipIfMismatch;
         }
 
-        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
-        {
-            yield return new TypeParameterInfo(null);
-        }
+        /// <summary>
+        /// Cast forces output to use generic element
+        /// </summary>
+        public override bool SupportGenericElementOutput => true;
+
+        public override bool PreserveElementType => false;
 
         public override BlockSyntax RenderMoveNextBody()
         {
@@ -33,7 +34,7 @@ namespace Cathei.LinqGen.Generator
             {
                 return Block(WhileStatement(InvocationExpression(SourceName, MoveNextName),
                         Block(IfStatement(
-                            IsExpression(MemberAccessExpression(SourceName, CurrentName), IdentifierName("T1")),
+                            IsExpression(MemberAccessExpression(SourceName, CurrentName), OutputElementType),
                             ReturnStatement(TrueExpression())))),
                     ReturnStatement(FalseExpression()));
             }
@@ -45,8 +46,11 @@ namespace Cathei.LinqGen.Generator
         {
             // assuming this is faster even for OfType than storing variable
             // because assigning reference variable to instance requires Write Barrier call
-            return Block(ReturnStatement(CastExpression(IdentifierName("T1"),
-                MemberAccessExpression(SourceName, CurrentName))));
+            // object conversion is required
+            return Block(ReturnStatement(
+                CastExpression(OutputElementType,
+                    CastExpression(ObjectType,
+                        MemberAccessExpression(SourceName, CurrentName)))));
         }
     }
 }

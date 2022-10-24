@@ -9,18 +9,18 @@ namespace Cathei.LinqGen.Hidden
     // For example, for code like this:
     // Enumerable.Range(10).Generate().Where(x => x % 2 == 0).Select(x => x * 0.5)
     // The information is like this:
-    // Select<Where<Gen<int>>, double>
+    // Select<Where<Gen>, double>
     public interface IStubSignature { }
 
-    public abstract class Gen<T> : IStubSignature { }
+    public abstract class Gen : IStubSignature { }
 
-    public abstract class GenList<T> : IStubSignature { }
+    public abstract class GenList : IStubSignature { }
 
     public abstract class AsEnumerable<TUp> : IStubSignature { }
 
-    public abstract class Cast<TUp, TOut> : IStubSignature { }
+    public abstract class Cast<TUp> : IStubSignature { }
 
-    public abstract class OfType<TUp, TOut> : IStubSignature { }
+    public abstract class OfType<TUp> : IStubSignature { }
 
     public abstract class Select<TUp, TOut> : IStubSignature { }
 

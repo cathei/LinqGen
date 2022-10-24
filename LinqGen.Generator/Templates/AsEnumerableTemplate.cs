@@ -117,10 +117,10 @@ namespace Cathei.LinqGen
                     case "_Enumerable_":
                         if (_instruction.Arity == 0)
                             return _instruction.IdentifierName;
-                        return GenericName(_instruction.IdentifierName!.Identifier, _instruction.GetTypeArguments()!);
+                        return GenericName(_instruction.IdentifierName!.Identifier, _instruction.GetTypeArguments(false)!);
 
                     case "_Element_":
-                        return _instruction.ElementName;
+                        return _instruction.OutputElementType;
 
                     case "_Upstream_":
                         return _instruction.UpstreamResolvedClassName;
@@ -135,8 +135,8 @@ namespace Cathei.LinqGen
             private ClassDeclarationSyntax RewriteEnumerableClass(ClassDeclarationSyntax node)
             {
                 return node.WithIdentifier(_instruction.IdentifierName!.Identifier)
-                    .WithTypeParameterList(_instruction.GetTypeParameters())
-                    .WithConstraintClauses(_instruction.GetGenericConstraints());
+                    .WithTypeParameterList(_instruction.GetTypeParameters(false))
+                    .WithConstraintClauses(_instruction.GetGenericConstraints(false));
             }
 
             private ClassDeclarationSyntax RewriteExtensionClass(ClassDeclarationSyntax node)
@@ -152,8 +152,8 @@ namespace Cathei.LinqGen
 
             private MethodDeclarationSyntax RewriteExtensionMethod(MethodDeclarationSyntax node)
             {
-                return node.WithTypeParameterList(_instruction.GetTypeParameters())
-                    .WithConstraintClauses(_instruction.GetGenericConstraints());
+                return node.WithTypeParameterList(_instruction.GetTypeParameters(false))
+                    .WithConstraintClauses(_instruction.GetGenericConstraints(false));
             }
         }
 

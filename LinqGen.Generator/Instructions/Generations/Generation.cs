@@ -18,9 +18,9 @@ namespace Cathei.LinqGen.Generator
     /// </summary>
     public abstract class Generation : Instruction
     {
-        public Generation(in LinqGenExpression expression) : base(expression) { }
+        protected Generation(in LinqGenExpression expression) : base(expression) { }
 
-        public Generation(INamedTypeSymbol? upstreamSymbol) : base(upstreamSymbol) { }
+        protected Generation(INamedTypeSymbol? upstreamSymbol) : base(upstreamSymbol) { }
 
         // public virtual bool CanSlice { get; }
 

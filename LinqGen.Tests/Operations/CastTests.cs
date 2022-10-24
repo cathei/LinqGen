@@ -11,8 +11,6 @@ namespace Cathei.LinqGen.Tests;
 [TestFixture]
 public class CastTests : GenerationTestBase<string>
 {
-    private readonly FundamentalTests _fundamentalTests = new FundamentalTests();
-
     public override IEnumerable<string> Build(int count)
     {
         return Enumerable.Repeat((object)"AAA", count)

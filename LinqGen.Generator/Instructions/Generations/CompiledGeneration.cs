@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.Text;
 namespace Cathei.LinqGen.Generator
 {
     using static SyntaxFactory;
+    using static CodeGenUtils;
 
     /// <summary>
     /// Mock class for already compiled generation.
@@ -24,9 +25,19 @@ namespace Cathei.LinqGen.Generator
         {
             TypeSymbol = typeSymbol;
             ClassName = ParseName(TypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+
+            TryParseStubInterface(typeSymbol, out var elementSymbol, out _);
+
+            SupportGenericElementOutput = elementSymbol is ITypeParameterSymbol;
+            OutputElementType = ParseTypeName(elementSymbol
+                .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
         }
 
         public IdentifierNameSyntax? IdentifierName { get; private set; }
+
+        public override bool SupportGenericElementOutput { get; }
+
+        public override TypeSyntax OutputElementType { get; }
 
         public override SourceText Render(IdentifierNameSyntax assemblyName, int id)
         {

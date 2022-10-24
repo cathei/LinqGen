@@ -19,16 +19,10 @@ namespace Cathei.LinqGen.Generator
     /// </summary>
     public abstract class CompilingGeneration : Generation
     {
-        protected CompilingGeneration(in LinqGenExpression expression, NameSyntax? elementNameOverride = null)
-            : base(expression)
+        protected CompilingGeneration(in LinqGenExpression expression) : base(expression)
         {
-            ElementName = elementNameOverride ??
-                ParseName(expression.ElementSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
-
             MethodName = IdentifierName(expression.MethodSymbol.Name);
         }
-
-        public NameSyntax ElementName { get; }
 
         public IdentifierNameSyntax MethodName { get; }
 

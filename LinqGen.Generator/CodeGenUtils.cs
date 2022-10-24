@@ -17,9 +17,9 @@ namespace Cathei.LinqGen.Generator
         private const string LinqGenAssemblyName = "LinqGen";
         private const string LinqGenStubExtensionsTypeName = nameof(StubExtensions);
 
-        private const string LinqGenStubEnumerableTypeName = "Stub";
-        private const string LinqGenBoxedStubEnumerableTypeName = "BoxedStub";
-        private const string LinqGenStubInterfaceTypeName = "IStub";
+        private const string LinqGenStubEnumerableTypeName = "Stub`2";
+        private const string LinqGenBoxedStubEnumerableTypeName = "BoxedStub`2";
+        private const string LinqGenStubInterfaceTypeName = "IStub`2";
         private const string LinqGenStructFunctionTypeName = "IStructFunction";
 
         private static bool IsMethodDefinedIn(IMethodSymbol symbol,
@@ -33,27 +33,47 @@ namespace Cathei.LinqGen.Generator
         {
             // is it member of extension class or member of stub enumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.ContainingType.Name is LinqGenStubExtensionsTypeName or LinqGenStubEnumerableTypeName;
+                   symbol.ContainingType.MetadataName is LinqGenStubExtensionsTypeName or LinqGenStubEnumerableTypeName;
         }
 
         public static bool IsOutputStubEnumerable(INamedTypeSymbol symbol)
         {
             // is return type defined for method is stub enumerable or boxed IEnumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.Name is LinqGenStubEnumerableTypeName or LinqGenBoxedStubEnumerableTypeName;
+                   symbol.MetadataName is LinqGenStubEnumerableTypeName or LinqGenBoxedStubEnumerableTypeName;
         }
 
         public static bool IsInputStubEnumerable(INamedTypeSymbol symbol)
         {
             // is input parameter defined for method is stub interface or stub enumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.Name is LinqGenStubInterfaceTypeName or LinqGenStubEnumerableTypeName;
+                   symbol.MetadataName is LinqGenStubInterfaceTypeName or LinqGenStubEnumerableTypeName;
         }
 
         public static bool IsStructFunction(ITypeSymbol symbol)
         {
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
                    symbol is INamedTypeSymbol { Name: LinqGenStructFunctionTypeName };
+        }
+
+        public static bool TryParseStubInterface(INamedTypeSymbol symbol,
+            out ITypeSymbol elementSymbol, out INamedTypeSymbol signatureSymbol)
+        {
+            var interfaceSymbol = symbol.AllInterfaces.FirstOrDefault(
+                x => x.MetadataName == LinqGenStubInterfaceTypeName);
+
+            // generic signature type should not be allowed
+            if (interfaceSymbol == null || interfaceSymbol.TypeArguments.Length < 2 ||
+                interfaceSymbol.TypeArguments[1] is not INamedTypeSymbol)
+            {
+                elementSymbol = default!;
+                signatureSymbol = default!;
+                return false;
+            }
+
+            elementSymbol = interfaceSymbol.TypeArguments[0];
+            signatureSymbol = (INamedTypeSymbol)interfaceSymbol.TypeArguments[1];
+            return true;
         }
 
         // known predefined type names
@@ -84,6 +104,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax InitialValueName = IdentifierName("initialValue");
 
         public static readonly TypeSyntax VarType = IdentifierName("var");
+        public static readonly TypeSyntax ObjectType = IdentifierName("object");
 
         public static readonly LiteralExpressionSyntax DefaultLiteral =
             SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression);
