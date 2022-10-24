@@ -30,8 +30,8 @@ using Cathei.LinqGen.Hidden._Assembly_;
 namespace Cathei.LinqGen.Hidden._Assembly_
 {
     // Enumerable is always readonly
-    // Can be public as LinqGen support predefined enumerable
-    public readonly struct _Enumerable_ : IStub<_Element_, Compiled>
+    // Non-exported Enumerable should consider anonymous type, thus it will be internal
+    internal readonly struct _Enumerable_ : IEmbeddedStub<_Element_, _Enumerable_>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal _Enumerable_()

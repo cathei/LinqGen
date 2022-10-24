@@ -58,19 +58,16 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderMoveNextBody()
         {
-            return Block(WhileStatement(TrueExpression(), Block(
-                IfStatement(
-                    LogicalNotExpression(InvocationExpression(SourceName, MoveNextName)),
-                    ReturnStatement(FalseExpression())),
-                IfStatement(
-                    InvocationExpression(
-                        MemberAccessExpression(PredicateName, InvokeName),
-                        WithIndex
-                            ? ArgumentList(MemberAccessExpression(SourceName, CurrentName),
-                                PreIncrementExpression(IndexName))
-                            : ArgumentList(MemberAccessExpression(SourceName, CurrentName))),
-                    ReturnStatement(TrueExpression()))
-            )));
+            return Block(WhileStatement(InvocationExpression(SourceName, MoveNextName), Block(
+                    IfStatement(
+                        InvocationExpression(
+                            MemberAccessExpression(PredicateName, InvokeName),
+                            WithIndex
+                                ? ArgumentList(MemberAccessExpression(SourceName, CurrentName),
+                                    PreIncrementExpression(IndexName))
+                                : ArgumentList(MemberAccessExpression(SourceName, CurrentName))),
+                        ReturnStatement(TrueExpression())))),
+                ReturnStatement(FalseExpression()));
         }
     }
 }

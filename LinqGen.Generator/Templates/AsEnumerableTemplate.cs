@@ -29,7 +29,7 @@ using Cathei.LinqGen.Hidden._Assembly_;
 
 namespace Cathei.LinqGen.Hidden._Assembly_
 {
-    // result of AsEnumerable, don't need to be public
+    // result of AsEnumerable, doesn't need to be public
     internal class _Enumerable_ : IEnumerable<_Element_>
     {
         private readonly _Upstream_ source;

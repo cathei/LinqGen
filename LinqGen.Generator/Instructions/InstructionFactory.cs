@@ -16,7 +16,7 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public static Generation? CreateGeneration(StringBuilder logBuilder, in LinqGenExpression expression)
         {
-            ITypeSymbol? parameterType;
+            ITypeSymbol? typeSymbol;
 
             switch (expression.SignatureSymbol!.Name)
             {
@@ -27,47 +27,53 @@ namespace Cathei.LinqGen.Generator
                     return new GenListGeneration(expression);
 
                 case "Select":
-                    if (!expression.TryGetParameterType(0, out parameterType))
+                    if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new SelectOperation(expression, parameterType, false, false);
+                    return new SelectOperation(expression, typeSymbol, false, false);
 
                 case "SelectStruct":
-                    if (!expression.TryGetParameterType(0, out parameterType))
+                    if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new SelectOperation(expression, parameterType, false, true);
+                    return new SelectOperation(expression, typeSymbol, false, true);
 
                 case "SelectAt":
-                    if (!expression.TryGetParameterType(0, out parameterType))
+                    if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new SelectOperation(expression, parameterType, true, false);
+                    return new SelectOperation(expression, typeSymbol, true, false);
 
                 case "SelectAtStruct":
-                    if (!expression.TryGetParameterType(0, out parameterType))
+                    if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new SelectOperation(expression, parameterType, true, true);
+                    return new SelectOperation(expression, typeSymbol, true, true);
 
                 case "Where":
-                    if (!expression.TryGetParameterType(0, out parameterType))
+                    if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new WhereOperation(expression, parameterType, false, false);
+                    return new WhereOperation(expression, typeSymbol, false, false);
 
                 case "WhereAt":
-                    if (!expression.TryGetParameterType(0, out parameterType))
+                    if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new WhereOperation(expression, parameterType, true, false);
+                    return new WhereOperation(expression, typeSymbol, true, false);
 
                 case "WhereStruct":
-                    if (!expression.TryGetParameterType(0, out parameterType))
+                    if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new WhereOperation(expression, parameterType, false, true);
+                    return new WhereOperation(expression, typeSymbol, false, true);
 
                 case "WhereAtStruct":
-                    if (!expression.TryGetParameterType(0, out parameterType))
+                    if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new WhereOperation(expression, parameterType, true, true);
+                    return new WhereOperation(expression, typeSymbol, true, true);
 
                 case "AsEnumerable":
                     return new AsEnumerableOperation(expression);
+
+                case "Cast":
+                    return new CastOperation(expression, false);
+
+                case "OfType":
+                    return new CastOperation(expression, true);
             }
 
             // not yet implemented
@@ -76,7 +82,7 @@ namespace Cathei.LinqGen.Generator
 
         public static Evaluation? CreateEvaluation(StringBuilder logBuilder, in LinqGenExpression expression)
         {
-            ITypeSymbol? parameterType;
+            ITypeSymbol? typeSymbol;
 
             switch (expression.MethodSymbol.Name)
             {
@@ -94,9 +100,9 @@ namespace Cathei.LinqGen.Generator
                     break;
 
                 case "Sum":
-                    if (!expression.TryGetParameterType(0, out parameterType))
+                    if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new SumEvaluation(expression, parameterType);
+                    return new SumEvaluation(expression, typeSymbol);
             }
 
             return null;

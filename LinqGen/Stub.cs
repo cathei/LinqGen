@@ -11,14 +11,31 @@ namespace Cathei.LinqGen.Hidden
     /// Stub interface for seamless code generation.
     /// The extensions are not actually implemented, only used for source generation.
     /// </summary>
-    public interface IStub<TSignature> { }
-
+    public interface IStub<T, TSignature>
+    {
+    }
 
     /// <summary>
-    /// Stub interface for seamless code generation.
-    /// The extensions are not actually implemented, only used for source generation.
+    /// The enumerable that getting compiled with. Stub exists for auto completion.
     /// </summary>
-    public interface IStub<T, TSignature> : IStub<TSignature>
+    public interface IEmbeddedStub : IStubSignature
+    {
+    }
+
+    /// <summary>
+    /// The enumerable that getting compiled with. Stub exists for auto completion.
+    /// </summary>
+    public interface IEmbeddedStub<T, TSignature> : IStub<T, TSignature>, IEmbeddedStub
+        where TSignature : IEmbeddedStub<T, TSignature>
+    {
+    }
+
+    /// <summary>
+    /// Stub that can be showed from other assembly.
+    /// Cast and OfType will not work otherwise defined within.
+    /// </summary>
+    public interface IExportedStub<T, TSignature> : IStub<T, TSignature>, IStubSignature
+        where TSignature : IExportedStub<T, TSignature>
     {
     }
 

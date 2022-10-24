@@ -128,7 +128,8 @@ namespace Cathei.LinqGen.Generator
                 return default;
 
             return new SyntaxList<TypeParameterConstraintClauseSyntax>(
-                TypeParameters.Select((x, i) => x.AsGenericConstraint(i + indexStart + 1)));
+                TypeParameters.Select((x, i) => x.AsGenericConstraint(i + indexStart + 1)!)
+                    .Where(x => x != null));
         }
     }
 }

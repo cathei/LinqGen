@@ -29,28 +29,25 @@ namespace Cathei.LinqGen.Generator
                    symbol.ContainingType.MetadataName == containingTypeName;
         }
 
-        private static bool IsMethodDefinedAs(IMethodSymbol symbol,
-            string assemblyName, string containingTypeName, string methodName)
-        {
-            return IsMethodDefinedIn(symbol, assemblyName, containingTypeName) &&
-                   symbol.MetadataName == methodName;
-        }
-
         public static bool IsStubMethod(IMethodSymbol symbol)
         {
-            return IsMethodDefinedIn(symbol, LinqGenAssemblyName, LinqGenStubExtensionsTypeName);
+            // is it member of extension class or member of stub enumerable?
+            return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
+                   symbol.ContainingType.Name is LinqGenStubExtensionsTypeName or LinqGenStubEnumerableTypeName;
         }
 
-        public static bool IsStubEnumerable(INamedTypeSymbol symbol)
+        public static bool IsOutputStubEnumerable(INamedTypeSymbol symbol)
         {
+            // is return type defined for method is stub enumerable or boxed IEnumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
                    symbol.Name is LinqGenStubEnumerableTypeName or LinqGenBoxedStubEnumerableTypeName;
         }
 
-        public static bool IsStubInterface(INamedTypeSymbol symbol)
+        public static bool IsInputStubEnumerable(INamedTypeSymbol symbol)
         {
+            // is input parameter defined for method is stub interface or stub enumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.Name == LinqGenStubInterfaceTypeName;
+                   symbol.Name is LinqGenStubInterfaceTypeName or LinqGenStubEnumerableTypeName;
         }
 
         public static bool IsStructFunction(ITypeSymbol symbol)
@@ -211,6 +208,11 @@ namespace Cathei.LinqGen.Generator
         public static BinaryExpressionSyntax LessThanExpression(ExpressionSyntax left, ExpressionSyntax right)
         {
             return SyntaxFactory.BinaryExpression(SyntaxKind.LessThanExpression, left, right);
+        }
+
+        public static BinaryExpressionSyntax IsExpression(ExpressionSyntax left, ExpressionSyntax right)
+        {
+            return SyntaxFactory.BinaryExpression(SyntaxKind.IsExpression, left, right);
         }
 
         public static ExpressionSyntax TrueExpression()

@@ -28,12 +28,14 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        public static Stub<TOut, Compiled> Cast<TOut>(this IStub<Compiled> enumerable)
+        // only used for auto completion, embedded stub never be public and this method should never be parsed.
+        public static Stub<TOut, Cast<IEmbeddedStub, TOut>> Cast<TOut>(this IEmbeddedStub enumerable)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<TOut, Compiled> OfType<TOut>(this IStub<Compiled> enumerable)
+        // only used for auto completion, embedded stub never be public and this method should never be parsed.
+        public static Stub<TOut, OfType<IEmbeddedStub, TOut>> OfType<TOut>(this IEmbeddedStub enumerable)
         {
             throw new NotImplementedException();
         }

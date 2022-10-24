@@ -10,46 +10,46 @@ using Cathei.LinqGen.Hidden;
 
 namespace Cathei.LinqGen.Hidden
 {
-    public readonly struct RangeEnumerable : IEmbeddedStub<int, RangeEnumerable>
+    public readonly struct RepeatEnumerable<T> : IStub<T, RepeatEnumerable<T>>
     {
-        private readonly int start;
+        private readonly T element;
         private readonly int count;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public RangeEnumerable(int start, int count)
+        public RepeatEnumerable(T element, int count)
         {
-            this.start = start;
+            this.element = element;
             this.count = count;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator(this);
 
-        public struct Enumerator : IEnumerator<int>
+        public struct Enumerator : IEnumerator<T>
         {
-            private int current;
-            private int end;
+            private T element;
+            private int count;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Enumerator(in RangeEnumerable parent)
+            public Enumerator(in RepeatEnumerable<T> parent)
             {
-                current = parent.start - 1;
-                end = parent.start + parent.count;
+                element = parent.element;
+                count = parent.count;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool MoveNext()
             {
-                return ++current < end;
+                return --count >= 0;
             }
 
-            public int Current
+            public T Current
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => current;
+                get => element;
             }
 
-            object IEnumerator.Current => Current;
+            object IEnumerator.Current => Current!;
 
             public void Reset() => throw new NotImplementedException();
 
@@ -64,9 +64,9 @@ namespace Cathei.LinqGen
     public static partial class GenEnumerable
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RangeEnumerable Range(int start, int count)
+        public static RepeatEnumerable<T> Repeat<T>(T element, int count)
         {
-            return new RangeEnumerable(start, count);
+            return new RepeatEnumerable<T>(element, count);
         }
     }
 }

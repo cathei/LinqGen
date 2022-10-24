@@ -12,12 +12,6 @@ namespace Cathei.LinqGen.Hidden
     // Select<Where<Gen<int>>, double>
     public interface IStubSignature { }
 
-    /// <summary>
-    /// Compiled will be used far all actual implementation.
-    /// Since type information will be only used for code generation, we don't need to keep it after compiling.
-    /// </summary>
-    public abstract class Compiled : IStubSignature { }
-
     public abstract class Gen<T> : IStubSignature { }
 
     public abstract class GenList<T> : IStubSignature { }

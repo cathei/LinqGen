@@ -55,7 +55,7 @@ namespace Cathei.LinqGen.Generator
             INamedTypeSymbol? signatureSymbol = null;
 
             // returning stub enumerable, meaning it's compiling generation
-            if (methodSymbol.ReturnType is INamedTypeSymbol returnTypeSymbol && IsStubEnumerable(returnTypeSymbol))
+            if (methodSymbol.ReturnType is INamedTypeSymbol returnTypeSymbol && IsOutputStubEnumerable(returnTypeSymbol))
             {
                 elementSymbol = returnTypeSymbol.TypeArguments[0];
 
@@ -74,7 +74,7 @@ namespace Cathei.LinqGen.Generator
                 }
             }
 
-            if (methodSymbol.ReceiverType is not INamedTypeSymbol parameterTypeSymbol)
+            if (methodSymbol.ReceiverType is not INamedTypeSymbol receiverTypeSymbol)
             {
                 // first parameter (this) of method is not NamedTypeSymbol (should not be possible)
                 return false;
@@ -83,7 +83,7 @@ namespace Cathei.LinqGen.Generator
             INamedTypeSymbol? upstreamSymbol = null;
 
             // this means it takes LinqGen enumerable as input, and upstream type is required
-            if (IsStubInterface(parameterTypeSymbol))
+            if (IsInputStubEnumerable(receiverTypeSymbol))
             {
                 var callerTypeInfo = semanticModel.GetTypeInfo(memberAccessSyntax.Expression);
 
@@ -93,10 +93,10 @@ namespace Cathei.LinqGen.Generator
                     return false;
                 }
 
-                if (IsStubEnumerable(callerTypeSymbol))
+                if (IsOutputStubEnumerable(callerTypeSymbol))
                 {
                     // called from stub enumerable.
-                    // meaning that upstream is getting generated as well
+                    // meaning that upstream is compiling together.
                     upstreamSymbol = callerTypeSymbol.TypeArguments[1] as INamedTypeSymbol;
 
                     if (upstreamSymbol == null)
@@ -108,14 +108,14 @@ namespace Cathei.LinqGen.Generator
                 else
                 {
                     // not called from Stub enumerable.
-                    // meaning that upstream is compiled type, so let's use the type directly
+                    // meaning that upstream is exported type, so let's use the type directly
                     upstreamSymbol = callerTypeSymbol;
                 }
 
                 if (signatureSymbol == null)
                 {
                     // for evaluation, use upstream symbol's element type
-                    elementSymbol = parameterTypeSymbol.TypeArguments[0];
+                    elementSymbol = receiverTypeSymbol.TypeArguments[0];
                 }
             }
 

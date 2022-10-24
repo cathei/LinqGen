@@ -9,9 +9,9 @@ namespace Cathei.LinqGen.Generator
 
     public readonly struct TypeParameterInfo
     {
-        public readonly TypeSyntax ConstraintType;
+        public readonly TypeSyntax? ConstraintType;
 
-        public TypeParameterInfo(TypeSyntax constraintType)
+        public TypeParameterInfo(TypeSyntax? constraintType)
         {
             ConstraintType = constraintType;
         }
@@ -26,8 +26,11 @@ namespace Cathei.LinqGen.Generator
             return IdentifierName($"T{index}");
         }
 
-        public TypeParameterConstraintClauseSyntax AsGenericConstraint(int index)
+        public TypeParameterConstraintClauseSyntax? AsGenericConstraint(int index)
         {
+            if (ConstraintType == null)
+                return null;
+
             return TypeParameterConstraintClause(IdentifierName($"T{index}"),
                 SingletonSeparatedList((TypeParameterConstraintSyntax)TypeConstraint(ConstraintType)));
         }

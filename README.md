@@ -32,6 +32,8 @@ It's because everything `LinqGen.Generator` generates designed to be precede ove
 ### Operations
 * Select
 * Where
+* Cast
+* OfType
 
 ### Evaluations
 * First
