@@ -28,17 +28,17 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        // only used for auto completion, embedded stub never be public and this method should never be parsed.
+        // // only used for auto completion, embedded stub never be public and this method should never be parsed.
         // public static Stub<TOut, Cast<IEmbeddedStub>> Cast<TOut>(this IEmbeddedStub enumerable)
         // {
         //     throw new NotImplementedException();
         // }
-
-        // only used for auto completion, embedded stub never be public and this method should never be parsed.
-        public static Stub<TOut, OfType<IEmbeddedStub>> OfType<TOut>(this IEmbeddedStub enumerable)
-        {
-            throw new NotImplementedException();
-        }
+        //
+        // // only used for auto completion, embedded stub never be public and this method should never be parsed.
+        // public static Stub<TOut, OfType<IEmbeddedStub>> OfType<TOut>(this IEmbeddedStub enumerable)
+        // {
+        //     throw new NotImplementedException();
+        // }
 
         public static Stub<T, Where<TUp>> Where<T, TUp>(
             this IStub<T, TUp> enumerable, Func<T, bool> predicate)

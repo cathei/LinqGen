@@ -18,24 +18,8 @@ namespace Cathei.LinqGen.Hidden
     /// <summary>
     /// The enumerable that getting compiled with. Stub exists for auto completion.
     /// </summary>
-    public interface IEmbeddedStub : IStubSignature
-    {
-    }
-
-    /// <summary>
-    /// The enumerable that getting compiled with. Stub exists for auto completion.
-    /// </summary>
-    public interface IEmbeddedStub<T, TSignature> : IStub<T, TSignature>, IEmbeddedStub
+    public interface IEmbeddedStub<T, TSignature> : IStub<T, TSignature>, IStubSignature
         where TSignature : IEmbeddedStub<T, TSignature>
-    {
-    }
-
-    /// <summary>
-    /// Stub that can be showed from other assembly.
-    /// Cast and OfType will not work otherwise defined within.
-    /// </summary>
-    public interface IExportedStub<T, TSignature> : IStub<T, TSignature>, IStubSignature
-        where TSignature : IExportedStub<T, TSignature>
     {
     }
 
@@ -47,11 +31,11 @@ namespace Cathei.LinqGen.Hidden
     public abstract class Stub<T, TSignature> : IStub<T, TSignature>
         where TSignature : IStubSignature
     {
-        // because of generic argument this can't be extension method
-        public Stub<TOut, Cast<TSignature>> Cast<TOut>() => throw new NotImplementedException();
-
-        // because of generic argument this can't be extension method
-        public Stub<TOut, OfType<TSignature>> OfType<TOut>() => throw new NotImplementedException();
+        // // because of generic argument this can't be extension method
+        // public Stub<TOut, Cast<TSignature>> Cast<TOut>() => throw new NotImplementedException();
+        //
+        // // because of generic argument this can't be extension method
+        // public Stub<TOut, OfType<TSignature>> OfType<TOut>() => throw new NotImplementedException();
     }
 
     /// <summary>
