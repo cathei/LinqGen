@@ -46,7 +46,9 @@ namespace Cathei.LinqGen.Generator
                     return;
                 }
 
-                var generation = InstructionFactory.CreateGeneration(_logBuilder, expression);
+                int id = _generations.Count + 1;
+
+                var generation = InstructionFactory.CreateGeneration(_logBuilder, expression, id);
 
                 if (generation == null)
                 {

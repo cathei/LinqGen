@@ -25,13 +25,12 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Cathei.LinqGen;
 using Cathei.LinqGen.Hidden;
-using Cathei.LinqGen.Hidden._Assembly_;
 
-namespace Cathei.LinqGen.Hidden._Assembly_
+namespace Cathei.LinqGen.Hidden
 {
     // Enumerable is always readonly
     // Non-exported Enumerable should consider anonymous type, thus it will be internal
-    internal readonly struct _Enumerable_ : IStub<IEnumerable<_Element_>, Compiled>
+    internal readonly struct _Enumerable_ : IStub<IContent<_Element_>, Compiled>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal _Enumerable_()
@@ -93,12 +92,10 @@ namespace Cathei.LinqGen
 
         private class Rewriter : CSharpSyntaxRewriter
         {
-            private readonly IdentifierNameSyntax _assemblyName;
             private readonly CompilingGeneration _instruction;
 
-            public Rewriter(IdentifierNameSyntax assemblyName, CompilingGeneration instruction)
+            public Rewriter(CompilingGeneration instruction)
             {
-                _assemblyName = assemblyName;
                 _instruction = instruction;
             }
 
@@ -146,9 +143,9 @@ namespace Cathei.LinqGen
                 return base.VisitConstructorDeclaration(node);
             }
 
-            public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
+            public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax? node)
             {
-                switch (node.Identifier.ValueText)
+                switch (node!.Identifier.ValueText)
                 {
                     case "MoveNext":
                         node = RewriteEnumeratorMoveNext(node);
@@ -163,6 +160,8 @@ namespace Cathei.LinqGen
                         break;
                 }
 
+                if (node == null)
+                    return null;
                 return base.VisitMethodDeclaration(node);
             }
 
@@ -190,9 +189,6 @@ namespace Cathei.LinqGen
 
                     case "_Element_":
                         return _instruction.OutputElementType;
-
-                    case "_Assembly_":
-                        return _assemblyName;
                 }
 
                 return base.VisitIdentifierName(node);
@@ -203,7 +199,8 @@ namespace Cathei.LinqGen
                 return node.WithIdentifier(_instruction.IdentifierName!.Identifier)
                     .WithTypeParameterList(_instruction.GetTypeParameters())
                     .WithConstraintClauses(_instruction.GetGenericConstraints())
-                    .AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerable, true).ToArray());
+                    .AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerable, true)
+                        .Concat(GetOperationMethods()).ToArray());
             }
 
             private StructDeclarationSyntax RewriteEnumeratorStruct(StructDeclarationSyntax node)
@@ -221,7 +218,7 @@ namespace Cathei.LinqGen
             private ConstructorDeclarationSyntax RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
             {
                 return node.WithIdentifier(_instruction.IdentifierName!.Identifier)
-                    .WithParameterList(ParameterList(_instruction.GetParameters(MemberKind.Enumerable, false)))
+                    .WithParameterList(ParameterList(_instruction.GetParameters(MemberKind.Enumerable)))
                     .WithBody(Block(_instruction.GetAssignments(MemberKind.Enumerable)));
             }
 
@@ -250,8 +247,12 @@ namespace Cathei.LinqGen
                     .WithAccessorList(AccessorList(SingletonList(getAccessor)));
             }
 
-            private MethodDeclarationSyntax RewriteExtensionMethod(MethodDeclarationSyntax node)
+            private MethodDeclarationSyntax? RewriteExtensionMethod(MethodDeclarationSyntax node)
             {
+                if (_instruction.Upstream != null)
+                    return null;
+
+
                 // keep identifier name here so it can be visited later
                 var body = Block(ReturnStatement(
                     ObjectCreationExpression(IdentifierName("_Enumerable_"),
@@ -264,15 +265,56 @@ namespace Cathei.LinqGen
                     _instruction.GetGenericConstraints(), body, default, default);
             }
 
+            private IEnumerable<MemberDeclarationSyntax> GetOperationMethods()
+            {
+                if (_instruction.Downstream == null)
+                {
+                    // nothing to operate
+                    yield break;
+                }
+
+                foreach (var downstream in _instruction.Downstream)
+                {
+                    int arityDiff = downstream.Arity - _instruction.Arity;
+
+                    NameSyntax downstreamClassName = downstream.ClassName;
+
+                    if (downstream.Arity != 0)
+                    {
+                        downstreamClassName = MakeGenericName(
+                            downstreamClassName, downstream.GetTypeArguments()!);
+                    }
+
+                    var typeParameters = downstream.GetTypeParameters(arityDiff);
+                    var genericConstraints = downstream.GetGenericConstraints(arityDiff);
+
+                    // swap first argument with this
+                    var argumentList = ArgumentList(
+                        downstream.GetArguments(MemberKind.Enumerable)
+                            .Skip(1).Prepend(Argument(ThisExpression())));
+
+                    var parameterList = ParameterList(
+                        downstream.GetParameters(MemberKind.Enumerable).Skip(1));
+
+                    var body = Block(ReturnStatement(
+                        ObjectCreationExpression(downstreamClassName, argumentList, default)));
+
+                    yield return MethodDeclaration(new(AggressiveInliningAttributeList),
+                        PublicTokenList, downstreamClassName, default,
+                        downstream.MethodName.Identifier, typeParameters,
+                        parameterList, genericConstraints, body, default, default);
+                }
+            }
+
             private IEnumerable<MemberDeclarationSyntax> GetExtensionMethods()
             {
                 if (_instruction.Evaluations == null)
                 {
                     // nothing to evaluate
-                    // downstream will have separated files
                     yield break;
                 }
 
+                // evaluation can use specialization, so it should be extension method
                 foreach (var evaluation in _instruction.Evaluations.Values)
                 {
                     yield return MethodDeclaration(new(AggressiveInliningAttributeList),
@@ -284,11 +326,11 @@ namespace Cathei.LinqGen
             }
         }
 
-        public static SourceText Render(IdentifierNameSyntax assemblyName, CompilingGeneration instruction)
+        public static SourceText Render(CompilingGeneration instruction)
         {
             var root = TemplateSyntaxTree.GetRoot();
 
-            var rewriter = new Rewriter(assemblyName, instruction);
+            var rewriter = new Rewriter(instruction);
             root = rewriter.Visit(root);
 
             return root.NormalizeWhitespace().GetText(Encoding.UTF8);

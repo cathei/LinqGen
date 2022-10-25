@@ -36,16 +36,6 @@ namespace Cathei.LinqGen.Hidden
         // where T : IEnumerable
         where TSignature : IStubSignature
     {
-        // because of generic argument this can't be extension method
-        public Stub<IEnumerable<TOut>, Cast<TSignature, TOut>> Cast<TOut>() => throw new NotImplementedException();
-
-        // because of generic argument this can't be extension method
-        public Stub<IEnumerable<TOut>, OfType<TSignature, TOut>> OfType<TOut>() => throw new NotImplementedException();
-
-        public static implicit operator (IEnumerable<T>, TSignature)(Stub<T, TSignature> tmp)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     /// <summary>

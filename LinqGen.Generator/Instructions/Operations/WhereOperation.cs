@@ -19,8 +19,8 @@ namespace Cathei.LinqGen.Generator
         protected readonly bool WithIndex;
         protected readonly bool WithStruct;
 
-        public WhereOperation(in LinqGenExpression expression, ITypeSymbol parameterType,
-            bool withIndex, bool withStruct) : base(expression)
+        public WhereOperation(in LinqGenExpression expression, int id,
+            ITypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression, id)
         {
             ParameterTypeName = ParseName(parameterType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
             WithIndex = withIndex;
@@ -33,7 +33,7 @@ namespace Cathei.LinqGen.Generator
                 yield return member;
 
             yield return new MemberInfo(MemberKind.Both,
-                WithStruct ? IdentifierName("T1") : ParameterTypeName, PredicateName);
+                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName, PredicateName);
 
             if (WithIndex)
                 yield return new MemberInfo(MemberKind.Enumerator, IntType, IndexName);
@@ -42,7 +42,7 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
             if (WithStruct)
-                yield return new TypeParameterInfo(IdentifierName("T1"), ParameterTypeName);
+                yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"), ParameterTypeName);
         }
 
         public override BlockSyntax RenderConstructorBody()

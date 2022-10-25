@@ -25,9 +25,8 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Cathei.LinqGen;
 using Cathei.LinqGen.Hidden;
-using Cathei.LinqGen.Hidden._Assembly_;
 
-namespace Cathei.LinqGen.Hidden._Assembly_
+namespace Cathei.LinqGen.Hidden
 {
     // result of AsEnumerable, doesn't need to be public
     internal class _Enumerable_ : IEnumerable<_Element_>
@@ -44,29 +43,14 @@ namespace Cathei.LinqGen.Hidden._Assembly_
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
-
-namespace Cathei.LinqGen
-{
-    // Extensions needs to be internal to prevent ambiguous resolution
-    internal static partial class _Extensions_
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<_Element_> AsEnumerable(this _Upstream_ source)
-        {
-            return new _Enumerable_(source);
-        }
-    }
-}
 ");
 
         private class Rewriter : CSharpSyntaxRewriter
         {
-            private readonly IdentifierNameSyntax _assemblyName;
             private readonly AsEnumerableOperation _instruction;
 
-            public Rewriter(IdentifierNameSyntax assemblyName, AsEnumerableOperation instruction)
+            public Rewriter(AsEnumerableOperation instruction)
             {
-                _assemblyName = assemblyName;
                 _instruction = instruction;
             }
 
@@ -76,10 +60,6 @@ namespace Cathei.LinqGen
                 {
                     case "_Enumerable_":
                         node = RewriteEnumerableClass(node);
-                        break;
-
-                    case "_Extensions_":
-                        node = RewriteExtensionClass(node);
                         break;
                 }
 
@@ -114,19 +94,11 @@ namespace Cathei.LinqGen
             {
                 switch (node.Identifier.ValueText)
                 {
-                    case "_Enumerable_":
-                        if (_instruction.Arity == 0)
-                            return _instruction.IdentifierName;
-                        return GenericName(_instruction.IdentifierName!.Identifier, _instruction.GetTypeArguments()!);
-
                     case "_Element_":
                         return _instruction.OutputElementType;
 
                     case "_Upstream_":
                         return _instruction.UpstreamResolvedClassName;
-
-                    case "_Assembly_":
-                        return _assemblyName;
                 }
 
                 return base.VisitIdentifierName(node);
@@ -137,12 +109,6 @@ namespace Cathei.LinqGen
                 return node.WithIdentifier(_instruction.IdentifierName!.Identifier)
                     .WithTypeParameterList(_instruction.GetTypeParameters())
                     .WithConstraintClauses(_instruction.GetGenericConstraints());
-            }
-
-            private ClassDeclarationSyntax RewriteExtensionClass(ClassDeclarationSyntax node)
-            {
-                return node.WithIdentifier(
-                    Identifier($"LinqGenExtensions_{_instruction.IdentifierName!.Identifier.ValueText}"));
             }
 
             private ConstructorDeclarationSyntax RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
@@ -157,11 +123,11 @@ namespace Cathei.LinqGen
             }
         }
 
-        public static SourceText Render(IdentifierNameSyntax assemblyName, AsEnumerableOperation instruction)
+        public static SourceText Render(AsEnumerableOperation instruction)
         {
             var root = TemplateSyntaxTree.GetRoot();
 
-            var rewriter = new Rewriter(assemblyName, instruction);
+            var rewriter = new Rewriter(instruction);
             root = rewriter.Visit(root);
 
             return root.NormalizeWhitespace().GetText(Encoding.UTF8);

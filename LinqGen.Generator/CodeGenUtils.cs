@@ -111,6 +111,7 @@ namespace Cathei.LinqGen.Generator
 
         public static readonly SyntaxTokenList ThisTokenList = TokenList(Token(SyntaxKind.ThisKeyword));
         public static readonly SyntaxTokenList PrivateTokenList = TokenList(Token(SyntaxKind.PrivateKeyword));
+        public static readonly SyntaxTokenList PublicTokenList = TokenList(Token(SyntaxKind.PublicKeyword));
         public static readonly SyntaxTokenList PrivateReadOnlyTokenList =
             TokenList(Token(SyntaxKind.PrivateKeyword), Token(SyntaxKind.ReadOnlyKeyword));
         public static readonly SyntaxTokenList PublicStaticTokenList =
@@ -179,6 +180,18 @@ namespace Cathei.LinqGen.Generator
         public static BracketedArgumentListSyntax BracketedArgumentList(ExpressionSyntax expression)
         {
             return SyntaxFactory.BracketedArgumentList(SingletonSeparatedList(Argument(expression)));
+        }
+
+        public static NameSyntax MakeGenericName(NameSyntax name, TypeArgumentListSyntax arguments)
+        {
+            return name switch
+            {
+                QualifiedNameSyntax qualifiedName =>
+                    qualifiedName.WithRight(GenericName(qualifiedName.Right.Identifier, arguments)),
+                GenericNameSyntax genericName => genericName.WithTypeArgumentList(arguments),
+                SimpleNameSyntax simpleName => GenericName(simpleName.Identifier, arguments),
+                _ => name
+            };
         }
 
         public static LocalDeclarationStatementSyntax UsingLocalDeclarationStatement(

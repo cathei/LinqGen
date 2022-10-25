@@ -48,7 +48,7 @@ namespace Cathei.LinqGen.Generator
             if (FunctionType != null)
             {
                 yield return Parameter(default, default,
-                    WithStruct ? IdentifierName("T1") : FunctionType, SelectorName.Identifier, default);
+                    WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : FunctionType, SelectorName.Identifier, default);
             }
 
             yield return Parameter(default, default,
@@ -58,7 +58,7 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
             if (WithStruct)
-                yield return new TypeParameterInfo(IdentifierName("T1"), FunctionType!);
+                yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"), FunctionType!);
         }
 
         public override BlockSyntax RenderMethodBody()

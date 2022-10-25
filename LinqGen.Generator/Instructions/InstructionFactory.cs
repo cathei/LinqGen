@@ -14,63 +14,63 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// The Instruction instance must be unique per signature (per generic arguments combination).
         /// </summary>
-        public static Generation? CreateGeneration(StringBuilder logBuilder, in LinqGenExpression expression)
+        public static Generation? CreateGeneration(StringBuilder logBuilder, in LinqGenExpression expression, int id)
         {
             INamedTypeSymbol? typeSymbol;
 
             switch (expression.SignatureSymbol!.Name)
             {
                 case "Specialize":
-                    return new SpecializeGeneration(expression);
+                    return new SpecializeGeneration(expression, id);
 
                 case "Select":
                     if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new SelectOperation(expression, typeSymbol, false, false);
+                    return new SelectOperation(expression, id, typeSymbol, false, false);
 
                 case "SelectStruct":
                     if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new SelectOperation(expression, typeSymbol, false, true);
+                    return new SelectOperation(expression, id, typeSymbol, false, true);
 
                 case "SelectAt":
                     if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new SelectOperation(expression, typeSymbol, true, false);
+                    return new SelectOperation(expression, id, typeSymbol, true, false);
 
                 case "SelectAtStruct":
                     if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new SelectOperation(expression, typeSymbol, true, true);
+                    return new SelectOperation(expression, id, typeSymbol, true, true);
 
                 case "Where":
                     if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new WhereOperation(expression, typeSymbol, false, false);
+                    return new WhereOperation(expression, id, typeSymbol, false, false);
 
                 case "WhereAt":
                     if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new WhereOperation(expression, typeSymbol, true, false);
+                    return new WhereOperation(expression, id, typeSymbol, true, false);
 
                 case "WhereStruct":
                     if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new WhereOperation(expression, typeSymbol, false, true);
+                    return new WhereOperation(expression, id, typeSymbol, false, true);
 
                 case "WhereAtStruct":
                     if (!expression.TryGetParameterType(0, out typeSymbol))
                         break;
-                    return new WhereOperation(expression, typeSymbol, true, true);
+                    return new WhereOperation(expression, id, typeSymbol, true, true);
 
                 case "AsEnumerable":
-                    return new AsEnumerableOperation(expression);
+                    return new AsEnumerableOperation(expression, id);
 
                 case "Cast":
-                    return new CastOperation(expression, false);
+                    return new CastOperation(expression, id, false);
 
                 case "OfType":
-                    return new CastOperation(expression, true);
+                    return new CastOperation(expression, id, true);
             }
 
             // not yet implemented

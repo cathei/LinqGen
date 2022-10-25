@@ -17,11 +17,11 @@ public class SumTests
     [TestCase(-5, 10)]
     public void TestResult_SameAsLinq(int start, int count)
     {
-        var expected = Enumerable.Range(start, count)
+        var expected = Enumerable.Repeat(start, count)
             .Sum();
 
-        var actual = GenEnumerable.Range(start, count)
-            .Sum();
+        var actual = GenEnumerable.Repeat(start, count)
+            .First();
 
         Assert.AreEqual(expected, actual);
     }

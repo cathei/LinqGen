@@ -16,7 +16,7 @@ namespace Cathei.LinqGen.Generator
     {
         private readonly bool SkipIfMismatch;
 
-        public CastOperation(in LinqGenExpression expression, bool skipIfMismatch) : base(expression)
+        public CastOperation(in LinqGenExpression expression, int id, bool skipIfMismatch) : base(expression, id)
         {
             SkipIfMismatch = skipIfMismatch;
         }

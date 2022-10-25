@@ -15,12 +15,11 @@ namespace Cathei.LinqGen.Generator
 
     public class AsEnumerableOperation : Operation
     {
-        public AsEnumerableOperation(in LinqGenExpression expression) : base(expression) { }
+        public AsEnumerableOperation(in LinqGenExpression expression, int id) : base(expression, id) { }
 
-        public override SourceText Render(IdentifierNameSyntax assemblyName, int id)
+        public override SourceText Render()
         {
-            ClassName = IdentifierName = IdentifierName($"{MethodName}_{id}");
-            return AsEnumerableTemplate.Render(assemblyName, this);
+            return AsEnumerableTemplate.Render(this);
         }
     }
 }

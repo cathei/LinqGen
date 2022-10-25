@@ -25,19 +25,29 @@ namespace Cathei.LinqGen.Generator
         // public virtual bool CanSlice { get; }
         public abstract TypeSyntax OutputElementType { get; }
 
-        public List<Generation>? Downstream { get; private set; }
+        /// <summary>
+        /// The qualified class name cached for child class rendering
+        /// </summary>
+        public abstract NameSyntax ClassName { get; }
+
+        /// <summary>
+        /// Non-qualified class name, Only used for current file rendering
+        /// </summary>
+        public abstract IdentifierNameSyntax IdentifierName { get; }
+
+        public List<Operation>? Downstream { get; private set; }
 
         public Dictionary<IMethodSymbol, Evaluation>? Evaluations { get; private set; }
 
-        public void SetUpstream(Generation upstream)
+        public virtual void SetUpstream(Generation upstream)
         {
-            Upstream = upstream;
-            Upstream.AddDownstream(this);
+            // only operation can have upstream
+            throw new NotImplementedException();
         }
 
-        public void AddDownstream(Generation downstream)
+        public void AddDownstream(Operation downstream)
         {
-            Downstream ??= new List<Generation>();
+            Downstream ??= new List<Operation>();
             Downstream.Add(downstream);
         }
 
@@ -54,6 +64,6 @@ namespace Cathei.LinqGen.Generator
         //     InputSymbols.Add(inputSymbol);
         // }
 
-        public abstract SourceText Render(IdentifierNameSyntax assemblyName, int id);
+        public abstract SourceText Render();
     }
 }

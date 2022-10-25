@@ -32,13 +32,8 @@ namespace Cathei.LinqGen.Generator
 
                 syntaxReceiver.ResolveHierarchy();
 
-                IdentifierNameSyntax assemblyName =
-                    SyntaxFactory.IdentifierName(context.Compilation.Assembly.Name.Replace('.', '_'));
-
-                int id = 0;
-
                 foreach (var node in syntaxReceiver.Roots)
-                    RenderNodeRecursive(node, context, assemblyName, ref id);
+                    RenderNodeRecursive(node, context);
             }
             catch (Exception ex)
             {
@@ -55,16 +50,15 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        private void RenderNodeRecursive(Generation generation,
-            GeneratorExecutionContext context, IdentifierNameSyntax assemblyName, ref int id)
+        private void RenderNodeRecursive(Generation generation, GeneratorExecutionContext context)
         {
-            var sourceText = generation.Render(assemblyName, ++id);
-            context.AddSource($"LinqGen.{id}.g.cs", sourceText);
+            var sourceText = generation.Render();
+            context.AddSource($"LinqGen.{generation.IdentifierName}.g.cs", sourceText);
 
             if (generation.Downstream != null)
             {
                 foreach (var downstream in generation.Downstream)
-                    RenderNodeRecursive(downstream, context, assemblyName, ref id);
+                    RenderNodeRecursive(downstream, context);
             }
         }
     }

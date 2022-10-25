@@ -19,24 +19,28 @@ namespace Cathei.LinqGen.Generator
     /// </summary>
     public abstract class CompilingGeneration : Generation
     {
-        protected CompilingGeneration(in LinqGenExpression expression) : base(expression)
+        protected CompilingGeneration(in LinqGenExpression expression, int id) : base(expression)
         {
             MethodName = IdentifierName(expression.MethodSymbol.Name);
+            ClassName = IdentifierName = IdentifierName($"{MethodName}_{id}");
+
+            // To make sure type parameter has unique id, easier to make downstream methods
+            TypeParameterPrefix = $"T{id}_";
         }
+
+        public override string TypeParameterPrefix { get; }
 
         public IdentifierNameSyntax MethodName { get; }
 
-        /// <summary>
-        /// Non-qualified class name, Only used for current file rendering
-        /// </summary>
-        public IdentifierNameSyntax? IdentifierName { get; protected set; }
+        public override NameSyntax ClassName { get; }
+
+        public override IdentifierNameSyntax IdentifierName { get; }
 
         protected abstract IEnumerable<MemberInfo> GetMemberInfos();
 
-        public override SourceText Render(IdentifierNameSyntax assemblyName, int id)
+        public override SourceText Render()
         {
-            ClassName = IdentifierName = IdentifierName($"{MethodName}_{id}");
-            return GenerationTemplate.Render(assemblyName, this);
+            return GenerationTemplate.Render(this);
         }
 
         public virtual BlockSyntax RenderConstructorBody() => SyntaxFactory.Block();
@@ -51,7 +55,7 @@ namespace Cathei.LinqGen.Generator
 
         private MemberInfo[] MemberInfos => _memberInfos ??= GetMemberInfos().ToArray();
 
-        public IEnumerable<ParameterSyntax> GetParameters(MemberKind kind, bool firstThisParam)
+        public IEnumerable<ParameterSyntax> GetParameters(MemberKind kind, bool firstThisParam = false)
         {
             foreach (var member in MemberInfos)
             {

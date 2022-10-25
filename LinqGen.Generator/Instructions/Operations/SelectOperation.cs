@@ -18,8 +18,8 @@ namespace Cathei.LinqGen.Generator
         private bool WithIndex { get; }
         private bool WithStruct { get; }
 
-        public SelectOperation(in LinqGenExpression expression,
-            INamedTypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression)
+        public SelectOperation(in LinqGenExpression expression, int id,
+            INamedTypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression, id)
         {
             ParameterTypeName = ParseTypeName(parameterType
                 .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
@@ -43,7 +43,7 @@ namespace Cathei.LinqGen.Generator
                 yield return member;
 
             yield return new MemberInfo(MemberKind.Both,
-                WithStruct ? IdentifierName("T1") : ParameterTypeName, SelectorName);
+                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName, SelectorName);
 
             if (WithIndex)
                 yield return new MemberInfo(MemberKind.Enumerator, IntType, IndexName);
@@ -52,7 +52,7 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
             if (WithStruct)
-                yield return new TypeParameterInfo(IdentifierName("T1"), ParameterTypeName);
+                yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"), ParameterTypeName);
         }
 
         public override BlockSyntax RenderConstructorBody()

@@ -17,10 +17,16 @@ namespace Cathei.LinqGen.Generator
     /// </summary>
     public class Operation : CompilingGeneration
     {
-        public Operation(in LinqGenExpression expression) : base(expression) { }
+        public Operation(in LinqGenExpression expression, int id) : base(expression, id) { }
 
         // upstream must exists for operations
         public override TypeSyntax OutputElementType => Upstream!.OutputElementType;
+
+        public override void SetUpstream(Generation upstream)
+        {
+            Upstream = upstream;
+            upstream.AddDownstream(this);
+        }
 
         protected override IEnumerable<MemberInfo> GetMemberInfos()
         {

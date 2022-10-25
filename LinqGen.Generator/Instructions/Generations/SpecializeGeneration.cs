@@ -18,7 +18,7 @@ namespace Cathei.LinqGen.Generator
         private TypeSyntax CallerEnumerableType { get; }
         private TypeSyntax CallerEnumeratorType { get; }
 
-        public SpecializeGeneration(in LinqGenExpression expression) : base(expression)
+        public SpecializeGeneration(in LinqGenExpression expression, int id) : base(expression, id)
         {
             // TODO prevent generic type
             // TODO prevent IEnumerable (without parameter) only type or convert to IEnumerable<object>
