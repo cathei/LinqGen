@@ -14,73 +14,70 @@ namespace Cathei.LinqGen
     /// </summary>
     public static partial class StubExtensions
     {
-        public static Stub<T, Specialize<T>> Specialize<T>(this T enumerable, bool unused = false)
-            where T : IEnumerable
+        public static Stub<IContentSource<T>, Specialize<T>> Specialize<T>(this T enumerable)
         {
             throw new NotImplementedException();
         }
 
-        public static BoxedStub<T, AsEnumerable<TUp>> AsEnumerable<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable)
+        public static BoxedStub<T, AsEnumerable<TUp>> AsEnumerable<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
         {
             throw new NotImplementedException();
         }
 
-        // only used for auto completion, embedded stub never be public and this method should never be parsed.
-        public static Stub<IEnumerable<TOut>, Cast<IStub, TOut>> Cast<TOut>(this IStub enumerable)
+        public static Stub<IContent<TOut>, Cast<TOut>> Cast<TOut>(this IStub enumerable)
         {
             throw new NotImplementedException();
         }
 
-        // only used for auto completion, embedded stub never be public and this method should never be parsed.
-        public static Stub<IEnumerable<TOut>, OfType<IStub, TOut>> OfType<TOut>(this IStub enumerable)
+        public static Stub<IContent<TOut>, OfType<TOut>> OfType<TOut>(this IStub enumerable)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<T>, Where<TUp>> Where<T, TUp>(
-            this IStub<IEnumerable<T>, TUp> enumerable, Func<T, bool> predicate)
+        public static Stub<IContent<T>, Where<TUp>> Where<T, TUp>(
+            this IStub<IContent<T>, TUp> enumerable, Func<T, bool> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<T>, WhereAt<TUp>> Where<T, TUp>(
-            this IStub<IEnumerable<T>, TUp> enumerable, Func<T, int, bool> predicate)
+        public static Stub<IContent<T>, WhereAt<TUp>> Where<T, TUp>(
+            this IStub<IContent<T>, TUp> enumerable, Func<T, int, bool> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<T>, WhereStruct<TUp>> Where<T, TUp>(
-            this IStub<IEnumerable<T>, TUp> enumerable, IStructFunction<T, bool> predicate)
+        public static Stub<IContent<T>, WhereStruct<TUp>> Where<T, TUp>(
+            this IStub<IContent<T>, TUp> enumerable, IStructFunction<T, bool> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<T>, WhereAtStruct<TUp>> Where<T, TUp>(
-            this IStub<IEnumerable<T>, TUp> enumerable, IStructFunction<T, int, bool> predicate)
+        public static Stub<IContent<T>, WhereAtStruct<TUp>> Where<T, TUp>(
+            this IStub<IContent<T>, TUp> enumerable, IStructFunction<T, int, bool> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<TOut>, Select<TUp, TOut>> Select<T, TUp, TOut>(
-            this IStub<IEnumerable<T>, TUp> enumerable, Func<T, TOut> select)
+        public static Stub<IContent<TOut>, Select<TUp, TOut>> Select<T, TUp, TOut>(
+            this IStub<IContent<T>, TUp> enumerable, Func<T, TOut> select)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<TOut>, SelectAt<TUp, TOut>> Select<T, TUp, TOut>(
-            this IStub<IEnumerable<T>, TUp> enumerable, Func<T, int, TOut> select)
+        public static Stub<IContent<TOut>, SelectAt<TUp, TOut>> Select<T, TUp, TOut>(
+            this IStub<IContent<T>, TUp> enumerable, Func<T, int, TOut> select)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<TOut>, SelectStruct<TUp, TOut>> Select<T, TUp, TOut>(
-            this IStub<IEnumerable<T>, TUp> enumerable, IStructFunction<T, TOut> select)
+        public static Stub<IContent<TOut>, SelectStruct<TUp, TOut>> Select<T, TUp, TOut>(
+            this IStub<IContent<T>, TUp> enumerable, IStructFunction<T, TOut> select)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<TOut>, SelectAtStruct<TUp, TOut>> Select<T, TUp, TOut>(
-            this IStub<IEnumerable<T>, TUp> enumerable, IStructFunction<T, int, TOut> select)
+        public static Stub<IContent<TOut>, SelectAtStruct<TUp, TOut>> Select<T, TUp, TOut>(
+            this IStub<IContent<T>, TUp> enumerable, IStructFunction<T, int, TOut> select)
         {
             throw new NotImplementedException();
         }

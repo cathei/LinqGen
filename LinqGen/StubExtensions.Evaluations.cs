@@ -1,6 +1,7 @@
 ﻿// LinqGen, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
 using System;
+using System.Collections.Generic;
 using Cathei.LinqGen.Hidden;
 
 namespace Cathei.LinqGen
@@ -12,38 +13,38 @@ namespace Cathei.LinqGen
     /// </summary>
     public static partial class StubExtensions
     {
-        public static T First<T, TUp>(this IStub<T, TUp> enumerable)
+        public static T First<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
         {
             throw new NotImplementedException();
         }
 
-        public static T FirstOrDefault<T, TUp>(this IStub<T, TUp> enumerable)
+        public static T FirstOrDefault<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
         {
             throw new NotImplementedException();
         }
 
-        public static T Last<T, TUp>(this IStub<T, TUp> enumerable)
+        public static T Last<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
         {
             throw new NotImplementedException();
         }
 
-        public static T LastOrDefault<T, TUp>(this IStub<T, TUp> enumerable)
+        public static T LastOrDefault<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
         {
             throw new NotImplementedException();
         }
 
-        public static T Sum<T, TUp>(this IStub<T, TUp> enumerable, T? initialValue = default)
+        public static T Sum<T, TUp>(this IStub<IContent<T>, TUp> enumerable, T? initialValue = default)
         {
             throw new NotImplementedException();
         }
 
-        public static TOut Sum<T, TUp, TOut>(this IStub<T, TUp> enumerable,
+        public static TOut Sum<T, TUp, TOut>(this IStub<IContent<T>, TUp> enumerable,
             Func<T, TOut> func, TOut? initialValue = default)
         {
             throw new NotImplementedException();
         }
 
-        public static TOut Sum<T, TUp, TOut>(this IStub<T, TUp> enumerable,
+        public static TOut Sum<T, TUp, TOut>(this IStub<IContent<T>, TUp> enumerable,
             IStructFunction<T, TOut> func, TOut? initialValue = default)
         {
             throw new NotImplementedException();

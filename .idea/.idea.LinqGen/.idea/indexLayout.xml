@@ -3,6 +3,7 @@
   <component name="UserContentModel">
     <attachedFolders />
     <explicitIncludes>
+      <Path>README.md</Path>
       <Path>docs</Path>
     </explicitIncludes>
     <explicitExcludes />

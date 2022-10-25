@@ -42,7 +42,7 @@ It's because everything `LinqGen.Generator` generates designed to be precede ove
   * Supports duck typing with `+` operator overload
 
 ### Etc
-* Gen
+* Specialize
     * Converts IEnumerable to LinqGen enumerable
 * AsEnumerable
     * Converts LinqGen enumerable to IEnumerable
