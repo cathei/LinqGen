@@ -16,15 +16,12 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public static Generation? CreateGeneration(StringBuilder logBuilder, in LinqGenExpression expression)
         {
-            ITypeSymbol? typeSymbol;
+            INamedTypeSymbol? typeSymbol;
 
             switch (expression.SignatureSymbol!.Name)
             {
-                case "Gen":
-                    return new GenGeneration(expression);
-
-                case "GenList":
-                    return new GenListGeneration(expression);
+                case "Specialize":
+                    return new SpecializeGeneration(expression);
 
                 case "Select":
                     if (!expression.TryGetParameterType(0, out typeSymbol))
@@ -82,7 +79,7 @@ namespace Cathei.LinqGen.Generator
 
         public static Evaluation? CreateEvaluation(StringBuilder logBuilder, in LinqGenExpression expression)
         {
-            ITypeSymbol? typeSymbol;
+            INamedTypeSymbol? typeSymbol;
 
             switch (expression.MethodSymbol.Name)
             {

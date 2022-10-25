@@ -19,6 +19,9 @@ namespace Cathei.LinqGen.Generator
     {
         public Operation(in LinqGenExpression expression) : base(expression) { }
 
+        // upstream must exists for operations
+        public override TypeSyntax OutputElementType => Upstream!.OutputElementType;
+
         protected override IEnumerable<MemberInfo> GetMemberInfos()
         {
             yield return new MemberInfo(MemberKind.Enumerable, UpstreamResolvedClassName, SourceName);

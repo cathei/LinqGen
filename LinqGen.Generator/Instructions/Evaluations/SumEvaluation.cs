@@ -13,10 +13,10 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public class SumEvaluation : Evaluation
+    public sealed class SumEvaluation : Evaluation
     {
-        private readonly TypeSyntax? FunctionType;
-        private readonly bool WithStruct;
+        private TypeSyntax? FunctionType { get; }
+        private bool WithStruct { get; }
 
         public SumEvaluation(in LinqGenExpression expression, ITypeSymbol parameterType) : base(expression)
         {

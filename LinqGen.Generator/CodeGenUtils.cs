@@ -56,8 +56,7 @@ namespace Cathei.LinqGen.Generator
                    symbol is INamedTypeSymbol { Name: LinqGenStructFunctionTypeName };
         }
 
-        public static bool TryParseStubInterface(INamedTypeSymbol symbol,
-            out ITypeSymbol elementSymbol, out INamedTypeSymbol signatureSymbol)
+        public static bool TryParseStubInterface(INamedTypeSymbol symbol, out INamedTypeSymbol signatureSymbol)
         {
             var interfaceSymbol = symbol.AllInterfaces.FirstOrDefault(
                 x => x.MetadataName == LinqGenStubInterfaceTypeName);
@@ -66,12 +65,10 @@ namespace Cathei.LinqGen.Generator
             if (interfaceSymbol == null || interfaceSymbol.TypeArguments.Length < 2 ||
                 interfaceSymbol.TypeArguments[1] is not INamedTypeSymbol)
             {
-                elementSymbol = default!;
                 signatureSymbol = default!;
                 return false;
             }
 
-            elementSymbol = interfaceSymbol.TypeArguments[0];
             signatureSymbol = (INamedTypeSymbol)interfaceSymbol.TypeArguments[1];
             return true;
         }

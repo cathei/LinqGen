@@ -1,6 +1,8 @@
 ﻿// LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq.Expressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,21 +17,22 @@ namespace Cathei.LinqGen.Generator
         public InvocationExpressionSyntax InvocationSyntax { get; }
         public MemberAccessExpressionSyntax MemberAccessSyntax { get; }
         public IMethodSymbol MethodSymbol { get; }
-        public ITypeSymbol ElementSymbol { get; }
         public INamedTypeSymbol? SignatureSymbol { get; }
-        public INamedTypeSymbol? UpstreamSymbol { get; }
+        public INamedTypeSymbol? UpstreamSignatureSymbol { get; }
+        public INamedTypeSymbol CallerTypeSymbol { get; }
 
         private LinqGenExpression(SemanticModel semanticModel, InvocationExpressionSyntax invocationSyntax,
             MemberAccessExpressionSyntax memberAccessSyntax, IMethodSymbol methodSymbol,
-            ITypeSymbol elementSymbol, INamedTypeSymbol? signatureSymbol, INamedTypeSymbol? upstreamSymbol)
+            INamedTypeSymbol? signatureSymbol, INamedTypeSymbol? upstreamSignatureSymbol,
+            INamedTypeSymbol callerTypeSymbol)
         {
             SemanticModel = semanticModel;
             InvocationSyntax = invocationSyntax;
             MemberAccessSyntax = memberAccessSyntax;
             MethodSymbol = methodSymbol;
-            ElementSymbol = elementSymbol;
             SignatureSymbol = signatureSymbol;
-            UpstreamSymbol = upstreamSymbol;
+            UpstreamSignatureSymbol = upstreamSignatureSymbol;
+            CallerTypeSymbol = callerTypeSymbol;
         }
 
         public static bool TryParse(SemanticModel semanticModel,
@@ -57,13 +60,20 @@ namespace Cathei.LinqGen.Generator
             // returning stub enumerable, meaning it's compiling generation
             if (methodSymbol.ReturnType is INamedTypeSymbol returnTypeSymbol && IsOutputStubEnumerable(returnTypeSymbol))
             {
-                elementSymbol = returnTypeSymbol.TypeArguments[0];
+                // elementSymbol = returnTypeSymbol.TypeArguments[0];
+                //
+                // if (elementSymbol is ITypeParameterSymbol)
+                // {
+                //     // generic type parameter should not be used
+                //     return false;
+                // }
+
                 signatureSymbol = returnTypeSymbol.TypeArguments[1] as INamedTypeSymbol;
 
                 if (signatureSymbol == null)
                 {
                     // something is wrong
-                    // generic signature is not allowed at the time
+                    // generic signature is not allowed
                     return false;
                 }
             }
@@ -74,43 +84,48 @@ namespace Cathei.LinqGen.Generator
                 return false;
             }
 
-            INamedTypeSymbol? upstreamSymbol = null;
+            var callerTypeInfo = semanticModel.GetTypeInfo(memberAccessSyntax.Expression);
+
+            if (callerTypeInfo.Type is not INamedTypeSymbol callerTypeSymbol)
+            {
+                // TODO consider array type?
+                return false;
+            }
+
+            INamedTypeSymbol? upstreamSignatureSymbol = null;
 
             // this means it takes LinqGen enumerable as input, and upstream type is required
             if (IsInputStubEnumerable(receiverTypeSymbol))
             {
-                var callerTypeInfo = semanticModel.GetTypeInfo(memberAccessSyntax.Expression);
-
-                if (callerTypeInfo.Type is not INamedTypeSymbol callerTypeSymbol ||
-                    !TryParseStubInterface(callerTypeSymbol, out var upstreamElementSymbol, out upstreamSymbol))
+                if (!TryParseStubInterface(callerTypeSymbol, out upstreamSignatureSymbol))
                 {
                     // How did this happen?
                     // TODO: Can we allow generic constrained upstream type?
                     return false;
                 }
 
-                if (signatureSymbol == null)
-                {
-                    // for evaluation, use upstream symbol's element type
-                    elementSymbol = upstreamElementSymbol;
-                }
+                // if (signatureSymbol == null)
+                // {
+                //     // for evaluation, use upstream symbol's element type
+                //     elementSymbol = upstreamElementSymbol;
+                // }
             }
 
-            if (elementSymbol == null)
-            {
-                // should not be possible
-                return false;
-            }
+            // if (elementSymbol == null)
+            // {
+            //     // should not be possible
+            //     return false;
+            // }
 
             result = new LinqGenExpression(
                 semanticModel, invocationSyntax, memberAccessSyntax,
-                methodSymbol, elementSymbol, signatureSymbol, upstreamSymbol);
+                methodSymbol, signatureSymbol, upstreamSignatureSymbol, callerTypeSymbol);
 
             return true;
         }
 
         // index 0 is second argument because first argument is treated as caller when it's extension method
-        public bool TryGetParameterType(int index, out ITypeSymbol result)
+        public bool TryGetParameterType(int index, out INamedTypeSymbol result)
         {
             if (MethodSymbol.Parameters.Length <= index)
             {
@@ -118,7 +133,13 @@ namespace Cathei.LinqGen.Generator
                 return false;
             }
 
-            result = MethodSymbol.Parameters[index].Type;
+            if (MethodSymbol.Parameters[index].Type is not INamedTypeSymbol namedTypeSymbol)
+            {
+                result = default!;
+                return false;
+            }
+
+            result = namedTypeSymbol;
             return true;
         }
 

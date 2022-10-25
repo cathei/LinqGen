@@ -22,9 +22,6 @@ namespace Cathei.LinqGen.Generator
         {
             MethodSymbol = expression.MethodSymbol;
             MethodName = IdentifierName(MethodSymbol.Name);
-
-            ElementName = ParseName(expression.ElementSymbol
-                .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
         }
 
         public IMethodSymbol MethodSymbol { get; }
@@ -39,12 +36,11 @@ namespace Cathei.LinqGen.Generator
             Upstream.AddEvaluation(this);
         }
 
-        public NameSyntax ElementName { get; }
-
         public abstract TypeSyntax ReturnType { get; }
 
         public virtual IEnumerable<ParameterSyntax> GetParameters()
         {
+            // yield break;
             yield return Parameter(default, ThisTokenList,
                 UpstreamResolvedClassName, SourceName.Identifier, default);
         }

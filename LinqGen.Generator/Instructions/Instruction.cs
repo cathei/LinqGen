@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -14,21 +15,24 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
 
     /// <summary>
-    /// Instruction is all kind of method that can performed on LinqGen enumerable
-    /// Generation is Value => Enumerable
-    /// Operation is Enumerable => Enumerable
-    /// Evaluation is Enumerable => Non-Enumerable
+    /// Instruction is all kind of method that can performed on LinqGen enumerable.
+    /// Generation is Value => Enumerable,
+    /// Operation is Enumerable => Enumerable,
+    /// Evaluation is Enumerable => Non-Enumerable.
     /// </summary>
     public abstract class Instruction
     {
-        protected Instruction(in LinqGenExpression expression) : this(expression.UpstreamSymbol) { }
-
-        protected Instruction(INamedTypeSymbol? upstreamSymbol)
+        protected Instruction(in LinqGenExpression expression)
         {
-            UpstreamSymbol = upstreamSymbol;
+            UpstreamSignatureSymbol = expression.UpstreamSignatureSymbol;
         }
 
-        public INamedTypeSymbol? UpstreamSymbol { get; }
+        // protected Instruction(INamedTypeSymbol? upstreamSignatureSymbol)
+        // {
+        //     UpstreamSignatureSymbol = upstreamSignatureSymbol;
+        // }
+
+        public INamedTypeSymbol? UpstreamSignatureSymbol { get; }
 
         public Generation? Upstream { get; protected set; }
 
@@ -61,6 +65,8 @@ namespace Cathei.LinqGen.Generator
 
                 var upstreamArguments = GetTypeArguments(true)!;
 
+                EnsureLoadTypeParameters();
+
                 _upstreamResolvedClassName = Upstream.ClassName switch
                 {
                     QualifiedNameSyntax qualifiedName =>
@@ -74,20 +80,22 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public virtual bool SupportGenericElementOutput => Upstream?.SupportGenericElementOutput ?? true;
+        // public virtual bool SupportGenericElementOutput => Upstream?.SupportGenericElementOutput ?? true;
+        //
+        // /// <summary>
+        // /// Is input element type will be same as output element type?
+        // /// </summary>
+        // public virtual bool PreserveElementType => true;
+        //
+        // private static readonly IdentifierNameSyntax GenericOutputElementName = IdentifierName("TElement");
+        //
+        // /// <summary>
+        // /// If generic output is not supported, this should be overriden as well
+        // /// </summary>
+        // public virtual TypeSyntax OutputElementType =>
+        //     SupportGenericElementOutput ? GenericOutputElementName : Upstream!.OutputElementType;
 
-        /// <summary>
-        /// Is input element type will be same as output element type?
-        /// </summary>
-        public virtual bool PreserveElementType => true;
-
-        private static readonly IdentifierNameSyntax GenericOutputElementName = IdentifierName("TElement");
-
-        /// <summary>
-        /// If generic output is not supported, this should be overriden as well
-        /// </summary>
-        public virtual TypeSyntax OutputElementType =>
-            SupportGenericElementOutput ? GenericOutputElementName : Upstream!.OutputElementType;
+        // public TypeArgumentListSyntax? CallerTypeArguments { get; }
 
         protected virtual IEnumerable<TypeParameterInfo> GetTypeParameterInfos() => Array.Empty<TypeParameterInfo>();
 
@@ -116,8 +124,8 @@ namespace Cathei.LinqGen.Generator
             _typeParameters = new List<TypeParameterInfo>();
             _upstreamTypeParameters = new List<TypeParameterInfo>();
 
-            if (SupportGenericElementOutput)
-                _typeParameters.Add(new TypeParameterInfo(GenericOutputElementName, null));
+            // if (SupportGenericElementOutput)
+            //     _typeParameters.Add(new TypeParameterInfo(GenericOutputElementName, null));
 
             _typeParameters.AddRange(GetTypeParameterInfos());
 
@@ -128,16 +136,16 @@ namespace Cathei.LinqGen.Generator
 
             int index = 0;
 
-            if (Upstream.SupportGenericElementOutput && PreserveElementType)
-            {
-                _upstreamTypeParameters.Add(new TypeParameterInfo(GenericOutputElementName, null));
-                index = 1;
-            }
+            // if (Upstream.SupportGenericElementOutput && PreserveElementType)
+            // {
+            //     _upstreamTypeParameters.Add(new TypeParameterInfo(GenericOutputElementName, null));
+            //     index = 1;
+            // }
 
             while (index < upstreamOriginalParameters.Count)
             {
                 // normalize the name
-                var info = new TypeParameterInfo(IdentifierName($"TUp{index}"),
+                var info = new TypeParameterInfo(IdentifierName($"TUp{index + 1}"),
                     upstreamOriginalParameters[index].ConstraintType);
 
                 _typeParameters.Add(info);
@@ -147,11 +155,12 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public TypeParameterListSyntax? GetTypeParameters(bool upstream)
+        public TypeParameterListSyntax? GetTypeParameters()
         {
             EnsureLoadTypeParameters();
 
-            var parameters = upstream ? _upstreamTypeParameters : _typeParameters;
+            // var parameters = upstream ? _upstreamTypeParameters : _typeParameters;
+            var parameters = _typeParameters;
 
             if (parameters!.Count == 0)
                 return null;
@@ -160,7 +169,7 @@ namespace Cathei.LinqGen.Generator
                 .Select((x) => x.AsTypeParameter())));
         }
 
-        public TypeArgumentListSyntax? GetTypeArguments(bool upstream)
+        public TypeArgumentListSyntax? GetTypeArguments(bool upstream = false)
         {
             EnsureLoadTypeParameters();
 
@@ -173,11 +182,12 @@ namespace Cathei.LinqGen.Generator
                 .Select((x) => x.AsTypeArgument())));
         }
 
-        public SyntaxList<TypeParameterConstraintClauseSyntax> GetGenericConstraints(bool upstream)
+        public SyntaxList<TypeParameterConstraintClauseSyntax> GetGenericConstraints()
         {
             EnsureLoadTypeParameters();
 
-            var parameters = upstream ? _upstreamTypeParameters : _typeParameters;
+            // var parameters = upstream ? _upstreamTypeParameters : _typeParameters;
+            var parameters = _typeParameters;
 
             if (parameters!.Count == 0)
                 return default;

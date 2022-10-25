@@ -31,7 +31,7 @@ namespace Cathei.LinqGen.Hidden._Assembly_
 {
     // Enumerable is always readonly
     // Non-exported Enumerable should consider anonymous type, thus it will be internal
-    internal readonly struct _Enumerable_ : IEmbeddedStub<_Element_, _Enumerable_>
+    internal readonly struct _Enumerable_ : IStub<IEnumerable<_Element_>, Compiled>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal _Enumerable_()
@@ -186,7 +186,7 @@ namespace Cathei.LinqGen
                     case "_Enumerable_":
                         if (_instruction.Arity == 0)
                             return _instruction.IdentifierName;
-                        return GenericName(_instruction.IdentifierName!.Identifier, _instruction.GetTypeArguments(false)!);
+                        return GenericName(_instruction.IdentifierName!.Identifier, _instruction.GetTypeArguments()!);
 
                     case "_Element_":
                         return _instruction.OutputElementType;
@@ -201,8 +201,8 @@ namespace Cathei.LinqGen
             private StructDeclarationSyntax RewriteEnumerableStruct(StructDeclarationSyntax node)
             {
                 return node.WithIdentifier(_instruction.IdentifierName!.Identifier)
-                    .WithTypeParameterList(_instruction.GetTypeParameters(false))
-                    .WithConstraintClauses(_instruction.GetGenericConstraints(false))
+                    .WithTypeParameterList(_instruction.GetTypeParameters())
+                    .WithConstraintClauses(_instruction.GetGenericConstraints())
                     .AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerable, true).ToArray());
             }
 
@@ -259,9 +259,9 @@ namespace Cathei.LinqGen
 
                 return MethodDeclaration(
                     node.AttributeLists, node.Modifiers, node.ReturnType, node.ExplicitInterfaceSpecifier,
-                    _instruction.MethodName.Identifier, _instruction.GetTypeParameters(false),
+                    _instruction.MethodName.Identifier, _instruction.GetTypeParameters(),
                     ParameterList(_instruction.GetParameters(MemberKind.Enumerable, true)),
-                    _instruction.GetGenericConstraints(false), body, default, default);
+                    _instruction.GetGenericConstraints(), body, default, default);
             }
 
             private IEnumerable<MemberDeclarationSyntax> GetExtensionMethods()
@@ -277,8 +277,8 @@ namespace Cathei.LinqGen
                 {
                     yield return MethodDeclaration(new(AggressiveInliningAttributeList),
                         PublicStaticTokenList, evaluation.ReturnType, default,
-                        evaluation.MethodName.Identifier, evaluation.GetTypeParameters(false),
-                        ParameterList(evaluation.GetParameters()), evaluation.GetGenericConstraints(false),
+                        evaluation.MethodName.Identifier, evaluation.GetTypeParameters(),
+                        ParameterList(evaluation.GetParameters()), evaluation.GetGenericConstraints(),
                         evaluation.RenderMethodBody(), default, default);
                 }
             }

@@ -13,17 +13,16 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public class FirstEvaluation : Evaluation
+    public sealed class FirstEvaluation : Evaluation
     {
-        private readonly bool OrDefault;
+        private bool OrDefault { get; }
 
         public FirstEvaluation(in LinqGenExpression expression, bool orDefault) : base(expression)
         {
             OrDefault = orDefault;
-            ReturnType = ElementName;
         }
 
-        public override TypeSyntax ReturnType { get; }
+        public override TypeSyntax ReturnType => Upstream!.OutputElementType;
 
         public override BlockSyntax RenderMethodBody()
         {

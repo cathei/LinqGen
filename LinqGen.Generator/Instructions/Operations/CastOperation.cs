@@ -21,12 +21,12 @@ namespace Cathei.LinqGen.Generator
             SkipIfMismatch = skipIfMismatch;
         }
 
-        /// <summary>
-        /// Cast forces output to use generic element
-        /// </summary>
-        public override bool SupportGenericElementOutput => true;
-
-        public override bool PreserveElementType => false;
+        // /// <summary>
+        // /// Cast forces output to use generic element
+        // /// </summary>
+        // public override bool SupportGenericElementOutput => true;
+        //
+        // public override bool PreserveElementType => false;
 
         public override BlockSyntax RenderMoveNextBody()
         {

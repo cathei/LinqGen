@@ -18,29 +18,24 @@ namespace Cathei.LinqGen.Generator
         private bool WithIndex { get; }
         private bool WithStruct { get; }
 
-        private readonly TypeSyntax _concreteOutputElementType;
-
         public SelectOperation(in LinqGenExpression expression,
-            ITypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression)
+            INamedTypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression)
         {
             ParameterTypeName = ParseTypeName(parameterType
                 .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
 
+            // Func<TIn, TOut> or IStructFunction<TIn, TOut>
+            // Func<TIn, int, TOut> or IStructFunction<TIn, int, TOut>
+            OutputElementType = ParseTypeName(parameterType.TypeArguments[withIndex ? 2 : 1]
+                .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+
             WithIndex = withIndex;
             WithStruct = withStruct;
-
-            _concreteOutputElementType = ParseTypeName(expression.ElementSymbol
-                .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
         }
 
-        /// <summary>
-        /// When Select use struct function selector, the output type must be fixed.
-        /// TODO: It might be possible to just have overloads of methods, but not enumerable type?
-        /// </summary>
-        public sealed override bool SupportGenericElementOutput => base.SupportGenericElementOutput && !WithStruct;
+        public override TypeSyntax OutputElementType { get; }
 
-        public override TypeSyntax OutputElementType =>
-            SupportGenericElementOutput ? base.OutputElementType : _concreteOutputElementType;
+        // public override bool PreserveElementType => false;
 
         protected override IEnumerable<MemberInfo> GetMemberInfos()
         {

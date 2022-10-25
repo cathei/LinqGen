@@ -20,13 +20,14 @@ namespace Cathei.LinqGen.Generator
     {
         protected Generation(in LinqGenExpression expression) : base(expression) { }
 
-        protected Generation(INamedTypeSymbol? upstreamSymbol) : base(upstreamSymbol) { }
+        // protected Generation(INamedTypeSymbol? upstreamSignatureSymbol) : base(upstreamSignatureSymbol) { }
 
         // public virtual bool CanSlice { get; }
+        public abstract TypeSyntax OutputElementType { get; }
 
-        public List<Generation>? Downstream { get; set; }
+        public List<Generation>? Downstream { get; private set; }
 
-        public Dictionary<IMethodSymbol, Evaluation>? Evaluations { get; set; }
+        public Dictionary<IMethodSymbol, Evaluation>? Evaluations { get; private set; }
 
         public void SetUpstream(Generation upstream)
         {
@@ -45,6 +46,13 @@ namespace Cathei.LinqGen.Generator
             Evaluations ??= new Dictionary<IMethodSymbol, Evaluation>(SymbolEqualityComparer.Default);
             Evaluations.Add(downstream.MethodSymbol, downstream);
         }
+
+        // public HashSet<INamedTypeSymbol>? InputSymbols { get; private set; }
+        // public void AddInputSymbol(INamedTypeSymbol inputSymbol)
+        // {
+        //     InputSymbols ??= new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
+        //     InputSymbols.Add(inputSymbol);
+        // }
 
         public abstract SourceText Render(IdentifierNameSyntax assemblyName, int id);
     }
