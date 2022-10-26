@@ -20,12 +20,11 @@ namespace Cathei.LinqGen.Generator
         public INamedTypeSymbol? SignatureSymbol { get; }
         public ITypeSymbol? InputElementSymbol { get; }
         public INamedTypeSymbol? UpstreamSignatureSymbol { get; }
-        public INamedTypeSymbol CallerTypeSymbol { get; }
 
         private LinqGenExpression(SemanticModel semanticModel, InvocationExpressionSyntax invocationSyntax,
             MemberAccessExpressionSyntax memberAccessSyntax, IMethodSymbol methodSymbol,
             INamedTypeSymbol? signatureSymbol, ITypeSymbol? inputElementSymbol,
-            INamedTypeSymbol? upstreamSignatureSymbol, INamedTypeSymbol callerTypeSymbol)
+            INamedTypeSymbol? upstreamSignatureSymbol)
         {
             SemanticModel = semanticModel;
             InvocationSyntax = invocationSyntax;
@@ -34,7 +33,6 @@ namespace Cathei.LinqGen.Generator
             SignatureSymbol = signatureSymbol;
             InputElementSymbol = inputElementSymbol;
             UpstreamSignatureSymbol = upstreamSignatureSymbol;
-            CallerTypeSymbol = callerTypeSymbol;
         }
 
         public static bool TryParse(SemanticModel semanticModel,
@@ -56,7 +54,7 @@ namespace Cathei.LinqGen.Generator
                 return false;
             }
 
-            ITypeSymbol? elementSymbol = null;
+            // ITypeSymbol? elementSymbol = null;
             INamedTypeSymbol? signatureSymbol = null;
 
             // returning stub enumerable, meaning it's compiling generation
@@ -86,36 +84,18 @@ namespace Cathei.LinqGen.Generator
                 return false;
             }
 
-            var callerTypeInfo = semanticModel.GetTypeInfo(memberAccessSyntax.Expression);
-
-            if (callerTypeInfo.Type is not INamedTypeSymbol callerTypeSymbol)
-            {
-                // TODO consider array type?
-                return false;
-            }
-
             ITypeSymbol? inputElementSymbol = null;
             INamedTypeSymbol? upstreamSignatureSymbol = null;
 
             // this means it takes LinqGen enumerable as input, and upstream type is required
             if (IsInputStubEnumerable(receiverTypeSymbol))
             {
-                if (!TryParseStubInterface(callerTypeSymbol, out upstreamSignatureSymbol))
+                if (!TryParseStubInterface(receiverTypeSymbol, out inputElementSymbol, out upstreamSignatureSymbol))
                 {
                     // How did this happen?
                     // TODO: Can we allow generic constrained upstream type?
                     return false;
                 }
-
-                if (receiverTypeSymbol.TypeArguments.Length < 1 ||
-                    receiverTypeSymbol.TypeArguments[0] is not INamedTypeSymbol contentTypeSymbol ||
-                    contentTypeSymbol.TypeArguments.Length < 1)
-                {
-                    // receiver type is: IStub<IContent<T>, TSignature>
-                    return false;
-                }
-
-                inputElementSymbol = contentTypeSymbol.TypeArguments[0];
 
                 // if (signatureSymbol == null)
                 // {
@@ -138,7 +118,7 @@ namespace Cathei.LinqGen.Generator
 
             result = new LinqGenExpression(
                 semanticModel, invocationSyntax, memberAccessSyntax, methodSymbol,
-                signatureSymbol, inputElementSymbol, upstreamSignatureSymbol, callerTypeSymbol);
+                signatureSymbol, inputElementSymbol, upstreamSignatureSymbol);
 
             return true;
         }

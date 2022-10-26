@@ -211,7 +211,7 @@ namespace Cathei.LinqGen
             private ClassDeclarationSyntax RewriteExtensionClass(ClassDeclarationSyntax node)
             {
                 return node.WithIdentifier(
-                        Identifier($"LinqGenExtensions_{_instruction.IdentifierName!.Identifier.ValueText}"))
+                        Identifier($"LinqGenExtensions_{_instruction.IdentifierName.Identifier.ValueText}"))
                     .AddMembers(GetExtensionMethods().ToArray());
             }
 

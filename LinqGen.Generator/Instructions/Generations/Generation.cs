@@ -21,7 +21,7 @@ namespace Cathei.LinqGen.Generator
     {
         protected Generation(in LinqGenExpression expression) : base(expression) { }
 
-        // protected Generation(INamedTypeSymbol? upstreamSignatureSymbol) : base(upstreamSignatureSymbol) { }
+        protected Generation(bool generated) : base(generated) { }
 
         // public virtual bool CanSlice { get; }
         public abstract TypeSyntax OutputElementType { get; }

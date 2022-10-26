@@ -20,16 +20,20 @@ namespace Cathei.LinqGen.Generator
 
         public SpecializeGeneration(in LinqGenExpression expression, int id) : base(expression, id)
         {
+            ITypeSymbol enumerableSymbol = expression.SignatureSymbol!.TypeArguments[0];
+
             // TODO prevent generic type element?
             ITypeSymbol? elementSymbol;
 
-            if (expression.CallerTypeSymbol.MetadataName == "IEnumerable`1")
+            if (enumerableSymbol.MetadataName == "IEnumerable`1")
             {
-                elementSymbol = expression.CallerTypeSymbol.TypeArguments[0];
+                // type is interface itself
+                elementSymbol = ((INamedTypeSymbol)enumerableSymbol).TypeArguments[0];
             }
             else
             {
-                elementSymbol = expression.CallerTypeSymbol.AllInterfaces
+                // find IEnumerable interface
+                elementSymbol = enumerableSymbol.AllInterfaces
                     .FirstOrDefault(x => x.MetadataName == "IEnumerable`1")?
                     .TypeArguments[0];
             }
@@ -39,16 +43,16 @@ namespace Cathei.LinqGen.Generator
                 ParseTypeName(elementSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)) : ObjectType;
 
             // find GetEnumerator with same rule as C# duck typing
-            ITypeSymbol enumeratorType = expression.CallerTypeSymbol.GetMembers()
+            ITypeSymbol enumeratorSymbol = enumerableSymbol.GetMembers()
                 .OfType<IMethodSymbol>()
                 .First(x => x.DeclaredAccessibility == Accessibility.Public && x.Name == "GetEnumerator")
                 .ReturnType;
 
             CallerEnumerableType =
-                ParseTypeName(expression.CallerTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+                ParseTypeName(enumerableSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
 
             CallerEnumeratorType =
-                ParseTypeName(enumeratorType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+                ParseTypeName(enumeratorSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
         }
 
         public override TypeSyntax OutputElementType { get; }

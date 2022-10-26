@@ -93,7 +93,7 @@ namespace Cathei.LinqGen.Generator
 
         public void ResolveHierarchy()
         {
-            // var compiledGenerations = new Dictionary<INamedTypeSymbol, Generation>(SymbolEqualityComparer.Default);
+            var compiledGenerations = new Dictionary<INamedTypeSymbol, Generation>(SymbolEqualityComparer.Default);
 
             foreach (var generation in _generations.Values)
             {
@@ -105,54 +105,34 @@ namespace Cathei.LinqGen.Generator
                     continue;
                 }
 
-                if (!_generations.TryGetValue(upstreamSymbol, out var upstream))
+                if (!_generations.TryGetValue(upstreamSymbol, out var upstream) &&
+                    !compiledGenerations.TryGetValue(upstreamSymbol, out upstream))
                 {
-                    // generation not registered
-                    // maybe due to error?
-                    continue;
+                    // okay we will need create compiled symbol here
+                    upstream = new CompiledGeneration(upstreamSymbol, compiledGenerations.Count + 1);
+                    compiledGenerations.Add(upstreamSymbol, upstream);
                 }
-
-                // if (!_generations.TryGetValue(upstreamSymbol, out var upstream) &&
-                //     !compiledGenerations.TryGetValue(upstreamSymbol, out upstream))
-                // {
-                //     // okay we will need create compiled symbol here
-                //     upstream = new CompiledGeneration(upstreamSymbol);
-                //     compiledGenerations.Add(upstreamSymbol, upstream);
-                // }
 
                 generation.SetUpstream(upstream);
             }
 
             foreach (var evaluation in _evaluations.Values)
             {
-                var upstreamSymbol = evaluation.UpstreamSignatureSymbol;
+                var upstreamSymbol = evaluation.UpstreamSignatureSymbol!;
 
-                if (upstreamSymbol == null)
+                if (!_generations.TryGetValue(upstreamSymbol, out var upstream) &&
+                    !compiledGenerations.TryGetValue(upstreamSymbol, out upstream))
                 {
-                    // this should never happen
-                    continue;
+                    // okay we will need create compiled symbol here
+                    upstream = new CompiledGeneration(upstreamSymbol, compiledGenerations.Count + 1);
+                    compiledGenerations.Add(upstreamSymbol, upstream);
                 }
-
-                if (!_generations.TryGetValue(upstreamSymbol, out var upstream))
-                {
-                    // generation not registered
-                    // maybe due to error?
-                    continue;
-                }
-
-                // if (!_generations.TryGetValue(upstreamSymbol, out var upstream) &&
-                //     !compiledGenerations.TryGetValue(upstreamSymbol, out upstream))
-                // {
-                //     // okay we will need create compiled symbol here
-                //     upstream = new CompiledGeneration(upstreamSymbol);
-                //     compiledGenerations.Add(upstreamSymbol, upstream);
-                // }
 
                 evaluation.SetUpstream(upstream);
             }
 
-            // // compiled generations are always root
-            // Roots.AddRange(compiledGenerations.Values);
+            // compiled generations are always root
+            Roots.AddRange(compiledGenerations.Values);
         }
     }
 }

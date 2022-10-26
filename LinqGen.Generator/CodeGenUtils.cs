@@ -49,20 +49,23 @@ namespace Cathei.LinqGen.Generator
                    symbol is INamedTypeSymbol { Name: LinqGenStructFunctionTypeName };
         }
 
-        public static bool TryParseStubInterface(INamedTypeSymbol symbol, out INamedTypeSymbol signatureSymbol)
+        public static bool TryParseStubInterface(INamedTypeSymbol symbol,
+            out ITypeSymbol inputElementSymbol, out INamedTypeSymbol signatureSymbol)
         {
-            var interfaceSymbol = symbol.AllInterfaces.FirstOrDefault(
-                x => x.MetadataName == LinqGenStubInterfaceTypeName);
-
             // generic signature type should not be allowed
-            if (interfaceSymbol == null || interfaceSymbol.TypeArguments.Length < 2 ||
-                interfaceSymbol.TypeArguments[1] is not INamedTypeSymbol result)
+            // receiver type is: IStub<IContent<T>, TSignature>
+            if (symbol.TypeArguments.Length < 2 ||
+                symbol.TypeArguments[0] is not INamedTypeSymbol contentTypeSymbol ||
+                symbol.TypeArguments[1] is not INamedTypeSymbol resultSignatureSymbol ||
+                contentTypeSymbol.TypeArguments.Length < 1)
             {
+                inputElementSymbol = default!;
                 signatureSymbol = default!;
                 return false;
             }
 
-            signatureSymbol = result;
+            inputElementSymbol = contentTypeSymbol.TypeArguments[0];
+            signatureSymbol = resultSignatureSymbol;
             return true;
         }
 

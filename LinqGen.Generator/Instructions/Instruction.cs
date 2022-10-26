@@ -28,10 +28,10 @@ namespace Cathei.LinqGen.Generator
             UpstreamSignatureSymbol = expression.UpstreamSignatureSymbol;
         }
 
-        // protected Instruction(INamedTypeSymbol? upstreamSignatureSymbol)
-        // {
-        //     UpstreamSignatureSymbol = upstreamSignatureSymbol;
-        // }
+        protected Instruction(bool generated)
+        {
+            UpstreamSignatureSymbol = null;
+        }
 
         public virtual string TypeParameterPrefix { get; } = "T";
 
