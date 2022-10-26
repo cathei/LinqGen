@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.Text;
 namespace Cathei.LinqGen.Generator
 {
     using static SyntaxFactory;
+    using static CodeGenUtils;
 
     /// <summary>
     /// Common base class for CompilingGeneration and CompiledGeneration.
@@ -35,9 +36,14 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public abstract IdentifierNameSyntax IdentifierName { get; }
 
-        public List<Operation>? Downstream { get; private set; }
+        /// <summary>
+        /// If True, method will be embedded as member method
+        /// If false, method will be extension method
+        /// </summary>
+        public virtual bool ShouldBeMemberMethod => false;
 
-        public Dictionary<IMethodSymbol, Evaluation>? Evaluations { get; private set; }
+        public List<Operation>? Downstream { get; private set; }
+        public List<Evaluation>? Evaluations { get; private set; }
 
         public virtual void SetUpstream(Generation upstream)
         {
@@ -53,8 +59,8 @@ namespace Cathei.LinqGen.Generator
 
         public void AddEvaluation(Evaluation downstream)
         {
-            Evaluations ??= new Dictionary<IMethodSymbol, Evaluation>(SymbolEqualityComparer.Default);
-            Evaluations.Add(downstream.MethodSymbol, downstream);
+            Evaluations ??= new List<Evaluation>();
+            Evaluations.Add(downstream);
         }
 
         // public HashSet<INamedTypeSymbol>? InputSymbols { get; private set; }

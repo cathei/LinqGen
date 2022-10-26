@@ -8,7 +8,7 @@ namespace Cathei.LinqGen.Hidden
     // Operation is type hint for LinqGen.
     // For example, for code like this:
     // Enumerable.Range(10).Generate().Where(x => x % 2 == 0).Select(x => x * 0.5)
-    // The information is like this:
+    // The signature is like this:
     // Select<Where<Specialized<IEnumerable<int>>>, double>
     public interface IStubSignature { }
 
@@ -18,9 +18,9 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class AsEnumerable<TUp> : IStubSignature { }
 
-    public abstract class Cast<TOut> : IStubSignature { }
+    public abstract class Cast<TUp> : IStubSignature { }
 
-    public abstract class OfType<TOut> : IStubSignature { }
+    public abstract class OfType<TUp> : IStubSignature { }
 
     public abstract class Select<TUp, TOut> : IStubSignature { }
 

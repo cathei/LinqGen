@@ -30,7 +30,7 @@ namespace Cathei.LinqGen.Hidden
 {
     // Enumerable is always readonly
     // Non-exported Enumerable should consider anonymous type, thus it will be internal
-    internal readonly struct _Enumerable_ : IStub<IContent<_Element_>, Compiled>
+    internal readonly struct _Enumerable_ : IInternalStub<_Element_>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal _Enumerable_()
@@ -249,9 +249,8 @@ namespace Cathei.LinqGen
 
             private MethodDeclarationSyntax? RewriteExtensionMethod(MethodDeclarationSyntax node)
             {
-                if (_instruction.Upstream != null)
+                if (_instruction.ShouldBeMemberMethod)
                     return null;
-
 
                 // keep identifier name here so it can be visited later
                 var body = Block(ReturnStatement(
@@ -275,6 +274,9 @@ namespace Cathei.LinqGen
 
                 foreach (var downstream in _instruction.Downstream)
                 {
+                    if (!downstream.ShouldBeMemberMethod)
+                        continue;
+
                     int arityDiff = downstream.Arity - _instruction.Arity;
 
                     NameSyntax downstreamClassName = downstream.ClassName;
@@ -315,7 +317,7 @@ namespace Cathei.LinqGen
                 }
 
                 // evaluation can use specialization, so it should be extension method
-                foreach (var evaluation in _instruction.Evaluations.Values)
+                foreach (var evaluation in _instruction.Evaluations)
                 {
                     yield return MethodDeclaration(new(AggressiveInliningAttributeList),
                         PublicStaticTokenList, evaluation.ReturnType, default,

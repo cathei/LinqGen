@@ -65,7 +65,8 @@ namespace Cathei.LinqGen.Generator
             }
             else
             {
-                var key = new EvaluationKey(expression.UpstreamSignatureSymbol!, expression.MethodSymbol);
+                var key = new EvaluationKey(
+                    expression.UpstreamSignatureSymbol!, expression.MethodSymbol, expression.InputElementSymbol!);
 
                 if (_evaluations.ContainsKey(key))
                 {

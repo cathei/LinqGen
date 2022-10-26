@@ -7,15 +7,19 @@ using Cathei.LinqGen.Hidden;
 
 namespace Cathei.LinqGen.Hidden
 {
-    public interface IStub
-    {
-    }
-
     /// <summary>
     /// Stub interface for seamless code generation.
     /// The extensions are not actually implemented, only used for source generation.
     /// </summary>
-    public interface IStub<in T, TSignature> : IStub
+    public interface IStub<in T, TSignature>
+    {
+    }
+
+    public interface IInternalStub
+    {
+    }
+
+    public interface IInternalStub<out T> : IInternalStub, IStub<IContent<T>, Compiled>
     {
     }
 
@@ -36,6 +40,17 @@ namespace Cathei.LinqGen.Hidden
         // where T : IEnumerable
         where TSignature : IStubSignature
     {
+        // this has to be instance method to get TSignature
+        public Stub<IContent<TOut>, Cast<TSignature>> Cast<TOut>()
+        {
+            throw new NotImplementedException();
+        }
+
+        // this has to be instance method to get TSignature
+        public Stub<IContent<TOut>, OfType<TSignature>> OfType<TOut>()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>

@@ -37,6 +37,12 @@ namespace Cathei.LinqGen.Generator
 
         public INamedTypeSymbol? UpstreamSignatureSymbol { get; }
 
+        /// <summary>
+        /// Input element type that can substitute upstream output element type.
+        /// Null means undetermined, possibly generic input type.
+        /// </summary>
+        public virtual TypeSyntax? InputElementType => null;
+
         public Generation? Upstream { get; protected set; }
 
         private NameSyntax? _upstreamResolvedClassName;
@@ -62,11 +68,12 @@ namespace Cathei.LinqGen.Generator
                 }
 
                 _upstreamResolvedClassName = MakeGenericName(
-                    Upstream.ClassName, GetTypeArguments(true)!);
+                    Upstream.ClassName, GetUpstreamTypeArguments()!);
 
                 return _upstreamResolvedClassName;
             }
         }
+
 
         // public virtual bool SupportGenericElementOutput => Upstream?.SupportGenericElementOutput ?? true;
         //
@@ -88,40 +95,39 @@ namespace Cathei.LinqGen.Generator
         protected virtual IEnumerable<TypeParameterInfo> GetTypeParameterInfos() => Array.Empty<TypeParameterInfo>();
 
         private List<TypeParameterInfo>? _typeParameters;
-        private IReadOnlyList<TypeParameterInfo>? _upstreamTypeParameters;
 
         /// <summary>
         /// Note the current instruction's parameters come first
         /// </summary>
         private IReadOnlyList<TypeParameterInfo> TypeParameters
-        {
-            get
-            {
-                EnsureLoadTypeParameters();
-                return _typeParameters!;
-            }
-        }
+            => _typeParameters ??= CreateTypeParameters();
 
         public int Arity => TypeParameters.Count;
 
-        private void EnsureLoadTypeParameters()
+        private List<TypeParameterInfo> CreateTypeParameters()
         {
-            if (_typeParameters != null)
-                return;
-
-            _typeParameters = new List<TypeParameterInfo>();
-            _upstreamTypeParameters = new List<TypeParameterInfo>();
+            var result = new List<TypeParameterInfo>();
 
             // if (SupportGenericElementOutput)
-            //     _typeParameters.Add(new TypeParameterInfo(GenericOutputElementName, null));
+            //     result.Add(new TypeParameterInfo(GenericOutputElementName, null));
 
-            _typeParameters.AddRange(GetTypeParameterInfos());
+            result.AddRange(GetTypeParameterInfos());
 
             if (Upstream == null)
-                return;
+                return result;
 
-            _upstreamTypeParameters = Upstream.TypeParameters;
-            _typeParameters.AddRange(Upstream.TypeParameters);
+            if (InputElementType == null)
+            {
+                result.AddRange(Upstream.TypeParameters);
+            }
+            else
+            {
+                // generic output element type will be replace with input element type
+                result.AddRange(Upstream.TypeParameters
+                    .Where(x => !x.Identifier.IsEquivalentTo(Upstream.OutputElementType)));
+            }
+
+            return result;
 
             // var upstreamOriginalParameters = Upstream.TypeParameters;
 
@@ -140,7 +146,7 @@ namespace Cathei.LinqGen.Generator
             //     var info = new TypeParameterInfo(IdentifierName($"TUp{index + 1}"),
             //         upstreamOriginalParameters[index].ConstraintType);
             //
-            //     _typeParameters.Add(info);
+            //     result.Add(info);
             //     _upstreamTypeParameters.Add(info);
             //
             //     index++;
@@ -149,8 +155,6 @@ namespace Cathei.LinqGen.Generator
 
         public TypeParameterListSyntax? GetTypeParameters(int? take = null)
         {
-            EnsureLoadTypeParameters();
-
             var parameters = TypeParameters;
 
             take ??= parameters.Count;
@@ -163,11 +167,9 @@ namespace Cathei.LinqGen.Generator
                 .Take(take.Value)));
         }
 
-        public TypeArgumentListSyntax? GetTypeArguments(bool upstream = false)
+        public TypeArgumentListSyntax? GetTypeArguments()
         {
-            EnsureLoadTypeParameters();
-
-            var parameters = upstream ? _upstreamTypeParameters : _typeParameters;
+            var parameters = TypeParameters;
 
             if (parameters!.Count == 0)
                 return null;
@@ -176,9 +178,23 @@ namespace Cathei.LinqGen.Generator
                 .Select((x) => x.AsTypeArgument())));
         }
 
+        public TypeArgumentListSyntax? GetUpstreamTypeArguments()
+        {
+            var parameters = Upstream?.TypeParameters;
+
+            if (parameters == null || parameters.Count == 0)
+                return null;
+
+            return TypeArgumentList(SeparatedList(parameters.Select((x) =>
+            {
+                if (InputElementType != null && x.Identifier.IsEquivalentTo(Upstream!.OutputElementType))
+                    return InputElementType;
+                return x.AsTypeArgument();
+            })));
+        }
+
         public SyntaxList<TypeParameterConstraintClauseSyntax> GetGenericConstraints(int? take = null)
         {
-            // var parameters = upstream ? _upstreamTypeParameters : _typeParameters;
             var parameters = TypeParameters;
 
             take ??= parameters.Count;

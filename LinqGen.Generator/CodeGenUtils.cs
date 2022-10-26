@@ -22,13 +22,6 @@ namespace Cathei.LinqGen.Generator
         private const string LinqGenStubInterfaceTypeName = "IStub`2";
         private const string LinqGenStructFunctionTypeName = "IStructFunction";
 
-        private static bool IsMethodDefinedIn(IMethodSymbol symbol,
-            string assemblyName, string containingTypeName)
-        {
-            return symbol.ContainingAssembly.Name == assemblyName &&
-                   symbol.ContainingType.MetadataName == containingTypeName;
-        }
-
         public static bool IsStubMethod(IMethodSymbol symbol)
         {
             // is it member of extension class or member of stub enumerable?
@@ -63,23 +56,18 @@ namespace Cathei.LinqGen.Generator
 
             // generic signature type should not be allowed
             if (interfaceSymbol == null || interfaceSymbol.TypeArguments.Length < 2 ||
-                interfaceSymbol.TypeArguments[1] is not INamedTypeSymbol)
+                interfaceSymbol.TypeArguments[1] is not INamedTypeSymbol result)
             {
                 signatureSymbol = default!;
                 return false;
             }
 
-            signatureSymbol = (INamedTypeSymbol)interfaceSymbol.TypeArguments[1];
+            signatureSymbol = result;
             return true;
         }
 
         // known predefined type names
         public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));
-
-        // known generic interface names
-        public static readonly GenericNameSyntax EnumerableInterfaceName = GenericName("IEnumerable");
-        public static readonly GenericNameSyntax EnumeratorInterfaceName = GenericName("IEnumerator");
-        public static readonly GenericNameSyntax ListInterfaceName = GenericName("IList");
 
         // known method names
         public static readonly IdentifierNameSyntax InvokeName = IdentifierName("Invoke");

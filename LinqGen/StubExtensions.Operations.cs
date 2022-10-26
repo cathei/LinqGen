@@ -15,6 +15,7 @@ namespace Cathei.LinqGen
     public static partial class StubExtensions
     {
         public static Stub<IContentSource<T>, Specialize<T>> Specialize<T>(this T enumerable)
+            where T : IEnumerable
         {
             throw new NotImplementedException();
         }
@@ -24,12 +25,14 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        public static Stub<IContent<TOut>, Cast<TOut>> Cast<TOut>(this IStub enumerable)
+        // fake stub for autocomplete, not used for parsing because can't take signature type from extension
+        public static Stub<IContent<TOut>, Cast<Compiled>> Cast<TOut>(this IInternalStub enumerable)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IContent<TOut>, OfType<TOut>> OfType<TOut>(this IStub enumerable)
+        // fake stub for autocomplete, not used for parsing because can't take signature type from extension
+        public static Stub<IContent<TOut>, OfType<Compiled>> OfType<TOut>(this IInternalStub enumerable)
         {
             throw new NotImplementedException();
         }

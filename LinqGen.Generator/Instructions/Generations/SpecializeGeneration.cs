@@ -20,9 +20,8 @@ namespace Cathei.LinqGen.Generator
 
         public SpecializeGeneration(in LinqGenExpression expression, int id) : base(expression, id)
         {
-            // TODO prevent generic type
-            // TODO prevent IEnumerable (without parameter) only type or convert to IEnumerable<object>
-            ITypeSymbol elementSymbol;
+            // TODO prevent generic type element?
+            ITypeSymbol? elementSymbol;
 
             if (expression.CallerTypeSymbol.MetadataName == "IEnumerable`1")
             {
@@ -31,12 +30,15 @@ namespace Cathei.LinqGen.Generator
             else
             {
                 elementSymbol = expression.CallerTypeSymbol.AllInterfaces
-                    .First(x => x.MetadataName == "IEnumerable`1")
+                    .FirstOrDefault(x => x.MetadataName == "IEnumerable`1")?
                     .TypeArguments[0];
             }
 
-            OutputElementType = ParseTypeName(elementSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            // if element symbol is not found, use object type
+            OutputElementType = elementSymbol != null ?
+                ParseTypeName(elementSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)) : ObjectType;
 
+            // find GetEnumerator with same rule as C# duck typing
             ITypeSymbol enumeratorType = expression.CallerTypeSymbol.GetMembers()
                 .OfType<IMethodSymbol>()
                 .First(x => x.DeclaredAccessibility == Accessibility.Public && x.Name == "GetEnumerator")

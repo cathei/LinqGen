@@ -12,13 +12,14 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public class CastOperation : Operation
+    public sealed class CastOperation : Operation
     {
-        private readonly bool SkipIfMismatch;
+        private bool SkipIfMismatch { get; }
 
         public CastOperation(in LinqGenExpression expression, int id, bool skipIfMismatch) : base(expression, id)
         {
             SkipIfMismatch = skipIfMismatch;
+            OutputElementType = IdentifierName($"{TypeParameterPrefix}1");
         }
 
         // /// <summary>
@@ -27,6 +28,16 @@ namespace Cathei.LinqGen.Generator
         // public override bool SupportGenericElementOutput => true;
         //
         // public override bool PreserveElementType => false;
+
+        public override bool ShouldBeMemberMethod => true;
+
+        public override TypeSyntax OutputElementType { get; }
+
+        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+        {
+            yield return new TypeParameterInfo(
+                IdentifierName($"{TypeParameterPrefix}1"), null);
+        }
 
         public override BlockSyntax RenderMoveNextBody()
         {

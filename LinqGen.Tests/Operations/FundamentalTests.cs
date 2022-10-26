@@ -25,16 +25,37 @@ public class FundamentalTests
     [Test]
     public void TypeGeneration()
     {
-        var result = Enumerable.Range(0, 10)
+        var result = new List<int>()
             .Specialize()
-            .Select(new Selector())
             .Where(x => x == 0)
+            .Select(new Selector())
             .Sum();
 
-        List<double> x = new List<double>();
+        var result2 = new List<int>()
+            .Specialize()
+            .Where(x => x == 0)
+            .Select(new Selector())
+            .Sum();
 
-        var t = x.Specialize()
-            .Where(y => y == 0);
+        var result3 = new List<int>()
+            .Specialize()
+            .Where(x => x == 0)
+            .Select(new Selector2())
+            .Sum();
+
+        var t = new Dictionary<int, double>().Values
+            .Specialize()
+            .Where(y => y == 0)
+            .Cast<decimal>()
+            .OfType<int>()
+            .Sum();
+
+        var t2 = new Dictionary<int, double>().Values
+            .Specialize()
+            .Where(y => y == 0)
+            .Cast<decimal>()
+            .OfType<double>()
+            .Sum();
     }
 
     public struct Selector : IStructFunction<int, double>
@@ -42,6 +63,23 @@ public class FundamentalTests
         public double Invoke(int arg)
         {
             return arg / 10.0;
+        }
+    }
+
+
+    public struct Selector2 : IStructFunction<int, double>
+    {
+        public double Invoke(int arg)
+        {
+            return arg / 10.0;
+        }
+    }
+
+    public struct Predicate : IStructFunction<int, bool>
+    {
+        public bool Invoke(int arg)
+        {
+            return arg == 0;
         }
     }
 }

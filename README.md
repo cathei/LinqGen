@@ -46,3 +46,9 @@ It's because everything `LinqGen.Generator` generates designed to be precede ove
     * Converts IEnumerable to LinqGen enumerable
 * AsEnumerable
     * Converts LinqGen enumerable to IEnumerable
+
+## Limitations
+* LinqGen does not support generic element type. (Element type must be known at compile time.)
+* Objects that used with LinqGen must have at least `internal` accessibility.
+* LinqGen queries should be treated as anonymous type, it cannot be used as return value or instance member. If you have these needs, use `AsEnumerable()` to convert.
+
