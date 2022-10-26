@@ -22,13 +22,6 @@ namespace Cathei.LinqGen.Generator
             OutputElementType = IdentifierName($"{TypeParameterPrefix}1");
         }
 
-        // /// <summary>
-        // /// Cast forces output to use generic element
-        // /// </summary>
-        // public override bool SupportGenericElementOutput => true;
-        //
-        // public override bool PreserveElementType => false;
-
         public override bool ShouldBeMemberMethod => true;
 
         public override TypeSyntax OutputElementType { get; }

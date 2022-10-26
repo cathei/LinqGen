@@ -18,17 +18,16 @@ namespace Cathei.LinqGen.Generator
         private TypeSyntax CallerEnumerableType { get; }
         private TypeSyntax CallerEnumeratorType { get; }
 
-        public SpecializeGeneration(in LinqGenExpression expression, int id) : base(expression, id)
+        public SpecializeGeneration(in LinqGenExpression expression, int id,
+            INamedTypeSymbol enumerableSymbol) : base(expression, id)
         {
-            ITypeSymbol enumerableSymbol = expression.SignatureSymbol!.TypeArguments[0];
-
             // TODO prevent generic type element?
             ITypeSymbol? elementSymbol;
 
             if (enumerableSymbol.MetadataName == "IEnumerable`1")
             {
                 // type is interface itself
-                elementSymbol = ((INamedTypeSymbol)enumerableSymbol).TypeArguments[0];
+                elementSymbol = enumerableSymbol.TypeArguments[0];
             }
             else
             {

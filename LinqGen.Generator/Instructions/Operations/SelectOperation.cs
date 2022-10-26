@@ -12,7 +12,7 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public class SelectOperation : Operation
+    public sealed class SelectOperation : Operation
     {
         private TypeSyntax ParameterTypeName { get; }
         private bool WithIndex { get; }

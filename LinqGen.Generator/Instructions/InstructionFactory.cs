@@ -21,7 +21,17 @@ namespace Cathei.LinqGen.Generator
             switch (expression.SignatureSymbol!.Name)
             {
                 case "Specialize":
-                    return new SpecializeGeneration(expression, id);
+                {
+                    ITypeSymbol typeArgument = expression.SignatureSymbol!.TypeArguments[0];
+
+                    if (typeArgument is IArrayTypeSymbol arraySymbol)
+                        return new SpecializeArrayGeneration(expression, id, arraySymbol);
+
+                    if (typeArgument is INamedTypeSymbol namedTypeSymbol)
+                        return new SpecializeGeneration(expression, id, namedTypeSymbol);
+
+                    break;
+                }
 
                 case "Select":
                     if (!expression.TryGetParameterType(0, out typeSymbol))

@@ -13,11 +13,11 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public class WhereOperation : Operation
+    public sealed class WhereOperation : Operation
     {
-        protected readonly NameSyntax ParameterTypeName;
-        protected readonly bool WithIndex;
-        protected readonly bool WithStruct;
+        private NameSyntax ParameterTypeName { get; }
+        private bool WithIndex { get; }
+        private bool WithStruct { get; }
 
         public WhereOperation(in LinqGenExpression expression, int id,
             ITypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression, id)

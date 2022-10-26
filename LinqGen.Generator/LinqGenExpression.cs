@@ -54,20 +54,12 @@ namespace Cathei.LinqGen.Generator
                 return false;
             }
 
-            // ITypeSymbol? elementSymbol = null;
             INamedTypeSymbol? signatureSymbol = null;
 
             // returning stub enumerable, meaning it's compiling generation
-            if (methodSymbol.ReturnType is INamedTypeSymbol returnTypeSymbol && IsOutputStubEnumerable(returnTypeSymbol))
+            if (methodSymbol.ReturnType is INamedTypeSymbol returnTypeSymbol &&
+                IsOutputStubEnumerable(returnTypeSymbol))
             {
-                // elementSymbol = returnTypeSymbol.TypeArguments[0];
-                //
-                // if (elementSymbol is ITypeParameterSymbol)
-                // {
-                //     // generic type parameter should not be used
-                //     return false;
-                // }
-
                 signatureSymbol = returnTypeSymbol.TypeArguments[1] as INamedTypeSymbol;
 
                 if (signatureSymbol == null)
@@ -78,17 +70,12 @@ namespace Cathei.LinqGen.Generator
                 }
             }
 
-            if (methodSymbol.ReceiverType is not INamedTypeSymbol receiverTypeSymbol)
-            {
-                // first parameter (this) of method is not NamedTypeSymbol (should not be possible)
-                return false;
-            }
-
             ITypeSymbol? inputElementSymbol = null;
             INamedTypeSymbol? upstreamSignatureSymbol = null;
 
             // this means it takes LinqGen enumerable as input, and upstream type is required
-            if (IsInputStubEnumerable(receiverTypeSymbol))
+            if (methodSymbol.ReceiverType is INamedTypeSymbol receiverTypeSymbol &&
+                IsInputStubEnumerable(receiverTypeSymbol))
             {
                 if (!TryParseStubInterface(receiverTypeSymbol, out inputElementSymbol, out upstreamSignatureSymbol))
                 {
@@ -96,19 +83,7 @@ namespace Cathei.LinqGen.Generator
                     // TODO: Can we allow generic constrained upstream type?
                     return false;
                 }
-
-                // if (signatureSymbol == null)
-                // {
-                //     // for evaluation, use upstream symbol's element type
-                //     elementSymbol = upstreamElementSymbol;
-                // }
             }
-
-            // if (elementSymbol == null)
-            // {
-            //     // should not be possible
-            //     return false;
-            // }
 
             if (signatureSymbol == null && inputElementSymbol == null)
             {

@@ -11,8 +11,6 @@ namespace Cathei.LinqGen.Tests;
 [TestFixture]
 public class FirstTests
 {
-
-    [TestCase(0, 0)]
     [TestCase(0, 10)]
     [TestCase(-5, 10)]
     public void TestResult_SameAsLinq(int start, int count)
@@ -24,6 +22,18 @@ public class FirstTests
             .First();
 
         Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void First_ThrowsException_IfEmpty()
+    {
+        IEnumerable<int> x = Array.Empty<int>();
+
+        x.Specialize();
+        //.First();
+
+        Array.Empty<int>().Specialize();
+
     }
 
     //
