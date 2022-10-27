@@ -102,14 +102,19 @@ namespace Cathei.LinqGen.Generator
                     return new FirstEvaluation(expression, true);
 
                 case "Last":
+                    return new LastEvaluation(expression, false);
+
                 case "LastOrDefault":
-                    break;
+                    return new LastEvaluation(expression, true);
 
                 case "Single":
                     break;
 
                 case "Sum":
                     return new SumEvaluation(expression);
+
+                case "Count":
+                    return new CountEvaluation(expression);
             }
 
             return null;

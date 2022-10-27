@@ -9,35 +9,35 @@ using Cathei.LinqGen;
 namespace Cathei.LinqGen.Tests;
 
 [TestFixture]
-public class FirstTests
+public class LastTests
 {
     [TestCase(0, 10)]
     [TestCase(-5, 10)]
     public void TestResult_SameAsLinq(int start, int count)
     {
         var expected = Enumerable.Range(start, count)
-            .First();
+            .Last();
 
         var actual = GenEnumerable.Range(start, count)
-            .First();
+            .Last();
 
         Assert.AreEqual(expected, actual);
     }
 
     [Test]
-    public void First_ThrowsException_IfEmpty()
+    public void Last_ThrowsException_IfEmpty()
     {
         var empty = Array.Empty<int>().Specialize();
 
-        Assert.Throws<InvalidOperationException>(() => empty.First());
+        Assert.Throws<InvalidOperationException>(() => empty.Last());
     }
 
     [Test]
-    public void FirstOrDefault_ReturnsDefault_IfEmpty()
+    public void LastOrDefault_ReturnsDefault_IfEmpty()
     {
         var empty = Array.Empty<int>().Specialize();
 
-        int value = empty.FirstOrDefault();
+        int value = empty.LastOrDefault();
 
         Assert.AreEqual(0, value);
     }

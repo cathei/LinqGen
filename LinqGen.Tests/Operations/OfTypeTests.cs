@@ -9,13 +9,13 @@ using Cathei.LinqGen;
 namespace Cathei.LinqGen.Tests;
 
 [TestFixture]
-public class CastTests : GenerationTestBase<string>
+public class OfTypeTests : GenerationTestBase<string>
 {
     public override IEnumerable<string> Build(int count)
     {
         return Enumerable.Repeat((object)"AAA", count)
             .Specialize()
-            .Cast<string>()
+            .OfType<string>()
             .AsEnumerable();
     }
 
@@ -24,31 +24,32 @@ public class CastTests : GenerationTestBase<string>
     {
         object?[] list = new object?[]
         {
-            "A", "B", null, "C", "DDD", "EEE"
+            "A", "B", new object(), "DDD", "EEE", null
         };
 
-        var expected = list.Cast<string>();
-        var actual = list.Specialize().Cast<string>();
+        var expected = list.OfType<string>();
+        var actual = list.Specialize().OfType<string>();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
     [Test]
-    public void CastFail_ExceptionShouldBeThrown()
+    public void FailedElement_ShouldBeSkipped()
     {
-        object[] list = new object[]
+        object?[] list = new object?[]
         {
-            "A", "B", new object(), "DDD", "EEE"
+            "A", "B", new object(), "DDD", "EEE", null
         };
 
-        var enumerable = list.Specialize().Cast<string>();
+        var enumerable = list.Specialize().OfType<string>();
 
-        Assert.Throws<InvalidCastException>(() =>
+        int count = 0;
+
+        foreach (var x in enumerable)
         {
-            foreach (var str in enumerable)
-            {
-                // do nothing
-            }
-        });
+            count++;
+        }
+
+        Assert.AreEqual(list.Length - 2, count);
     }
 }

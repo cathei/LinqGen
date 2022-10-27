@@ -49,5 +49,20 @@ namespace Cathei.LinqGen
         {
             throw new NotImplementedException();
         }
+
+        public static int Count<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int Count<T, TUp>(this IStub<IContent<T>, TUp> enumerable, Func<T, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int Count<T, TUp>(this IStub<IContent<T>, TUp> enumerable, IStructFunction<T, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

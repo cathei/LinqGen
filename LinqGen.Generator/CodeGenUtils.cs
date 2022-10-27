@@ -197,6 +197,13 @@ namespace Cathei.LinqGen.Generator
                 VariableDeclaration(identifier, initialValue), SemicolonToken);
         }
 
+        public static LocalDeclarationStatementSyntax LocalDeclarationStatement(
+            SyntaxToken identifier, ExpressionSyntax initialValue)
+        {
+            return SyntaxFactory.LocalDeclarationStatement(
+                VariableDeclaration(identifier, initialValue));
+        }
+
         public static VariableDeclarationSyntax VariableDeclaration(
             SyntaxToken identifier, ExpressionSyntax initialValue)
         {
