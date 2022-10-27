@@ -12,74 +12,59 @@ public class FundamentalTests
     public static readonly Func<int, int> temp2 = x => x;
 
 
-    [Test]
-    public void Fundamental_DelegateComparison()
-    {
-        Func<int, int> a = static x => x;
-        Func<int, int> b = static x => x;
+    // [Test]
+    // public void Fundamental_DelegateComparison()
+    // {
+    //     Func<int, int> a = static x => x;
+    //     Func<int, int> b = static x => x;
+    //
+    //     Assert.AreEqual(a.Method.MethodHandle.Value, b.Method.MethodHandle.Value);
+    //     Assert.AreEqual(temp1.Method.MethodHandle.Value, temp2.Method.MethodHandle.Value);
+    // }
 
-        // Assert.AreEqual(a, b);
-        Assert.True(object.ReferenceEquals(temp1, temp2));
+    [TestCase(2)]
+    [TestCase(5)]
+    [TestCase(0)]
+    public void TestArrayTypeGeneration(int c1)
+    {
+        int[] array = new int[c1];
+
+        int count = 0;
+
+        foreach (var i in array.Specialize())
+            count++;
+
+        Assert.AreEqual(c1, count);
+    }
+
+
+    [TestCase(1, 2, 3, 4)]
+    [TestCase(8, 6, 4, 2)]
+    [TestCase(2, 0, 4, 2)]
+    public void TestArrayMultiTypeGeneration(int c1, int c2, int c3, int c4)
+    {
+        int[,,,] array = new int[c1, c2, c3, c4];
+
+        int count = 0;
+
+        foreach (var i in array.Specialize())
+            count++;
+
+        Assert.AreEqual(c1 * c2 * c3 * c4, count);
     }
 
     [Test]
-    public void TypeGeneration()
+    public void TestGenericTypeGeneration()
     {
-        var result = new List<int>()
-            .Specialize()
-            .Where(x => x == 0)
-            .Select(new Selector())
-            .Sum();
-
-        var result2 = new List<int>()
-            .Specialize()
-            .Where(x => x == 0)
-            .Select(new Selector())
-            .Sum();
-
-        var result3 = new List<int>()
-            .Specialize()
-            .Where(x => x == 0)
-            .Select(new Selector2())
-            .Sum();
-
-        var t = new Dictionary<int, double>().Values
-            .Specialize()
-            .Where(y => y == 0)
-            .Cast<decimal>()
-            .OfType<int>()
-            .Sum();
-
-        var t2 = new Dictionary<int, double>().Values
-            .Specialize()
-            .Where(y => y == 0)
-            .Cast<decimal>()
-            .OfType<double>()
-            .Sum();
+        Assert.AreEqual(10, TypeGenerationTest(10));
+        Assert.AreEqual(20.0, TypeGenerationTest(20.0));
+        Assert.AreEqual("Test string", TypeGenerationTest("Test string"));
     }
 
-    public struct Selector : IStructFunction<int, double>
+    private TTestParam TypeGenerationTest<TTestParam>(TTestParam value)
     {
-        public double Invoke(int arg)
-        {
-            return arg / 10.0;
-        }
-    }
-
-
-    public struct Selector2 : IStructFunction<int, double>
-    {
-        public double Invoke(int arg)
-        {
-            return arg / 10.0;
-        }
-    }
-
-    public struct Predicate : IStructFunction<int, bool>
-    {
-        public bool Invoke(int arg)
-        {
-            return arg == 0;
-        }
+        return Enumerable.Repeat(value, 1)
+            .Specialize()
+            .First();
     }
 }

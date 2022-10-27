@@ -15,14 +15,14 @@ namespace Cathei.LinqGen.Generator
 
     public sealed class WhereOperation : Operation
     {
-        private NameSyntax ParameterTypeName { get; }
+        private TypeSyntax ParameterTypeName { get; }
         private bool WithIndex { get; }
         private bool WithStruct { get; }
 
         public WhereOperation(in LinqGenExpression expression, int id,
             ITypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression, id)
         {
-            ParameterTypeName = ParseName(parameterType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            ParameterTypeName = ParseTypeName(parameterType);
             WithIndex = withIndex;
             WithStruct = withStruct;
         }

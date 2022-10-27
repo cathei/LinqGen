@@ -23,8 +23,15 @@ namespace Cathei.LinqGen.Generator
             MethodSymbol = expression.MethodSymbol;
             MethodName = IdentifierName(MethodSymbol.Name);
 
-            InputElementType = ParseTypeName(expression.InputElementSymbol!
-                .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            if (expression.InputElementSymbol is ITypeParameterSymbol)
+            {
+                InputElementType = null;
+            }
+            else
+            {
+                InputElementType = ParseTypeName(expression.InputElementSymbol!
+                    .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            }
         }
 
         public IMethodSymbol MethodSymbol { get; }

@@ -29,9 +29,9 @@ namespace Cathei.LinqGen.Generator
             IdentifierName = IdentifierName($"Compiled_{id}");
 
             var stubInterfaceSymbol = typeSymbol.AllInterfaces.First(IsInputStubEnumerable);
-            TryParseStubInterface(stubInterfaceSymbol, out var elementSymbol, out var signatureSymbol);
+            TryParseStubInterface(stubInterfaceSymbol, out var elementSymbol, out _);
 
-            OutputElementType = ParseTypeName(elementSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            OutputElementType = ParseTypeName(elementSymbol);
         }
 
         public override NameSyntax ClassName { get; }

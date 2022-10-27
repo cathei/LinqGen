@@ -98,8 +98,7 @@ namespace Cathei.LinqGen.Generator
             return true;
         }
 
-        // index 0 is second argument because first argument is treated as caller when it's extension method
-        public bool TryGetParameterType(int index, out INamedTypeSymbol result)
+        public bool TryGetParameterType(int index, out ITypeSymbol result)
         {
             if (MethodSymbol.Parameters.Length <= index)
             {
@@ -107,9 +106,22 @@ namespace Cathei.LinqGen.Generator
                 return false;
             }
 
-            if (MethodSymbol.Parameters[index].Type is not INamedTypeSymbol namedTypeSymbol)
+            result = MethodSymbol.Parameters[index].Type;
+            return true;
+        }
+
+        // index 0 is second argument because first argument is treated as caller when it's extension method
+        public bool TryGetNamedParameterType(int index, out INamedTypeSymbol result)
+        {
+            if (!TryGetParameterType(index, out var typeSymbol))
             {
-                result = default!;
+                result = null!;
+                return false;
+            }
+
+            if (typeSymbol is not INamedTypeSymbol namedTypeSymbol)
+            {
+                result = null!;
                 return false;
             }
 

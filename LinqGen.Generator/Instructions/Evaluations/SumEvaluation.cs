@@ -18,16 +18,16 @@ namespace Cathei.LinqGen.Generator
         private TypeSyntax? FunctionType { get; }
         private bool WithStruct { get; }
 
-        public SumEvaluation(in LinqGenExpression expression, ITypeSymbol parameterType) : base(expression)
+        public SumEvaluation(in LinqGenExpression expression) : base(expression)
         {
-            ReturnType = ParseTypeName(expression.MethodSymbol.ReturnType
-                .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            ReturnType = ParseTypeName(expression.MethodSymbol.ReturnType);
 
             if (MethodSymbol.Parameters.Length == 2)
             {
-                // bit hard coding but double parameter uses selector
-                FunctionType = ParseTypeName(parameterType
-                    .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+                // bit hard coding but Sum with two parameter uses selector
+                var parameterType = MethodSymbol.Parameters[0].Type;
+
+                FunctionType = ParseTypeName(parameterType);
                 WithStruct = IsStructFunction(parameterType);
             }
             else

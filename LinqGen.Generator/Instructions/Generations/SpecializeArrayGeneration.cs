@@ -23,23 +23,9 @@ namespace Cathei.LinqGen.Generator
             IArrayTypeSymbol arraySymbol) : base(expression, id)
         {
             ArrayTypeSymbol = arraySymbol;
-            OutputElementType = ParseTypeName(arraySymbol.ElementType
-                .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
 
-            CallerEnumerableType =
-                ParseTypeName(arraySymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
-
-            // // find GetEnumerator with same rule as C# duck typing
-            // ITypeSymbol enumeratorSymbol = enumerableSymbol.GetMembers()
-            //     .OfType<IMethodSymbol>()
-            //     .First(x => x.DeclaredAccessibility == Accessibility.Public && x.Name == "GetEnumerator")
-            //     .ReturnType;
-            //
-            // CallerEnumerableType =
-            //     ParseTypeName(enumerableSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
-            //
-            // CallerEnumeratorType =
-            //     ParseTypeName(enumeratorSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            OutputElementType = ParseTypeName(arraySymbol.ElementType);
+            CallerEnumerableType = ParseTypeName(arraySymbol);
         }
 
         public override TypeSyntax OutputElementType { get; }
@@ -55,19 +41,18 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderConstructorBody()
         {
-            return Block(ExpressionStatement(SimpleAssignmentExpression(
-                MemberAccessExpression(ThisExpression(), SourceName),
-                InvocationExpression(ParentName, SourceName, GetEnumeratorName))));
+            return Block(ExpressionStatement(SimpleAssignmentExpression(IndexName, LiteralExpression(-1))));
         }
 
         public override BlockSyntax RenderMoveNextBody()
         {
-            return Block(ReturnStatement(InvocationExpression(SourceName, MoveNextName)));
+            return Block(ReturnStatement(LessThanExpression(
+                PreIncrementExpression(IndexName), MemberAccessExpression(SourceName, IdentifierName("Length")))));
         }
 
         public override BlockSyntax RenderCurrentGetBody()
         {
-            return Block(ReturnStatement(MemberAccessExpression(SourceName, CurrentName)));
+            return Block(ReturnStatement(ElementAccessExpression(SourceName, BracketedArgumentList(IndexName))));
         }
     }
 }

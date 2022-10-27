@@ -21,13 +21,11 @@ namespace Cathei.LinqGen.Generator
         public SelectOperation(in LinqGenExpression expression, int id,
             INamedTypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression, id)
         {
-            ParameterTypeName = ParseTypeName(parameterType
-                .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            ParameterTypeName = ParseTypeName(parameterType);
 
             // Func<TIn, TOut> or IStructFunction<TIn, TOut>
             // Func<TIn, int, TOut> or IStructFunction<TIn, int, TOut>
-            OutputElementType = ParseTypeName(parameterType.TypeArguments[withIndex ? 2 : 1]
-                .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            OutputElementType = ParseTypeName(parameterType.TypeArguments[withIndex ? 2 : 1]);
 
             WithIndex = withIndex;
             WithStruct = withStruct;

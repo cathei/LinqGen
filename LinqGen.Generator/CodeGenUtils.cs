@@ -117,6 +117,11 @@ namespace Cathei.LinqGen.Generator
                         MemberAccessExpression(IdentifierName("MethodImplOptions"),
                             IdentifierName("AggressiveInlining"))))))));
 
+        public static TypeSyntax ParseTypeName(ITypeSymbol typeSymbol)
+        {
+            return SyntaxFactory.ParseTypeName(typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+        }
+
         public static InvocationExpressionSyntax InvocationExpression(
             ExpressionSyntax expression, IdentifierNameSyntax name)
         {
@@ -230,6 +235,11 @@ namespace Cathei.LinqGen.Generator
         public static BinaryExpressionSyntax LessThanExpression(ExpressionSyntax left, ExpressionSyntax right)
         {
             return SyntaxFactory.BinaryExpression(SyntaxKind.LessThanExpression, left, right);
+        }
+
+        public static BinaryExpressionSyntax GreaterOrEqualExpression(ExpressionSyntax left, ExpressionSyntax right)
+        {
+            return SyntaxFactory.BinaryExpression(SyntaxKind.GreaterThanOrEqualExpression, left, right);
         }
 
         public static BinaryExpressionSyntax IsExpression(ExpressionSyntax left, ExpressionSyntax right)

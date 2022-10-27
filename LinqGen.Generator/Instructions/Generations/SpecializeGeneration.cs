@@ -18,8 +18,10 @@ namespace Cathei.LinqGen.Generator
         private TypeSyntax CallerEnumerableType { get; }
         private TypeSyntax CallerEnumeratorType { get; }
 
-        public SpecializeGeneration(in LinqGenExpression expression, int id,
-            INamedTypeSymbol enumerableSymbol) : base(expression, id)
+        private bool GenericElement { get; }
+
+        public SpecializeGeneration(in LinqGenExpression expression, int id, INamedTypeSymbol enumerableSymbol)
+            : base(expression, id)
         {
             // TODO prevent generic type element?
             ITypeSymbol? elementSymbol;
@@ -37,24 +39,49 @@ namespace Cathei.LinqGen.Generator
                     .TypeArguments[0];
             }
 
-            // if element symbol is not found, use object type
-            OutputElementType = elementSymbol != null ?
-                ParseTypeName(elementSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)) : ObjectType;
-
             // find GetEnumerator with same rule as C# duck typing
+            // TODO also find with interface implementation
             ITypeSymbol enumeratorSymbol = enumerableSymbol.GetMembers()
                 .OfType<IMethodSymbol>()
-                .First(x => x.DeclaredAccessibility == Accessibility.Public && x.Name == "GetEnumerator")
+                .First(x => x.DeclaredAccessibility == Accessibility.Public &&
+                            x.Name == "GetEnumerator" && x.Parameters.Length == 0 && x.TypeParameters.Length == 0)
                 .ReturnType;
 
-            CallerEnumerableType =
-                ParseTypeName(enumerableSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            CallerEnumerableType = ParseTypeName(enumerableSymbol);
+            CallerEnumeratorType = ParseTypeName(enumeratorSymbol);
 
-            CallerEnumeratorType =
-                ParseTypeName(enumeratorSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            if (elementSymbol is ITypeParameterSymbol typeParameterSymbol)
+            {
+                var outputElementName = IdentifierName($"{TypeParameterPrefix}1");
+
+                OutputElementType = outputElementName;
+                GenericElement = true;
+
+                var rewriter = new GenericRewriter(IdentifierName(typeParameterSymbol.Name), outputElementName);
+                CallerEnumerableType = (TypeSyntax)rewriter.Visit(CallerEnumerableType);
+                CallerEnumeratorType = (TypeSyntax)rewriter.Visit(CallerEnumeratorType);
+            }
+            else if (elementSymbol != null)
+            {
+                OutputElementType = ParseTypeName(elementSymbol);
+                GenericElement = false;
+            }
+            else
+            {
+                // if element symbol is not found, use object type
+                OutputElementType = ObjectType;
+                GenericElement = false;
+            }
         }
 
         public override TypeSyntax OutputElementType { get; }
+
+        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+        {
+            // TODO apply generic constraints from original type...
+            if (GenericElement)
+                yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"), null);
+        }
 
         protected override IEnumerable<MemberInfo> GetMemberInfos()
         {
@@ -85,6 +112,26 @@ namespace Cathei.LinqGen.Generator
         public override BlockSyntax RenderDisposeBody()
         {
             return Block(ExpressionStatement(InvocationExpression(SourceName, DisposeName)));
+        }
+
+        private class GenericRewriter : CSharpSyntaxRewriter
+        {
+            private readonly IdentifierNameSyntax _target;
+            private readonly IdentifierNameSyntax _replace;
+
+            public GenericRewriter(IdentifierNameSyntax target, IdentifierNameSyntax replace)
+            {
+                _target = target;
+                _replace = replace;
+            }
+
+            public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+            {
+                if (node.Identifier.ValueText == _target.Identifier.ValueText)
+                    return _replace;
+
+                return base.VisitIdentifierName(node);
+            }
         }
     }
 }
