@@ -38,6 +38,9 @@ It's because everything `LinqGen.Generator` generates designed to be precede ove
 ### Evaluations
 * First
 * FirstOrDefault
+* Last
+* LastOrDefault
+* Count
 * Sum
   * Supports duck typing with `+` operator overload
 

@@ -9,51 +9,31 @@ using Cathei.LinqGen.Hidden;
 
 namespace Cathei.LinqGen.Hidden
 {
-    public readonly struct RepeatEnumerable<T> :
-        IStub<IContent<T>, RepeatEnumerable<T>>,
-        IStructCollection<T, RepeatEnumerable<T>.Enumerator>
+    public readonly struct EmptyEnumerable<T> :
+        IStub<IContent<T>, EmptyEnumerable<T>>,
+        IStructCollection<T, EmptyEnumerable<T>.Enumerator>
     {
-        private readonly T element;
-        private readonly int count;
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public RepeatEnumerable(T element, int count)
-        {
-            this.element = element;
-            this.count = count;
-        }
+        public Enumerator GetEnumerator() => new Enumerator();
 
-        public int Count => count;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Enumerator GetEnumerator() => new Enumerator(element, count);
+        public int Count => 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetSliceEnumerator(int skip, int take)
-            => new Enumerator(element, Math.Min(count - skip, take));
+            => new Enumerator();
 
         public struct Enumerator : IStructCollectionEnumerator<T>
         {
-            private T element;
-            private int count;
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Enumerator(T element, int count)
-            {
-                this.element = element;
-                this.count = count;
-            }
-
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool MoveNext()
             {
-                return --count >= 0;
+                return false;
             }
 
             public T Current
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => element;
+                get => throw new NotSupportedException();
             }
 
             object IEnumerator.Current => Current!;
@@ -63,8 +43,8 @@ namespace Cathei.LinqGen.Hidden
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Dispose() { }
 
-            public int Count => count;
-            public T Get(int index) => element;
+            public int Count => 0;
+            public T Get(int index) => throw new NotSupportedException();
         }
     }
 }
@@ -74,9 +54,9 @@ namespace Cathei.LinqGen
     public static partial class GenEnumerable
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RepeatEnumerable<T> Repeat<T>(T element, int count)
+        public static EmptyEnumerable<T> Empty<T>()
         {
-            return new RepeatEnumerable<T>(element, count);
+            return new EmptyEnumerable<T>();
         }
     }
 }

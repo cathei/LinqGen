@@ -7,10 +7,11 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Cathei.LinqGen.Hidden;
 
-
 namespace Cathei.LinqGen.Hidden
 {
-    public readonly struct RangeEnumerable : IStub<IContent<int>, RangeEnumerable>
+    public readonly struct RangeEnumerable :
+        IStub<IContent<int>, RangeEnumerable>,
+        IStructCollection<int, RangeEnumerable.Enumerator>
     {
         private readonly int start;
         private readonly int count;
@@ -22,39 +23,50 @@ namespace Cathei.LinqGen.Hidden
             this.count = count;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Enumerator GetEnumerator() => new Enumerator(this);
+        public int Count => count;
 
-        public struct Enumerator : IEnumerator<int>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Enumerator GetEnumerator() => new Enumerator(start, count);
+
+        public Enumerator GetSliceEnumerator(int skip, int take)
+            => new Enumerator(start + skip, Math.Min(count - skip, take));
+
+        public struct Enumerator : IStructCollectionEnumerator<int>
         {
-            private int current;
-            private int end;
+            private readonly int start;
+            private readonly int count;
+            private int index;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Enumerator(in RangeEnumerable parent)
+            public Enumerator(int start, int count)
             {
-                current = parent.start - 1;
-                end = parent.start + parent.count;
+                this.start = start;
+                this.count = count;
+                index = -1;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool MoveNext()
             {
-                return ++current < end;
+                return ++index < count;
             }
 
             public int Current
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => current;
+                get => start + index;
             }
 
             object IEnumerator.Current => Current;
 
-            public void Reset() => throw new NotImplementedException();
+            public void Reset() => throw new NotSupportedException();
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Dispose() { }
+
+            public int Count => count;
+
+            public int Get(int index) => start + index;
         }
     }
 }

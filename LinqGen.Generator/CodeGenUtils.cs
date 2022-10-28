@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Cathei.LinqGen.Hidden;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -216,10 +217,11 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.ReturnStatement(DefaultLiteral);
         }
 
-        public static ThrowStatementSyntax ThrowInvalidOperationStatement()
+        public static StatementSyntax ThrowInvalidOperationStatement()
         {
-            return SyntaxFactory.ThrowStatement(ObjectCreationExpression(
-                IdentifierName("InvalidOperationException"), EmptyArgumentList, default));
+            return ExpressionStatement(InvocationExpression(
+                IdentifierName(nameof(ExceptionUtils)),
+                IdentifierName(nameof(ExceptionUtils.ThrowInvalidOperation))));
         }
 
         public static LiteralExpressionSyntax LiteralExpression(int value)
