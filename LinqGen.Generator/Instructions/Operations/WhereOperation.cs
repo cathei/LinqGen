@@ -48,15 +48,17 @@ namespace Cathei.LinqGen.Generator
                 yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"), ParameterTypeName);
         }
 
-        public override BlockSyntax RenderConstructorBody()
+        public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()
         {
+            var syntax = base.RenderEnumeratorConstructor();
+
             if (WithIndex)
             {
-                return base.RenderConstructorBody()
-                    .AddStatements(ExpressionStatement(SimpleAssignmentExpression(IndexName, LiteralExpression(-1))));
+                syntax = syntax.AddBodyStatements(
+                    ExpressionStatement(SimpleAssignmentExpression(IndexName, LiteralExpression(-1))));
             }
 
-            return base.RenderConstructorBody();
+            return syntax;
         }
 
         public override BlockSyntax RenderMoveNextBody()

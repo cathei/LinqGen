@@ -49,9 +49,11 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public override BlockSyntax RenderConstructorBody()
+        public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()
         {
-            StatementSyntax setIndexToLength(int i)
+            var syntax = base.RenderEnumeratorConstructor();
+
+            static StatementSyntax setIndexToLength(int i)
             {
                 return ExpressionStatement(SimpleAssignmentExpression(IdentifierName($"index{i}"),
                     InvocationExpression(MemberAccessExpression(SourceName, IdentifierName("GetLength")),
@@ -63,10 +65,13 @@ namespace Cathei.LinqGen.Generator
                     MemberAccessExpression(SourceName, IdentifierName("Length"))),
                 Block(Enumerable.Range(0, Rank).Select(setIndexToLength).Append(ReturnStatement())));
 
-            return Block(Enumerable.Range(0, Rank)
-                .Select(i => ExpressionStatement(SimpleAssignmentExpression(IdentifierName($"index{i}"),
-                    LiteralExpression(i == Rank - 1 ? -1 : 0))))
-                .Prepend<StatementSyntax>(lengthZeroCheck));
+            var statements = syntax.Body!.Statements.AddRange(
+                Enumerable.Range(0, Rank)
+                    .Select(i => ExpressionStatement(SimpleAssignmentExpression(IdentifierName($"index{i}"),
+                        LiteralExpression(i == Rank - 1 ? -1 : 0))))
+                    .Prepend<StatementSyntax>(lengthZeroCheck));
+
+            return syntax.WithBody(Block(statements));
         }
 
         public override BlockSyntax RenderMoveNextBody()

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -36,12 +37,37 @@ namespace Cathei.LinqGen.Generator
                 QualifiedName(UpstreamResolvedClassName, IdentifierName("Enumerator")), SourceName);
         }
 
-        public override BlockSyntax RenderConstructorBody()
+        public override BlockSyntax RenderGetEnumeratorBody()
         {
-            return Block(ExpressionStatement(AssignmentExpression(
-                SyntaxKind.SimpleAssignmentExpression,
-                MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, ThisExpression(), SourceName),
-                InvocationExpression(ParentName, SourceName, GetEnumeratorName))));
+            return Block(ReturnStatement(ObjectCreationExpression(EnumeratorName,
+                ArgumentList(GetArguments(MemberKind.Both).Prepend(
+                    Argument(InvocationExpression(SourceName, GetEnumeratorName)))), null)));
+        }
+
+        public override BlockSyntax RenderGetSliceEnumeratorBody()
+        {
+            return Block(ReturnStatement(ObjectCreationExpression(EnumeratorName,
+                ArgumentList(GetArguments(MemberKind.Both).Prepend(
+                    Argument(InvocationExpression(
+                        MemberAccessExpression(SourceName, GetSliceEnumeratorName),
+                        ArgumentList(SkipName, TakeName))))), null)));
+        }
+
+        public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()
+        {
+            var parameters = GetParameters(MemberKind.Both)
+                .Prepend(Parameter(
+                    QualifiedName(UpstreamResolvedClassName, IdentifierName("Enumerator")),
+                    SourceName.Identifier));
+
+            var assignments = GetAssignments(MemberKind.Both)
+                .Prepend(ExpressionStatement(SimpleAssignmentExpression(
+                    MemberAccessExpression(ThisExpression(), SourceName), SourceName)));
+
+            // assignment will be automatic if parameter kind is Both
+            return ConstructorDeclaration(new(AggressiveInliningAttributeList),
+                InternalTokenList, Identifier("Enumerator"), ParameterList(parameters),
+                ThisInitializer, Block(assignments));
         }
 
         public override BlockSyntax RenderMoveNextBody()

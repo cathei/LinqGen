@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Cathei.LinqGen.Generator
 {
     using static SyntaxFactory;
+    using static CodeGenUtils;
 
     public readonly struct MemberInfo
     {
@@ -22,7 +23,7 @@ namespace Cathei.LinqGen.Generator
 
         public ParameterSyntax AsParameter()
         {
-            return Parameter(default, default, Type, Name.Identifier, default);
+            return Parameter(Type, Name.Identifier);
         }
 
         public ArgumentSyntax AsArgument()

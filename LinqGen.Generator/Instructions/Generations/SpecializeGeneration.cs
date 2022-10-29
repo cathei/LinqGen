@@ -24,27 +24,21 @@ namespace Cathei.LinqGen.Generator
             : base(expression, id)
         {
             // TODO prevent generic type element?
-            ITypeSymbol? elementSymbol;
+            ITypeSymbol? elementSymbol = null;
 
-            if (enumerableSymbol.MetadataName == "IEnumerable`1")
+            if (TryGetGenericEnumerableInterface(enumerableSymbol, out var genericInterfaceSymbol))
             {
-                // type is interface itself
+                // IEnumerable<T>
                 elementSymbol = enumerableSymbol.TypeArguments[0];
-            }
-            else
-            {
-                // find IEnumerable interface
-                elementSymbol = enumerableSymbol.AllInterfaces
-                    .FirstOrDefault(x => x.MetadataName == "IEnumerable`1")?
-                    .TypeArguments[0];
             }
 
             // find GetEnumerator with same rule as C# duck typing
             // TODO also find with interface implementation
             ITypeSymbol enumeratorSymbol = enumerableSymbol.GetMembers()
                 .OfType<IMethodSymbol>()
-                .First(x => x.DeclaredAccessibility == Accessibility.Public &&
-                            x.Name == "GetEnumerator" && x.Parameters.Length == 0 && x.TypeParameters.Length == 0)
+                .First(x =>
+                    x.DeclaredAccessibility == Accessibility.Public &&
+                    x.Name == "GetEnumerator" && x.Parameters.Length == 0 && x.TypeParameters.Length == 0)
                 .ReturnType;
 
             CallerEnumerableType = ParseTypeName(enumerableSymbol);
@@ -94,11 +88,20 @@ namespace Cathei.LinqGen.Generator
                 MemberKind.Enumerator, CallerEnumeratorType, SourceName);
         }
 
-        public override BlockSyntax RenderConstructorBody()
+        public override BlockSyntax RenderGetEnumeratorBody()
         {
-            return Block(ExpressionStatement(SimpleAssignmentExpression(
-                MemberAccessExpression(ThisExpression(), SourceName),
-                InvocationExpression(ParentName, SourceName, GetEnumeratorName))));
+            return Block(ReturnStatement(ObjectCreationExpression(
+                EnumeratorName, ArgumentList(InvocationExpression(SourceName, GetEnumeratorName)), null)));
+        }
+
+        public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()
+        {
+            // assignment will be automatic if parameter kind is Both
+            return ConstructorDeclaration(new(AggressiveInliningAttributeList),
+                InternalTokenList, Identifier("Enumerator"),
+                ParameterList(Parameter(CallerEnumeratorType, SourceName.Identifier)), ThisInitializer,
+                Block(ExpressionStatement(SimpleAssignmentExpression(
+                    MemberAccessExpression(ThisExpression(), SourceName), SourceName))));
         }
 
         public override BlockSyntax RenderMoveNextBody()

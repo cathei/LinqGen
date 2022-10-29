@@ -82,18 +82,21 @@ namespace Cathei.LinqGen.Generator
             return true;
         }
 
-        // known predefined type names
+        // known type names
         public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));
+        public static readonly IdentifierNameSyntax EnumeratorName = IdentifierName("Enumerator");
 
         // known method names
         public static readonly IdentifierNameSyntax InvokeName = IdentifierName("Invoke");
         public static readonly IdentifierNameSyntax MoveNextName = IdentifierName("MoveNext");
         public static readonly IdentifierNameSyntax DisposeName = IdentifierName("Dispose");
         public static readonly IdentifierNameSyntax GetEnumeratorName = IdentifierName("GetEnumerator");
+        public static readonly IdentifierNameSyntax GetSliceEnumeratorName = IdentifierName("GetSliceEnumerator");
 
         // known property names
         public static readonly IdentifierNameSyntax CurrentName = IdentifierName("Current");
         public static readonly IdentifierNameSyntax CountName = IdentifierName("Count");
+        public static readonly IdentifierNameSyntax LengthName = IdentifierName("Length");
 
         // custom variable names
         public static readonly IdentifierNameSyntax ParentName = IdentifierName("parent");
@@ -103,6 +106,8 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax SelectorName = IdentifierName("select");
         public static readonly IdentifierNameSyntax PredicateName = IdentifierName("predicate");
         public static readonly IdentifierNameSyntax InitialValueName = IdentifierName("initialValue");
+        public static readonly IdentifierNameSyntax SkipName = IdentifierName("skip");
+        public static readonly IdentifierNameSyntax TakeName = IdentifierName("take");
 
         public static readonly TypeSyntax VarType = IdentifierName("var");
         public static readonly TypeSyntax ObjectType = IdentifierName("object");
@@ -191,6 +196,16 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.ParameterList(SeparatedList(parameters));
         }
 
+        public static ParameterListSyntax ParameterList(params ParameterSyntax[] parameters)
+        {
+            return SyntaxFactory.ParameterList(SeparatedList(parameters));
+        }
+
+        public static ParameterSyntax Parameter(TypeSyntax type, SyntaxToken identifier)
+        {
+            return SyntaxFactory.Parameter(default, default, type, identifier, default);
+        }
+
         public static BracketedArgumentListSyntax BracketedArgumentList(ExpressionSyntax expression)
         {
             return SyntaxFactory.BracketedArgumentList(SingletonSeparatedList(Argument(expression)));
@@ -275,6 +290,11 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.BinaryExpression(SyntaxKind.GreaterThanOrEqualExpression, left, right);
         }
 
+        public static BinaryExpressionSyntax SubtractExpression(ExpressionSyntax left, ExpressionSyntax right)
+        {
+            return SyntaxFactory.BinaryExpression(SyntaxKind.SubtractExpression, left, right);
+        }
+
         public static BinaryExpressionSyntax IsExpression(ExpressionSyntax left, ExpressionSyntax right)
         {
             return SyntaxFactory.BinaryExpression(SyntaxKind.IsExpression, left, right);
@@ -288,6 +308,29 @@ namespace Cathei.LinqGen.Generator
         public static ExpressionSyntax FalseExpression()
         {
             return SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression);
+        }
+
+        private static INamedTypeSymbol? GetInterface(
+            ITypeSymbol symbol, string assemblyName, string interfaceMetadataName)
+        {
+            // check symbol itself first
+            if (symbol.ContainingAssembly?.Name == assemblyName && symbol.MetadataName == interfaceMetadataName)
+                return (INamedTypeSymbol)symbol;
+
+            return symbol.AllInterfaces.FirstOrDefault(x =>
+                x.ContainingAssembly.Name == assemblyName && x.MetadataName == interfaceMetadataName);
+        }
+
+        public static bool TryGetGenericListInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
+        {
+            interfaceSymbol = GetInterface(symbol, "System.Runtime", "IList`1")!;
+            return interfaceSymbol != null!;
+        }
+
+        public static bool TryGetGenericEnumerableInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
+        {
+            interfaceSymbol = GetInterface(symbol, "System.Runtime", "IEnumerable`1")!;
+            return interfaceSymbol != null!;
         }
     }
 }

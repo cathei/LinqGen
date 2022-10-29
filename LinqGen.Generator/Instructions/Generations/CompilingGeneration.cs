@@ -67,7 +67,7 @@ namespace Cathei.LinqGen.Generator
         public virtual BlockSyntax RenderGetEnumeratorBody()
         {
             return Block(ReturnStatement(ObjectCreationExpression(
-                IdentifierName("Enumerator"), ArgumentList(GetArguments(MemberKind.Both)), null)));
+                EnumeratorName, ArgumentList(GetArguments(MemberKind.Both)), null)));
         }
 
         public virtual BlockSyntax RenderGetSliceEnumeratorBody() => throw new NotImplementedException();

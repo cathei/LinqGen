@@ -9,6 +9,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Cathei.LinqGen.Generator
 {
+    using static CodeGenUtils;
+
     public static class InstructionFactory
     {
         /// <summary>
@@ -24,12 +26,11 @@ namespace Cathei.LinqGen.Generator
                 {
                     ITypeSymbol typeArgument = expression.SignatureSymbol!.TypeArguments[0];
 
+                    if (TryGetGenericListInterface(typeArgument, out var listSymbol))
+                        return new SpecializeListGeneration(expression, id, typeArgument, listSymbol);
+
                     if (typeArgument is IArrayTypeSymbol arraySymbol)
-                    {
-                        return arraySymbol.Rank == 1
-                            ? new SpecializeArrayGeneration(expression, id, arraySymbol)
-                            : new SpecializeArrayMultiGeneration(expression, id, arraySymbol);
-                    }
+                        return new SpecializeArrayMultiGeneration(expression, id, arraySymbol);
 
                     if (typeArgument is INamedTypeSymbol namedTypeSymbol)
                         return new SpecializeGeneration(expression, id, namedTypeSymbol);
