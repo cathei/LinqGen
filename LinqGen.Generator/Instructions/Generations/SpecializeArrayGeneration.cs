@@ -35,9 +35,10 @@ namespace Cathei.LinqGen.Generator
                 MemberKind.Enumerator, IntType, IndexName);
         }
 
-        public override BlockSyntax RenderConstructorBody()
+        public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()
         {
-            return Block(ExpressionStatement(SimpleAssignmentExpression(IndexName, LiteralExpression(-1))));
+            return base.RenderEnumeratorConstructor().AddBodyStatements(
+                ExpressionStatement(SimpleAssignmentExpression(IndexName, LiteralExpression(-1))));
         }
 
         public override BlockSyntax RenderMoveNextBody()

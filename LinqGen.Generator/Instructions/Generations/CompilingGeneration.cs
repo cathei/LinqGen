@@ -64,6 +64,14 @@ namespace Cathei.LinqGen.Generator
 
         private MemberInfo[] MemberInfos => _memberInfos ??= GetMemberInfos().ToArray();
 
+        public virtual BlockSyntax RenderGetEnumeratorBody()
+        {
+            return Block(ReturnStatement(ObjectCreationExpression(
+                IdentifierName("Enumerator"), ArgumentList(GetArguments(MemberKind.Both)), null)));
+        }
+
+        public virtual BlockSyntax RenderGetSliceEnumeratorBody() => throw new NotImplementedException();
+
         public IEnumerable<ParameterSyntax> GetParameters(MemberKind kind, bool firstThisParam = false)
         {
             foreach (var member in MemberInfos)

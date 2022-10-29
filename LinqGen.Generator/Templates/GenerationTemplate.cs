@@ -166,11 +166,14 @@ namespace Cathei.LinqGen
                 switch (node!.Identifier.ValueText)
                 {
                     case "GetEnumerator":
+                        node = RenderGetEnumerator(node);
                         break;
 
                     case "GetSliceEnumerator":
                         if (!_instruction.IsPartition)
                             return null;
+
+                        node = RenderGetSliceEnumerator(node);
                         break;
 
                     case "MoveNext":
@@ -189,6 +192,16 @@ namespace Cathei.LinqGen
                 if (node == null)
                     return null;
                 return base.VisitMethodDeclaration(node);
+            }
+
+            private MethodDeclarationSyntax RenderGetEnumerator(MethodDeclarationSyntax node)
+            {
+                return node.WithBody(_instruction.RenderGetEnumeratorBody());
+            }
+
+            private MethodDeclarationSyntax RenderGetSliceEnumerator(MethodDeclarationSyntax node)
+            {
+                return node.WithBody(_instruction.RenderGetSliceEnumeratorBody());
             }
 
             public override SyntaxNode? VisitPropertyDeclaration(PropertyDeclarationSyntax node)
