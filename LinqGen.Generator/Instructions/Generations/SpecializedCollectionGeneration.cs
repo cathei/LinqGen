@@ -13,15 +13,18 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public sealed class SpecializeArrayGeneration : CompilingGeneration
+    public sealed class SpecializeCollectionGeneration : CompilingGeneration
     {
         private TypeSyntax CallerEnumerableType { get; }
 
-        public SpecializeArrayGeneration(in LinqGenExpression expression, int id,
-            IArrayTypeSymbol arraySymbol) : base(expression, id)
+        public SpecializeCollectionGeneration(in LinqGenExpression expression, int id,
+            INamedTypeSymbol collectionSymbol) : base(expression, id)
         {
-            OutputElementType = ParseTypeName(arraySymbol.ElementType);
-            CallerEnumerableType = ParseTypeName(arraySymbol);
+            // TODO prevent generic type element?
+            ITypeSymbol elementSymbol = collectionSymbol.TypeArguments[0];
+
+            OutputElementType = ParseTypeName(elementSymbol);
+            CallerEnumerableType = ParseTypeName(collectionSymbol);
         }
 
         public override TypeSyntax OutputElementType { get; }

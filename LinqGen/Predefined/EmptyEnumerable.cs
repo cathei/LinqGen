@@ -16,13 +16,13 @@ namespace Cathei.LinqGen.Hidden
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator();
 
-        public int Count => 0;
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetSliceEnumerator(int skip, int take)
             => new Enumerator();
 
-        public struct Enumerator : IStructCollectionEnumerator<T>
+        public int Count => 0;
+
+        public struct Enumerator : IEnumerator<T>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool MoveNext()
@@ -42,9 +42,6 @@ namespace Cathei.LinqGen.Hidden
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Dispose() { }
-
-            public int Count => 0;
-            public T Get(int index) => throw new NotSupportedException();
         }
     }
 }

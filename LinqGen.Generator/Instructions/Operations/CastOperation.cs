@@ -26,6 +26,9 @@ namespace Cathei.LinqGen.Generator
 
         public override TypeSyntax OutputElementType { get; }
 
+        public override bool IsCollection => Upstream!.IsCollection;
+        public override bool IsPartition => Upstream!.IsPartition;
+
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
             yield return new TypeParameterInfo(

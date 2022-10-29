@@ -18,19 +18,11 @@ namespace Cathei.LinqGen.Hidden
     }
 
     /// <summary>
-    /// Enumerable that can be boosted with slicing, counting and indexing.
-    /// For example, Select from IList.
-    /// Note that this behaves different from standard List enumerable, where throws exception with version checking.
+    /// Enumerable that can be boosted with counting
     /// </summary>
     public interface IStructCollection<out TElement, out TEnumerator> : IStructPartition<TElement, TEnumerator>
-        where TEnumerator : IStructCollectionEnumerator<TElement>
+        where TEnumerator : IEnumerator<TElement>
     {
         int Count { get; }
-    }
-
-    public interface IStructCollectionEnumerator<out TElement> : IEnumerator<TElement>
-    {
-        int Count { get; }
-        TElement Get(int index);
     }
 }

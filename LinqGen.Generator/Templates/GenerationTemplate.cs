@@ -33,18 +33,36 @@ namespace Cathei.LinqGen.Hidden
     internal readonly struct _Enumerable_ : IInternalStub<_Element_>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal _Enumerable_()
+        internal _Enumerable_() : this()
         {
 
         }
 
+        public int Count
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+
+            }
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Enumerator GetEnumerator() => new Enumerator(this);
+        public Enumerator GetEnumerator()
+        {
+            return new Enumerator();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Enumerator GetSliceEnumerator(int skip, int take)
+        {
+            return new Enumerator();
+        }
 
         public struct Enumerator : IEnumerator<_Element_>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            internal Enumerator(in _Enumerable_ parent)
+            internal Enumerator() : this()
             {
 
             }
@@ -54,7 +72,7 @@ namespace Cathei.LinqGen.Hidden
             {
             }
 
-            public TReturn Current
+            public _Element_ Current
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
@@ -147,6 +165,14 @@ namespace Cathei.LinqGen
             {
                 switch (node!.Identifier.ValueText)
                 {
+                    case "GetEnumerator":
+                        break;
+
+                    case "GetSliceEnumerator":
+                        if (!_instruction.IsPartition)
+                            return null;
+                        break;
+
                     case "MoveNext":
                         node = RewriteEnumeratorMoveNext(node);
                         break;
@@ -173,6 +199,13 @@ namespace Cathei.LinqGen
                         if (node.ExplicitInterfaceSpecifier == null)
                             node = RewriteEnumeratorCurrent(node);
                         break;
+
+                    case "Count":
+                        if (!_instruction.IsCollection)
+                            return null;
+
+                        node = RewriteEnumerableCount(node);
+                        break;
                 }
 
                 return base.VisitPropertyDeclaration(node);
@@ -196,11 +229,17 @@ namespace Cathei.LinqGen
 
             private StructDeclarationSyntax RewriteEnumerableStruct(StructDeclarationSyntax node)
             {
-                return node.WithIdentifier(_instruction.IdentifierName!.Identifier)
-                    .WithTypeParameterList(_instruction.GetTypeParameters())
-                    .WithConstraintClauses(_instruction.GetGenericConstraints())
-                    .AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerable, true)
-                        .Concat(GetOperationMethods()).ToArray());
+                var additionalMembers = _instruction
+                    .GetFieldDeclarations(MemberKind.Enumerable, true)
+                    .Concat(GetOperationMethods());
+
+                var baseListTypes = node.BaseList!.
+                    Types.AddRange(_instruction.GetBaseInterfaces());
+
+                return node.Update(node.AttributeLists, node.Modifiers, node.Keyword,
+                    _instruction.IdentifierName.Identifier, _instruction.GetTypeParameters(),
+                    node.BaseList.WithTypes(baseListTypes), _instruction.GetGenericConstraints(), node.OpenBraceToken,
+                    node.Members.AddRange(additionalMembers), node.CloseBraceToken, node.SemicolonToken);
             }
 
             private StructDeclarationSyntax RewriteEnumeratorStruct(StructDeclarationSyntax node)
@@ -217,16 +256,14 @@ namespace Cathei.LinqGen
 
             private ConstructorDeclarationSyntax RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
             {
-                return node.WithIdentifier(_instruction.IdentifierName!.Identifier)
+                return node.WithIdentifier(_instruction.IdentifierName.Identifier)
                     .WithParameterList(ParameterList(_instruction.GetParameters(MemberKind.Enumerable)))
                     .WithBody(Block(_instruction.GetAssignments(MemberKind.Enumerable)));
             }
 
             private ConstructorDeclarationSyntax RewriteEnumeratorConstructor(ConstructorDeclarationSyntax node)
             {
-                // assignment will be automatic if parameter kind is Both
-                return node.WithBody(Block(_instruction.RenderConstructorBody()
-                    .Statements.InsertRange(0, _instruction.GetAssignments(MemberKind.Both, ParentName))));
+                return _instruction.RenderEnumeratorConstructor();
             }
 
             private MethodDeclarationSyntax RewriteEnumeratorMoveNext(MethodDeclarationSyntax node)
@@ -242,9 +279,13 @@ namespace Cathei.LinqGen
             private PropertyDeclarationSyntax RewriteEnumeratorCurrent(PropertyDeclarationSyntax node)
             {
                 var getAccessor = node.AccessorList!.Accessors[0].WithBody(_instruction.RenderCurrentGetBody());
+                return node.WithAccessorList(AccessorList(SingletonList(getAccessor)));
+            }
 
-                return node.WithType(_instruction.OutputElementType)
-                    .WithAccessorList(AccessorList(SingletonList(getAccessor)));
+            private PropertyDeclarationSyntax RewriteEnumerableCount(PropertyDeclarationSyntax node)
+            {
+                var getAccessor = node.AccessorList!.Accessors[0].WithBody(_instruction.RenderCountGetBody());
+                return node.WithAccessorList(AccessorList(SingletonList(getAccessor)));
             }
 
             private MethodDeclarationSyntax? RewriteExtensionMethod(MethodDeclarationSyntax node)

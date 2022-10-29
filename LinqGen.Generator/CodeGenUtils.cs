@@ -44,6 +44,18 @@ namespace Cathei.LinqGen.Generator
                    symbol.MetadataName is LinqGenStubInterfaceTypeName or LinqGenStubEnumerableTypeName;
         }
 
+        public static bool IsStructCollection(INamedTypeSymbol symbol)
+        {
+            return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
+                   symbol.MetadataName == "IStructCollection`2";
+        }
+
+        public static bool IsStructPartition(INamedTypeSymbol symbol)
+        {
+            return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
+                   symbol.MetadataName == "IStructPartition`2";
+        }
+
         public static bool IsStructFunction(ITypeSymbol symbol)
         {
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
@@ -104,12 +116,17 @@ namespace Cathei.LinqGen.Generator
         public static readonly SyntaxTokenList ThisTokenList = TokenList(Token(SyntaxKind.ThisKeyword));
         public static readonly SyntaxTokenList PrivateTokenList = TokenList(Token(SyntaxKind.PrivateKeyword));
         public static readonly SyntaxTokenList PublicTokenList = TokenList(Token(SyntaxKind.PublicKeyword));
+        public static readonly SyntaxTokenList InternalTokenList = TokenList(Token(SyntaxKind.InternalKeyword));
+
         public static readonly SyntaxTokenList PrivateReadOnlyTokenList =
             TokenList(Token(SyntaxKind.PrivateKeyword), Token(SyntaxKind.ReadOnlyKeyword));
         public static readonly SyntaxTokenList PublicStaticTokenList =
             TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword));
 
         public static readonly ArgumentListSyntax EmptyArgumentList = SyntaxFactory.ArgumentList();
+
+        public static readonly ConstructorInitializerSyntax ThisInitializer =
+            ConstructorInitializer(SyntaxKind.ThisConstructorInitializer);
 
         public static readonly AttributeListSyntax AggressiveInliningAttributeList =
             AttributeList(SingletonSeparatedList(
@@ -179,6 +196,11 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.BracketedArgumentList(SingletonSeparatedList(Argument(expression)));
         }
 
+        public static TypeArgumentListSyntax TypeArgumentList(params TypeSyntax[] arguments)
+        {
+            return SyntaxFactory.TypeArgumentList(SeparatedList(arguments));
+        }
+
         public static NameSyntax MakeGenericName(NameSyntax name, TypeArgumentListSyntax arguments)
         {
             return name switch
@@ -219,9 +241,11 @@ namespace Cathei.LinqGen.Generator
 
         public static StatementSyntax ThrowInvalidOperationStatement()
         {
-            return ExpressionStatement(InvocationExpression(
-                IdentifierName(nameof(ExceptionUtils)),
-                IdentifierName(nameof(ExceptionUtils.ThrowInvalidOperation))));
+            return Block(
+                ExpressionStatement(InvocationExpression(
+                    IdentifierName(nameof(ExceptionUtils)),
+                    IdentifierName(nameof(ExceptionUtils.ThrowInvalidOperation)))),
+                ReturnDefaultStatement());
         }
 
         public static LiteralExpressionSyntax LiteralExpression(int value)

@@ -23,15 +23,15 @@ namespace Cathei.LinqGen.Hidden
             this.count = count;
         }
 
-        public int Count => count;
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator(start, count);
 
         public Enumerator GetSliceEnumerator(int skip, int take)
             => new Enumerator(start + skip, Math.Min(count - skip, take));
 
-        public struct Enumerator : IStructCollectionEnumerator<int>
+        public int Count => count;
+
+        public struct Enumerator : IEnumerator<int>
         {
             private readonly int start;
             private readonly int count;
@@ -63,10 +63,6 @@ namespace Cathei.LinqGen.Hidden
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Dispose() { }
-
-            public int Count => count;
-
-            public int Get(int index) => start + index;
         }
     }
 }

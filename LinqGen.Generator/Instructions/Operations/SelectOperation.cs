@@ -35,6 +35,9 @@ namespace Cathei.LinqGen.Generator
 
         // public override bool PreserveElementType => false;
 
+        public override bool IsCollection => Upstream!.IsCollection;
+        public override bool IsPartition => Upstream!.IsPartition;
+
         protected override IEnumerable<MemberInfo> GetMemberInfos()
         {
             foreach (var member in base.GetMemberInfos())

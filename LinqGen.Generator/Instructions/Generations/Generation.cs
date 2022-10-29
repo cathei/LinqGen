@@ -63,12 +63,9 @@ namespace Cathei.LinqGen.Generator
             Evaluations.Add(downstream);
         }
 
-        // public HashSet<INamedTypeSymbol>? InputSymbols { get; private set; }
-        // public void AddInputSymbol(INamedTypeSymbol inputSymbol)
-        // {
-        //     InputSymbols ??= new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
-        //     InputSymbols.Add(inputSymbol);
-        // }
+        public abstract bool IsCollection { get; }
+
+        public abstract bool IsPartition { get; }
 
         public abstract SourceText Render();
     }

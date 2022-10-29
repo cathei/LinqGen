@@ -28,15 +28,34 @@ namespace Cathei.LinqGen.Generator
             ClassName = ParseName(TypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
             IdentifierName = IdentifierName($"Compiled_{id}");
 
-            var stubInterfaceSymbol = typeSymbol.AllInterfaces.First(IsInputStubEnumerable);
-            TryParseStubInterface(stubInterfaceSymbol, out var elementSymbol, out _);
+            INamedTypeSymbol stubInterfaceSymbol = default!;
 
+            foreach (var interfaceSymbol in typeSymbol.AllInterfaces)
+            {
+                if (IsInputStubEnumerable(interfaceSymbol))
+                {
+                    stubInterfaceSymbol = interfaceSymbol;
+                }
+                else if (IsStructCollection(interfaceSymbol))
+                {
+                    IsCollection = true;
+                }
+                else if (IsStructPartition(interfaceSymbol))
+                {
+                    IsPartition = true;
+                }
+            }
+
+            TryParseStubInterface(stubInterfaceSymbol, out var elementSymbol, out _);
             OutputElementType = ParseTypeName(elementSymbol);
         }
 
         public override NameSyntax ClassName { get; }
         public override IdentifierNameSyntax IdentifierName { get; }
         public override TypeSyntax OutputElementType { get; }
+
+        public override bool IsCollection { get; }
+        public override bool IsPartition { get; }
 
         public override SourceText Render()
         {

@@ -74,24 +74,6 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-
-        // public virtual bool SupportGenericElementOutput => Upstream?.SupportGenericElementOutput ?? true;
-        //
-        // /// <summary>
-        // /// Is input element type will be same as output element type?
-        // /// </summary>
-        // public virtual bool PreserveElementType => true;
-        //
-        // private static readonly IdentifierNameSyntax GenericOutputElementName = IdentifierName("TElement");
-        //
-        // /// <summary>
-        // /// If generic output is not supported, this should be overriden as well
-        // /// </summary>
-        // public virtual TypeSyntax OutputElementType =>
-        //     SupportGenericElementOutput ? GenericOutputElementName : Upstream!.OutputElementType;
-
-        // public TypeArgumentListSyntax? CallerTypeArguments { get; }
-
         protected virtual IEnumerable<TypeParameterInfo> GetTypeParameterInfos() => Array.Empty<TypeParameterInfo>();
 
         private List<TypeParameterInfo>? _typeParameters;
@@ -107,9 +89,6 @@ namespace Cathei.LinqGen.Generator
         private List<TypeParameterInfo> CreateTypeParameters()
         {
             var result = new List<TypeParameterInfo>();
-
-            // if (SupportGenericElementOutput)
-            //     result.Add(new TypeParameterInfo(GenericOutputElementName, null));
 
             result.AddRange(GetTypeParameterInfos());
 
@@ -128,29 +107,6 @@ namespace Cathei.LinqGen.Generator
             }
 
             return result;
-
-            // var upstreamOriginalParameters = Upstream.TypeParameters;
-
-            // int index = 0;
-
-            // if (Upstream.SupportGenericElementOutput && PreserveElementType)
-            // {
-            //     _upstreamTypeParameters.Add(new TypeParameterInfo(GenericOutputElementName, null));
-            //     index = 1;
-            // }
-
-            // // NOTE: Always carry over upstream type arguments
-            // while (index < upstreamOriginalParameters.Count)
-            // {
-            //     // normalize the name
-            //     var info = new TypeParameterInfo(IdentifierName($"TUp{index + 1}"),
-            //         upstreamOriginalParameters[index].ConstraintType);
-            //
-            //     result.Add(info);
-            //     _upstreamTypeParameters.Add(info);
-            //
-            //     index++;
-            // }
         }
 
         public TypeParameterListSyntax? GetTypeParameters(int? take = null)

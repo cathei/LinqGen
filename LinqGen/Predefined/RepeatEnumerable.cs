@@ -10,8 +10,7 @@ using Cathei.LinqGen.Hidden;
 namespace Cathei.LinqGen.Hidden
 {
     public readonly struct RepeatEnumerable<T> :
-        IStub<IContent<T>, RepeatEnumerable<T>>,
-        IStructCollection<T, RepeatEnumerable<T>.Enumerator>
+        IStub<IContent<T>, RepeatEnumerable<T>>, IStructCollection<T, RepeatEnumerable<T>.Enumerator>
     {
         private readonly T element;
         private readonly int count;
@@ -23,8 +22,6 @@ namespace Cathei.LinqGen.Hidden
             this.count = count;
         }
 
-        public int Count => count;
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator(element, count);
 
@@ -32,7 +29,9 @@ namespace Cathei.LinqGen.Hidden
         public Enumerator GetSliceEnumerator(int skip, int take)
             => new Enumerator(element, Math.Min(count - skip, take));
 
-        public struct Enumerator : IStructCollectionEnumerator<T>
+        public int Count => count;
+
+        public struct Enumerator : IEnumerator<T>
         {
             private T element;
             private int count;
@@ -62,9 +61,6 @@ namespace Cathei.LinqGen.Hidden
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Dispose() { }
-
-            public int Count => count;
-            public T Get(int index) => element;
         }
     }
 }

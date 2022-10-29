@@ -17,6 +17,9 @@ namespace Cathei.LinqGen.Generator
     {
         public AsEnumerableOperation(in LinqGenExpression expression, int id) : base(expression, id) { }
 
+        public override bool IsCollection => Upstream!.IsCollection;
+        public override bool IsPartition => Upstream!.IsPartition;
+
         public override SourceText Render()
         {
             return AsEnumerableTemplate.Render(this);

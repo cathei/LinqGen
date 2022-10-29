@@ -43,13 +43,22 @@ namespace Cathei.LinqGen.Generator
             return GenerationTemplate.Render(this);
         }
 
-        public virtual BlockSyntax RenderConstructorBody() => SyntaxFactory.Block();
+        public virtual ConstructorDeclarationSyntax RenderEnumeratorConstructor()
+        {
+            // assignment will be automatic if parameter kind is Both
+            return ConstructorDeclaration(new(AggressiveInliningAttributeList),
+                InternalTokenList, Identifier("Enumerator"), ParameterList(GetParameters(MemberKind.Both)),
+                ThisInitializer, Block(GetAssignments(MemberKind.Both)));
+        }
 
         public abstract BlockSyntax RenderMoveNextBody();
 
         public abstract BlockSyntax RenderCurrentGetBody();
 
-        public virtual BlockSyntax RenderDisposeBody() => SyntaxFactory.Block();
+        public virtual BlockSyntax RenderDisposeBody() => Block();
+
+        public virtual BlockSyntax RenderCountGetBody() =>
+            Block(ReturnStatement(MemberAccessExpression(SourceName, CountName)));
 
         private MemberInfo[]? _memberInfos;
 
@@ -82,6 +91,27 @@ namespace Cathei.LinqGen.Generator
                     continue;
 
                 yield return member.AsArgument();
+            }
+        }
+
+        public IEnumerable<BaseTypeSyntax> GetBaseInterfaces()
+        {
+            NameSyntax genericClassName = IdentifierName;
+
+            if (Arity > 0)
+                genericClassName = GenericName(IdentifierName.Identifier, GetTypeArguments()!);
+
+            if (IsCollection)
+            {
+                yield return SimpleBaseType(GenericName(Identifier("IStructCollection"),
+                    TypeArgumentList(OutputElementType,
+                        QualifiedName(genericClassName, IdentifierName("Enumerator")))));
+            }
+            else if (IsPartition)
+            {
+                yield return SimpleBaseType(GenericName(Identifier("IStructPartition"),
+                    TypeArgumentList(OutputElementType,
+                        QualifiedName(genericClassName, IdentifierName("Enumerator")))));
             }
         }
 
