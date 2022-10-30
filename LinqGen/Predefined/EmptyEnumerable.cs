@@ -10,8 +10,7 @@ using Cathei.LinqGen.Hidden;
 namespace Cathei.LinqGen.Hidden
 {
     public readonly struct EmptyEnumerable<T> :
-        IStub<IContent<T>, EmptyEnumerable<T>>,
-        IStructCollection<T, EmptyEnumerable<T>.Enumerator>
+        IStub<IContent<T>, EmptyEnumerable<T>>, IPartition<EmptyEnumerable<T>.Enumerator>, ICountable
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator();

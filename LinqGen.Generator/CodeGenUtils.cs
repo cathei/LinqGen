@@ -44,16 +44,16 @@ namespace Cathei.LinqGen.Generator
                    symbol.MetadataName is LinqGenStubInterfaceTypeName or LinqGenStubEnumerableTypeName;
         }
 
-        public static bool IsStructCollection(INamedTypeSymbol symbol)
+        public static bool IsCountable(INamedTypeSymbol symbol)
         {
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.MetadataName == "IStructCollection`2";
+                   symbol.MetadataName == "ICountable";
         }
 
-        public static bool IsStructPartition(INamedTypeSymbol symbol)
+        public static bool IsPartition(INamedTypeSymbol symbol)
         {
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.MetadataName == "IStructPartition`2";
+                   symbol.MetadataName == "IPartition`1";
         }
 
         public static bool IsStructFunction(ITypeSymbol symbol)
@@ -300,6 +300,13 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.BinaryExpression(SyntaxKind.IsExpression, left, right);
         }
 
+        public static ExpressionSyntax MathMin(ExpressionSyntax left, ExpressionSyntax right)
+        {
+            return SyntaxFactory.InvocationExpression(
+                MemberAccessExpression(IdentifierName("Math"), IdentifierName("Min")),
+                ArgumentList(left, right));
+        }
+
         public static ExpressionSyntax TrueExpression()
         {
             return SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression);
@@ -330,6 +337,12 @@ namespace Cathei.LinqGen.Generator
         public static bool TryGetGenericEnumerableInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
         {
             interfaceSymbol = GetInterface(symbol, "System.Runtime", "IEnumerable`1")!;
+            return interfaceSymbol != null!;
+        }
+
+        public static bool TryGetGenericCollectionInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
+        {
+            interfaceSymbol = GetInterface(symbol, "System.Runtime", "ICollection`1")!;
             return interfaceSymbol != null!;
         }
     }

@@ -34,7 +34,7 @@ namespace Cathei.LinqGen.Generator
 
         public override TypeSyntax OutputElementType { get; }
 
-        public override bool IsCollection => false;
+        public override bool IsCountable => false;
         public override bool IsPartition => false;
 
         protected override IEnumerable<MemberInfo> GetMemberInfos()

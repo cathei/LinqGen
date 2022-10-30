@@ -32,6 +32,9 @@ namespace Cathei.LinqGen.Generator
                 elementSymbol = enumerableSymbol.TypeArguments[0];
             }
 
+            // TODO ICollection, ICollection<T>, IReadOnlyCollection<T> ...
+            IsCountable = TryGetGenericCollectionInterface(enumerableSymbol, out _);
+
             // find GetEnumerator with same rule as C# duck typing
             // TODO also find with interface implementation
             ITypeSymbol enumeratorSymbol = enumerableSymbol.GetMembers()
@@ -69,7 +72,7 @@ namespace Cathei.LinqGen.Generator
         }
 
         public override TypeSyntax OutputElementType { get; }
-        public override bool IsCollection => false;
+        public override bool IsCountable { get; }
         public override bool IsPartition => false;
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
@@ -102,6 +105,11 @@ namespace Cathei.LinqGen.Generator
                 ParameterList(Parameter(CallerEnumeratorType, SourceName.Identifier)), ThisInitializer,
                 Block(ExpressionStatement(SimpleAssignmentExpression(
                     MemberAccessExpression(ThisExpression(), SourceName), SourceName))));
+        }
+
+        public override BlockSyntax RenderCountGetBody()
+        {
+            return Block(ReturnStatement(MemberAccessExpression(SourceName, CountName)));
         }
 
         public override BlockSyntax RenderMoveNextBody()

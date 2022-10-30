@@ -1,8 +1,6 @@
 ﻿// LinqGen, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-using System;
-using System.Collections.Generic;
-using Cathei.LinqGen.Hidden;
+using System.Collections;
 
 namespace Cathei.LinqGen.Hidden
 {
@@ -10,18 +8,17 @@ namespace Cathei.LinqGen.Hidden
     /// Enumerable that can be boosted with slicing.
     /// For example, OrderBy.
     /// </summary>
-    public interface IStructPartition<out TElement, out TEnumerator>
-        where TEnumerator : IEnumerator<TElement>
+    public interface IPartition<out TEnumerator>
+        where TEnumerator : IEnumerator
     {
-        TEnumerator GetEnumerator();
         TEnumerator GetSliceEnumerator(int skip, int take);
     }
 
     /// <summary>
     /// Enumerable that can be boosted with counting
+    /// For example, IList.
     /// </summary>
-    public interface IStructCollection<out TElement, out TEnumerator> : IStructPartition<TElement, TEnumerator>
-        where TEnumerator : IEnumerator<TElement>
+    public interface ICountable
     {
         int Count { get; }
     }

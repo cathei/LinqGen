@@ -9,19 +9,18 @@ using StructLinq.Range;
 namespace QuickLinq.Benchmarks.Cases;
 
 [MemoryDiagnoser]
-public class SelectSum
+public class ListSelectSum
 {
     private const int Count = 10_000;
 
-    [Benchmark]
-    public double ForLoop()
+    private static List<int> TestData;
+
+    static ListSelectSum()
     {
-        double sum = 0;
+        TestData = new List<int>();
 
         for (int i = 0; i < Count; ++i)
-            sum += i * 2.0;
-
-        return sum;
+            TestData.Add(i);
     }
 
     [Benchmark]
@@ -29,7 +28,7 @@ public class SelectSum
     {
         double sum = 0;
 
-        foreach (var i in Enumerable.Range(0, Count))
+        foreach (var i in TestData)
             sum += i * 2.0;
 
         return sum;
@@ -38,8 +37,7 @@ public class SelectSum
     [Benchmark(Baseline = true)]
     public double Linq()
     {
-        return Enumerable
-            .Range(0, Count)
+        return TestData
             .Select(x=> x * 2.0)
             .Sum();
     }
@@ -47,8 +45,8 @@ public class SelectSum
     [Benchmark]
     public double LinqGenDelegate()
     {
-        return GenEnumerable
-            .Range(0, Count)
+        return TestData
+            .Specialize()
             .Select(x => x * 2.0)
             .Sum();
     }
@@ -58,17 +56,17 @@ public class SelectSum
     {
         var selector = new Selector();
 
-        return GenEnumerable
-               .Range(0, Count)
-               .Select(selector)
-               .Sum();
+        return TestData
+            .Specialize()
+            .Select(selector)
+            .Sum();
     }
 
     [Benchmark]
     public double StructLinqDelegate()
     {
-        return StructEnumerable
-            .Range(0, Count)
+        return TestData
+            .ToStructEnumerable()
             .Select(x => x * 2.0)
             .Sum();
     }
@@ -78,8 +76,8 @@ public class SelectSum
     {
         var selector = new Selector();
 
-        return StructEnumerable
-            .Range(0, Count)
+        return TestData
+            .ToStructEnumerable()
             .Select(ref selector, x => x, x => x)
             .Sum(x=> x);
     }
@@ -87,8 +85,8 @@ public class SelectSum
     [Benchmark]
     public double HyperLinqDelegate()
     {
-        return ValueEnumerable
-            .Range(0, Count)
+        return TestData
+            .AsValueEnumerable()
             .Select(x => x * 2.0)
             .Sum();
     }
@@ -96,8 +94,8 @@ public class SelectSum
     [Benchmark]
     public double HyperLinqStruct()
     {
-        return ValueEnumerable
-            .Range(0, Count)
+        return TestData
+            .AsValueEnumerable()
             .Select<double, Selector>()
             .Sum();
     }

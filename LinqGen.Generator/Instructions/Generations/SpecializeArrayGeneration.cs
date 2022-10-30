@@ -13,27 +13,23 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public sealed class SpecializeListGeneration : CompilingGeneration
+    public sealed class SpecializeArrayGeneration : CompilingGeneration
     {
         private TypeSyntax CallerEnumerableType { get; }
 
-        private bool IsArray { get; }
-
-        public SpecializeListGeneration(in LinqGenExpression expression, int id,
-            ITypeSymbol enumerableSymbol, INamedTypeSymbol listSymbol) : base(expression, id)
+        public SpecializeArrayGeneration(in LinqGenExpression expression, int id,
+            IArrayTypeSymbol arraySymbol) : base(expression, id)
         {
             // TODO prevent generic type element?
-            ITypeSymbol elementSymbol = listSymbol.TypeArguments[0];
+            ITypeSymbol elementSymbol = arraySymbol.ElementType;
 
             OutputElementType = ParseTypeName(elementSymbol);
-            CallerEnumerableType = ParseTypeName(enumerableSymbol);
-
-            IsArray = enumerableSymbol is IArrayTypeSymbol;
+            CallerEnumerableType = ParseTypeName(arraySymbol);
         }
 
         public override TypeSyntax OutputElementType { get; }
 
-        public override bool IsCollection => true;
+        public override bool IsCountable => true;
         public override bool IsPartition => true;
 
         protected override IEnumerable<MemberInfo> GetMemberInfos()
@@ -51,7 +47,7 @@ namespace Cathei.LinqGen.Generator
         public override BlockSyntax RenderCountGetBody()
         {
             return Block(ReturnStatement(
-                MemberAccessExpression(SourceName, IsArray ? LengthName : CountName)));
+                MemberAccessExpression(SourceName, LengthName)));
         }
 
         public override BlockSyntax RenderGetEnumeratorBody()
@@ -63,7 +59,7 @@ namespace Cathei.LinqGen.Generator
         public override BlockSyntax RenderGetSliceEnumeratorBody()
         {
             return Block(ReturnStatement(ObjectCreationExpression(EnumeratorName,
-                ArgumentList(SourceName, SkipName, TakeName), null)));
+                ArgumentList(SourceName, SkipName, MathMin(SubtractExpression(CountName, SkipName), TakeName)), null)));
         }
 
         public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()

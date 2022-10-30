@@ -10,8 +10,7 @@ using Cathei.LinqGen.Hidden;
 namespace Cathei.LinqGen.Hidden
 {
     public readonly struct RangeEnumerable :
-        IStub<IContent<int>, RangeEnumerable>,
-        IStructCollection<int, RangeEnumerable.Enumerator>
+        IStub<IContent<int>, RangeEnumerable>, IPartition<RangeEnumerable.Enumerator>, ICountable
     {
         private readonly int start;
         private readonly int count;

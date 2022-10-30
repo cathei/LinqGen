@@ -60,7 +60,7 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderMethodBody()
         {
-            if (FunctionType == null && Upstream!.IsCollection)
+            if (FunctionType == null && Upstream!.IsCountable)
             {
                 return Block(ReturnStatement(MemberAccessExpression(SourceName, CountName)));
             }

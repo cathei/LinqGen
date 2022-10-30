@@ -36,11 +36,11 @@ namespace Cathei.LinqGen.Generator
                 {
                     stubInterfaceSymbol = interfaceSymbol;
                 }
-                else if (IsStructCollection(interfaceSymbol))
+                else if (IsCountable(interfaceSymbol))
                 {
-                    IsCollection = true;
+                    IsCountable = true;
                 }
-                else if (IsStructPartition(interfaceSymbol))
+                else if (IsPartition(interfaceSymbol))
                 {
                     IsPartition = true;
                 }
@@ -54,7 +54,7 @@ namespace Cathei.LinqGen.Generator
         public override IdentifierNameSyntax IdentifierName { get; }
         public override TypeSyntax OutputElementType { get; }
 
-        public override bool IsCollection { get; }
+        public override bool IsCountable { get; }
         public override bool IsPartition { get; }
 
         public override SourceText Render()

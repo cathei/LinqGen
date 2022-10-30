@@ -1,25 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 
 namespace Cathei.LinqGen.Tests;
 
 public class FundamentalTests
 {
-
-    public static readonly Func<int, int> temp1 = x => x;
-    public static readonly Func<int, int> temp2 = x => x;
-
-
     // [Test]
     // public void Fundamental_DelegateComparison()
     // {
-    //     Func<int, int> a = static x => x;
-    //     Func<int, int> b = static x => x;
+    //     Expression<Func<int, int>> a = x => x;
+    //     Expression<Func<int, int>> b = y => y;
+    //     Expression<Func<int, int>> c = x => x;
     //
-    //     Assert.AreEqual(a.Method.MethodHandle.Value, b.Method.MethodHandle.Value);
-    //     Assert.AreEqual(temp1.Method.MethodHandle.Value, temp2.Method.MethodHandle.Value);
+    //     Assert.IsTrue();
+    //     Assert.AreEqual(a, b);
     // }
 
     [TestCase(2)]

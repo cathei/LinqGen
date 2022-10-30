@@ -214,7 +214,7 @@ namespace Cathei.LinqGen
                         break;
 
                     case "Count":
-                        if (!_instruction.IsCollection)
+                        if (!_instruction.IsCountable)
                             return null;
 
                         node = RewriteEnumerableCount(node);

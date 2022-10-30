@@ -26,11 +26,12 @@ namespace Cathei.LinqGen.Generator
                 {
                     ITypeSymbol typeArgument = expression.SignatureSymbol!.TypeArguments[0];
 
-                    if (TryGetGenericListInterface(typeArgument, out var listSymbol))
-                        return new SpecializeListGeneration(expression, id, typeArgument, listSymbol);
-
                     if (typeArgument is IArrayTypeSymbol arraySymbol)
+                    {
+                        if (arraySymbol.Rank == 1)
+                            return new SpecializeArrayGeneration(expression, id, arraySymbol);
                         return new SpecializeArrayMultiGeneration(expression, id, arraySymbol);
+                    }
 
                     if (typeArgument is INamedTypeSymbol namedTypeSymbol)
                         return new SpecializeGeneration(expression, id, namedTypeSymbol);

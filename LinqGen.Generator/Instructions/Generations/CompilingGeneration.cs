@@ -109,17 +109,15 @@ namespace Cathei.LinqGen.Generator
             if (Arity > 0)
                 genericClassName = GenericName(IdentifierName.Identifier, GetTypeArguments()!);
 
-            if (IsCollection)
+            if (IsCountable)
             {
-                yield return SimpleBaseType(GenericName(Identifier("IStructCollection"),
-                    TypeArgumentList(OutputElementType,
-                        QualifiedName(genericClassName, IdentifierName("Enumerator")))));
+                yield return SimpleBaseType(IdentifierName("ICountable"));
             }
-            else if (IsPartition)
+
+            if (IsPartition)
             {
-                yield return SimpleBaseType(GenericName(Identifier("IStructPartition"),
-                    TypeArgumentList(OutputElementType,
-                        QualifiedName(genericClassName, IdentifierName("Enumerator")))));
+                yield return SimpleBaseType(GenericName(Identifier("IPartition"),
+                    TypeArgumentList(QualifiedName(genericClassName, IdentifierName("Enumerator")))));
             }
         }
 

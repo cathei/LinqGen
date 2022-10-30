@@ -63,7 +63,7 @@ namespace Cathei.LinqGen.Generator
             Evaluations.Add(downstream);
         }
 
-        public abstract bool IsCollection { get; }
+        public abstract bool IsCountable { get; }
 
         public abstract bool IsPartition { get; }
 
