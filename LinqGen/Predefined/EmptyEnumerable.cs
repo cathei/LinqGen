@@ -16,7 +16,7 @@ namespace Cathei.LinqGen.Hidden
         public Enumerator GetEnumerator() => new Enumerator();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Enumerator GetSliceEnumerator(int skip, int take)
+        public Enumerator GetSliceEnumerator(int skip, int? take)
             => new Enumerator();
 
         public int Count => 0;

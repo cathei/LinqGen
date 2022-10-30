@@ -31,26 +31,26 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<MemberInfo> GetMemberInfos()
         {
-            yield return new MemberInfo(MemberKind.Enumerable, UpstreamResolvedClassName, SourceName);
+            yield return new MemberInfo(MemberKind.Enumerable, UpstreamResolvedClassName, SourceField);
 
             yield return new MemberInfo(MemberKind.Enumerator,
-                QualifiedName(UpstreamResolvedClassName, IdentifierName("Enumerator")), SourceName);
+                QualifiedName(UpstreamResolvedClassName, IdentifierName("Enumerator")), SourceField);
         }
 
         public override BlockSyntax RenderGetEnumeratorBody()
         {
-            return Block(ReturnStatement(ObjectCreationExpression(EnumeratorName,
+            return Block(ReturnStatement(ObjectCreationExpression(EnumeratorType,
                 ArgumentList(GetArguments(MemberKind.Both).Prepend(
-                    Argument(InvocationExpression(SourceName, GetEnumeratorName)))), null)));
+                    Argument(InvocationExpression(SourceField, GetEnumeratorMethod)))), null)));
         }
 
         public override BlockSyntax RenderGetSliceEnumeratorBody()
         {
-            return Block(ReturnStatement(ObjectCreationExpression(EnumeratorName,
+            return Block(ReturnStatement(ObjectCreationExpression(EnumeratorType,
                 ArgumentList(GetArguments(MemberKind.Both).Prepend(
                     Argument(InvocationExpression(
-                        MemberAccessExpression(SourceName, GetSliceEnumeratorName),
-                        ArgumentList(SkipName, TakeName))))), null)));
+                        MemberAccessExpression(SourceField, GetSliceEnumeratorMethod),
+                        ArgumentList(SkipField, TakeField))))), null)));
         }
 
         public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()
@@ -58,11 +58,11 @@ namespace Cathei.LinqGen.Generator
             var parameters = GetParameters(MemberKind.Both)
                 .Prepend(Parameter(
                     QualifiedName(UpstreamResolvedClassName, IdentifierName("Enumerator")),
-                    SourceName.Identifier));
+                    SourceField.Identifier));
 
             var assignments = GetAssignments(MemberKind.Both)
                 .Prepend(ExpressionStatement(SimpleAssignmentExpression(
-                    MemberAccessExpression(ThisExpression(), SourceName), SourceName)));
+                    MemberAccessExpression(ThisExpression(), SourceField), SourceField)));
 
             // assignment will be automatic if parameter kind is Both
             return ConstructorDeclaration(new(AggressiveInliningAttributeList),
@@ -72,17 +72,17 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderMoveNextBody()
         {
-            return Block(ReturnStatement(InvocationExpression(SourceName, MoveNextName)));
+            return Block(ReturnStatement(InvocationExpression(SourceField, MoveNextMethod)));
         }
 
         public override BlockSyntax RenderCurrentGetBody()
         {
-            return Block(ReturnStatement(MemberAccessExpression(SourceName, CurrentName)));
+            return Block(ReturnStatement(MemberAccessExpression(SourceField, CurrentProperty)));
         }
 
         public override BlockSyntax RenderDisposeBody()
         {
-            return Block(ExpressionStatement(InvocationExpression(SourceName, DisposeName)));
+            return Block(ExpressionStatement(InvocationExpression(SourceField, DisposeMethod)));
         }
     }
 }

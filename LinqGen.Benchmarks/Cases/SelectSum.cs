@@ -59,9 +59,9 @@ public class SelectSum
         var selector = new Selector();
 
         return GenEnumerable
-               .Range(0, Count)
-               .Select(selector)
-               .Sum();
+            .Range(0, Count)
+            .Select(selector)
+            .Sum();
     }
 
     [Benchmark]

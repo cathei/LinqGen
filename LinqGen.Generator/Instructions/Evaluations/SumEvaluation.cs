@@ -48,11 +48,11 @@ namespace Cathei.LinqGen.Generator
             if (FunctionType != null)
             {
                 yield return Parameter(default, default,
-                    WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : FunctionType, SelectorName.Identifier, default);
+                    WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : FunctionType, SelectorField.Identifier, default);
             }
 
             yield return Parameter(default, default,
-                ReturnType, InitialValueName.Identifier, EqualsValueClause(DefaultLiteral));
+                ReturnType, InitialValueField.Identifier, EqualsValueClause(DefaultLiteral));
         }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
@@ -64,15 +64,15 @@ namespace Cathei.LinqGen.Generator
         public override BlockSyntax RenderMethodBody()
         {
             return Block(UsingLocalDeclarationStatement(
-                    IteratorName.Identifier, InvocationExpression(SourceName, GetEnumeratorName)),
-                WhileStatement(InvocationExpression(IteratorName, MoveNextName),
+                    IteratorField.Identifier, InvocationExpression(SourceField, GetEnumeratorMethod)),
+                WhileStatement(InvocationExpression(IteratorField, MoveNextMethod),
                     ExpressionStatement(
-                        AssignmentExpression(SyntaxKind.AddAssignmentExpression, InitialValueName,
+                        AssignmentExpression(SyntaxKind.AddAssignmentExpression, InitialValueField,
                             FunctionType == null
-                                ? MemberAccessExpression(IteratorName, CurrentName)
-                                : InvocationExpression(MemberAccessExpression(SelectorName, InvokeName),
-                                    ArgumentList(MemberAccessExpression(IteratorName, CurrentName)))))),
-                ReturnStatement(InitialValueName));
+                                ? MemberAccessExpression(IteratorField, CurrentProperty)
+                                : InvocationExpression(MemberAccessExpression(SelectorField, InvokeMethod),
+                                    ArgumentList(MemberAccessExpression(IteratorField, CurrentProperty)))))),
+                ReturnStatement(InitialValueField));
         }
     }
 }

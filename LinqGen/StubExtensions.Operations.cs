@@ -84,5 +84,17 @@ namespace Cathei.LinqGen
         {
             throw new NotImplementedException();
         }
+
+        public static Stub<IContent<T>, Skip<TUp>> Skip<T, TUp>(
+            this IStub<IContent<T>, TUp> enumerable, int skip)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IContent<T>, Take<TUp>> Take<T, TUp>(
+            this IStub<IContent<T>, TUp> enumerable, int take)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

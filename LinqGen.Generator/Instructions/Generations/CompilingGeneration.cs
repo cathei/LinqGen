@@ -58,7 +58,7 @@ namespace Cathei.LinqGen.Generator
         public virtual BlockSyntax RenderDisposeBody() => Block();
 
         public virtual BlockSyntax RenderCountGetBody() =>
-            Block(ReturnStatement(MemberAccessExpression(SourceName, CountName)));
+            Block(ReturnStatement(MemberAccessExpression(SourceField, CountProperty)));
 
         private MemberInfo[]? _memberInfos;
 
@@ -67,7 +67,7 @@ namespace Cathei.LinqGen.Generator
         public virtual BlockSyntax RenderGetEnumeratorBody()
         {
             return Block(ReturnStatement(ObjectCreationExpression(
-                EnumeratorName, ArgumentList(GetArguments(MemberKind.Both)), null)));
+                EnumeratorType, ArgumentList(GetArguments(MemberKind.Both)), null)));
         }
 
         public virtual BlockSyntax RenderGetSliceEnumeratorBody() => throw new NotImplementedException();

@@ -84,36 +84,41 @@ namespace Cathei.LinqGen.Generator
 
         // known type names
         public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));
-        public static readonly IdentifierNameSyntax EnumeratorName = IdentifierName("Enumerator");
+        public static readonly IdentifierNameSyntax EnumeratorType = IdentifierName("Enumerator");
 
         // known method names
-        public static readonly IdentifierNameSyntax InvokeName = IdentifierName("Invoke");
-        public static readonly IdentifierNameSyntax MoveNextName = IdentifierName("MoveNext");
-        public static readonly IdentifierNameSyntax DisposeName = IdentifierName("Dispose");
-        public static readonly IdentifierNameSyntax GetEnumeratorName = IdentifierName("GetEnumerator");
-        public static readonly IdentifierNameSyntax GetSliceEnumeratorName = IdentifierName("GetSliceEnumerator");
+        public static readonly IdentifierNameSyntax InvokeMethod = IdentifierName("Invoke");
+        public static readonly IdentifierNameSyntax MoveNextMethod = IdentifierName("MoveNext");
+        public static readonly IdentifierNameSyntax DisposeMethod = IdentifierName("Dispose");
+        public static readonly IdentifierNameSyntax GetEnumeratorMethod = IdentifierName("GetEnumerator");
+        public static readonly IdentifierNameSyntax GetSliceEnumeratorMethod = IdentifierName("GetSliceEnumerator");
 
         // known property names
-        public static readonly IdentifierNameSyntax CurrentName = IdentifierName("Current");
-        public static readonly IdentifierNameSyntax CountName = IdentifierName("Count");
-        public static readonly IdentifierNameSyntax LengthName = IdentifierName("Length");
+        public static readonly IdentifierNameSyntax CurrentProperty = IdentifierName("Current");
+        public static readonly IdentifierNameSyntax CountProperty = IdentifierName("Count");
+        public static readonly IdentifierNameSyntax LengthProperty = IdentifierName("Length");
+        public static readonly IdentifierNameSyntax HasValueProperty = IdentifierName("HasValue");
+        public static readonly IdentifierNameSyntax ValueProperty = IdentifierName("Value");
 
         // custom variable names
-        public static readonly IdentifierNameSyntax ParentName = IdentifierName("parent");
-        public static readonly IdentifierNameSyntax SourceName = IdentifierName("source");
-        public static readonly IdentifierNameSyntax IteratorName = IdentifierName("iter");
-        public static readonly IdentifierNameSyntax IndexName = IdentifierName("index");
-        public static readonly IdentifierNameSyntax SelectorName = IdentifierName("select");
-        public static readonly IdentifierNameSyntax PredicateName = IdentifierName("predicate");
-        public static readonly IdentifierNameSyntax InitialValueName = IdentifierName("initialValue");
-        public static readonly IdentifierNameSyntax SkipName = IdentifierName("skip");
-        public static readonly IdentifierNameSyntax TakeName = IdentifierName("take");
+        public static readonly IdentifierNameSyntax ParentField = IdentifierName("parent");
+        public static readonly IdentifierNameSyntax SourceField = IdentifierName("source");
+        public static readonly IdentifierNameSyntax IteratorField = IdentifierName("iter");
+        public static readonly IdentifierNameSyntax IndexField = IdentifierName("index");
+        public static readonly IdentifierNameSyntax SelectorField = IdentifierName("select");
+        public static readonly IdentifierNameSyntax PredicateField = IdentifierName("predicate");
+        public static readonly IdentifierNameSyntax InitialValueField = IdentifierName("initialValue");
+        public static readonly IdentifierNameSyntax SkipField = IdentifierName("skip");
+        public static readonly IdentifierNameSyntax TakeField = IdentifierName("take");
+        public static readonly IdentifierNameSyntax ValueField = IdentifierName("value");
 
         public static readonly TypeSyntax VarType = IdentifierName("var");
         public static readonly TypeSyntax ObjectType = IdentifierName("object");
 
         public static readonly LiteralExpressionSyntax DefaultLiteral =
             SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression);
+        public static readonly LiteralExpressionSyntax NullLiteral =
+            SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression);
 
         public static readonly SyntaxToken UsingKeywordToken = Token(SyntaxKind.UsingKeyword);
         public static readonly SyntaxToken SemicolonToken = Token(SyntaxKind.SemicolonToken);
@@ -275,6 +280,11 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.PreIncrementExpression, operand);
         }
 
+        public static PrefixUnaryExpressionSyntax PreDecrementExpression(ExpressionSyntax operand)
+        {
+            return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.PreDecrementExpression, operand);
+        }
+
         public static PrefixUnaryExpressionSyntax LogicalNotExpression(ExpressionSyntax operand)
         {
             return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, operand);
@@ -290,9 +300,19 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.BinaryExpression(SyntaxKind.GreaterThanOrEqualExpression, left, right);
         }
 
+        public static BinaryExpressionSyntax AddExpression(ExpressionSyntax left, ExpressionSyntax right)
+        {
+            return SyntaxFactory.BinaryExpression(SyntaxKind.AddExpression, left, right);
+        }
+
         public static BinaryExpressionSyntax SubtractExpression(ExpressionSyntax left, ExpressionSyntax right)
         {
             return SyntaxFactory.BinaryExpression(SyntaxKind.SubtractExpression, left, right);
+        }
+
+        public static BinaryExpressionSyntax NullCoalesce(ExpressionSyntax left, ExpressionSyntax right)
+        {
+            return SyntaxFactory.BinaryExpression(SyntaxKind.CoalesceExpression, left, right);
         }
 
         public static BinaryExpressionSyntax IsExpression(ExpressionSyntax left, ExpressionSyntax right)
@@ -304,6 +324,13 @@ namespace Cathei.LinqGen.Generator
         {
             return SyntaxFactory.InvocationExpression(
                 MemberAccessExpression(IdentifierName("Math"), IdentifierName("Min")),
+                ArgumentList(left, right));
+        }
+
+        public static ExpressionSyntax MathMax(ExpressionSyntax left, ExpressionSyntax right)
+        {
+            return SyntaxFactory.InvocationExpression(
+                MemberAccessExpression(IdentifierName("Math"), IdentifierName("Max")),
                 ArgumentList(left, right));
         }
 

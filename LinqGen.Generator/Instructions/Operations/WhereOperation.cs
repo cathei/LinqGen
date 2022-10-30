@@ -36,10 +36,10 @@ namespace Cathei.LinqGen.Generator
                 yield return member;
 
             yield return new MemberInfo(MemberKind.Both,
-                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName, PredicateName);
+                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName, PredicateField);
 
             if (WithIndex)
-                yield return new MemberInfo(MemberKind.Enumerator, IntType, IndexName);
+                yield return new MemberInfo(MemberKind.Enumerator, IntType, IndexField);
         }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
@@ -55,7 +55,7 @@ namespace Cathei.LinqGen.Generator
             if (WithIndex)
             {
                 syntax = syntax.AddBodyStatements(
-                    ExpressionStatement(SimpleAssignmentExpression(IndexName, LiteralExpression(-1))));
+                    ExpressionStatement(SimpleAssignmentExpression(IndexField, LiteralExpression(-1))));
             }
 
             return syntax;
@@ -63,14 +63,14 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderMoveNextBody()
         {
-            return Block(WhileStatement(InvocationExpression(SourceName, MoveNextName), Block(
+            return Block(WhileStatement(InvocationExpression(SourceField, MoveNextMethod), Block(
                     IfStatement(
                         InvocationExpression(
-                            MemberAccessExpression(PredicateName, InvokeName),
+                            MemberAccessExpression(PredicateField, InvokeMethod),
                             WithIndex
-                                ? ArgumentList(MemberAccessExpression(SourceName, CurrentName),
-                                    PreIncrementExpression(IndexName))
-                                : ArgumentList(MemberAccessExpression(SourceName, CurrentName))),
+                                ? ArgumentList(MemberAccessExpression(SourceField, CurrentProperty),
+                                    PreIncrementExpression(IndexField))
+                                : ArgumentList(MemberAccessExpression(SourceField, CurrentProperty))),
                         ReturnStatement(TrueExpression())))),
                 ReturnStatement(FalseExpression()));
         }

@@ -30,19 +30,19 @@ namespace Cathei.LinqGen.Generator
             if (Upstream!.IsPartition)
             {
                 return InvocationExpression(
-                    MemberAccessExpression(SourceName, GetSliceEnumeratorName),
+                    MemberAccessExpression(SourceField, GetSliceEnumeratorMethod),
                     ArgumentList(LiteralExpression(0), LiteralExpression(1)));
             }
 
-            return InvocationExpression(SourceName, GetEnumeratorName);
+            return InvocationExpression(SourceField, GetEnumeratorMethod);
         }
 
         public override BlockSyntax RenderMethodBody()
         {
             return Block(UsingLocalDeclarationStatement(
-                    IteratorName.Identifier, GetEnumeratorExpression()),
-                IfStatement(InvocationExpression(IteratorName, MoveNextName),
-                    ReturnStatement(MemberAccessExpression(IteratorName, CurrentName))),
+                    IteratorField.Identifier, GetEnumeratorExpression()),
+                IfStatement(InvocationExpression(IteratorField, MoveNextMethod),
+                    ReturnStatement(MemberAccessExpression(IteratorField, CurrentProperty))),
                 OrDefault ? ReturnDefaultStatement() : ThrowInvalidOperationStatement());
         }
     }

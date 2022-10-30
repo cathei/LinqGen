@@ -40,7 +40,7 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos()
         {
             yield return new MemberInfo(
-                MemberKind.Both, CallerEnumerableType, SourceName);
+                MemberKind.Both, CallerEnumerableType, SourceField);
 
             for (int i = 0; i < Rank; ++i)
             {
@@ -56,13 +56,13 @@ namespace Cathei.LinqGen.Generator
             static StatementSyntax setIndexToLength(int i)
             {
                 return ExpressionStatement(SimpleAssignmentExpression(IdentifierName($"index{i}"),
-                    InvocationExpression(MemberAccessExpression(SourceName, IdentifierName("GetLength")),
+                    InvocationExpression(MemberAccessExpression(SourceField, IdentifierName("GetLength")),
                         ArgumentList(LiteralExpression(i)))));
             }
 
             var lengthZeroCheck = IfStatement(
                 GreaterOrEqualExpression(LiteralExpression(0),
-                    MemberAccessExpression(SourceName, IdentifierName("Length"))),
+                    MemberAccessExpression(SourceField, IdentifierName("Length"))),
                 Block(Enumerable.Range(0, Rank).Select(setIndexToLength).Append(ReturnStatement())));
 
             var statements = syntax.Body!.Statements.AddRange(
@@ -78,7 +78,7 @@ namespace Cathei.LinqGen.Generator
         {
             return Block(Enumerable.Range(0, Rank).Reverse().Select(i => IfStatement(
                 LessThanExpression(PreIncrementExpression(IdentifierName($"index{i}")),
-                    InvocationExpression(MemberAccessExpression(SourceName, IdentifierName("GetLength")),
+                    InvocationExpression(MemberAccessExpression(SourceField, IdentifierName("GetLength")),
                         ArgumentList(LiteralExpression(i)))),
                 Block(Enumerable.Range(i + 1, Rank - i - 1).Select(j => ExpressionStatement(
                         SimpleAssignmentExpression(IdentifierName($"index{j}"), LiteralExpression(0))))
@@ -88,7 +88,7 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderCurrentGetBody()
         {
-            return Block(ReturnStatement(ElementAccessExpression(SourceName,
+            return Block(ReturnStatement(ElementAccessExpression(SourceField,
                 BracketedArgumentList(SeparatedList(Enumerable.Range(0, Rank)
                     .Select(i => Argument(IdentifierName($"index{i}"))))))));
         }

@@ -11,7 +11,7 @@ namespace Cathei.LinqGen.Hidden
     public interface IPartition<out TEnumerator>
         where TEnumerator : IEnumerator
     {
-        TEnumerator GetSliceEnumerator(int skip, int take);
+        TEnumerator GetSliceEnumerator(int skip, int? take);
     }
 
     /// <summary>

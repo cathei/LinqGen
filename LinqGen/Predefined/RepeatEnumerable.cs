@@ -26,8 +26,8 @@ namespace Cathei.LinqGen.Hidden
         public Enumerator GetEnumerator() => new Enumerator(element, count);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Enumerator GetSliceEnumerator(int skip, int take)
-            => new Enumerator(element, Math.Min(count - skip, take));
+        public Enumerator GetSliceEnumerator(int skip, int? take)
+            => new Enumerator(element, take.HasValue ? Math.Min(count - skip, take.Value) : count - skip);
 
         public int Count => count;
 

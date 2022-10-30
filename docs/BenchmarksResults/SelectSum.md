@@ -14,14 +14,14 @@ Apple M1 Pro, 1 CPU, 10 logical and 10 physical cores
 
 
 ```
-|             Method |      Mean |     Error |    StdDev | Ratio | Allocated | Alloc Ratio |
-|------------------- |----------:|----------:|----------:|------:|----------:|------------:|
-|            ForLoop |  9.386 μs | 0.0531 μs | 0.0496 μs |  0.24 |         - |        0.00 |
-|        ForEachLoop | 25.891 μs | 0.2113 μs | 0.1976 μs |  0.65 |      40 B |        0.45 |
-|               Linq | 39.648 μs | 0.4394 μs | 0.4110 μs |  1.00 |      88 B |        1.00 |
-|    LinqGenDelegate | 26.956 μs | 0.1401 μs | 0.1310 μs |  0.68 |         - |        0.00 |
-|      LinqGenStruct | 11.727 μs | 0.0519 μs | 0.0433 μs |  0.30 |         - |        0.00 |
-| StructLinqDelegate | 34.714 μs | 0.1070 μs | 0.0893 μs |  0.88 |      56 B |        0.64 |
-|   StructLinqStruct |  9.344 μs | 0.0206 μs | 0.0161 μs |  0.24 |         - |        0.00 |
-|  HyperLinqDelegate | 34.544 μs | 0.1349 μs | 0.1196 μs |  0.87 |         - |        0.00 |
-|    HyperLinqStruct | 34.512 μs | 0.1205 μs | 0.1127 μs |  0.87 |         - |        0.00 |
+|             Method |      Mean |     Error |    StdDev | Ratio |   Gen0 | Allocated | Alloc Ratio |
+|------------------- |----------:|----------:|----------:|------:|-------:|----------:|------------:|
+|            ForLoop |  9.462 μs | 0.0389 μs | 0.0345 μs |  0.24 |      - |         - |        0.00 |
+|        ForEachLoop | 25.917 μs | 0.1046 μs | 0.0979 μs |  0.67 |      - |      40 B |        0.45 |
+|               Linq | 38.900 μs | 0.0989 μs | 0.0925 μs |  1.00 |      - |      88 B |        1.00 |
+|    LinqGenDelegate | 27.016 μs | 0.2227 μs | 0.1859 μs |  0.69 |      - |         - |        0.00 |
+|      LinqGenStruct | 11.810 μs | 0.0289 μs | 0.0271 μs |  0.30 |      - |         - |        0.00 |
+| StructLinqDelegate | 14.344 μs | 0.0366 μs | 0.0325 μs |  0.37 | 0.0153 |      56 B |        0.64 |
+|   StructLinqStruct |  9.472 μs | 0.0418 μs | 0.0391 μs |  0.24 |      - |         - |        0.00 |
+|  HyperLinqDelegate | 34.880 μs | 0.2039 μs | 0.1908 μs |  0.90 |      - |         - |        0.00 |
+|    HyperLinqStruct | 34.931 μs | 0.0894 μs | 0.0793 μs |  0.90 |      - |         - |        0.00 |

@@ -87,6 +87,12 @@ namespace Cathei.LinqGen.Generator
 
                 case "OfType":
                     return new CastOperation(expression, id, true);
+
+                case "Skip":
+                    return new SkipOperation(expression, id);
+
+                case "Take":
+                    return new TakeOperation(expression, id);
             }
 
             // not yet implemented

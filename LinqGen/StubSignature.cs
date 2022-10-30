@@ -38,4 +38,7 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class WhereAtStruct<TUp> : IStubSignature { }
 
+    public abstract class Skip<TUp> : IStubSignature { }
+
+    public abstract class Take<TUp> : IStubSignature { }
 }

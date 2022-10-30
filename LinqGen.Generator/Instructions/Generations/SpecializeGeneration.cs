@@ -85,16 +85,16 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos()
         {
             yield return new MemberInfo(
-                MemberKind.Enumerable, CallerEnumerableType, SourceName);
+                MemberKind.Enumerable, CallerEnumerableType, SourceField);
 
             yield return new MemberInfo(
-                MemberKind.Enumerator, CallerEnumeratorType, SourceName);
+                MemberKind.Enumerator, CallerEnumeratorType, SourceField);
         }
 
         public override BlockSyntax RenderGetEnumeratorBody()
         {
             return Block(ReturnStatement(ObjectCreationExpression(
-                EnumeratorName, ArgumentList(InvocationExpression(SourceName, GetEnumeratorName)), null)));
+                EnumeratorType, ArgumentList(InvocationExpression(SourceField, GetEnumeratorMethod)), null)));
         }
 
         public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()
@@ -102,29 +102,29 @@ namespace Cathei.LinqGen.Generator
             // assignment will be automatic if parameter kind is Both
             return ConstructorDeclaration(new(AggressiveInliningAttributeList),
                 InternalTokenList, Identifier("Enumerator"),
-                ParameterList(Parameter(CallerEnumeratorType, SourceName.Identifier)), ThisInitializer,
+                ParameterList(Parameter(CallerEnumeratorType, SourceField.Identifier)), ThisInitializer,
                 Block(ExpressionStatement(SimpleAssignmentExpression(
-                    MemberAccessExpression(ThisExpression(), SourceName), SourceName))));
+                    MemberAccessExpression(ThisExpression(), SourceField), SourceField))));
         }
 
         public override BlockSyntax RenderCountGetBody()
         {
-            return Block(ReturnStatement(MemberAccessExpression(SourceName, CountName)));
+            return Block(ReturnStatement(MemberAccessExpression(SourceField, CountProperty)));
         }
 
         public override BlockSyntax RenderMoveNextBody()
         {
-            return Block(ReturnStatement(InvocationExpression(SourceName, MoveNextName)));
+            return Block(ReturnStatement(InvocationExpression(SourceField, MoveNextMethod)));
         }
 
         public override BlockSyntax RenderCurrentGetBody()
         {
-            return Block(ReturnStatement(MemberAccessExpression(SourceName, CurrentName)));
+            return Block(ReturnStatement(MemberAccessExpression(SourceField, CurrentProperty)));
         }
 
         public override BlockSyntax RenderDisposeBody()
         {
-            return Block(ExpressionStatement(InvocationExpression(SourceName, DisposeName)));
+            return Block(ExpressionStatement(InvocationExpression(SourceField, DisposeMethod)));
         }
 
         private class GenericRewriter : CSharpSyntaxRewriter
