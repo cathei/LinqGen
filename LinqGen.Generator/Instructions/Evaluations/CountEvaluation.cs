@@ -60,6 +60,11 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderMethodBody()
         {
+            if (FunctionType == null && Upstream!.IsCollection)
+            {
+                return Block(ReturnStatement(MemberAccessExpression(SourceName, CountName)));
+            }
+
             var localCountName = IdentifierName("count");
 
             return Block(UsingLocalDeclarationStatement(

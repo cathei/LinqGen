@@ -16,12 +16,12 @@ Apple M1 Pro, 1 CPU, 10 logical and 10 physical cores
 ```
 |             Method |      Mean |     Error |    StdDev | Ratio | Allocated | Alloc Ratio |
 |------------------- |----------:|----------:|----------:|------:|----------:|------------:|
-|            ForLoop |  9.469 ms | 0.0237 ms | 0.0221 ms |  0.24 |      10 B |        0.07 |
-|        ForEachLoop | 25.941 ms | 0.3002 ms | 0.2661 ms |  0.65 |      61 B |        0.44 |
-|               Linq | 40.141 ms | 0.6941 ms | 0.6493 ms |  1.00 |     140 B |        1.00 |
-|    LinqGenDelegate | 20.205 ms | 0.1205 ms | 0.1127 ms |  0.50 |      21 B |        0.15 |
-|      LinqGenStruct | 12.380 ms | 0.1771 ms | 0.1478 ms |  0.31 |      10 B |        0.07 |
-| StructLinqDelegate | 14.448 ms | 0.0542 ms | 0.0480 ms |  0.36 |      66 B |        0.47 |
-|   StructLinqStruct |  9.587 ms | 0.0302 ms | 0.0268 ms |  0.24 |      10 B |        0.07 |
-|  HyperLinqDelegate | 35.040 ms | 0.0997 ms | 0.0779 ms |  0.87 |      45 B |        0.32 |
-|    HyperLinqStruct | 34.753 ms | 0.1456 ms | 0.1290 ms |  0.86 |      45 B |        0.32 |
+|            ForLoop |  9.386 μs | 0.0531 μs | 0.0496 μs |  0.24 |         - |        0.00 |
+|        ForEachLoop | 25.891 μs | 0.2113 μs | 0.1976 μs |  0.65 |      40 B |        0.45 |
+|               Linq | 39.648 μs | 0.4394 μs | 0.4110 μs |  1.00 |      88 B |        1.00 |
+|    LinqGenDelegate | 26.956 μs | 0.1401 μs | 0.1310 μs |  0.68 |         - |        0.00 |
+|      LinqGenStruct | 11.727 μs | 0.0519 μs | 0.0433 μs |  0.30 |         - |        0.00 |
+| StructLinqDelegate | 34.714 μs | 0.1070 μs | 0.0893 μs |  0.88 |      56 B |        0.64 |
+|   StructLinqStruct |  9.344 μs | 0.0206 μs | 0.0161 μs |  0.24 |         - |        0.00 |
+|  HyperLinqDelegate | 34.544 μs | 0.1349 μs | 0.1196 μs |  0.87 |         - |        0.00 |
+|    HyperLinqStruct | 34.512 μs | 0.1205 μs | 0.1127 μs |  0.87 |         - |        0.00 |

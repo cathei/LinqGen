@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -24,10 +25,22 @@ namespace Cathei.LinqGen.Generator
 
         public override TypeSyntax ReturnType => Upstream!.OutputElementType;
 
+        private InvocationExpressionSyntax GetEnumeratorExpression()
+        {
+            if (Upstream!.IsPartition)
+            {
+                return InvocationExpression(
+                    MemberAccessExpression(SourceName, GetSliceEnumeratorName),
+                    ArgumentList(LiteralExpression(0), LiteralExpression(1)));
+            }
+
+            return InvocationExpression(SourceName, GetEnumeratorName);
+        }
+
         public override BlockSyntax RenderMethodBody()
         {
             return Block(UsingLocalDeclarationStatement(
-                    IteratorName.Identifier, InvocationExpression(SourceName, GetEnumeratorName)),
+                    IteratorName.Identifier, GetEnumeratorExpression()),
                 IfStatement(InvocationExpression(IteratorName, MoveNextName),
                     ReturnStatement(MemberAccessExpression(IteratorName, CurrentName))),
                 OrDefault ? ReturnDefaultStatement() : ThrowInvalidOperationStatement());

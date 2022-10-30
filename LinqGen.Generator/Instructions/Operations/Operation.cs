@@ -18,7 +18,7 @@ namespace Cathei.LinqGen.Generator
     /// </summary>
     public abstract class Operation : CompilingGeneration
     {
-        public Operation(in LinqGenExpression expression, int id) : base(expression, id) { }
+        protected Operation(in LinqGenExpression expression, int id) : base(expression, id) { }
 
         // upstream must exists for operations
         public override TypeSyntax OutputElementType => Upstream!.OutputElementType;
