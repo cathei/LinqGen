@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using Cathei.LinqGen.Hidden;
@@ -371,6 +372,44 @@ namespace Cathei.LinqGen.Generator
         {
             interfaceSymbol = GetInterface(symbol, "System.Runtime", "ICollection`1")!;
             return interfaceSymbol != null!;
+        }
+
+        public static INamedTypeSymbol NormalizeSignature(INamedTypeSymbol signature)
+        {
+            if (signature.Arity == 0)
+                return signature;
+
+            var typeArgs = signature.TypeArguments;
+            var newTypeArgs = new ITypeSymbol[typeArgs.Length];
+
+            var constructedFromArgs = signature.ConstructedFrom.TypeArguments;
+
+            for (int i = 0; i < typeArgs.Length; i++)
+            {
+                // any ITypeParameterSymbol should be replaced
+                if (typeArgs[i] is ITypeParameterSymbol)
+                {
+                    newTypeArgs[i] = constructedFromArgs[i];
+                    continue;
+                }
+
+                if (typeArgs[i] is IArrayTypeSymbol arraySymbol &&
+                    arraySymbol.ElementType is ITypeParameterSymbol)
+                {
+                    newTypeArgs[i] = arraySymbol.OriginalDefinition;
+                    continue;
+                }
+
+                if (typeArgs[i] is INamedTypeSymbol namedTypeSymbol)
+                {
+                    newTypeArgs[i] = NormalizeSignature(namedTypeSymbol);
+                    continue;
+                }
+
+                newTypeArgs[i] = typeArgs[i];
+            }
+
+            return signature.ConstructedFrom.Construct(newTypeArgs);
         }
     }
 }

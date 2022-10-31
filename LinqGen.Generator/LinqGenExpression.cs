@@ -91,6 +91,12 @@ namespace Cathei.LinqGen.Generator
                 return false;
             }
 
+            if (signatureSymbol != null)
+                signatureSymbol = NormalizeSignature(signatureSymbol);
+
+            if (upstreamSignatureSymbol != null)
+                upstreamSignatureSymbol = NormalizeSignature(upstreamSignatureSymbol);
+
             result = new LinqGenExpression(
                 semanticModel, invocationSyntax, memberAccessSyntax, methodSymbol,
                 signatureSymbol, inputElementSymbol, upstreamSignatureSymbol);

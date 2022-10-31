@@ -100,8 +100,8 @@ public abstract class GenerationTestBase<T>
     {
         var enumerable = Build(20);
 
-        var array1 = enumerable.AsEnumerable().Skip(6).Take(7).ToArray();
-        var array2 = enumerable.Skip(6).Take(7).ToArray();
+        var array1 = enumerable.Skip(6).Take(7);
+        var array2 = enumerable.Specialize().Skip(6).Take(7).AsEnumerable();
 
         CollectionAssert.AreEqual(array1, array2);
     }

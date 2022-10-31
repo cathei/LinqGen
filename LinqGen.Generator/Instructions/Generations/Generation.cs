@@ -23,7 +23,6 @@ namespace Cathei.LinqGen.Generator
 
         protected Generation(bool generated) : base(generated) { }
 
-        // public virtual bool CanSlice { get; }
         public abstract TypeSyntax OutputElementType { get; }
 
         /// <summary>
