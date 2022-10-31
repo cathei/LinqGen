@@ -56,7 +56,7 @@ namespace Cathei.LinqGen.Generator
                 return base.RenderMoveNextBody();
 
             return Block(WhileStatement(
-                    LessThanExpression(LiteralExpression(0), PreDecrementExpression(ValueField)),
+                    GreaterOrEqualExpression(PreDecrementExpression(ValueField), LiteralExpression(0)),
                     IfStatement(
                         LogicalNotExpression(InvocationExpression(SourceField, MoveNextMethod)),
                         ReturnStatement(FalseExpression()))),
