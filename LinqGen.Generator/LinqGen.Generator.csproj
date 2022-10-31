@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LinqGen\LinqGen.csproj" />
+<!--      <ProjectReference Include="..\LinqGen\LinqGen.csproj" />-->
     </ItemGroup>
 
 </Project>

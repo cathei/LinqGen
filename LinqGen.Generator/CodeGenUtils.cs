@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
-using Cathei.LinqGen.Hidden;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -17,7 +16,7 @@ namespace Cathei.LinqGen.Generator
     public static class CodeGenUtils
     {
         private const string LinqGenAssemblyName = "LinqGen";
-        private const string LinqGenStubExtensionsTypeName = nameof(StubExtensions);
+        private const string LinqGenStubExtensionsTypeName = "StubExtensions";
 
         private const string LinqGenStubEnumerableTypeName = "Stub`2";
         private const string LinqGenBoxedStubEnumerableTypeName = "BoxedStub`2";
@@ -264,8 +263,8 @@ namespace Cathei.LinqGen.Generator
         {
             return Block(
                 ExpressionStatement(InvocationExpression(
-                    IdentifierName(nameof(ExceptionUtils)),
-                    IdentifierName(nameof(ExceptionUtils.ThrowInvalidOperation)))),
+                    IdentifierName("ExceptionUtils"),
+                    IdentifierName("ThrowInvalidOperation"))),
                 ReturnDefaultStatement());
         }
 
