@@ -1,0 +1,115 @@
+// LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+namespace Cathei.LinqGen.Generator
+{
+    using static SyntaxFactory;
+    using static CodeGenUtils;
+
+    public sealed class DistinctOperation : Operation
+    {
+        private bool WithStruct { get; }
+
+        public DistinctOperation(in LinqGenExpression expression, int id, bool withStruct) : base(expression, id)
+        {
+            WithStruct = withStruct;
+        }
+
+        public override bool IsCountable => false;
+        public override bool IsPartition => false;
+
+        private TypeSyntax ParameterTypeName =>
+            GenericName(Identifier("IEqualityComparer"), TypeArgumentList(Upstream!.OutputElementType));
+
+        private GenericNameSyntax HashSetType =>
+            GenericName(Identifier("PooledSet"), TypeArgumentList(Upstream!.OutputElementType,
+                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName));
+
+        protected override IEnumerable<MemberInfo> GetMemberInfos()
+        {
+            foreach (var member in base.GetMemberInfos())
+                yield return member;
+
+            yield return new MemberInfo(MemberKind.Enumerable,
+                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName, ComparerField,
+                WithStruct ? null : NullLiteral);
+
+            yield return new MemberInfo(MemberKind.Enumerator, HashSetType, HashSetField);
+        }
+
+        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+        {
+            if (WithStruct)
+            {
+                yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"),
+                    ClassOrStructConstraint(SyntaxKind.StructConstraint), TypeConstraint(ParameterTypeName));
+            }
+        }
+
+        public override BlockSyntax RenderGetEnumeratorBody()
+        {
+            var hashSetCreation = ObjectCreationExpression(HashSetType,
+                ArgumentList(Upstream!.IsCountable
+                        ? MemberAccessExpression(SourceField, CountProperty)
+                        : LiteralExpression(0),
+                    ComparerField), default);
+
+            return Block(ReturnStatement(ObjectCreationExpression(EnumeratorType,
+                ArgumentList(GetArguments(MemberKind.Both)
+                    .Prepend(Argument(InvocationExpression(SourceField, GetEnumeratorMethod)))
+                    .Append(Argument(hashSetCreation))), null)));
+        }
+
+        public override ConstructorDeclarationSyntax RenderEnumerableConstructor()
+        {
+            var syntax = base.RenderEnumerableConstructor();
+
+            if (!WithStruct)
+            {
+                // EqualityComparer<T>.Default if null
+                var statements = syntax.Body!.Statements.Insert(0,
+                    ExpressionStatement(SimpleAssignmentExpression(ComparerField,
+                        NullCoalesce(ComparerField, MemberAccessExpression(
+                            GenericName(Identifier("EqualityComparer"), TypeArgumentList(Upstream!.OutputElementType)),
+                            IdentifierName("Default"))))));
+
+                syntax = syntax.WithBody(Block(statements));
+            }
+
+            return syntax;
+        }
+
+        public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()
+        {
+            return base.RenderEnumeratorConstructor()
+                .AddParameterListParameters(Parameter(HashSetType, HashSetField.Identifier))
+                .AddBodyStatements(ExpressionStatement(SimpleAssignmentExpression(
+                    MemberAccessExpression(ThisExpression(), HashSetField), HashSetField)));
+        }
+
+        public override BlockSyntax RenderMoveNextBody()
+        {
+            return Block(
+                WhileStatement(InvocationExpression(SourceField, MoveNextMethod),
+                    Block(IfStatement(InvocationExpression(
+                            MemberAccessExpression(HashSetField, AddMethod),
+                            ArgumentList(MemberAccessExpression(SourceField, CurrentProperty))),
+                        ReturnStatement(TrueExpression())))),
+                ReturnStatement(FalseExpression()));
+        }
+
+        public override BlockSyntax RenderDisposeBody()
+        {
+            return Block(ExpressionStatement(
+                InvocationExpression(MemberAccessExpression(HashSetField, DisposeMethod))));
+        }
+    }
+}

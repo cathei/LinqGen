@@ -36,6 +36,7 @@ It's because everything `LinqGen.Generator` generates designed to be precede ove
 * OfType
 * Skip
 * Take
+* Distinct
 
 ### Evaluations
 * First

@@ -92,6 +92,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax DisposeMethod = IdentifierName("Dispose");
         public static readonly IdentifierNameSyntax GetEnumeratorMethod = IdentifierName("GetEnumerator");
         public static readonly IdentifierNameSyntax GetSliceEnumeratorMethod = IdentifierName("GetSliceEnumerator");
+        public static readonly IdentifierNameSyntax AddMethod = IdentifierName("Add");
 
         // known property names
         public static readonly IdentifierNameSyntax CurrentProperty = IdentifierName("Current");
@@ -107,10 +108,12 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax IndexField = IdentifierName("index");
         public static readonly IdentifierNameSyntax SelectorField = IdentifierName("select");
         public static readonly IdentifierNameSyntax PredicateField = IdentifierName("predicate");
+        public static readonly IdentifierNameSyntax ComparerField = IdentifierName("comparer");
         public static readonly IdentifierNameSyntax InitialValueField = IdentifierName("initialValue");
         public static readonly IdentifierNameSyntax SkipField = IdentifierName("skip");
         public static readonly IdentifierNameSyntax TakeField = IdentifierName("take");
         public static readonly IdentifierNameSyntax ValueField = IdentifierName("value");
+        public static readonly IdentifierNameSyntax HashSetField = IdentifierName("hashSet");
 
         public static readonly TypeSyntax VarType = IdentifierName("var");
         public static readonly TypeSyntax ObjectType = IdentifierName("object");
@@ -206,9 +209,11 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.ParameterList(SeparatedList(parameters));
         }
 
-        public static ParameterSyntax Parameter(TypeSyntax type, SyntaxToken identifier)
+        public static ParameterSyntax Parameter(TypeSyntax type, SyntaxToken identifier,
+            ExpressionSyntax? defaultValue = null)
         {
-            return SyntaxFactory.Parameter(default, default, type, identifier, default);
+            return SyntaxFactory.Parameter(default, default, type, identifier,
+                defaultValue == null ? default : EqualsValueClause(defaultValue));
         }
 
         public static BracketedArgumentListSyntax BracketedArgumentList(ExpressionSyntax expression)

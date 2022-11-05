@@ -92,6 +92,12 @@ namespace Cathei.LinqGen.Generator
 
                 case "Take":
                     return new TakeOperation(expression, id);
+
+                case "Distinct":
+                    return new DistinctOperation(expression, id, false);
+
+                case "DistinctStruct":
+                    return new DistinctOperation(expression, id, true);
             }
 
             // not yet implemented

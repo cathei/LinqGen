@@ -31,8 +31,7 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
-            yield return new TypeParameterInfo(
-                IdentifierName($"{TypeParameterPrefix}1"), null);
+            yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"));
         }
 
         public override BlockSyntax RenderMoveNextBody()

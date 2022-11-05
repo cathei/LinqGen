@@ -43,6 +43,13 @@ namespace Cathei.LinqGen.Generator
             return GenerationTemplate.Render(this);
         }
 
+        public virtual ConstructorDeclarationSyntax RenderEnumerableConstructor()
+        {
+            return ConstructorDeclaration(new(AggressiveInliningAttributeList),
+                InternalTokenList, IdentifierName.Identifier, ParameterList(GetParameters(MemberKind.Enumerable)),
+                ThisInitializer, Block(GetAssignments(MemberKind.Enumerable)));
+        }
+
         public virtual ConstructorDeclarationSyntax RenderEnumeratorConstructor()
         {
             // assignment will be automatic if parameter kind is Both

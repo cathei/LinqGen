@@ -269,9 +269,7 @@ namespace Cathei.LinqGen
 
             private ConstructorDeclarationSyntax RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
             {
-                return node.WithIdentifier(_instruction.IdentifierName.Identifier)
-                    .WithParameterList(ParameterList(_instruction.GetParameters(MemberKind.Enumerable)))
-                    .WithBody(Block(_instruction.GetAssignments(MemberKind.Enumerable)));
+                return _instruction.RenderEnumerableConstructor();
             }
 
             private ConstructorDeclarationSyntax RewriteEnumeratorConstructor(ConstructorDeclarationSyntax node)

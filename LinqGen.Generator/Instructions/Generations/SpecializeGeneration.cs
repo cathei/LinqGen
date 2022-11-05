@@ -79,7 +79,7 @@ namespace Cathei.LinqGen.Generator
         {
             // TODO apply generic constraints from original type...
             if (GenericElement)
-                yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"), null);
+                yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"));
         }
 
         protected override IEnumerable<MemberInfo> GetMemberInfos()

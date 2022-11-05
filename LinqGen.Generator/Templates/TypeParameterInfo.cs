@@ -1,5 +1,6 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -10,12 +11,26 @@ namespace Cathei.LinqGen.Generator
     public readonly struct TypeParameterInfo
     {
         public readonly IdentifierNameSyntax Identifier;
-        public readonly TypeSyntax? ConstraintType;
+        // public readonly TypeSyntax? ConstraintType;
+        public readonly TypeParameterConstraintClauseSyntax? GenericConstraint;
 
-        public TypeParameterInfo(IdentifierNameSyntax identifier, TypeSyntax? constraintType)
+        public TypeParameterInfo(IdentifierNameSyntax identifier)
         {
             Identifier = identifier;
-            ConstraintType = constraintType;
+            GenericConstraint = null;
+        }
+
+        public TypeParameterInfo(IdentifierNameSyntax identifier, TypeSyntax constraintType)
+        {
+            Identifier = identifier;
+            GenericConstraint = TypeParameterConstraintClause(identifier,
+                SingletonSeparatedList<TypeParameterConstraintSyntax>(TypeConstraint(constraintType)));
+        }
+
+        public TypeParameterInfo(IdentifierNameSyntax identifier, params TypeParameterConstraintSyntax[] constraints)
+        {
+            Identifier = identifier;
+            GenericConstraint = TypeParameterConstraintClause(identifier, SeparatedList(constraints));
         }
 
         public TypeParameterSyntax AsTypeParameter()
@@ -30,11 +45,7 @@ namespace Cathei.LinqGen.Generator
 
         public TypeParameterConstraintClauseSyntax? AsGenericConstraint()
         {
-            if (ConstraintType == null)
-                return null;
-
-            return TypeParameterConstraintClause(Identifier,
-                SingletonSeparatedList((TypeParameterConstraintSyntax)TypeConstraint(ConstraintType)));
+            return GenericConstraint;
         }
 
     }
