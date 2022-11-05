@@ -64,5 +64,15 @@ namespace Cathei.LinqGen
         {
             throw new NotImplementedException();
         }
+
+        public static List<T> ToList<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static T[] ToArray<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

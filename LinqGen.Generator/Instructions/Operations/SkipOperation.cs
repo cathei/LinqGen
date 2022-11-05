@@ -24,7 +24,7 @@ namespace Cathei.LinqGen.Generator
             foreach (var member in base.GetMemberInfos())
                 yield return member;
 
-            yield return new MemberInfo(MemberKind.Both, IntType, ValueField);
+            yield return new MemberInfo(MemberKind.Both, IntType, ValueVar);
         }
 
         public override BlockSyntax RenderGetEnumeratorBody()
@@ -34,8 +34,8 @@ namespace Cathei.LinqGen.Generator
 
             return Block(ReturnStatement(ObjectCreationExpression(EnumeratorType, ArgumentList(
                 InvocationExpression(
-                    MemberAccessExpression(SourceField, GetSliceEnumeratorMethod),
-                    ArgumentList(ValueField, NullLiteral)),
+                    MemberAccessExpression(SourceVar, GetSliceEnumeratorMethod),
+                    ArgumentList(ValueVar, NullLiteral)),
                 LiteralExpression(0)), null)));
         }
 
@@ -43,10 +43,10 @@ namespace Cathei.LinqGen.Generator
         {
             return Block(ReturnStatement(ObjectCreationExpression(EnumeratorType, ArgumentList(
                 InvocationExpression(
-                    MemberAccessExpression(SourceField, GetSliceEnumeratorMethod),
+                    MemberAccessExpression(SourceVar, GetSliceEnumeratorMethod),
                     ArgumentList(
-                        AddExpression(SkipField, ValueField),
-                        SubtractExpression(TakeField, ValueField))),
+                        AddExpression(SkipVar, ValueVar),
+                        SubtractExpression(TakeVar, ValueVar))),
                 LiteralExpression(0)), null)));
         }
 
@@ -56,17 +56,17 @@ namespace Cathei.LinqGen.Generator
                 return base.RenderMoveNextBody();
 
             return Block(WhileStatement(
-                    GreaterOrEqualExpression(PreDecrementExpression(ValueField), LiteralExpression(0)),
+                    GreaterOrEqualExpression(PreDecrementExpression(ValueVar), LiteralExpression(0)),
                     IfStatement(
-                        LogicalNotExpression(InvocationExpression(SourceField, MoveNextMethod)),
+                        LogicalNotExpression(InvocationExpression(SourceVar, MoveNextMethod)),
                         ReturnStatement(FalseExpression()))),
-                ReturnStatement(InvocationExpression(SourceField, MoveNextMethod)));
+                ReturnStatement(InvocationExpression(SourceVar, MoveNextMethod)));
         }
 
         public override BlockSyntax RenderCountGetBody()
         {
             return Block(ReturnStatement(MathMax(
-                SubtractExpression(MemberAccessExpression(SourceField, CountProperty), ValueField),
+                SubtractExpression(MemberAccessExpression(SourceVar, CountProperty), ValueVar),
                 LiteralExpression(0))));
         }
     }

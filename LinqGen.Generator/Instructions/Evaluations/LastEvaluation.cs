@@ -29,13 +29,13 @@ namespace Cathei.LinqGen.Generator
             var lastValue = IdentifierName("lastValue");
 
             return Block(UsingLocalDeclarationStatement(
-                    IteratorField.Identifier, InvocationExpression(SourceField, GetEnumeratorMethod)),
-                IfStatement(LogicalNotExpression(InvocationExpression(IteratorField, MoveNextMethod)),
+                    IteratorVar.Identifier, InvocationExpression(SourceVar, GetEnumeratorMethod)),
+                IfStatement(LogicalNotExpression(InvocationExpression(IteratorVar, MoveNextMethod)),
                     OrDefault ? ReturnDefaultStatement() : ThrowInvalidOperationStatement()),
-                LocalDeclarationStatement(lastValue.Identifier, MemberAccessExpression(IteratorField, CurrentProperty)),
-                WhileStatement(InvocationExpression(IteratorField, MoveNextMethod),
+                LocalDeclarationStatement(lastValue.Identifier, MemberAccessExpression(IteratorVar, CurrentProperty)),
+                WhileStatement(InvocationExpression(IteratorVar, MoveNextMethod),
                     ExpressionStatement(SimpleAssignmentExpression(
-                        lastValue, MemberAccessExpression(IteratorField, CurrentProperty)))),
+                        lastValue, MemberAccessExpression(IteratorVar, CurrentProperty)))),
                 ReturnStatement(lastValue));
         }
     }

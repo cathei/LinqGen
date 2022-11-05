@@ -35,59 +35,59 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos()
         {
             yield return new MemberInfo(
-                MemberKind.Both, CallerEnumerableType, SourceField);
+                MemberKind.Both, CallerEnumerableType, SourceVar);
 
             yield return new MemberInfo(
-                MemberKind.Enumerator, IntType, IndexField);
+                MemberKind.Enumerator, IntType, IndexVar);
 
             yield return new MemberInfo(
-                MemberKind.Enumerator, IntType, TakeField);
+                MemberKind.Enumerator, IntType, TakeVar);
         }
 
         public override BlockSyntax RenderCountGetBody()
         {
             return Block(ReturnStatement(
-                MemberAccessExpression(SourceField, LengthProperty)));
+                MemberAccessExpression(SourceVar, LengthProperty)));
         }
 
         public override BlockSyntax RenderGetEnumeratorBody()
         {
             return Block(ReturnStatement(ObjectCreationExpression(EnumeratorType,
-                ArgumentList(SourceField, LiteralExpression(0), CountProperty), null)));
+                ArgumentList(SourceVar, LiteralExpression(0), CountProperty), null)));
         }
 
         public override BlockSyntax RenderGetSliceEnumeratorBody()
         {
             return Block(ReturnStatement(ObjectCreationExpression(EnumeratorType,
-                ArgumentList(SourceField, SkipField, ConditionalExpression(
-                    MemberAccessExpression(TakeField, HasValueProperty),
+                ArgumentList(SourceVar, SkipVar, ConditionalExpression(
+                    MemberAccessExpression(TakeVar, HasValueProperty),
                     MathMin(
-                        SubtractExpression(CountProperty, SkipField),
-                        MemberAccessExpression(TakeField, ValueProperty)),
-                    SubtractExpression(CountProperty, SkipField))), null)));
+                        SubtractExpression(CountProperty, SkipVar),
+                        MemberAccessExpression(TakeVar, ValueProperty)),
+                    SubtractExpression(CountProperty, SkipVar))), null)));
         }
 
         public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()
         {
             return base.RenderEnumeratorConstructor()
                 .AddParameterListParameters(
-                    Parameter(IntType, SkipField.Identifier), Parameter(IntType, TakeField.Identifier))
+                    Parameter(IntType, SkipVar.Identifier), Parameter(IntType, TakeVar.Identifier))
                 .AddBodyStatements(
                     ExpressionStatement(SimpleAssignmentExpression(
-                        MemberAccessExpression(ThisExpression(), IndexField),
-                        SubtractExpression(SkipField, LiteralExpression(1)))),
+                        MemberAccessExpression(ThisExpression(), IndexVar),
+                        SubtractExpression(SkipVar, LiteralExpression(1)))),
                     ExpressionStatement(SimpleAssignmentExpression(
-                        MemberAccessExpression(ThisExpression(), TakeField), TakeField)));
+                        MemberAccessExpression(ThisExpression(), TakeVar), TakeVar)));
         }
 
         public override BlockSyntax RenderMoveNextBody()
         {
-            return Block(ReturnStatement(LessThanExpression(PreIncrementExpression(IndexField), TakeField)));
+            return Block(ReturnStatement(LessThanExpression(PreIncrementExpression(IndexVar), TakeVar)));
         }
 
         public override BlockSyntax RenderCurrentGetBody()
         {
-            return Block(ReturnStatement(ElementAccessExpression(SourceField, BracketedArgumentList(IndexField))));
+            return Block(ReturnStatement(ElementAccessExpression(SourceVar, BracketedArgumentList(IndexVar))));
         }
     }
 }

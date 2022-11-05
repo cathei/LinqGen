@@ -48,11 +48,11 @@ namespace Cathei.LinqGen.Generator
             if (FunctionType != null)
             {
                 yield return Parameter(default, default,
-                    WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : FunctionType, SelectorField.Identifier, default);
+                    WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : FunctionType, SelectorVar.Identifier, default);
             }
 
             yield return Parameter(default, default,
-                ReturnType, InitialValueField.Identifier, EqualsValueClause(DefaultLiteral));
+                ReturnType, InitialValueVar.Identifier, EqualsValueClause(DefaultLiteral));
         }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
@@ -64,15 +64,15 @@ namespace Cathei.LinqGen.Generator
         public override BlockSyntax RenderMethodBody()
         {
             return Block(UsingLocalDeclarationStatement(
-                    IteratorField.Identifier, InvocationExpression(SourceField, GetEnumeratorMethod)),
-                WhileStatement(InvocationExpression(IteratorField, MoveNextMethod),
+                    IteratorVar.Identifier, InvocationExpression(SourceVar, GetEnumeratorMethod)),
+                WhileStatement(InvocationExpression(IteratorVar, MoveNextMethod),
                     ExpressionStatement(
-                        AssignmentExpression(SyntaxKind.AddAssignmentExpression, InitialValueField,
+                        AssignmentExpression(SyntaxKind.AddAssignmentExpression, InitialValueVar,
                             FunctionType == null
-                                ? MemberAccessExpression(IteratorField, CurrentProperty)
-                                : InvocationExpression(MemberAccessExpression(SelectorField, InvokeMethod),
-                                    ArgumentList(MemberAccessExpression(IteratorField, CurrentProperty)))))),
-                ReturnStatement(InitialValueField));
+                                ? MemberAccessExpression(IteratorVar, CurrentProperty)
+                                : InvocationExpression(MemberAccessExpression(SelectorVar, InvokeMethod),
+                                    ArgumentList(MemberAccessExpression(IteratorVar, CurrentProperty)))))),
+                ReturnStatement(InitialValueVar));
         }
     }
 }

@@ -48,7 +48,7 @@ namespace Cathei.LinqGen.Generator
                 yield return Parameter(default, default, WithStruct
                         ? IdentifierName($"{TypeParameterPrefix}1")
                         : FunctionType,
-                    PredicateField.Identifier, default);
+                    PredicateVar.Identifier, default);
             }
         }
 
@@ -62,19 +62,19 @@ namespace Cathei.LinqGen.Generator
         {
             if (FunctionType == null && Upstream!.IsCountable)
             {
-                return Block(ReturnStatement(MemberAccessExpression(SourceField, CountProperty)));
+                return Block(ReturnStatement(MemberAccessExpression(SourceVar, CountProperty)));
             }
 
             var localCountName = IdentifierName("count");
 
             return Block(UsingLocalDeclarationStatement(
-                    IteratorField.Identifier, InvocationExpression(SourceField, GetEnumeratorMethod)),
+                    IteratorVar.Identifier, InvocationExpression(SourceVar, GetEnumeratorMethod)),
                 LocalDeclarationStatement(localCountName.Identifier, LiteralExpression(0)),
-                WhileStatement(InvocationExpression(IteratorField, MoveNextMethod),
+                WhileStatement(InvocationExpression(IteratorVar, MoveNextMethod),
                     FunctionType == null
                         ? ExpressionStatement(PreIncrementExpression(localCountName))
-                        : IfStatement(InvocationExpression(MemberAccessExpression(PredicateField, InvokeMethod),
-                                ArgumentList(MemberAccessExpression(IteratorField, CurrentProperty))),
+                        : IfStatement(InvocationExpression(MemberAccessExpression(PredicateVar, InvokeMethod),
+                                ArgumentList(MemberAccessExpression(IteratorVar, CurrentProperty))),
                             ExpressionStatement(PreIncrementExpression(localCountName)))),
                 ReturnStatement(localCountName));
         }

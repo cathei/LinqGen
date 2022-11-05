@@ -65,7 +65,7 @@ namespace Cathei.LinqGen.Generator
         public virtual BlockSyntax RenderDisposeBody() => Block();
 
         public virtual BlockSyntax RenderCountGetBody() =>
-            Block(ReturnStatement(MemberAccessExpression(SourceField, CountProperty)));
+            Block(ReturnStatement(MemberAccessExpression(SourceVar, CountProperty)));
 
         private MemberInfo[]? _memberInfos;
 

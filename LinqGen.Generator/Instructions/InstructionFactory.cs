@@ -128,6 +128,12 @@ namespace Cathei.LinqGen.Generator
 
                 case "Count":
                     return new CountEvaluation(expression);
+
+                case "ToArray":
+                    return new ToArrayEvaluation(expression);
+
+                case "ToList":
+                    return new ToListEvaluation(expression);
             }
 
             return null;

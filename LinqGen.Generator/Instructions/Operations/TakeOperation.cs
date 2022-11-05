@@ -24,7 +24,7 @@ namespace Cathei.LinqGen.Generator
             foreach (var member in base.GetMemberInfos())
                 yield return member;
 
-            yield return new MemberInfo(MemberKind.Both, IntType, ValueField);
+            yield return new MemberInfo(MemberKind.Both, IntType, ValueVar);
         }
 
         public override BlockSyntax RenderGetEnumeratorBody()
@@ -34,9 +34,9 @@ namespace Cathei.LinqGen.Generator
 
             return Block(ReturnStatement(ObjectCreationExpression(EnumeratorType, ArgumentList(
                 InvocationExpression(
-                    MemberAccessExpression(SourceField, GetSliceEnumeratorMethod),
-                    ArgumentList(LiteralExpression(0), ValueField)),
-                ValueField), null)));
+                    MemberAccessExpression(SourceVar, GetSliceEnumeratorMethod),
+                    ArgumentList(LiteralExpression(0), ValueVar)),
+                ValueVar), null)));
         }
 
         public override BlockSyntax RenderGetSliceEnumeratorBody()
@@ -45,14 +45,14 @@ namespace Cathei.LinqGen.Generator
             // return new Enumerator(source.GetSliceEnumerator(skip, newTake), newTake);
             return Block(
                 LocalDeclarationStatement(Identifier("newTake"),
-                    ConditionalExpression(MemberAccessExpression(TakeField, HasValueProperty),
-                        MathMin(MemberAccessExpression(TakeField, ValueProperty),
-                            SubtractExpression(ValueField, SkipField)),
-                        ValueField)),
+                    ConditionalExpression(MemberAccessExpression(TakeVar, HasValueProperty),
+                        MathMin(MemberAccessExpression(TakeVar, ValueProperty),
+                            SubtractExpression(ValueVar, SkipVar)),
+                        ValueVar)),
                 ReturnStatement(ObjectCreationExpression(EnumeratorType, ArgumentList(
                     InvocationExpression(
-                        MemberAccessExpression(SourceField, GetSliceEnumeratorMethod),
-                        ArgumentList(SkipField, IdentifierName("newTake"))),
+                        MemberAccessExpression(SourceVar, GetSliceEnumeratorMethod),
+                        ArgumentList(SkipVar, IdentifierName("newTake"))),
                     IdentifierName("newTake")), null)));
         }
 
@@ -60,15 +60,15 @@ namespace Cathei.LinqGen.Generator
         {
             return Block(
                 IfStatement(
-                    GreaterOrEqualExpression(PreDecrementExpression(ValueField), LiteralExpression(0)),
-                    ReturnStatement(InvocationExpression(SourceField, MoveNextMethod))),
+                    GreaterOrEqualExpression(PreDecrementExpression(ValueVar), LiteralExpression(0)),
+                    ReturnStatement(InvocationExpression(SourceVar, MoveNextMethod))),
                 ReturnStatement(FalseExpression()));
         }
 
         public override BlockSyntax RenderCountGetBody()
         {
             return Block(ReturnStatement(MathMin(
-                MemberAccessExpression(SourceField, CountProperty), ValueField)));
+                MemberAccessExpression(SourceVar, CountProperty), ValueVar)));
         }
     }
 }

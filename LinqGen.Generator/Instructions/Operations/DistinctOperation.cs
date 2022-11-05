@@ -39,10 +39,10 @@ namespace Cathei.LinqGen.Generator
                 yield return member;
 
             yield return new MemberInfo(MemberKind.Enumerable,
-                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName, ComparerField,
+                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName, ComparerVar,
                 WithStruct ? null : NullLiteral);
 
-            yield return new MemberInfo(MemberKind.Enumerator, HashSetType, HashSetField);
+            yield return new MemberInfo(MemberKind.Enumerator, HashSetType, HashSetVar);
         }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
@@ -58,13 +58,13 @@ namespace Cathei.LinqGen.Generator
         {
             var hashSetCreation = ObjectCreationExpression(HashSetType,
                 ArgumentList(Upstream!.IsCountable
-                        ? MemberAccessExpression(SourceField, CountProperty)
+                        ? MemberAccessExpression(SourceVar, CountProperty)
                         : LiteralExpression(0),
-                    ComparerField), default);
+                    ComparerVar), default);
 
             return Block(ReturnStatement(ObjectCreationExpression(EnumeratorType,
                 ArgumentList(GetArguments(MemberKind.Both)
-                    .Prepend(Argument(InvocationExpression(SourceField, GetEnumeratorMethod)))
+                    .Prepend(Argument(InvocationExpression(SourceVar, GetEnumeratorMethod)))
                     .Append(Argument(hashSetCreation))), null)));
         }
 
@@ -76,8 +76,8 @@ namespace Cathei.LinqGen.Generator
             {
                 // EqualityComparer<T>.Default if null
                 var statements = syntax.Body!.Statements.Insert(0,
-                    ExpressionStatement(SimpleAssignmentExpression(ComparerField,
-                        NullCoalesce(ComparerField, MemberAccessExpression(
+                    ExpressionStatement(SimpleAssignmentExpression(ComparerVar,
+                        NullCoalesce(ComparerVar, MemberAccessExpression(
                             GenericName(Identifier("EqualityComparer"), TypeArgumentList(Upstream!.OutputElementType)),
                             IdentifierName("Default"))))));
 
@@ -90,18 +90,18 @@ namespace Cathei.LinqGen.Generator
         public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()
         {
             return base.RenderEnumeratorConstructor()
-                .AddParameterListParameters(Parameter(HashSetType, HashSetField.Identifier))
+                .AddParameterListParameters(Parameter(HashSetType, HashSetVar.Identifier))
                 .AddBodyStatements(ExpressionStatement(SimpleAssignmentExpression(
-                    MemberAccessExpression(ThisExpression(), HashSetField), HashSetField)));
+                    MemberAccessExpression(ThisExpression(), HashSetVar), HashSetVar)));
         }
 
         public override BlockSyntax RenderMoveNextBody()
         {
             return Block(
-                WhileStatement(InvocationExpression(SourceField, MoveNextMethod),
+                WhileStatement(InvocationExpression(SourceVar, MoveNextMethod),
                     Block(IfStatement(InvocationExpression(
-                            MemberAccessExpression(HashSetField, AddMethod),
-                            ArgumentList(MemberAccessExpression(SourceField, CurrentProperty))),
+                            MemberAccessExpression(HashSetVar, AddMethod),
+                            ArgumentList(MemberAccessExpression(SourceVar, CurrentProperty))),
                         ReturnStatement(TrueExpression())))),
                 ReturnStatement(FalseExpression()));
         }
@@ -109,7 +109,7 @@ namespace Cathei.LinqGen.Generator
         public override BlockSyntax RenderDisposeBody()
         {
             return Block(ExpressionStatement(
-                InvocationExpression(MemberAccessExpression(HashSetField, DisposeMethod))));
+                InvocationExpression(MemberAccessExpression(HashSetVar, DisposeMethod))));
         }
     }
 }

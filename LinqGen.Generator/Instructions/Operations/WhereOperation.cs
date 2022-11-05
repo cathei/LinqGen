@@ -36,10 +36,10 @@ namespace Cathei.LinqGen.Generator
                 yield return member;
 
             yield return new MemberInfo(MemberKind.Both,
-                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName, PredicateField);
+                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName, PredicateVar);
 
             if (WithIndex)
-                yield return new MemberInfo(MemberKind.Enumerator, IntType, IndexField);
+                yield return new MemberInfo(MemberKind.Enumerator, IntType, IndexVar);
         }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
@@ -55,7 +55,7 @@ namespace Cathei.LinqGen.Generator
             if (WithIndex)
             {
                 syntax = syntax.AddBodyStatements(
-                    ExpressionStatement(SimpleAssignmentExpression(IndexField, LiteralExpression(-1))));
+                    ExpressionStatement(SimpleAssignmentExpression(IndexVar, LiteralExpression(-1))));
             }
 
             return syntax;
@@ -63,14 +63,14 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderMoveNextBody()
         {
-            return Block(WhileStatement(InvocationExpression(SourceField, MoveNextMethod), Block(
+            return Block(WhileStatement(InvocationExpression(SourceVar, MoveNextMethod), Block(
                     IfStatement(
                         InvocationExpression(
-                            MemberAccessExpression(PredicateField, InvokeMethod),
+                            MemberAccessExpression(PredicateVar, InvokeMethod),
                             WithIndex
-                                ? ArgumentList(MemberAccessExpression(SourceField, CurrentProperty),
-                                    PreIncrementExpression(IndexField))
-                                : ArgumentList(MemberAccessExpression(SourceField, CurrentProperty))),
+                                ? ArgumentList(MemberAccessExpression(SourceVar, CurrentProperty),
+                                    PreIncrementExpression(IndexVar))
+                                : ArgumentList(MemberAccessExpression(SourceVar, CurrentProperty))),
                         ReturnStatement(TrueExpression())))),
                 ReturnStatement(FalseExpression()));
         }

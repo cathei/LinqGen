@@ -44,10 +44,10 @@ namespace Cathei.LinqGen.Generator
                 yield return member;
 
             yield return new MemberInfo(MemberKind.Both,
-                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName, SelectorField);
+                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName, SelectorVar);
 
             if (WithIndex)
-                yield return new MemberInfo(MemberKind.Enumerator, IntType, IndexField);
+                yield return new MemberInfo(MemberKind.Enumerator, IntType, IndexVar);
         }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
@@ -63,7 +63,7 @@ namespace Cathei.LinqGen.Generator
             if (WithIndex)
             {
                 syntax = syntax.AddBodyStatements(
-                    ExpressionStatement(SimpleAssignmentExpression(IndexField, LiteralExpression(-1))));
+                    ExpressionStatement(SimpleAssignmentExpression(IndexVar, LiteralExpression(-1))));
             }
 
             return syntax;
@@ -74,9 +74,9 @@ namespace Cathei.LinqGen.Generator
             if (WithIndex)
             {
                 return Block(
-                    IfStatement(LogicalNotExpression(InvocationExpression(SourceField, MoveNextMethod)),
+                    IfStatement(LogicalNotExpression(InvocationExpression(SourceVar, MoveNextMethod)),
                         ReturnStatement(FalseExpression())),
-                    ExpressionStatement(PreIncrementExpression(IndexField)),
+                    ExpressionStatement(PreIncrementExpression(IndexVar)),
                     ReturnStatement(TrueExpression()));
             }
 
@@ -86,10 +86,10 @@ namespace Cathei.LinqGen.Generator
         public override BlockSyntax RenderCurrentGetBody()
         {
             return Block(ReturnStatement(InvocationExpression(
-                MemberAccessExpression(SelectorField, InvokeMethod),
+                MemberAccessExpression(SelectorVar, InvokeMethod),
                 WithIndex ?
-                    ArgumentList(MemberAccessExpression(SourceField, CurrentProperty), PreIncrementExpression(IndexField)) :
-                    ArgumentList(MemberAccessExpression(SourceField, CurrentProperty)))));
+                    ArgumentList(MemberAccessExpression(SourceVar, CurrentProperty), PreIncrementExpression(IndexVar)) :
+                    ArgumentList(MemberAccessExpression(SourceVar, CurrentProperty)))));
         }
     }
 }

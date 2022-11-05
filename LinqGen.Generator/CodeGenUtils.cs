@@ -102,18 +102,19 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax ValueProperty = IdentifierName("Value");
 
         // custom variable names
-        public static readonly IdentifierNameSyntax ParentField = IdentifierName("parent");
-        public static readonly IdentifierNameSyntax SourceField = IdentifierName("source");
-        public static readonly IdentifierNameSyntax IteratorField = IdentifierName("iter");
-        public static readonly IdentifierNameSyntax IndexField = IdentifierName("index");
-        public static readonly IdentifierNameSyntax SelectorField = IdentifierName("select");
-        public static readonly IdentifierNameSyntax PredicateField = IdentifierName("predicate");
-        public static readonly IdentifierNameSyntax ComparerField = IdentifierName("comparer");
-        public static readonly IdentifierNameSyntax InitialValueField = IdentifierName("initialValue");
-        public static readonly IdentifierNameSyntax SkipField = IdentifierName("skip");
-        public static readonly IdentifierNameSyntax TakeField = IdentifierName("take");
-        public static readonly IdentifierNameSyntax ValueField = IdentifierName("value");
-        public static readonly IdentifierNameSyntax HashSetField = IdentifierName("hashSet");
+        public static readonly IdentifierNameSyntax ParentVar = IdentifierName("parent");
+        public static readonly IdentifierNameSyntax SourceVar = IdentifierName("source");
+        public static readonly IdentifierNameSyntax IteratorVar = IdentifierName("iter");
+        public static readonly IdentifierNameSyntax IndexVar = IdentifierName("index");
+        public static readonly IdentifierNameSyntax SelectorVar = IdentifierName("select");
+        public static readonly IdentifierNameSyntax PredicateVar = IdentifierName("predicate");
+        public static readonly IdentifierNameSyntax ComparerVar = IdentifierName("comparer");
+        public static readonly IdentifierNameSyntax InitialValueVar = IdentifierName("initialValue");
+        public static readonly IdentifierNameSyntax SkipVar = IdentifierName("skip");
+        public static readonly IdentifierNameSyntax TakeVar = IdentifierName("take");
+        public static readonly IdentifierNameSyntax ValueVar = IdentifierName("value");
+        public static readonly IdentifierNameSyntax HashSetVar = IdentifierName("hashSet");
+        public static readonly IdentifierNameSyntax ListVar = IdentifierName("list");
 
         public static readonly TypeSyntax VarType = IdentifierName("var");
         public static readonly TypeSyntax ObjectType = IdentifierName("object");

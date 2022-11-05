@@ -38,9 +38,9 @@ namespace Cathei.LinqGen.Generator
         {
             if (SkipIfMismatch)
             {
-                return Block(WhileStatement(InvocationExpression(SourceField, MoveNextMethod),
+                return Block(WhileStatement(InvocationExpression(SourceVar, MoveNextMethod),
                         Block(IfStatement(
-                            IsExpression(MemberAccessExpression(SourceField, CurrentProperty), OutputElementType),
+                            IsExpression(MemberAccessExpression(SourceVar, CurrentProperty), OutputElementType),
                             ReturnStatement(TrueExpression())))),
                     ReturnStatement(FalseExpression()));
             }
@@ -56,7 +56,7 @@ namespace Cathei.LinqGen.Generator
             return Block(ReturnStatement(
                 CastExpression(OutputElementType,
                     CastExpression(ObjectType,
-                        MemberAccessExpression(SourceField, CurrentProperty)))));
+                        MemberAccessExpression(SourceVar, CurrentProperty)))));
         }
     }
 }
