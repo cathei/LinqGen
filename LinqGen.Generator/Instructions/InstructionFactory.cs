@@ -98,6 +98,26 @@ namespace Cathei.LinqGen.Generator
 
                 case "DistinctStruct":
                     return new DistinctOperation(expression, id, true);
+
+                case "OrderBy":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new OrderByOperation(expression, id, typeSymbol, false);
+
+                case "OrderByStruct":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new OrderByOperation(expression, id, typeSymbol, true);
+
+                case "ThenBy":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new OrderByOperation(expression, id, typeSymbol, false);
+
+                case "ThenByStruct":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new OrderByOperation(expression, id, typeSymbol, true);
             }
 
             // not yet implemented

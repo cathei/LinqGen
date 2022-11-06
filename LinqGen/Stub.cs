@@ -32,6 +32,17 @@ namespace Cathei.LinqGen.Hidden
     }
 
     /// <summary>
+    /// Returned from OrderBy, to chain ThenBy
+    /// </summary>
+    public interface IOrderedStub<in T, TSignature> : IStub<T, TSignature>
+    {
+    }
+
+    public interface IInternalOrderedStub<out T> : IInternalStub, IOrderedStub<IContent<T>, Compiled>
+    {
+    }
+
+    /// <summary>
     /// This is empty stub that will be replaced with source generator.
     /// For value types, the parameter interface will be replaced with actual type to avoid boxing.
     /// Use AsEnumerable to safely box generated type and store as IEnumerable.
@@ -51,6 +62,14 @@ namespace Cathei.LinqGen.Hidden
         {
             throw new NotImplementedException();
         }
+    }
+
+    /// <summary>
+    /// Stub for OrderBy
+    /// </summary>
+    public abstract class OrderedStub<T, TSignature> : IOrderedStub<T, TSignature>
+    {
+
     }
 
     /// <summary>

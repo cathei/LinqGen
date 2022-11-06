@@ -108,5 +108,31 @@ namespace Cathei.LinqGen
         {
             throw new NotImplementedException();
         }
+
+        public static OrderedStub<IContent<T>, OrderBy<TUp, TKey>> OrderBy<T, TUp, TKey>(
+            this IStub<IContent<T>, TUp> enumerable, Func<T, TKey> keySelector, IComparer<TKey>? comparer = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static OrderedStub<IContent<T>, OrderByStruct<TUp, TKey>> OrderBy<T, TUp, TKey, TComparer>(
+            this IStub<IContent<T>, TUp> enumerable, IStructFunction<T, TKey> keySelector, TComparer comparer)
+            where TComparer : struct, IComparer<TKey>
+        {
+            throw new NotImplementedException();
+        }
+
+        public static OrderedStub<IContent<T>, ThenBy<TUp, TKey>> ThenBy<T, TUp, TKey>(
+            this IOrderedStub<IContent<T>, TUp> enumerable, Func<T, TKey> keySelector, IComparer<TKey>? comparer = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static OrderedStub<IContent<T>, ThenByStruct<TUp, TKey>> ThenBy<T, TUp, TKey, TComparer>(
+            this IOrderedStub<IContent<T>, TUp> enumerable, IStructFunction<T, TKey> keySelector, TComparer comparer)
+            where TComparer : struct, IComparer<TKey>
+        {
+            throw new NotImplementedException();
+        }
     }
 }
