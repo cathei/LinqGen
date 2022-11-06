@@ -19,7 +19,8 @@ namespace Cathei.LinqGen.Generator
         {
         }
 
-        public override TypeSyntax ReturnType => ArrayType(Upstream!.OutputElementType);
+        public override TypeSyntax ReturnType =>
+            ArrayType(Upstream!.OutputElementType, SingletonList(ArrayRankSpecifier()));
 
         public override BlockSyntax RenderMethodBody()
         {
