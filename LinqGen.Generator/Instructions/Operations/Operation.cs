@@ -29,7 +29,7 @@ namespace Cathei.LinqGen.Generator
             upstream.AddDownstream(this);
         }
 
-        protected override IEnumerable<MemberInfo> GetMemberInfos()
+        public override IEnumerable<MemberInfo> GetMemberInfos()
         {
             yield return new MemberInfo(MemberKind.Enumerable, UpstreamResolvedClassName, SourceVar);
 

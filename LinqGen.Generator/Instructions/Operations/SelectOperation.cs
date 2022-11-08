@@ -38,7 +38,7 @@ namespace Cathei.LinqGen.Generator
         public override bool IsCountable => Upstream!.IsCountable;
         public override bool IsPartition => Upstream!.IsPartition;
 
-        protected override IEnumerable<MemberInfo> GetMemberInfos()
+        public override IEnumerable<MemberInfo> GetMemberInfos()
         {
             foreach (var member in base.GetMemberInfos())
                 yield return member;

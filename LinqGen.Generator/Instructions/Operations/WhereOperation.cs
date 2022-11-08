@@ -30,7 +30,7 @@ namespace Cathei.LinqGen.Generator
         public override bool IsCountable => false;
         public override bool IsPartition => false;
 
-        protected override IEnumerable<MemberInfo> GetMemberInfos()
+        public override IEnumerable<MemberInfo> GetMemberInfos()
         {
             foreach (var member in base.GetMemberInfos())
                 yield return member;

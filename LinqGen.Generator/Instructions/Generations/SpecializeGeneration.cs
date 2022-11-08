@@ -82,7 +82,7 @@ namespace Cathei.LinqGen.Generator
                 yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"));
         }
 
-        protected override IEnumerable<MemberInfo> GetMemberInfos()
+        public override IEnumerable<MemberInfo> GetMemberInfos()
         {
             yield return new MemberInfo(
                 MemberKind.Enumerable, CallerEnumerableType, SourceVar);

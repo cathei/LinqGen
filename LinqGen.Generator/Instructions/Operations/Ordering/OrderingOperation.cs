@@ -14,12 +14,12 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public sealed class OrderByOperation : Operation
+    public abstract class OrderingOperation : Operation
     {
-        private TypeSyntax SelectorTypeName { get; }
-        private bool WithStruct { get; }
+        protected TypeSyntax SelectorTypeName { get; }
+        protected bool WithStruct { get; }
 
-        public OrderByOperation(in LinqGenExpression expression, int id,
+        public OrderingOperation(in LinqGenExpression expression, int id,
             INamedTypeSymbol selectorType, bool withStruct) : base(expression, id)
         {
             WithStruct = withStruct;
@@ -29,23 +29,8 @@ namespace Cathei.LinqGen.Generator
         public override bool IsCountable => Upstream!.IsCountable;
         public override bool IsPartition => true;
 
-        private TypeSyntax ComparerTypeName =>
+        protected TypeSyntax ComparerTypeName =>
             GenericName(Identifier("IComparer"), TypeArgumentList(Upstream!.OutputElementType));
-
-        protected override IEnumerable<MemberInfo> GetMemberInfos()
-        {
-            foreach (var member in base.GetMemberInfos())
-                yield return member;
-
-            yield return new MemberInfo(MemberKind.Enumerable,
-                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : SelectorTypeName, SelectorVar);
-
-            yield return new MemberInfo(MemberKind.Enumerable,
-                WithStruct ? IdentifierName($"{TypeParameterPrefix}2") : ComparerTypeName, ComparerVar,
-                WithStruct ? null : NullLiteral);
-
-            // yield return new MemberInfo(MemberKind.Enumerator, HashSetType, HashSetVar);
-        }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
@@ -61,8 +46,9 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderGetEnumeratorBody()
         {
-
+            return Block(ReturnStatement(
+                InvocationExpression(GetSliceEnumeratorMethod,
+                    ArgumentList(LiteralExpression(0), LiteralExpression(-1)))));
         }
-
     }
 }

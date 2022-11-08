@@ -33,7 +33,7 @@ namespace Cathei.LinqGen.Generator
             GenericName(Identifier("PooledSet"), TypeArgumentList(Upstream!.OutputElementType,
                 WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName));
 
-        protected override IEnumerable<MemberInfo> GetMemberInfos()
+        public override IEnumerable<MemberInfo> GetMemberInfos()
         {
             foreach (var member in base.GetMemberInfos())
                 yield return member;

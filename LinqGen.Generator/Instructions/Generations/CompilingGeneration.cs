@@ -36,7 +36,7 @@ namespace Cathei.LinqGen.Generator
 
         public override IdentifierNameSyntax IdentifierName { get; }
 
-        protected abstract IEnumerable<MemberInfo> GetMemberInfos();
+        public abstract IEnumerable<MemberInfo> GetMemberInfos();
 
         public override SourceText Render()
         {
