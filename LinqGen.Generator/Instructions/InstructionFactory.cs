@@ -94,7 +94,10 @@ namespace Cathei.LinqGen.Generator
                     return new TakeOperation(expression, id);
 
                 case "Distinct":
-                    return new DistinctOperation(expression, id);
+                    return new DistinctOperation(expression, id, false);
+
+                case "DistinctStruct":
+                    return new DistinctOperation(expression, id, true);
 
                 case "OrderBy":
                     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
