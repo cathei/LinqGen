@@ -164,7 +164,7 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public IEnumerable<MemberDeclarationSyntax> RenderExtensionMethods()
+        public virtual IEnumerable<MemberDeclarationSyntax> RenderExtensionMethods()
         {
             if (ShouldBeMemberMethod)
                 yield break;
@@ -179,15 +179,15 @@ namespace Cathei.LinqGen.Generator
                 GetGenericConstraints(), body, default, default);
         }
 
-        public IEnumerable<MemberDeclarationSyntax> RenderUpstreamMemberMethods()
+        public virtual IEnumerable<MemberDeclarationSyntax> RenderUpstreamMemberMethods()
         {
             if (!ShouldBeMemberMethod)
                 yield break;
 
             int arityDiff = Arity - Upstream!.Arity;
 
-            var typeParameters = GetTypeParameters(arityDiff);
-            var genericConstraints = GetGenericConstraints(arityDiff);
+            var typeParameters = GetTypeParameters(take: arityDiff);
+            var genericConstraints = GetGenericConstraints(take: arityDiff);
 
             // swap first argument with this
             var argumentList = ArgumentList(

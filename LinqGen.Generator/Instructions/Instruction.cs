@@ -109,29 +109,36 @@ namespace Cathei.LinqGen.Generator
             return result;
         }
 
-        public TypeParameterListSyntax? GetTypeParameters(int? take = null)
+        public TypeParameterListSyntax? GetTypeParameters(int skip = 0, int take = -1)
         {
             var parameters = TypeParameters;
 
-            take ??= parameters.Count;
+            if (take < 0)
+                take = parameters.Count - skip;
 
-            if (take == 0)
+            if (take <= 0)
                 return null;
 
             return TypeParameterList(SeparatedList(parameters
-                .Select((x) => x.AsTypeParameter())
-                .Take(take.Value)));
+                .Skip(skip)
+                .Take(take)
+                .Select(x => x.AsTypeParameter())));
         }
 
-        public TypeArgumentListSyntax? GetTypeArguments()
+        public TypeArgumentListSyntax? GetTypeArguments(int skip = 0, int take = -1)
         {
             var parameters = TypeParameters;
 
-            if (parameters!.Count == 0)
+            if (take < 0)
+                take = parameters.Count - skip;
+
+            if (take <= 0)
                 return null;
 
             return TypeArgumentList(SeparatedList(parameters
-                .Select((x) => x.AsTypeArgument())));
+                .Skip(skip)
+                .Take(take)
+                .Select(x => x.AsTypeArgument())));
         }
 
         public TypeArgumentListSyntax? GetUpstreamTypeArguments()
@@ -149,15 +156,18 @@ namespace Cathei.LinqGen.Generator
             })));
         }
 
-        public SyntaxList<TypeParameterConstraintClauseSyntax> GetGenericConstraints(int? take = null)
+        public SyntaxList<TypeParameterConstraintClauseSyntax> GetGenericConstraints(int skip = 0, int take = -1)
         {
             var parameters = TypeParameters;
 
-            take ??= parameters.Count;
+            if (take < 0)
+                take = parameters.Count - skip;
 
             return new SyntaxList<TypeParameterConstraintClauseSyntax>(
-                parameters.Select((x) => x.AsGenericConstraint()!)
-                    .Take(take.Value)
+                parameters
+                    .Skip(skip)
+                    .Take(take)
+                    .Select(x => x.AsGenericConstraint()!)
                     .Where(x => x != null));
         }
     }
