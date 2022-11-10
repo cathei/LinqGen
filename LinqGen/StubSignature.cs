@@ -44,8 +44,6 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class Distinct<TUp> : IStubSignature { }
 
-    public abstract class DistinctStruct<TUp> : IStubSignature { }
-
     public abstract class OrderBy<TUp, TKey> : IStubSignature { }
 
     public abstract class OrderByStruct<TUp, TKey> : IStubSignature { }

@@ -16,22 +16,19 @@ namespace Cathei.LinqGen.Generator
 
     public sealed class DistinctOperation : Operation
     {
-        private bool WithStruct { get; }
-
-        public DistinctOperation(in LinqGenExpression expression, int id, bool withStruct) : base(expression, id)
+        public DistinctOperation(in LinqGenExpression expression, int id) : base(expression, id)
         {
-            WithStruct = withStruct;
         }
 
         public override bool IsCountable => false;
         public override bool IsPartition => false;
 
-        private TypeSyntax ParameterTypeName =>
+        private TypeSyntax ComparerInterfaceName =>
             GenericName(Identifier("IEqualityComparer"), TypeArgumentList(Upstream!.OutputElementType));
 
         private GenericNameSyntax HashSetType =>
-            GenericName(Identifier("PooledSet"), TypeArgumentList(Upstream!.OutputElementType,
-                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName));
+            GenericName(Identifier("PooledSet"),
+                TypeArgumentList(Upstream!.OutputElementType, IdentifierName($"{TypeParameterPrefix}1")));
 
         public override IEnumerable<MemberInfo> GetMemberInfos()
         {
@@ -39,19 +36,15 @@ namespace Cathei.LinqGen.Generator
                 yield return member;
 
             yield return new MemberInfo(MemberKind.Enumerable,
-                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : ParameterTypeName, ComparerVar,
-                WithStruct ? null : NullLiteral);
+                IdentifierName($"{TypeParameterPrefix}1"), ComparerVar);
 
             yield return new MemberInfo(MemberKind.Enumerator, HashSetType, HashSetVar);
         }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
-            if (WithStruct)
-            {
-                yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"),
-                    ClassOrStructConstraint(SyntaxKind.StructConstraint), TypeConstraint(ParameterTypeName));
-            }
+            yield return new TypeParameterInfo(
+                IdentifierName($"{TypeParameterPrefix}1"), TypeConstraint(ComparerInterfaceName));
         }
 
         public override BlockSyntax RenderGetEnumeratorBody()
@@ -66,25 +59,6 @@ namespace Cathei.LinqGen.Generator
                 ArgumentList(GetArguments(MemberKind.Both)
                     .Prepend(Argument(InvocationExpression(SourceVar, GetEnumeratorMethod)))
                     .Append(Argument(hashSetCreation))), null)));
-        }
-
-        public override ConstructorDeclarationSyntax RenderEnumerableConstructor()
-        {
-            var syntax = base.RenderEnumerableConstructor();
-
-            if (!WithStruct)
-            {
-                // EqualityComparer<T>.Default if null
-                var statements = syntax.Body!.Statements.Insert(0,
-                    ExpressionStatement(SimpleAssignmentExpression(ComparerVar,
-                        NullCoalesce(ComparerVar, MemberAccessExpression(
-                            GenericName(Identifier("EqualityComparer"), TypeArgumentList(Upstream!.OutputElementType)),
-                            IdentifierName("Default"))))));
-
-                syntax = syntax.WithBody(Block(statements));
-            }
-
-            return syntax;
         }
 
         public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()
@@ -110,6 +84,49 @@ namespace Cathei.LinqGen.Generator
         {
             return Block(ExpressionStatement(
                 InvocationExpression(MemberAccessExpression(HashSetVar, DisposeMethod))));
+        }
+
+        public override IEnumerable<MemberDeclarationSyntax> RenderExtensionMethods()
+        {
+            var returnStatement = ReturnStatement(
+                ObjectCreationExpression(ResolvedClassName,
+                    ArgumentList(GetArguments(MemberKind.Enumerable)), default));
+
+            var parameters = ParameterList(GetParameters(MemberKind.Enumerable, true));
+
+            var methodWithComparer = MethodDeclaration(
+                new(AggressiveInliningAttributeList), PublicStaticTokenList, ResolvedClassName, null,
+                MethodName.Identifier, GetTypeParameters(), parameters, GetGenericConstraints(),
+                Block(returnStatement), default, default);
+
+            var parametersWithoutComparer = ParameterList(
+                parameters.Parameters.RemoveAt(parameters.Parameters.Count - 1));
+
+            var typeArguments = GetTypeArguments(skip: 1) ?? TypeArgumentList();
+
+            var typeArgumentsWithDefault =
+                TypeArgumentList(typeArguments.Arguments.Insert(0, ComparerInterfaceName));
+
+            var resolvedNameWithDefault = GenericName(IdentifierName.Identifier, typeArgumentsWithDefault);
+
+            // EqualityComparer<T>.Default
+            var defaultComparerStatement = LocalDeclarationStatement(ComparerVar.Identifier,
+                MemberAccessExpression(
+                    GenericName(Identifier("EqualityComparer"), TypeArgumentList(Upstream!.OutputElementType)),
+                    IdentifierName("Default")));
+
+            var returnStatementWithDefault = ReturnStatement(
+                ObjectCreationExpression(resolvedNameWithDefault,
+                    ArgumentList(GetArguments(MemberKind.Enumerable)), default));
+
+            var methodWithoutComparer = MethodDeclaration(
+                new(AggressiveInliningAttributeList), PublicStaticTokenList, resolvedNameWithDefault, null,
+                MethodName.Identifier, GetTypeParameters(skip: 1),
+                parametersWithoutComparer, GetGenericConstraints(skip: 1),
+                Block(defaultComparerStatement, returnStatementWithDefault), default, default);
+
+            yield return methodWithComparer;
+            yield return methodWithoutComparer;
         }
     }
 }
