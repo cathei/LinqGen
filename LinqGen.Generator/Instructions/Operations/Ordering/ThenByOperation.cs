@@ -39,7 +39,12 @@ namespace Cathei.LinqGen.Generator
             foreach (var memberInfo in upstreamOrdering!.GetMemberInfos())
                 yield return memberInfo;
 
+            yield return new MemberInfo(MemberKind.Enumerable,
+                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : SelectorTypeName, SelectorVar);
 
+            yield return new MemberInfo(MemberKind.Enumerable,
+                WithStruct ? IdentifierName($"{TypeParameterPrefix}2") : ComparerTypeName, ComparerVar,
+                WithStruct ? null : NullLiteral);
         }
     }
 }

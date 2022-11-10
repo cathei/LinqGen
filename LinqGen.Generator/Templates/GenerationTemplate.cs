@@ -99,11 +99,6 @@ namespace Cathei.LinqGen
     // Extensions needs to be internal to prevent ambiguous resolution
     internal static partial class _Extensions_
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static _Enumerable_ _ExtensionMethod_()
-        {
-            return new _Enumerable_();
-        }
     }
 }
 ");
@@ -161,9 +156,9 @@ namespace Cathei.LinqGen
                 return base.VisitConstructorDeclaration(node);
             }
 
-            public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax? node)
+            public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
             {
-                switch (node!.Identifier.ValueText)
+                switch (node.Identifier.ValueText)
                 {
                     case "GetEnumerator":
                         node = RenderGetEnumerator(node);
@@ -183,14 +178,8 @@ namespace Cathei.LinqGen
                     case "Dispose":
                         node = RewriteEnumeratorDispose(node);
                         break;
-
-                    case "_ExtensionMethod_":
-                        node = RewriteExtensionMethod(node);
-                        break;
                 }
 
-                if (node == null)
-                    return null;
                 return base.VisitMethodDeclaration(node);
             }
 
@@ -229,9 +218,7 @@ namespace Cathei.LinqGen
                 switch (node.Identifier.ValueText)
                 {
                     case "_Enumerable_":
-                        if (_instruction.Arity == 0)
-                            return _instruction.IdentifierName;
-                        return GenericName(_instruction.IdentifierName!.Identifier, _instruction.GetTypeArguments()!);
+                        return _instruction.ResolvedClassName;
 
                     case "_Element_":
                         return _instruction.OutputElementType;
@@ -299,23 +286,6 @@ namespace Cathei.LinqGen
                 return node.WithAccessorList(AccessorList(SingletonList(getAccessor)));
             }
 
-            private MethodDeclarationSyntax? RewriteExtensionMethod(MethodDeclarationSyntax node)
-            {
-                if (_instruction.ShouldBeMemberMethod)
-                    return null;
-
-                // keep identifier name here so it can be visited later
-                var body = Block(ReturnStatement(
-                    ObjectCreationExpression(IdentifierName("_Enumerable_"),
-                        ArgumentList(_instruction.GetArguments(MemberKind.Enumerable)), default)));
-
-                return MethodDeclaration(
-                    node.AttributeLists, node.Modifiers, node.ReturnType, node.ExplicitInterfaceSpecifier,
-                    _instruction.MethodName.Identifier, _instruction.GetTypeParameters(),
-                    ParameterList(_instruction.GetParameters(MemberKind.Enumerable, true)),
-                    _instruction.GetGenericConstraints(), body, default, default);
-            }
-
             private IEnumerable<MemberDeclarationSyntax> GetOperationMethods()
             {
                 if (_instruction.Downstream == null)
@@ -326,56 +296,27 @@ namespace Cathei.LinqGen
 
                 foreach (var downstream in _instruction.Downstream)
                 {
-                    if (!downstream.ShouldBeMemberMethod)
-                        continue;
-
-                    int arityDiff = downstream.Arity - _instruction.Arity;
-
-                    NameSyntax downstreamClassName = downstream.ClassName;
-
-                    if (downstream.Arity != 0)
-                    {
-                        downstreamClassName = MakeGenericName(
-                            downstreamClassName, downstream.GetTypeArguments()!);
-                    }
-
-                    var typeParameters = downstream.GetTypeParameters(arityDiff);
-                    var genericConstraints = downstream.GetGenericConstraints(arityDiff);
-
-                    // swap first argument with this
-                    var argumentList = ArgumentList(
-                        downstream.GetArguments(MemberKind.Enumerable)
-                            .Skip(1).Prepend(Argument(ThisExpression())));
-
-                    var parameterList = ParameterList(
-                        downstream.GetParameters(MemberKind.Enumerable).Skip(1));
-
-                    var body = Block(ReturnStatement(
-                        ObjectCreationExpression(downstreamClassName, argumentList, default)));
-
-                    yield return MethodDeclaration(new(AggressiveInliningAttributeList),
-                        PublicTokenList, downstreamClassName, default,
-                        downstream.MethodName.Identifier, typeParameters,
-                        parameterList, genericConstraints, body, default, default);
+                    foreach (var method in downstream.RenderUpstreamMemberMethods())
+                        yield return method;
                 }
             }
 
             private IEnumerable<MemberDeclarationSyntax> GetExtensionMethods()
             {
-                if (_instruction.Evaluations == null)
-                {
-                    // nothing to evaluate
-                    yield break;
-                }
+                foreach (var method in _instruction.RenderExtensionMethods())
+                    yield return method;
 
-                // evaluation can use specialization, so it should be extension method
-                foreach (var evaluation in _instruction.Evaluations)
+                if (_instruction.Evaluations != null)
                 {
-                    yield return MethodDeclaration(new(AggressiveInliningAttributeList),
-                        PublicStaticTokenList, evaluation.ReturnType, default,
-                        evaluation.MethodName.Identifier, evaluation.GetTypeParameters(),
-                        ParameterList(evaluation.GetParameters()), evaluation.GetGenericConstraints(),
-                        evaluation.RenderMethodBody(), default, default);
+                    // evaluation can use specialization, so it should be extension method
+                    foreach (var evaluation in _instruction.Evaluations)
+                    {
+                        yield return MethodDeclaration(new(AggressiveInliningAttributeList),
+                            PublicStaticTokenList, evaluation.ReturnType, default,
+                            evaluation.MethodName.Identifier, evaluation.GetTypeParameters(),
+                            ParameterList(evaluation.GetParameters()), evaluation.GetGenericConstraints(),
+                            evaluation.RenderMethodBody(), default, default);
+                    }
                 }
             }
         }

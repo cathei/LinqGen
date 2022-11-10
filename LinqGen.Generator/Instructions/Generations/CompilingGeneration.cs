@@ -71,6 +71,16 @@ namespace Cathei.LinqGen.Generator
 
         private MemberInfo[] MemberInfos => _memberInfos ??= GetMemberInfos().ToArray();
 
+        public TypeSyntax ResolvedClassName
+        {
+            get
+            {
+                if (Arity == 0)
+                    return IdentifierName;
+                return GenericName(IdentifierName.Identifier, GetTypeArguments()!);
+            }
+        }
+
         public virtual BlockSyntax RenderGetEnumeratorBody()
         {
             return Block(ReturnStatement(ObjectCreationExpression(
@@ -152,6 +162,45 @@ namespace Cathei.LinqGen.Generator
                     MemberAccessExpression(ThisExpression(), member.Name),
                     source == null ? member.Name : MemberAccessExpression(source, member.Name)));
             }
+        }
+
+        public IEnumerable<MemberDeclarationSyntax> RenderExtensionMethods()
+        {
+            if (ShouldBeMemberMethod)
+                yield break;
+
+            var body = Block(ReturnStatement(
+                ObjectCreationExpression(ResolvedClassName,
+                    ArgumentList(GetArguments(MemberKind.Enumerable)), default)));
+
+            yield return MethodDeclaration(
+                new(AggressiveInliningAttributeList), PublicStaticTokenList, ResolvedClassName, null,
+                MethodName.Identifier, GetTypeParameters(), ParameterList(GetParameters(MemberKind.Enumerable, true)),
+                GetGenericConstraints(), body, default, default);
+        }
+
+        public IEnumerable<MemberDeclarationSyntax> RenderUpstreamMemberMethods()
+        {
+            if (!ShouldBeMemberMethod)
+                yield break;
+
+            int arityDiff = Arity - Upstream!.Arity;
+
+            var typeParameters = GetTypeParameters(arityDiff);
+            var genericConstraints = GetGenericConstraints(arityDiff);
+
+            // swap first argument with this
+            var argumentList = ArgumentList(
+                GetArguments(MemberKind.Enumerable).Skip(1).Prepend(Argument(ThisExpression())));
+
+            var parameterList = ParameterList(GetParameters(MemberKind.Enumerable).Skip(1));
+
+            var body = Block(ReturnStatement(
+                ObjectCreationExpression(ResolvedClassName, argumentList, default)));
+
+            yield return MethodDeclaration(new(AggressiveInliningAttributeList),
+                PublicTokenList, ResolvedClassName, default, MethodName.Identifier, typeParameters,
+                parameterList, genericConstraints, body, default, default);
         }
     }
 }
