@@ -20,8 +20,9 @@ namespace Cathei.LinqGen.Generator
 
         private const string LinqGenStubEnumerableTypeName = "Stub`2";
         private const string LinqGenBoxedStubEnumerableTypeName = "BoxedStub`2";
-        private const string LinqGenOrderedStubEnumerableTypeName = "OrderedStub`2";
         private const string LinqGenStubInterfaceTypeName = "IStub`2";
+        private const string LinqGenOrderedStubEnumerableTypeName = "OrderedStub`2";
+        private const string LinqGenOrderedStubInterfaceTypeName = "IOrderedStub`2";
         private const string LinqGenStructFunctionTypeName = "IStructFunction";
 
         public static bool IsStubMethod(IMethodSymbol symbol)
@@ -44,7 +45,9 @@ namespace Cathei.LinqGen.Generator
         {
             // is input parameter defined for method is stub interface or stub enumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.MetadataName is LinqGenStubInterfaceTypeName or LinqGenStubEnumerableTypeName;
+                   symbol.MetadataName is LinqGenStubInterfaceTypeName or
+                       LinqGenStubEnumerableTypeName or
+                       LinqGenOrderedStubInterfaceTypeName;
         }
 
         public static bool IsCountable(INamedTypeSymbol symbol)

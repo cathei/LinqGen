@@ -260,10 +260,15 @@ namespace Cathei.LinqGen.Generator
         public override TypeSyntax InterfaceType =>
             GenericName(Identifier("IInternalOrderedStub"), TypeArgumentList(OutputElementType));
 
+        public int Depth => UpstreamOrder == null ? 1 : UpstreamOrder.Depth + 1;
+
+        private TypeSyntax SourceEnumerableType =>
+            UpstreamOrder == null ? UpstreamResolvedClassName : UpstreamOrder.SourceEnumerableType;
+
         public override bool IsCountable => Upstream!.IsCountable;
         public override bool IsPartition => true;
 
-        private OrderingOperation? UpstreamOrder { get; set; }
+        protected OrderingOperation? UpstreamOrder { get; set; }
 
         public override void SetUpstream(Generation upstream)
         {
@@ -282,8 +287,30 @@ namespace Cathei.LinqGen.Generator
                     TypeConstraint(SelectorInterfaceType));
 
                 yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}2"),
-                    ClassOrStructConstraint(SyntaxKind.StructConstraint), TypeConstraint(ComparerInterfaceType));
+                    TypeConstraint(ComparerInterfaceType));
             }
+        }
+
+        public override ConstructorDeclarationSyntax RenderEnumerableConstructor()
+        {
+            var syntax = base.RenderEnumerableConstructor();
+
+            if (!WithStruct)
+            {
+                var block = syntax.Body!;
+                var comparerVar = IdentifierName($"comparer{Depth}");
+
+                // Comparer<T>.Default if null
+                var statements = block.Statements.Insert(0,
+                    ExpressionStatement(SimpleAssignmentExpression(comparerVar,
+                        NullCoalesce(comparerVar, MemberAccessExpression(
+                            GenericName(Identifier("Comparer"), TypeArgumentList(Upstream!.OutputElementType)),
+                            IdentifierName("Default"))))));
+
+                syntax = syntax.WithBody(block.WithStatements(statements));
+            }
+
+            return syntax;
         }
 
         public override BlockSyntax RenderGetEnumeratorBody()
@@ -294,10 +321,9 @@ namespace Cathei.LinqGen.Generator
 
         public sealed override IEnumerable<MemberInfo> GetMemberInfos()
         {
-            if (UpstreamOrder == null)
-            {
-                yield return new MemberInfo(MemberKind.Enumerable, UpstreamResolvedClassName, SourceVar);
-            }
+            yield return new MemberInfo(MemberKind.Enumerable, SourceEnumerableType, SourceVar);
+
+            int depth = Depth;
 
             foreach (var member in GetOrderMemberInfos())
             {
@@ -305,7 +331,8 @@ namespace Cathei.LinqGen.Generator
                     member.SelectorType, IdentifierName($"selector{member.Index}"));
 
                 yield return new MemberInfo(MemberKind.Enumerable,
-                    member.ComparerType, IdentifierName($"comparer{member.Index}"));
+                    member.ComparerType, IdentifierName($"comparer{member.Index}"),
+                    WithStruct || depth != member.Index ? null : NullLiteral);
             }
 
             yield return new MemberInfo(MemberKind.Enumerator,
@@ -319,28 +346,25 @@ namespace Cathei.LinqGen.Generator
 
         protected IEnumerable<OrderMemberInfo> GetOrderMemberInfos()
         {
-            int index = 1;
-
             if (UpstreamOrder != null)
             {
                 foreach (var member in UpstreamOrder.GetOrderMemberInfos())
-                {
                     yield return member;
-                    ++index;
-                }
             }
+
+            int depth = Depth;
 
             if (WithStruct)
             {
                 yield return new OrderMemberInfo(
                     IdentifierName($"{TypeParameterPrefix}1"),
                     IdentifierName($"{TypeParameterPrefix}2"),
-                    KeyType, index);
+                    KeyType, depth);
             }
             else
             {
                 yield return new OrderMemberInfo(
-                    SelectorInterfaceType, ComparerInterfaceType, KeyType, index);
+                    SelectorInterfaceType, ComparerInterfaceType, KeyType, depth);
             }
         }
 

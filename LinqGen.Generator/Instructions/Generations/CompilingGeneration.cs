@@ -197,7 +197,7 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public IEnumerable<MemberDeclarationSyntax> RenderUpstreamMemberMethods()
+        public virtual IEnumerable<MemberDeclarationSyntax> RenderUpstreamMemberMethods()
         {
             if (!ShouldBeMemberMethod)
                 yield break;

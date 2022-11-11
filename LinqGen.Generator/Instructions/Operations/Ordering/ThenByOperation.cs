@@ -23,5 +23,25 @@ namespace Cathei.LinqGen.Generator
         }
 
         public override bool ShouldBeMemberMethod => true;
+
+        public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMemberMethods()
+        {
+            int arityDiff = Arity - Upstream!.Arity;
+            int upstreamDepth = UpstreamOrder!.Depth;
+
+            var typeParameters = GetTypeParameters(take: arityDiff);
+            var genericConstraints = GetGenericConstraints(take: arityDiff);
+
+            // swap first argument with source
+            var argumentList = ArgumentList(GetArguments(MemberKind.Enumerable));
+            var parameterList = ParameterList(GetParameters(MemberKind.Enumerable).Skip(1 + upstreamDepth * 2));
+
+            var body = Block(ReturnStatement(
+                ObjectCreationExpression(ResolvedClassName, argumentList, default)));
+
+            yield return MethodDeclaration(new(AggressiveInliningAttributeList),
+                PublicTokenList, ResolvedClassName, default, MethodName.Identifier, typeParameters,
+                parameterList, genericConstraints, body, default, default);
+        }
     }
 }

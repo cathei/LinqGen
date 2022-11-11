@@ -9,12 +9,13 @@ using Cathei.LinqGen;
 namespace Cathei.LinqGen.Tests;
 
 [TestFixture]
-public class OrderByTests : GenerationTestBase<int>
+public class ThenByTests : GenerationTestBase<int>
 {
     public override IEnumerable<int> Build(int count)
     {
         return GenEnumerable.Range(-2, count)
-            .OrderBy(x => -x)
+            .OrderBy(x => x % 3)
+            .ThenBy(x => -x)
             .AsEnumerable();
     }
 
@@ -24,10 +25,12 @@ public class OrderByTests : GenerationTestBase<int>
     public void TestResult_SameAsLinq(int start, int count)
     {
         var expected = Enumerable.Range(start, count)
-            .OrderBy(x => x % 2 == 0 ? -x : x);
+            .OrderBy(x => x % 2)
+            .ThenBy(x => 3 - x);
 
         var actual = GenEnumerable.Range(start, count)
-            .OrderBy(x => x % 2 == 0 ? -x : x);
+            .OrderBy(x => x % 2)
+            .ThenBy(x => 3 - x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -37,24 +40,33 @@ public class OrderByTests : GenerationTestBase<int>
     [TestCase(-5, 10)]
     public void TestResultStruct_SameAsLinq(int start, int count)
     {
-        var selector = new Selector();
+        var selector1 = new Selector1();
+        var selector2 = new Selector2();
 
         var expected = Enumerable.Range(start, count)
-            .OrderBy(selector.Invoke);
+            .OrderBy(selector1.Invoke)
+            .ThenBy(selector2.Invoke);
 
         var actual = GenEnumerable.Range(start, count)
-            .OrderBy(selector, Comparer<double>.Default);
+            .OrderBy(selector1, Comparer<bool>.Default)
+            .ThenBy(selector2, Comparer<double>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
-    private struct Selector : IStructFunction<int, double>
+    private struct Selector1 : IStructFunction<int, bool>
+    {
+        public bool Invoke(int arg)
+        {
+            return arg < 0;
+        }
+    }
+
+    private struct Selector2 : IStructFunction<int, double>
     {
         public double Invoke(int arg)
         {
-            if (arg % 2 == 0)
-                return 10.5 - arg;
-            return 10.5 + arg;
+            return 5.5 - arg;
         }
     }
 }

@@ -112,12 +112,12 @@ namespace Cathei.LinqGen.Generator
                 case "ThenBy":
                     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
                         break;
-                    return new OrderByOperation(expression, id, typeSymbol, false);
+                    return new ThenByOperation(expression, id, typeSymbol, false);
 
                 case "ThenByStruct":
                     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
                         break;
-                    return new OrderByOperation(expression, id, typeSymbol, true);
+                    return new ThenByOperation(expression, id, typeSymbol, true);
             }
 
             // not yet implemented
