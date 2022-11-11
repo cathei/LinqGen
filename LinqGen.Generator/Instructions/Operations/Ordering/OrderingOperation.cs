@@ -34,7 +34,7 @@ namespace Cathei.LinqGen.Generator
             {
                 // in this case, it actually should not be enumerated at all
                 elementBuffer.Dispose();
-                return new Enumerator(new PooledList<_Element_>(0), new PooledList<int>(0), -1);
+                return new Enumerator(new PooledList<int>(0), new PooledList<_Element_>(0), -1);
             }
 
             var indexBuffer = new PooledList<int>(elementBuffer.Count);

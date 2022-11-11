@@ -5,7 +5,7 @@ using Cathei.LinqGen;
 using StructLinq;
 using NetFabric.Hyperlinq;
 
-namespace QuickLinq.Benchmarks.Cases;
+namespace Cathei.LinqGen.Benchmarks.Cases;
 
 [MemoryDiagnoser]
 public class SelectCount
