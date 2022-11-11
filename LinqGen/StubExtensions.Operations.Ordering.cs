@@ -21,8 +21,8 @@ namespace Cathei.LinqGen
         }
 
         public static OrderedStub<IContent<T>, OrderByStruct<TUp, TKey>> OrderBy<T, TUp, TKey, TComparer>(
-            this IStub<IContent<T>, TUp> enumerable, IStructFunction<T, TKey> keySelector, IComparer<TKey>? comparer = null)
-            where TComparer : struct, IComparer<TKey>
+            this IStub<IContent<T>, TUp> enumerable, IStructFunction<T, TKey> keySelector, TComparer comparer)
+            where TComparer : IComparer<TKey>
         {
             throw new NotImplementedException();
         }
@@ -34,8 +34,8 @@ namespace Cathei.LinqGen
         }
 
         public static OrderedStub<IContent<T>, ThenByStruct<TUp, TKey>> ThenBy<T, TUp, TKey, TComparer>(
-            this IOrderedStub<IContent<T>, TUp> enumerable, IStructFunction<T, TKey> keySelector, IComparer<TKey>? comparer = null)
-            where TComparer : struct, IComparer<TKey>
+            this IOrderedStub<IContent<T>, TUp> enumerable, IStructFunction<T, TKey> keySelector, TComparer comparer)
+            where TComparer : IComparer<TKey>
         {
             throw new NotImplementedException();
         }

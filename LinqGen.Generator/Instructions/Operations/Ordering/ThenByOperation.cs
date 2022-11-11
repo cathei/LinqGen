@@ -23,28 +23,5 @@ namespace Cathei.LinqGen.Generator
         }
 
         public override bool ShouldBeMemberMethod => true;
-
-        public override ConstructorDeclarationSyntax RenderEnumerableConstructor()
-        {
-            return base.RenderEnumerableConstructor();
-        }
-
-        public override IEnumerable<MemberInfo> GetMemberInfos()
-        {
-            var upstreamOrdering = Upstream as OrderingOperation;
-
-            Debug.Assert(upstreamOrdering != null);
-
-            // inherits all member info of parent
-            foreach (var memberInfo in upstreamOrdering!.GetMemberInfos())
-                yield return memberInfo;
-
-            yield return new MemberInfo(MemberKind.Enumerable,
-                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : SelectorTypeName, SelectorVar);
-
-            yield return new MemberInfo(MemberKind.Enumerable,
-                WithStruct ? IdentifierName($"{TypeParameterPrefix}2") : ComparerTypeName, ComparerVar,
-                WithStruct ? null : NullLiteral);
-        }
     }
 }

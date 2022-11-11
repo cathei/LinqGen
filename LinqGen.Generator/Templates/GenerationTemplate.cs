@@ -30,7 +30,7 @@ namespace Cathei.LinqGen.Hidden
 {
     // Enumerable is always readonly
     // Non-exported Enumerable should consider anonymous type, thus it will be internal
-    internal readonly struct _Enumerable_ : IInternalStub<_Element_>
+    internal readonly struct _Enumerable_ : _Interface_
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal _Enumerable_() : this()
@@ -86,7 +86,7 @@ namespace Cathei.LinqGen.Hidden
             void IEnumerator.Reset() => throw new NotSupportedException();
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public void Dispose()
+            public void _Dispose_()
             {
 
             }
@@ -175,7 +175,8 @@ namespace Cathei.LinqGen
                         node = RewriteEnumeratorMoveNext(node);
                         break;
 
-                    case "Dispose":
+                    // use _Dispose_ to prevent overwriting other Dispose in members
+                    case "_Dispose_":
                         node = RewriteEnumeratorDispose(node);
                         break;
                 }
@@ -222,6 +223,9 @@ namespace Cathei.LinqGen
 
                     case "_Element_":
                         return _instruction.OutputElementType;
+
+                    case "_Interface_":
+                        return _instruction.InterfaceType;
                 }
 
                 return base.VisitIdentifierName(node);
@@ -231,7 +235,7 @@ namespace Cathei.LinqGen
             {
                 var additionalMembers = _instruction
                     .GetFieldDeclarations(MemberKind.Enumerable, true)
-                    .Concat(GetOperationMethods());
+                    .Concat(GetAdditionalMembers());
 
                 var baseListTypes = node.BaseList!.
                     Types.AddRange(_instruction.GetBaseInterfaces());
@@ -271,7 +275,8 @@ namespace Cathei.LinqGen
 
             private MethodDeclarationSyntax RewriteEnumeratorDispose(MethodDeclarationSyntax node)
             {
-                return node.WithBody(_instruction.RenderDisposeBody());
+                return node.WithIdentifier(DisposeMethod.Identifier)
+                    .WithBody(_instruction.RenderDisposeBody());
             }
 
             private PropertyDeclarationSyntax RewriteEnumeratorCurrent(PropertyDeclarationSyntax node)
@@ -286,19 +291,10 @@ namespace Cathei.LinqGen
                 return node.WithAccessorList(AccessorList(SingletonList(getAccessor)));
             }
 
-            private IEnumerable<MemberDeclarationSyntax> GetOperationMethods()
+            private IEnumerable<MemberDeclarationSyntax> GetAdditionalMembers()
             {
-                if (_instruction.Downstream == null)
-                {
-                    // nothing to operate
-                    yield break;
-                }
-
-                foreach (var downstream in _instruction.Downstream)
-                {
-                    foreach (var method in downstream.RenderUpstreamMemberMethods())
-                        yield return method;
-                }
+                foreach (var method in _instruction.RenderAdditionalMembers())
+                    yield return method;
             }
 
             private IEnumerable<MemberDeclarationSyntax> GetExtensionMethods()

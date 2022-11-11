@@ -36,6 +36,9 @@ namespace Cathei.LinqGen.Generator
 
         public override IdentifierNameSyntax IdentifierName { get; }
 
+        public virtual TypeSyntax InterfaceType =>
+            GenericName(Identifier("IInternalStub"), TypeArgumentList(OutputElementType));
+
         public abstract IEnumerable<MemberInfo> GetMemberInfos();
 
         public override SourceText Render()
@@ -164,7 +167,7 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public virtual IEnumerable<MemberDeclarationSyntax> RenderExtensionMethods()
+        public IEnumerable<MemberDeclarationSyntax> RenderExtensionMethods()
         {
             if (ShouldBeMemberMethod)
                 yield break;
@@ -179,7 +182,22 @@ namespace Cathei.LinqGen.Generator
                 GetGenericConstraints(), body, default, default);
         }
 
-        public virtual IEnumerable<MemberDeclarationSyntax> RenderUpstreamMemberMethods()
+        public virtual IEnumerable<MemberDeclarationSyntax> RenderAdditionalMembers()
+        {
+            if (Downstream == null)
+            {
+                // nothing to operate
+                yield break;
+            }
+
+            foreach (var downstream in Downstream)
+            {
+                foreach (var method in downstream.RenderUpstreamMemberMethods())
+                    yield return method;
+            }
+        }
+
+        public IEnumerable<MemberDeclarationSyntax> RenderUpstreamMemberMethods()
         {
             if (!ShouldBeMemberMethod)
                 yield break;

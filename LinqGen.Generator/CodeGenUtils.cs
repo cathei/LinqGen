@@ -20,6 +20,7 @@ namespace Cathei.LinqGen.Generator
 
         private const string LinqGenStubEnumerableTypeName = "Stub`2";
         private const string LinqGenBoxedStubEnumerableTypeName = "BoxedStub`2";
+        private const string LinqGenOrderedStubEnumerableTypeName = "OrderedStub`2";
         private const string LinqGenStubInterfaceTypeName = "IStub`2";
         private const string LinqGenStructFunctionTypeName = "IStructFunction";
 
@@ -34,7 +35,9 @@ namespace Cathei.LinqGen.Generator
         {
             // is return type defined for method is stub enumerable or boxed IEnumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.MetadataName is LinqGenStubEnumerableTypeName or LinqGenBoxedStubEnumerableTypeName;
+                   symbol.MetadataName is LinqGenStubEnumerableTypeName or
+                       LinqGenBoxedStubEnumerableTypeName or
+                       LinqGenOrderedStubEnumerableTypeName;
         }
 
         public static bool IsInputStubEnumerable(INamedTypeSymbol symbol)
@@ -93,6 +96,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax GetEnumeratorMethod = IdentifierName("GetEnumerator");
         public static readonly IdentifierNameSyntax GetSliceEnumeratorMethod = IdentifierName("GetSliceEnumerator");
         public static readonly IdentifierNameSyntax AddMethod = IdentifierName("Add");
+        public static readonly IdentifierNameSyntax CompareMethod = IdentifierName("Compare");
 
         // known property names
         public static readonly IdentifierNameSyntax CurrentProperty = IdentifierName("Current");
@@ -177,6 +181,12 @@ namespace Cathei.LinqGen.Generator
         {
             return SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
                 MemberAccessExpression(expression, name1), name2);
+        }
+
+        public static ElementAccessExpressionSyntax ElementAccessExpression(
+            ExpressionSyntax expression, ExpressionSyntax index)
+        {
+            return SyntaxFactory.ElementAccessExpression(expression, BracketedArgumentList(index));
         }
 
         public static AssignmentExpressionSyntax SimpleAssignmentExpression(
@@ -304,6 +314,11 @@ namespace Cathei.LinqGen.Generator
         public static BinaryExpressionSyntax GreaterOrEqualExpression(ExpressionSyntax left, ExpressionSyntax right)
         {
             return SyntaxFactory.BinaryExpression(SyntaxKind.GreaterThanOrEqualExpression, left, right);
+        }
+
+        public static BinaryExpressionSyntax NotEqualsExpression(ExpressionSyntax left, ExpressionSyntax right)
+        {
+            return SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, left, right);
         }
 
         public static BinaryExpressionSyntax AddExpression(ExpressionSyntax left, ExpressionSyntax right)

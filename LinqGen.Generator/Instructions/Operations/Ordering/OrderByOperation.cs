@@ -20,18 +20,5 @@ namespace Cathei.LinqGen.Generator
             INamedTypeSymbol selectorType, bool withStruct) : base(expression, id, selectorType, withStruct)
         {
         }
-
-        public override IEnumerable<MemberInfo> GetMemberInfos()
-        {
-            foreach (var member in base.GetMemberInfos())
-                yield return member;
-
-            yield return new MemberInfo(MemberKind.Enumerable,
-                WithStruct ? IdentifierName($"{TypeParameterPrefix}1") : SelectorTypeName, SelectorVar);
-
-            yield return new MemberInfo(MemberKind.Enumerable,
-                WithStruct ? IdentifierName($"{TypeParameterPrefix}2") : ComparerTypeName, ComparerVar,
-                WithStruct ? null : NullLiteral);
-        }
     }
 }
