@@ -41,8 +41,8 @@ public class OrderByReference
     {
         get
         {
-            // yield return smallList.ToArray();
-            // yield return mediumList.ToArray();
+            yield return smallList.ToArray();
+            yield return mediumList.ToArray();
             yield return largeList.ToArray();
         }
     }
