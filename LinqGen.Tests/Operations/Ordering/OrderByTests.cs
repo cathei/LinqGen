@@ -21,6 +21,34 @@ public class OrderByTests : GenerationTestBase<int>
     [TestCase(0, 0)]
     [TestCase(0, 10)]
     [TestCase(-5, 10)]
+    public void TestResultIdentity_SameAsLinq(int start, int count)
+    {
+        var expected = Enumerable.Range(start, count)
+            .OrderBy(x => x);
+
+        var actual = GenEnumerable.Range(start, count)
+            .OrderBy();
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(0, 10)]
+    [TestCase(-5, 10)]
+    public void TestResultIdentityStruct_SameAsLinq(int start, int count)
+    {
+        var expected = Enumerable.Range(start, count)
+            .OrderBy(x => x, new Comparer());
+
+        var actual = GenEnumerable.Range(start, count)
+            .OrderBy(new Comparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(0, 10)]
+    [TestCase(-5, 10)]
     public void TestResult_SameAsLinq(int start, int count)
     {
         var expected = Enumerable.Range(start, count)
@@ -55,6 +83,14 @@ public class OrderByTests : GenerationTestBase<int>
             if (arg % 2 == 0)
                 return 10.5 - arg;
             return 10.5 + arg;
+        }
+    }
+
+    private struct Comparer : IComparer<int>
+    {
+        public int Compare(int x, int y)
+        {
+            return x - y;
         }
     }
 }

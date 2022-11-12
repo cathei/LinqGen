@@ -90,6 +90,7 @@ namespace Cathei.LinqGen.Generator
 
         // known type names
         public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));
+        public static readonly PredefinedTypeSyntax BoolType = PredefinedType(Token(SyntaxKind.BoolKeyword));
         public static readonly IdentifierNameSyntax EnumeratorType = IdentifierName("Enumerator");
 
         // known method names
@@ -307,6 +308,11 @@ namespace Cathei.LinqGen.Generator
         public static PrefixUnaryExpressionSyntax LogicalNotExpression(ExpressionSyntax operand)
         {
             return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, operand);
+        }
+
+        public static PrefixUnaryExpressionSyntax MinusExpression(ExpressionSyntax operand)
+        {
+            return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.UnaryMinusExpression, operand);
         }
 
         public static BinaryExpressionSyntax LessThanExpression(ExpressionSyntax left, ExpressionSyntax right)

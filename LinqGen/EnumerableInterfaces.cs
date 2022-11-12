@@ -1,5 +1,6 @@
 ﻿// LinqGen, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
+using System;
 using System.Collections;
 
 namespace Cathei.LinqGen.Hidden

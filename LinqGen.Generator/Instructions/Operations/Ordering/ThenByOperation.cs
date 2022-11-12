@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -18,7 +19,7 @@ namespace Cathei.LinqGen.Generator
     public sealed class ThenByOperation : OrderingOperation
     {
         public ThenByOperation(in LinqGenExpression expression, int id,
-            INamedTypeSymbol selectorType, bool withStruct) : base(expression, id, selectorType, withStruct)
+            INamedTypeSymbol? selectorType, bool withStruct) : base(expression, id, selectorType, withStruct)
         {
         }
 
@@ -29,19 +30,40 @@ namespace Cathei.LinqGen.Generator
             int arityDiff = Arity - Upstream!.Arity;
             int upstreamDepth = UpstreamOrder!.Depth;
 
-            var typeParameters = GetTypeParameters(take: arityDiff);
-            var genericConstraints = GetGenericConstraints(take: arityDiff);
+            var argumentList = SeparatedList(GetArguments(MemberKind.Enumerable));
 
-            // swap first argument with source
-            var argumentList = ArgumentList(GetArguments(MemberKind.Enumerable));
-            var parameterList = ParameterList(GetParameters(MemberKind.Enumerable).Skip(1 + upstreamDepth * 2));
+            // last argument is desc
+            argumentList = argumentList.RemoveAt(argumentList.Count - 1);
 
-            var body = Block(ReturnStatement(
-                ObjectCreationExpression(ResolvedClassName, argumentList, default)));
+            int parameterCount = WithSelector ? 3 : 2;
 
+            var parameterList = new List<ParameterSyntax>(GetParameters(MemberKind.Enumerable, defaultValue: true));
+
+            // only need parameter for this operation
+            parameterList.RemoveRange(0, parameterList.Count - parameterCount);
+
+            // last parameter is desc flag
+            parameterList.RemoveAt(parameterList.Count - 1);
+
+            // ascending
             yield return MethodDeclaration(new(AggressiveInliningAttributeList),
-                PublicTokenList, ResolvedClassName, default, MethodName.Identifier, typeParameters,
-                parameterList, genericConstraints, body, default, default);
+                PublicTokenList, ResolvedClassName, default, Identifier("ThenBy"),
+                GetTypeParameters(take: arityDiff),
+                ParameterList(parameterList),
+                GetGenericConstraints(take: arityDiff),
+                Block(ReturnStatement(ObjectCreationExpression(ResolvedClassName,
+                    ArgumentList(argumentList.Add(Argument(FalseExpression()))), default))),
+                default, default);
+
+            // descending
+            yield return MethodDeclaration(new(AggressiveInliningAttributeList),
+                PublicTokenList, ResolvedClassName, default, Identifier("ThenByDescending"),
+                GetTypeParameters(take: arityDiff),
+                ParameterList(parameterList),
+                GetGenericConstraints(take: arityDiff),
+                Block(ReturnStatement(ObjectCreationExpression(ResolvedClassName,
+                    ArgumentList(argumentList.Add(Argument(TrueExpression()))), default))),
+                default, default);
         }
     }
 }

@@ -109,6 +109,12 @@ namespace Cathei.LinqGen.Generator
                         break;
                     return new OrderByOperation(expression, id, typeSymbol, true);
 
+                case "OrderBySelf":
+                    return new OrderByOperation(expression, id, null, false);
+
+                case "OrderBySelfStruct":
+                    return new OrderByOperation(expression, id, null, true);
+
                 case "ThenBy":
                     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
                         break;
@@ -118,6 +124,12 @@ namespace Cathei.LinqGen.Generator
                     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
                         break;
                     return new ThenByOperation(expression, id, typeSymbol, true);
+
+                case "ThenBySelf":
+                    return new ThenByOperation(expression, id, null, false);
+
+                case "ThenBySelfStruct":
+                    return new ThenByOperation(expression, id, null, true);
             }
 
             // not yet implemented

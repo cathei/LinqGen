@@ -44,23 +44,22 @@ namespace Cathei.LinqGen.Generator
                 indexBuffer.Add(i);
 
             // initialize comparer with keys
-            var comparer = new Comparer(this, elementBuffer);
+            var sorter = new Sorter(this, elementBuffer);
 
-            OrderByUtils.PartialQuickSort(
-                indexBuffer.Array, comparer, 0, elementBuffer.Count - 1, min, max);
+            sorter.PartialQuickSort(indexBuffer.Array, 0, elementBuffer.Count - 1, min, max);
 
-            comparer.Dispose();
+            sorter.Dispose();
 
             return new Enumerator(indexBuffer, elementBuffer, skip - 1);
         }");
 
         private static readonly SyntaxTree ComparerTemplate = CSharpSyntaxTree.ParseText(@"
-        internal struct Comparer : IComparer<int>, IDisposable
+        internal struct Sorter : IComparer<int>, IDisposable
         {
             private _Enumerable_ source;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Comparer(_Enumerable_ source, PooledList<_Element_> elements)
+            public Sorter(_Enumerable_ source, PooledList<_Element_> elements)
             {
                 this.source = source;
             }
@@ -74,6 +73,51 @@ namespace Cathei.LinqGen.Generator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Dispose()
             {
+            }
+
+            public void PartialQuickSort(
+                int[] indexesToSort, int left, int right, int min, int max)
+            {
+                do
+                {
+                    int mid = PartitionHoare(indexesToSort, left, right);
+
+                    if (left < mid && mid >= min)
+                        PartialQuickSort(indexesToSort, left, mid, min, max);
+
+                    left = mid + 1;
+
+                } while (left < right && left <= max);
+            }
+
+            // Hoare partition scheme
+            // This implementation is faster when using struct comparer (more comparison and less copy)
+            private int PartitionHoare(int[] indexesToSort, int left, int right)
+            {
+                // preventing overflow of the pivot
+                int pivot = left + ((right - left) >> 1);
+                int pivotIndex = indexesToSort[pivot];
+
+                int i = left - 1;
+                int j = right + 1;
+
+                while (true)
+                {
+                    // Move the left index to the right at least once and while the element at
+                    // the left index is less than the pivot
+                    while (Compare(indexesToSort[++i], pivotIndex) < 0) { }
+
+                    // Move the right index to the left at least once and while the element at
+                    // the right index is greater than the pivot
+                    while (Compare(indexesToSort[--j], pivotIndex) > 0) { }
+
+                    // If the indices crossed, return
+                    if (i >= j)
+                        return j;
+
+                    // Swap the elements at the left and right indices
+                    (indexesToSort[i], indexesToSort[j]) = (indexesToSort[j], indexesToSort[i]);
+                }
             }
         }
 ");
@@ -95,7 +139,7 @@ namespace Cathei.LinqGen.Generator
                         return _operation.ResolvedClassName;
 
                     case "_Element_":
-                        return _operation.Upstream!.OutputElementType;
+                        return _operation.OutputElementType;
 
                     case "_Count_":
                         return _operation.IsCountable
@@ -138,12 +182,28 @@ namespace Cathei.LinqGen.Generator
             {
                 var list = new List<MemberDeclarationSyntax>();
 
+                bool needElement = false;
+
                 foreach (var member in _operation.GetOrderMemberInfos())
                 {
+                    if (member.SelectorType == null)
+                    {
+                        needElement = true;
+                        continue;
+                    }
+
                     list.Add(FieldDeclaration(
                         default, PrivateTokenList, VariableDeclaration(
                             GenericName(Identifier("PooledList"), TypeArgumentList(member.KeyType)),
-                            SingletonSeparatedList(VariableDeclarator(Identifier("keys" + member.Index))))));
+                            SingletonSeparatedList(VariableDeclarator(Identifier($"keys{member.Index}"))))));
+                }
+
+                if (needElement)
+                {
+                    list.Add(FieldDeclaration(
+                        default, PrivateTokenList, VariableDeclaration(
+                            GenericName(Identifier("PooledList"), TypeArgumentList(_operation.OutputElementType)),
+                            SingletonSeparatedList(VariableDeclarator(Identifier("elements"))))));
                 }
 
                 return node.AddMembers(list.ToArray());
@@ -156,8 +216,16 @@ namespace Cathei.LinqGen.Generator
                 var elementIdentifier = IdentifierName("elements");
                 var elementCount = MemberAccessExpression(elementIdentifier, CountProperty);
 
+                bool needElement = false;
+
                 foreach (var member in _operation.GetOrderMemberInfos())
                 {
+                    if (member.SelectorType == null)
+                    {
+                        needElement = true;
+                        continue;
+                    }
+
                     var keyIdentifier = IdentifierName($"keys{member.Index}");
                     var selectorIdentifier = IdentifierName($"selector{member.Index}");
 
@@ -178,6 +246,12 @@ namespace Cathei.LinqGen.Generator
                                     ElementAccessExpression(elementIdentifier, IndexVar))))))));
                 }
 
+                if (needElement)
+                {
+                    list.Add(ExpressionStatement(SimpleAssignmentExpression(
+                        MemberAccessExpression(ThisExpression(), elementIdentifier), elementIdentifier)));
+                }
+
                 return node.AddBodyStatements(list.ToArray());
             }
 
@@ -191,8 +265,12 @@ namespace Cathei.LinqGen.Generator
 
                 foreach (var member in _operation.GetOrderMemberInfos())
                 {
-                    var keyIdentifier = IdentifierName($"keys{member.Index}");
+                    var keyIdentifier = member.SelectorType == null
+                        ? IdentifierName("elements")
+                        : IdentifierName($"keys{member.Index}");
+
                     var comparerIdentifier = IdentifierName($"comparer{member.Index}");
+                    var descIdentifier = IdentifierName($"desc{member.Index}");
 
                     list.Add(ExpressionStatement(SimpleAssignmentExpression(resultVar, InvocationExpression(
                         MemberAccessExpression(SourceVar, comparerIdentifier, CompareMethod), ArgumentList(
@@ -200,7 +278,10 @@ namespace Cathei.LinqGen.Generator
                             ElementAccessExpression(keyIdentifier, yVar))))));
 
                     list.Add(IfStatement(NotEqualsExpression(resultVar, LiteralExpression(0)),
-                        ReturnStatement(resultVar)));
+                        ReturnStatement(ConditionalExpression(
+                            MemberAccessExpression(SourceVar, descIdentifier),
+                            MinusExpression(resultVar),
+                            resultVar))));
                 }
 
                 list.Add(ReturnStatement(SubtractExpression(xVar, yVar)));
@@ -214,6 +295,9 @@ namespace Cathei.LinqGen.Generator
 
                 foreach (var member in _operation.GetOrderMemberInfos())
                 {
+                    if (member.SelectorType == null)
+                        continue;
+
                     var keyIdentifier = IdentifierName($"keys{member.Index}");
                     list.Add(ExpressionStatement(InvocationExpression(keyIdentifier, DisposeMethod)));
                 }
@@ -224,12 +308,12 @@ namespace Cathei.LinqGen.Generator
 
         protected readonly struct OrderMemberInfo
         {
-            public readonly TypeSyntax SelectorType;
+            public readonly TypeSyntax? SelectorType;
             public readonly TypeSyntax ComparerType;
             public readonly TypeSyntax KeyType;
             public readonly int Index;
 
-            public OrderMemberInfo(TypeSyntax selectorType, TypeSyntax comparerType, TypeSyntax keyType, int index)
+            public OrderMemberInfo(TypeSyntax? selectorType, TypeSyntax comparerType, TypeSyntax keyType, int index)
             {
                 SelectorType = selectorType;
                 ComparerType = comparerType;
@@ -238,22 +322,35 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        protected bool WithStruct { get; }
+        protected bool WithSelector { get; }
+        private bool WithStruct { get; }
         private SyntaxRewriter Rewriter { get; }
 
         public OrderingOperation(in LinqGenExpression expression, int id,
-            INamedTypeSymbol selectorType, bool withStruct) : base(expression, id)
+            INamedTypeSymbol? selectorType, bool withStruct) : base(expression, id)
         {
             WithStruct = withStruct;
 
-            SelectorInterfaceType = ParseTypeName(selectorType);
-            KeyType = ParseTypeName(selectorType.TypeArguments[1]);
+            if (selectorType != null)
+            {
+                WithSelector = true;
+                SelectorInterfaceType = ParseTypeName(selectorType);
+                SelectorKeyType = ParseTypeName(selectorType.TypeArguments[1]);
+            }
+            else
+            {
+                WithSelector = false;
+                SelectorInterfaceType = null;
+                SelectorKeyType = null;
+            }
 
             Rewriter = new SyntaxRewriter(this);
         }
 
-        private TypeSyntax SelectorInterfaceType { get; }
-        private TypeSyntax KeyType { get; }
+        private TypeSyntax? SelectorInterfaceType { get; }
+        private TypeSyntax? SelectorKeyType { get; }
+
+        private TypeSyntax KeyType => WithSelector ? SelectorKeyType! : OutputElementType;
         private TypeSyntax ComparerInterfaceType =>
             GenericName(Identifier("IComparer"), TypeArgumentList(KeyType));
 
@@ -283,11 +380,20 @@ namespace Cathei.LinqGen.Generator
         {
             if (WithStruct)
             {
-                yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"),
-                    TypeConstraint(SelectorInterfaceType));
+                if (WithSelector)
+                {
+                    yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}1"),
+                        TypeConstraint(SelectorInterfaceType!));
 
-                yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}2"),
-                    TypeConstraint(ComparerInterfaceType));
+                    yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}2"),
+                        TypeConstraint(ComparerInterfaceType));
+                }
+                else
+                {
+                    // here struct constraint is necessary for type inference
+                    yield return new TypeParameterInfo(IdentifierName($"{TypeParameterPrefix}2"),
+                        ClassOrStructConstraint(SyntaxKind.StructConstraint), TypeConstraint(ComparerInterfaceType));
+                }
             }
         }
 
@@ -327,12 +433,18 @@ namespace Cathei.LinqGen.Generator
 
             foreach (var member in GetOrderMemberInfos())
             {
-                yield return new MemberInfo(MemberKind.Enumerable,
-                    member.SelectorType, IdentifierName($"selector{member.Index}"));
+                if (member.SelectorType != null)
+                {
+                    yield return new MemberInfo(MemberKind.Enumerable,
+                        member.SelectorType, IdentifierName($"selector{member.Index}"));
+                }
 
                 yield return new MemberInfo(MemberKind.Enumerable,
                     member.ComparerType, IdentifierName($"comparer{member.Index}"),
                     WithStruct || depth != member.Index ? null : NullLiteral);
+
+                yield return new MemberInfo(MemberKind.Enumerable,
+                    BoolType, IdentifierName($"desc{member.Index}"));
             }
 
             yield return new MemberInfo(MemberKind.Enumerator,
@@ -357,14 +469,15 @@ namespace Cathei.LinqGen.Generator
             if (WithStruct)
             {
                 yield return new OrderMemberInfo(
-                    IdentifierName($"{TypeParameterPrefix}1"),
+                    WithSelector ? IdentifierName($"{TypeParameterPrefix}1") : null,
                     IdentifierName($"{TypeParameterPrefix}2"),
                     KeyType, depth);
             }
             else
             {
                 yield return new OrderMemberInfo(
-                    SelectorInterfaceType, ComparerInterfaceType, KeyType, depth);
+                    WithSelector ? SelectorInterfaceType : null,
+                    ComparerInterfaceType, KeyType, depth);
             }
         }
 

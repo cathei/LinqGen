@@ -22,7 +22,7 @@ namespace Cathei.LinqGen.Generator
         protected CompilingGeneration(in LinqGenExpression expression, int id) : base(expression)
         {
             MethodName = IdentifierName(expression.MethodSymbol.Name);
-            ClassName = IdentifierName = IdentifierName($"{MethodName}_{id}");
+            ClassName = IdentifierName = IdentifierName($"{expression.SignatureSymbol!.Name}_{id}");
 
             // To make sure type parameter has unique id, easier to make downstream methods
             TypeParameterPrefix = $"T{id}_";
@@ -92,14 +92,15 @@ namespace Cathei.LinqGen.Generator
 
         public virtual BlockSyntax RenderGetSliceEnumeratorBody() => throw new NotImplementedException();
 
-        public IEnumerable<ParameterSyntax> GetParameters(MemberKind kind, bool firstThisParam = false)
+        public IEnumerable<ParameterSyntax> GetParameters(MemberKind kind,
+            bool firstThisParam = false, bool defaultValue = false)
         {
             foreach (var member in MemberInfos)
             {
                 if ((member.Kind & kind) != kind)
                     continue;
 
-                var param = member.AsParameter();
+                var param = member.AsParameter(defaultValue);
 
                 if (firstThisParam)
                 {
@@ -167,7 +168,7 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public IEnumerable<MemberDeclarationSyntax> RenderExtensionMethods()
+        public virtual IEnumerable<MemberDeclarationSyntax> RenderExtensionMethods()
         {
             if (ShouldBeMemberMethod)
                 yield break;
@@ -178,7 +179,8 @@ namespace Cathei.LinqGen.Generator
 
             yield return MethodDeclaration(
                 new(AggressiveInliningAttributeList), PublicStaticTokenList, ResolvedClassName, null,
-                MethodName.Identifier, GetTypeParameters(), ParameterList(GetParameters(MemberKind.Enumerable, true)),
+                MethodName.Identifier, GetTypeParameters(),
+                ParameterList(GetParameters(MemberKind.Enumerable, firstThisParam: true, defaultValue: true)),
                 GetGenericConstraints(), body, default, default);
         }
 
@@ -211,7 +213,7 @@ namespace Cathei.LinqGen.Generator
             var argumentList = ArgumentList(
                 GetArguments(MemberKind.Enumerable).Skip(1).Prepend(Argument(ThisExpression())));
 
-            var parameterList = ParameterList(GetParameters(MemberKind.Enumerable).Skip(1));
+            var parameterList = ParameterList(GetParameters(MemberKind.Enumerable, defaultValue: true).Skip(1));
 
             var body = Block(ReturnStatement(
                 ObjectCreationExpression(ResolvedClassName, argumentList, default)));

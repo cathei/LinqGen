@@ -24,9 +24,9 @@ namespace Cathei.LinqGen.Generator
             DefaultValue = defaultValue;
         }
 
-        public ParameterSyntax AsParameter()
+        public ParameterSyntax AsParameter(bool defaultValue)
         {
-            return Parameter(Type, Name.Identifier, DefaultValue);
+            return Parameter(Type, Name.Identifier, defaultValue ? DefaultValue : null);
         }
 
         public ArgumentSyntax AsArgument()
