@@ -37,8 +37,8 @@ It's because everything `LinqGen.Generator` generates designed to be precede ove
 * Skip
 * Take
 * Distinct
-* OrderBy
-* ThenBy
+* OrderBy, OrderByDescending
+* ThenBy, ThenByDescending
 
 ### Evaluations
 * First
