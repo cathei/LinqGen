@@ -23,7 +23,7 @@ public class OrderBySkipTake : OrderByBenchmarkBase
     public double LinqGenDelegate(int[] list)
     {
         return list.Specialize()
-            .OrderBy(x => x)
+            .OrderBy()
             .Skip(10)
             .Take(10)
             .Sum();
@@ -34,7 +34,7 @@ public class OrderBySkipTake : OrderByBenchmarkBase
     public double LinqGenStruct(int[] list)
     {
         return list.Specialize()
-            .OrderBy(new Identity(), new Comparer())
+            .OrderBy(new Comparer())
             .Skip(10)
             .Take(10)
             .Sum();
@@ -62,14 +62,6 @@ public class OrderBySkipTake : OrderByBenchmarkBase
             .Skip(10, x => x)
             .Take(10, x => x)
             .Sum(x => x);
-    }
-
-    readonly struct Identity : IStructFunction<int, int>
-    {
-        public int Invoke(int arg)
-        {
-            return arg;
-        }
     }
 
     readonly struct Comparer :

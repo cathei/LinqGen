@@ -53,7 +53,7 @@ public class OrderBy : OrderByBenchmarkBase
     public double LinqGenDelegate(int[] list)
     {
         return list.Specialize()
-            .OrderBy(x => x)
+            .OrderBy()
             .Sum();
     }
 
@@ -62,7 +62,7 @@ public class OrderBy : OrderByBenchmarkBase
     public double LinqGenStruct(int[] list)
     {
         return list.Specialize()
-            .OrderBy(new Identity(), new Comparer())
+            .OrderBy(new Comparer())
             .Sum();
     }
 
@@ -84,14 +84,6 @@ public class OrderBy : OrderByBenchmarkBase
         return list.ToStructEnumerable()
             .Order(ref comparer, x => x)
             .Sum(x => x);
-    }
-
-    readonly struct Identity : IStructFunction<int, int>
-    {
-        public int Invoke(int arg)
-        {
-            return arg;
-        }
     }
 
     readonly struct Comparer :

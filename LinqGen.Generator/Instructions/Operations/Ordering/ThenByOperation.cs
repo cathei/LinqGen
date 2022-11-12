@@ -28,7 +28,6 @@ namespace Cathei.LinqGen.Generator
         public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMemberMethods()
         {
             int arityDiff = Arity - Upstream!.Arity;
-            int upstreamDepth = UpstreamOrder!.Depth;
 
             var argumentList = SeparatedList(GetArguments(MemberKind.Enumerable));
 

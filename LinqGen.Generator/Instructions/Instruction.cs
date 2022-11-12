@@ -109,34 +109,32 @@ namespace Cathei.LinqGen.Generator
             return result;
         }
 
-        public TypeParameterListSyntax? GetTypeParameters(int skip = 0, int take = -1)
+        public TypeParameterListSyntax? GetTypeParameters(int take = -1)
         {
             var parameters = TypeParameters;
 
             if (take < 0)
-                take = parameters.Count - skip;
+                take = parameters.Count;
 
             if (take <= 0)
                 return null;
 
             return TypeParameterList(SeparatedList(parameters
-                .Skip(skip)
                 .Take(take)
                 .Select(x => x.AsTypeParameter())));
         }
 
-        public TypeArgumentListSyntax? GetTypeArguments(int skip = 0, int take = -1)
+        public TypeArgumentListSyntax? GetTypeArguments(int take = -1)
         {
             var parameters = TypeParameters;
 
             if (take < 0)
-                take = parameters.Count - skip;
+                take = parameters.Count;
 
             if (take <= 0)
                 return null;
 
             return TypeArgumentList(SeparatedList(parameters
-                .Skip(skip)
                 .Take(take)
                 .Select(x => x.AsTypeArgument())));
         }
@@ -156,16 +154,15 @@ namespace Cathei.LinqGen.Generator
             })));
         }
 
-        public SyntaxList<TypeParameterConstraintClauseSyntax> GetGenericConstraints(int skip = 0, int take = -1)
+        public SyntaxList<TypeParameterConstraintClauseSyntax> GetGenericConstraints(int take = -1)
         {
             var parameters = TypeParameters;
 
             if (take < 0)
-                take = parameters.Count - skip;
+                take = parameters.Count;
 
             return new SyntaxList<TypeParameterConstraintClauseSyntax>(
                 parameters
-                    .Skip(skip)
                     .Take(take)
                     .Select(x => x.AsGenericConstraint()!)
                     .Where(x => x != null));
