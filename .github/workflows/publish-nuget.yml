@@ -1,0 +1,27 @@
+name: Publish to NuGet
+
+on:
+  push:
+    tags: # v1.0, v1.1, etc..
+      - v*
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Generate packages
+        run: |
+          $env:RELEASE_VERSION = $env:GITHUB_REF.substring(11) # Remove 'refs/tags/v'
+          dotnet pack LinqGen -c Release -p:PackageVersion=$env:RELEASE_VERSION -o out --no-restore
+          dotnet pack LinqGen.Generator -c Release -p:PackageVersion=$env:RELEASE_VERSION -o out --no-restore
+      - name: Publish packages
+        run: dotnet nuget push out\*.nupkg -s https://api.nuget.org/v3/index.json -k $env:NUGET_TOKEN --skip-duplicate
+        env:
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
