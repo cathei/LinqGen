@@ -46,6 +46,16 @@ int result = array.Specialize()
                   .Sum();
 ```
 
+This is benchmark result for above code. You can see full benchmark results [here](./docs/BenchmarkResults).
+
+|             Method |      Mean |     Error |    StdDev | Ratio |   Gen0 | Allocated | Alloc Ratio |
+|------------------- |----------:|----------:|----------:|------:|-------:|----------:|------------:|
+|            ForLoop | 11.228 μs | 0.0615 μs | 0.0514 μs |  0.32 |      - |         - |        0.00 |
+|        ForEachLoop |  9.577 μs | 0.0285 μs | 0.0267 μs |  0.27 |      - |         - |        0.00 |
+|               Linq | 35.388 μs | 0.1858 μs | 0.1647 μs |  1.00 |      - |     104 B |        1.00 |
+|    LinqGenDelegate | 22.625 μs | 0.0637 μs | 0.0596 μs |  0.64 |      - |         - |        0.00 |
+|      LinqGenStruct | 12.329 μs | 0.0394 μs | 0.0369 μs |  0.35 |      - |         - |        0.00 |
+
 ## Why not just use struct Linq implementations?
 
 Because of [this issue](https://github.com/dotnet/runtime/discussions/77192),
