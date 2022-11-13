@@ -13,6 +13,9 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
+    /// <summary>
+    /// Array can be enumerated with index as it has fixed size and no version check
+    /// </summary>
     public sealed class SpecializeArrayGeneration : CompilingGeneration
     {
         private TypeSyntax CallerEnumerableType { get; }

@@ -19,6 +19,33 @@ Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as li
     </PackageReference>
 ```
 
+For Unity, you can install as Unity package.
+```
+https://github.com/cathei/LinqGen.git?path=LinqGen.Unity/Packages/com.cathei.linqgen#v0.0.1-preview
+```
+
+## Usage
+Just add `Specialize()` in front of your Linq query.
+It will generate code to ensure zero-allocation slightly better performance.
+```csharp
+using Cathei.LinqGen;
+ 
+int[] array = new int[] { 1, 2, 3, 4, 5 };
+
+int result = array.Specialize()
+                  .Where(x => x % 2 == 0)
+                  .Select(x => x * 2)
+                  .Sum();
+```
+
+For additional performance boost, use struct functions with `IStructFunction` interface.
+```csharp
+int result = array.Specialize()
+                  .Where(new Predicate())
+                  .Select(new Selector())
+                  .Sum();
+```
+
 ## Why not just use struct Linq implementations?
 
 Because of [this issue](https://github.com/dotnet/runtime/discussions/77192),
@@ -30,6 +57,10 @@ Which makes your code hard to read and understand. The error messages or stack t
 
 Using source generation also makes your code friendly for AOT platforms, such as Unity,
 which has [maximum generic depth](https://forum.unity.com/threads/il2cpp-max-nested-generic-types.540534/).
+
+Being source generator makes `LinqGen` core library much small than other struct linq implementations, though it may grow as user uses Linq operations.
+
+It's worth to mention that `LinqGen` uses standard .NET enumerator like `List<T>.Enumerator` so it can give same behaviour when the iterating collection changed.
 
 ## How does LinqGen work?
 
