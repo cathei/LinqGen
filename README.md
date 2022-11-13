@@ -1,10 +1,23 @@
 # LinqGen
+[![Nuget](https://img.shields.io/nuget/v/LinqGen)](https://www.nuget.org/packages?q=LinqGen)
+[![Discord](https://img.shields.io/discord/942240862354702376?color=%235865F2&label=discord&logo=discord&logoColor=%23FFFFFF)](https://discord.gg/htzm856QhA)
 
 ## Linq meets Source Generator
 
 LinqGen is project to optimize Linq queries using source generation of user code.
 
 It aims to make allocation-free, specialized Linq queries per your type.
+
+## Install
+Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as library and [LinqGen.Generator](https://www.nuget.org/packages/LinqGen.Generator) as source generator.
+
+```xml
+    <PackageReference Include="LinqGen" Version="0.0.1-preview" />
+    <PackageReference Include="LinqGen.Generator" Version="0.0.1-preview">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+```
 
 ## Why not just use struct Linq implementations?
 
