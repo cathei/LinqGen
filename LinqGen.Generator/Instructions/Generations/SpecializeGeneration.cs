@@ -29,7 +29,7 @@ namespace Cathei.LinqGen.Generator
             if (TryGetGenericEnumerableInterface(enumerableSymbol, out var genericInterfaceSymbol))
             {
                 // IEnumerable<T>
-                elementSymbol = enumerableSymbol.TypeArguments[0];
+                elementSymbol = genericInterfaceSymbol.TypeArguments[0];
             }
 
             // TODO ICollection, ICollection<T>, IReadOnlyCollection<T> ...

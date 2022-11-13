@@ -25,6 +25,9 @@ namespace Cathei.LinqGen.Generator
         private const string LinqGenOrderedStubInterfaceTypeName = "IOrderedStub`2";
         private const string LinqGenStructFunctionTypeName = "IStructFunction";
 
+        private const string SystemNamespace = "System";
+        private const string SystemCollectionsGenericNamespace = "System.Collections.Generic";
+
         public static bool IsStubMethod(IMethodSymbol symbol)
         {
             // is it member of extension class or member of stub enumerable?
@@ -388,39 +391,43 @@ namespace Cathei.LinqGen.Generator
                 GenericName(Identifier("EqualityComparer"), TypeArgumentList(type)), IdentifierName("Default"));
         }
 
-        private static INamedTypeSymbol? GetInterface(
-            ITypeSymbol symbol, string assemblyName, string interfaceMetadataName)
+        private static bool CompareNamespace(ITypeSymbol symbol, string name)
         {
-            // check symbol itself first
-            if (symbol.ContainingAssembly?.Name == assemblyName && symbol.MetadataName == interfaceMetadataName)
+            return symbol.ContainingNamespace.ToDisplayString() == name;
+        }
+
+        private static INamedTypeSymbol? GetInterface(
+            ITypeSymbol symbol, string namespaceName, string interfaceMetadataName)
+        {
+            if (symbol.MetadataName == interfaceMetadataName && CompareNamespace(symbol, namespaceName))
                 return (INamedTypeSymbol)symbol;
 
             return symbol.AllInterfaces.FirstOrDefault(x =>
-                x.ContainingAssembly.Name == assemblyName && x.MetadataName == interfaceMetadataName);
+                x.MetadataName == interfaceMetadataName && CompareNamespace(symbol, namespaceName));
         }
 
         public static bool TryGetGenericListInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
         {
-            interfaceSymbol = GetInterface(symbol, "System.Runtime", "IList`1")!;
+            interfaceSymbol = GetInterface(symbol, SystemCollectionsGenericNamespace, "IList`1")!;
             return interfaceSymbol != null!;
         }
 
         public static bool TryGetGenericEnumerableInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
         {
-            interfaceSymbol = GetInterface(symbol, "System.Runtime", "IEnumerable`1")!;
+            interfaceSymbol = GetInterface(symbol, SystemCollectionsGenericNamespace, "IEnumerable`1")!;
             return interfaceSymbol != null!;
         }
 
         public static bool TryGetGenericCollectionInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
         {
-            interfaceSymbol = GetInterface(symbol, "System.Runtime", "ICollection`1")!;
+            interfaceSymbol = GetInterface(symbol, SystemCollectionsGenericNamespace, "ICollection`1")!;
             return interfaceSymbol != null!;
         }
 
         public static bool TryGetComparableSelfInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
         {
             interfaceSymbol = symbol.AllInterfaces.FirstOrDefault(x =>
-                x.ContainingAssembly.Name == "System.Runtime" && x.MetadataName == "IComparable`1" &&
+                x.MetadataName == "IComparable`1" && CompareNamespace(x, SystemNamespace) &&
                 SymbolEqualityComparer.Default.Equals(x.TypeArguments[0], symbol))!;
 
             return interfaceSymbol != null!;
