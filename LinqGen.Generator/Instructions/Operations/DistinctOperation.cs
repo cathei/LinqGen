@@ -80,9 +80,7 @@ namespace Cathei.LinqGen.Generator
                 // EqualityComparer<T>.Default if null
                 var statements = block.Statements.Insert(0,
                     ExpressionStatement(SimpleAssignmentExpression(ComparerVar,
-                        NullCoalesce(ComparerVar, MemberAccessExpression(
-                            GenericName(Identifier("EqualityComparer"), TypeArgumentList(Upstream!.OutputElementType)),
-                            IdentifierName("Default"))))));
+                        NullCoalesce(ComparerVar, EqualityComparerDefault(Upstream!.OutputElementType)))));
 
                 syntax = syntax.WithBody(block.WithStatements(statements));
             }

@@ -41,9 +41,15 @@ namespace Cathei.LinqGen.Hidden
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private int InternalGetHashCode(TKey item)
+        private int GetHashCode(TKey item)
         {
             return item == null ? 0 : _comparer.GetHashCode(item);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static uint Reduce(int hashCode, int size)
+        {
+            return (uint)hashCode % (uint)size;
         }
 
         private void IncreaseCapacity()
@@ -92,7 +98,7 @@ namespace Cathei.LinqGen.Hidden
             for (int i = 0; i < _count; i++)
             {
                 ref var newSlot = ref newSlots[i];
-                int bucket = newSlot.hashCode % newSize;
+                uint bucket = Reduce(newSlot.hashCode, newSize);
                 newSlot.next = newBuckets[bucket] - 1;
                 newBuckets[bucket] = i + 1;
             }
@@ -137,8 +143,8 @@ namespace Cathei.LinqGen.Hidden
 
         public bool Add(TKey key, TValue value)
         {
-            int hashCode = InternalGetHashCode(key);
-            int bucket = hashCode % _size;
+            int hashCode = GetHashCode(key);
+            uint bucket = Reduce(hashCode, _size);
             int collisionCount = 0;
             Slot[] tmpSlots = _slots;
             for (int i = _buckets[bucket] - 1; i >= 0; )
@@ -161,17 +167,17 @@ namespace Cathei.LinqGen.Hidden
                 IncreaseCapacity();
                 // this will change during resize
                 tmpSlots = _slots;
-                bucket = hashCode % _size;
+                bucket = Reduce(hashCode, _size);
             }
 
             int index = _count;
-            _count++;
 
             ref var lastSlot = ref tmpSlots[index];
             lastSlot.hashCode = hashCode;
             lastSlot.key = key;
             lastSlot.value = value;
             lastSlot.next = _buckets[bucket] - 1;
+
             _buckets[bucket] = index + 1;
             _count++;
             return true;

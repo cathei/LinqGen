@@ -114,6 +114,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax SourceVar = IdentifierName("source");
         public static readonly IdentifierNameSyntax IteratorVar = IdentifierName("iter");
         public static readonly IdentifierNameSyntax IndexVar = IdentifierName("index");
+        public static readonly IdentifierNameSyntax ResultVar = IdentifierName("result");
         public static readonly IdentifierNameSyntax SelectorVar = IdentifierName("select");
         public static readonly IdentifierNameSyntax PredicateVar = IdentifierName("predicate");
         public static readonly IdentifierNameSyntax ComparerVar = IdentifierName("comparer");
@@ -372,6 +373,18 @@ namespace Cathei.LinqGen.Generator
         public static ExpressionSyntax FalseExpression()
         {
             return SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression);
+        }
+
+        public static MemberAccessExpressionSyntax ComparerDefault(TypeSyntax type)
+        {
+            return MemberAccessExpression(
+                GenericName(Identifier("Comparer"), TypeArgumentList(type)), IdentifierName("Default"));
+        }
+
+        public static MemberAccessExpressionSyntax EqualityComparerDefault(TypeSyntax type)
+        {
+            return MemberAccessExpression(
+                GenericName(Identifier("EqualityComparer"), TypeArgumentList(type)), IdentifierName("Default"));
         }
 
         private static INamedTypeSymbol? GetInterface(

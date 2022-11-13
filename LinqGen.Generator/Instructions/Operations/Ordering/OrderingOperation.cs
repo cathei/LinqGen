@@ -409,9 +409,7 @@ namespace Cathei.LinqGen.Generator
                 // Comparer<T>.Default if null
                 var statements = block.Statements.Insert(0,
                     ExpressionStatement(SimpleAssignmentExpression(comparerVar,
-                        NullCoalesce(comparerVar, MemberAccessExpression(
-                            GenericName(Identifier("Comparer"), TypeArgumentList(Upstream!.OutputElementType)),
-                            IdentifierName("Default"))))));
+                        NullCoalesce(comparerVar, ComparerDefault(Upstream!.OutputElementType)))));
 
                 syntax = syntax.WithBody(block.WithStatements(statements));
             }
