@@ -119,4 +119,4 @@ It's because everything `LinqGen.Generator` generates designed to be precede ove
 ## Limitations
 * Element or key types that used with LinqGen must have at least `internal` accessibility.
 * LinqGen queries should be treated as anonymous type, it cannot be used as return value or instance member. If you have these needs, use `AsEnumerable()` to convert.
-
+* Article about [alloc-free Linq implementation and limitations](https://blog.devgenius.io/like-regular-linq-but-faster-and-without-allocations-is-it-possible-3d4724632e2a).
