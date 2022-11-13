@@ -46,7 +46,7 @@ int result = array.Specialize()
                   .Sum();
 ```
 
-This is benchmark result for above code. You can see full benchmark results [here](./docs/BenchmarkResults).
+This is benchmark result for above code. You can see full benchmark results [here](./docs/BenchmarksResults).
 
 |             Method |      Mean |     Error |    StdDev | Ratio |   Gen0 | Allocated | Alloc Ratio |
 |------------------- |----------:|----------:|----------:|------:|-------:|----------:|------------:|
