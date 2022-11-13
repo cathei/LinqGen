@@ -3,6 +3,8 @@
   <component name="UserContentModel">
     <attachedFolders />
     <explicitIncludes>
+      <Path>.gitignore</Path>
+      <Path>LICENSE</Path>
       <Path>README.md</Path>
       <Path>docs</Path>
     </explicitIncludes>
