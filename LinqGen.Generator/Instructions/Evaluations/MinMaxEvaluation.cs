@@ -17,12 +17,24 @@ namespace Cathei.LinqGen.Generator
     {
         private bool IsMin { get; }
         private bool WithComparer { get; }
+        private bool UseCompareTo { get; }
 
         public MinMaxEvaluation(in LinqGenExpression expression, bool isMin) : base(expression)
         {
             IsMin = isMin;
             // max with a parameter uses comparer
             WithComparer = MethodSymbol.Parameters.Length == 1;
+            UseCompareTo = false;
+
+            if (!WithComparer)
+            {
+                var elementSymbol = expression.InputElementSymbol!;
+
+                if (TryGetComparableSelfInterface(elementSymbol, out _))
+                {
+                    UseCompareTo = true;
+                }
+            }
         }
 
         public override TypeSyntax ReturnType => Upstream!.OutputElementType;
@@ -52,7 +64,7 @@ namespace Cathei.LinqGen.Generator
         {
             List<StatementSyntax> statements = new List<StatementSyntax>();
 
-            if (!WithComparer)
+            if (!WithComparer && !UseCompareTo)
             {
                 statements.Add(LocalDeclarationStatement(
                     ComparerVar.Identifier, ComparerDefault(Upstream!.OutputElementType)));
@@ -71,12 +83,25 @@ namespace Cathei.LinqGen.Generator
 
             var expressionKind = IsMin ? SyntaxKind.LessThanExpression : SyntaxKind.GreaterThanExpression;
 
+            ExpressionSyntax comparison;
+
+            if (UseCompareTo)
+            {
+                comparison = InvocationExpression(
+                    MemberAccessExpression(ResultVar, CompareToMethod),
+                    ArgumentList(ValueVar));
+            }
+            else
+            {
+                comparison = InvocationExpression(
+                    MemberAccessExpression(ComparerVar, CompareMethod),
+                    ArgumentList(ResultVar, ValueVar));
+            }
+
             statements.Add(WhileStatement(InvocationExpression(IteratorVar, MoveNextMethod), Block(
                 LocalDeclarationStatement(ValueVar.Identifier, MemberAccessExpression(IteratorVar, CurrentProperty)),
                 IfStatement(
-                    BinaryExpression(expressionKind, LiteralExpression(0), InvocationExpression(
-                        MemberAccessExpression(ComparerVar, CompareMethod),
-                        ArgumentList(ResultVar, ValueVar))),
+                    BinaryExpression(expressionKind, LiteralExpression(0), comparison),
                     ExpressionStatement(SimpleAssignmentExpression(ResultVar, ValueVar))))));
 
             statements.Add(ReturnStatement(ResultVar));

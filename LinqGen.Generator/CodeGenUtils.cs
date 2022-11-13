@@ -101,6 +101,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax GetSliceEnumeratorMethod = IdentifierName("GetSliceEnumerator");
         public static readonly IdentifierNameSyntax AddMethod = IdentifierName("Add");
         public static readonly IdentifierNameSyntax CompareMethod = IdentifierName("Compare");
+        public static readonly IdentifierNameSyntax CompareToMethod = IdentifierName("CompareTo");
 
         // known property names
         public static readonly IdentifierNameSyntax CurrentProperty = IdentifierName("Current");
@@ -413,6 +414,15 @@ namespace Cathei.LinqGen.Generator
         public static bool TryGetGenericCollectionInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
         {
             interfaceSymbol = GetInterface(symbol, "System.Runtime", "ICollection`1")!;
+            return interfaceSymbol != null!;
+        }
+
+        public static bool TryGetComparableSelfInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
+        {
+            interfaceSymbol = symbol.AllInterfaces.FirstOrDefault(x =>
+                x.ContainingAssembly.Name == "System.Runtime" && x.MetadataName == "IComparable`1" &&
+                SymbolEqualityComparer.Default.Equals(x.TypeArguments[0], symbol))!;
+
             return interfaceSymbol != null!;
         }
 

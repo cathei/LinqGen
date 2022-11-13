@@ -53,6 +53,8 @@ It's because everything `LinqGen.Generator` generates designed to be precede ove
 * Count
 * Sum
   * Supports duck typing with `+` operator overload
+* Min
+* Max
 
 ### Etc
 * Specialize
