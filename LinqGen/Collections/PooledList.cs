@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Cathei.LinqGen.Hidden
@@ -41,7 +42,7 @@ namespace Cathei.LinqGen.Hidden
             try
             {
                 // Clear the elements so that the gc can reclaim the references.
-                SharedArrayPool<T>.Return(array, true);
+                SharedArrayPool<T>.Return(array, default(T) is not ValueType);
             }
             catch (ArgumentException)
             {
@@ -88,6 +89,18 @@ namespace Cathei.LinqGen.Hidden
         {
             var result = new T[count];
             System.Array.Copy(array, result, count);
+            return result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public List<T> ToList()
+        {
+            var result = new List<T>(count);
+
+            // TODO this can be optimized with Unsafe..
+            for (int i = 0; i < count; ++i)
+                result.Add(array[i]);
+
             return result;
         }
     }

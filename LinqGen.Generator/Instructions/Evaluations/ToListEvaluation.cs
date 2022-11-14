@@ -25,18 +25,19 @@ namespace Cathei.LinqGen.Generator
         public override BlockSyntax RenderMethodBody()
         {
             return Block(
-                LocalDeclarationStatement(ListVar.Identifier,
-                    ObjectCreationExpression(ReturnType, ArgumentList(Upstream!.IsCountable
-                            ? MemberAccessExpression(SourceVar, CountProperty)
-                            : LiteralExpression(0)),
-                        default)),
+                UsingLocalDeclarationStatement(ListVar.Identifier, ObjectCreationExpression(
+                    GenericName(Identifier("PooledList"), TypeArgumentList(Upstream!.OutputElementType)),
+                    ArgumentList(Upstream!.IsCountable
+                        ? MemberAccessExpression(SourceVar, CountProperty)
+                        : LiteralExpression(0)),
+                    default)),
                 UsingLocalDeclarationStatement(IteratorVar.Identifier,
                     InvocationExpression(SourceVar, GetEnumeratorMethod)),
                 WhileStatement(InvocationExpression(MemberAccessExpression(IteratorVar, MoveNextMethod)),
                     ExpressionStatement(InvocationExpression(
                         MemberAccessExpression(ListVar, AddMethod),
                         ArgumentList(MemberAccessExpression(IteratorVar, CurrentProperty))))),
-                ReturnStatement(ListVar));
+                ReturnStatement(InvocationExpression(MemberAccessExpression(ListVar, IdentifierName("ToList")))));
         }
     }
 }

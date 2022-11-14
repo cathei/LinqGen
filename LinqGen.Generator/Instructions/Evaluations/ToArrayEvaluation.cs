@@ -25,7 +25,7 @@ namespace Cathei.LinqGen.Generator
         public override BlockSyntax RenderMethodBody()
         {
             return Block(
-                LocalDeclarationStatement(ListVar.Identifier, ObjectCreationExpression(
+                UsingLocalDeclarationStatement(ListVar.Identifier, ObjectCreationExpression(
                     GenericName(Identifier("PooledList"), TypeArgumentList(Upstream!.OutputElementType)),
                     ArgumentList(Upstream!.IsCountable
                         ? MemberAccessExpression(SourceVar, CountProperty)
