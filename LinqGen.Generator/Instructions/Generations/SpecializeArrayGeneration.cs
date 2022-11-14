@@ -44,7 +44,7 @@ namespace Cathei.LinqGen.Generator
                 MemberKind.Enumerator, IntType, IndexVar);
 
             yield return new MemberInfo(
-                MemberKind.Enumerator, IntType, TakeVar);
+                MemberKind.Enumerator, OutputElementType, CurrentVar);
         }
 
         public override BlockSyntax RenderCountGetBody()
@@ -56,41 +56,44 @@ namespace Cathei.LinqGen.Generator
         public override BlockSyntax RenderGetEnumeratorBody()
         {
             return Block(ReturnStatement(ObjectCreationExpression(EnumeratorType,
-                ArgumentList(SourceVar, LiteralExpression(0), CountProperty), null)));
+                ArgumentList(SourceVar, LiteralExpression(0)), null)));
         }
 
         public override BlockSyntax RenderGetSliceEnumeratorBody()
         {
             return Block(ReturnStatement(ObjectCreationExpression(EnumeratorType,
-                ArgumentList(SourceVar, SkipVar, ConditionalExpression(
-                    MemberAccessExpression(TakeVar, HasValueProperty),
-                    MathMin(
-                        SubtractExpression(CountProperty, SkipVar),
-                        MemberAccessExpression(TakeVar, ValueProperty)),
-                    SubtractExpression(CountProperty, SkipVar))), null)));
+                ArgumentList(SourceVar, SkipVar), null)));
         }
 
         public override ConstructorDeclarationSyntax RenderEnumeratorConstructor()
         {
             return base.RenderEnumeratorConstructor()
-                .AddParameterListParameters(
-                    Parameter(IntType, SkipVar.Identifier), Parameter(IntType, TakeVar.Identifier))
+                .AddParameterListParameters(Parameter(IntType, SkipVar.Identifier))
                 .AddBodyStatements(
                     ExpressionStatement(SimpleAssignmentExpression(
                         MemberAccessExpression(ThisExpression(), IndexVar),
-                        SubtractExpression(SkipVar, LiteralExpression(1)))),
-                    ExpressionStatement(SimpleAssignmentExpression(
-                        MemberAccessExpression(ThisExpression(), TakeVar), TakeVar)));
+                        SubtractExpression(SkipVar, LiteralExpression(1)))));
         }
 
         public override BlockSyntax RenderMoveNextBody()
         {
-            return Block(ReturnStatement(LessThanExpression(PreIncrementExpression(IndexVar), TakeVar)));
+            return Block(
+                LocalDeclarationStatement(ArrayVar.Identifier, SourceVar),
+                LocalDeclarationStatement(IndexVar.Identifier,
+                    PreIncrementExpression(MemberAccessExpression(ThisExpression(), IndexVar))),
+                IfStatement(LessThanExpression(
+                        CastExpression(UIntType, IndexVar),
+                        CastExpression(UIntType, MemberAccessExpression(ArrayVar, LengthProperty))),
+                    Block(
+                        ExpressionStatement(SimpleAssignmentExpression(CurrentVar,
+                            ElementAccessExpression(ArrayVar, BracketedArgumentList(IndexVar)))),
+                        ReturnStatement(TrueExpression()))),
+                ReturnStatement(FalseExpression()));
         }
 
         public override BlockSyntax RenderCurrentGetBody()
         {
-            return Block(ReturnStatement(ElementAccessExpression(SourceVar, BracketedArgumentList(IndexVar))));
+            return Block(ReturnStatement(CurrentVar));
         }
     }
 }

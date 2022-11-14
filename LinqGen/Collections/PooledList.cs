@@ -55,10 +55,17 @@ namespace Cathei.LinqGen.Hidden
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(T item)
         {
-            if (count >= array.Length)
-                IncreaseCapacity();
+            var localArray = array;
+            uint index = unchecked((uint)count);
 
-            array[count++] = item;
+            if (index >= array.Length)
+            {
+                IncreaseCapacity();
+                localArray = array;
+            }
+
+            localArray[index] = item;
+            count++;
         }
 
         public int Count
@@ -99,11 +106,12 @@ namespace Cathei.LinqGen.Hidden
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public List<T> ToList()
         {
+            var localArray = array;
             var result = new List<T>(count);
 
             // TODO this can be optimized with Unsafe..
             for (int i = 0; i < count; ++i)
-                result.Add(array[i]);
+                result.Add(localArray[i]);
 
             return result;
         }
