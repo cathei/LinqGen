@@ -93,6 +93,7 @@ namespace Cathei.LinqGen.Generator
 
         // known type names
         public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));
+        public static readonly PredefinedTypeSyntax UIntType = PredefinedType(Token(SyntaxKind.UIntKeyword));
         public static readonly PredefinedTypeSyntax BoolType = PredefinedType(Token(SyntaxKind.BoolKeyword));
         public static readonly IdentifierNameSyntax EnumeratorType = IdentifierName("Enumerator");
 
@@ -114,7 +115,6 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax ValueProperty = IdentifierName("Value");
 
         // custom variable names
-        public static readonly IdentifierNameSyntax ParentVar = IdentifierName("parent");
         public static readonly IdentifierNameSyntax SourceVar = IdentifierName("source");
         public static readonly IdentifierNameSyntax IteratorVar = IdentifierName("iter");
         public static readonly IdentifierNameSyntax IndexVar = IdentifierName("index");
@@ -126,6 +126,8 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax SkipVar = IdentifierName("skip");
         public static readonly IdentifierNameSyntax TakeVar = IdentifierName("take");
         public static readonly IdentifierNameSyntax ValueVar = IdentifierName("value");
+        public static readonly IdentifierNameSyntax CurrentVar = IdentifierName("current");
+        public static readonly IdentifierNameSyntax ArrayVar = IdentifierName("array");
         public static readonly IdentifierNameSyntax HashSetVar = IdentifierName("hashSet");
         public static readonly IdentifierNameSyntax ListVar = IdentifierName("list");
 

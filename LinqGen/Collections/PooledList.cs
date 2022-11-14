@@ -87,7 +87,11 @@ namespace Cathei.LinqGen.Hidden
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T[] ToArray()
         {
+#if NET5_0_OR_GREATER
+            var result = GC.AllocateUninitializedArray<T>(count);
+#else
             var result = new T[count];
+#endif
             System.Array.Copy(array, result, count);
             return result;
         }

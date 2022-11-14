@@ -11,7 +11,7 @@ namespace LinqGen.Benchmarks.Cases;
 [MemoryDiagnoser]
 public class ArrayWhereToArray
 {
-    private const int Count = 10_000;
+    private const int Count = 1_000_000;
 
     private static int[] TestData;
 

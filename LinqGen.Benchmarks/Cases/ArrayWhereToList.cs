@@ -27,6 +27,20 @@ public class ArrayWhereToList
         }
     }
 
+    [Benchmark]
+    public List<int> ForEach()
+    {
+        List<int> list = new List<int>();
+
+        foreach (var item in TestData)
+        {
+            if (item % 2 == 0)
+                list.Add(item);
+        }
+
+        return list;
+    }
+
     [Benchmark(Baseline = true)]
     public List<int> Linq()
     {
