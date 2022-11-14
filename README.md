@@ -12,11 +12,8 @@ It aims to make allocation-free, specialized Linq queries per your type.
 Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as library and [LinqGen.Generator](https://www.nuget.org/packages/LinqGen.Generator) as source generator.
 
 ```xml
-    <PackageReference Include="LinqGen" Version="0.0.1-preview" />
-    <PackageReference Include="LinqGen.Generator" Version="0.0.1-preview">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="LinqGen" Version="0.0.2-preview" />
+    <PackageReference Include="LinqGen.Generator" Version="0.0.2-preview" />
 ```
 
 For Unity, you can install as Unity package.
