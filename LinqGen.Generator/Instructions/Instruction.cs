@@ -28,12 +28,6 @@ namespace Cathei.LinqGen.Generator
             UpstreamSignatureSymbol = expression.UpstreamSignatureSymbol;
         }
 
-        /// <summary>
-        /// Input element type that can substitute upstream output element type.
-        /// Null means undetermined, possibly generic input type.
-        /// </summary>
-        public virtual TypeSyntax? InputElementType => null;
-
         public Generation? Upstream { get; protected set; }
 
         private NameSyntax? _upstreamResolvedClassName;
@@ -75,7 +69,20 @@ namespace Cathei.LinqGen.Generator
             return IdentifierName($"{identifier}_{Id}");
         }
 
-        protected IdentifierNameSyntax CurrentVar { get;  } = IdentifierName("_current_");
+        /// <summary>
+        /// Context variable, affected by downstream
+        /// </summary>
+        protected static readonly IdentifierNameSyntax SkipVar = IdentifierName("_skip_");
+
+        /// <summary>
+        /// Context variable, affected by downstream
+        /// </summary>
+        protected static readonly IdentifierNameSyntax TakeVar = IdentifierName("_take_");
+
+        /// <summary>
+        /// Context variable, affected by upstream
+        /// </summary>
+        protected static readonly IdentifierNameSyntax CurrentVar = IdentifierName("_current_");
 
         protected virtual IEnumerable<TypeParameterInfo> GetTypeParameterInfos() => Array.Empty<TypeParameterInfo>();
 

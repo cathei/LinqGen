@@ -18,20 +18,10 @@ namespace Cathei.LinqGen.Generator
     /// </summary>
     public abstract class Evaluation : Instruction
     {
-        protected Evaluation(in LinqGenExpression expression) : base(expression)
+        protected Evaluation(in LinqGenExpression expression, int id) : base(expression, id)
         {
             MethodSymbol = expression.MethodSymbol;
             MethodName = IdentifierName(MethodSymbol.Name);
-
-            if (expression.InputElementSymbol is ITypeParameterSymbol)
-            {
-                InputElementType = null;
-            }
-            else
-            {
-                InputElementType = ParseTypeName(expression.InputElementSymbol!
-                    .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
-            }
         }
 
         public IMethodSymbol MethodSymbol { get; }
@@ -42,20 +32,23 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public void SetUpstream(Generation upstream)
         {
-            Upstream = upstream;
+            base.Upstream = upstream;
             Upstream.AddEvaluation(this);
         }
 
-        public abstract TypeSyntax ReturnType { get; }
+        /// <summary>
+        /// Upstream must be assigned for Evaluations
+        /// </summary>
+        public new Generation Upstream => base.Upstream!;
 
-        public override TypeSyntax? InputElementType { get; }
+        public abstract IEnumerable<MemberDeclarationSyntax> RenderMembers();
 
-        public virtual IEnumerable<ParameterSyntax> GetParameters()
-        {
-            yield return Parameter(default, ThisTokenList,
-                UpstreamResolvedClassName, SourceVar.Identifier, default);
-        }
-
-        public abstract BlockSyntax RenderMethodBody();
+        // public virtual IEnumerable<ParameterSyntax> GetParameters()
+        // {
+        //     yield return Parameter(default, ThisTokenList,
+        //         UpstreamResolvedClassName, SourceVar.Identifier, default);
+        // }
+        //
+        // public abstract BlockSyntax RenderMethodBody();
     }
 }

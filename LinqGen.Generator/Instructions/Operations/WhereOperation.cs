@@ -54,12 +54,15 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public override ExpressionSyntax RenderMoveNext(RenderOption option)
+        public override StatementSyntax RenderMoveNext(RenderOption option)
         {
-            return InvocationExpression(MemberAccessExpression(VarName("predicate"), InvokeMethod),
-                ArgumentList(WithIndex
-                    ? new ExpressionSyntax[] { CurrentVar, PreIncrementExpression(VarName("index")) }
-                    : new ExpressionSyntax[] { CurrentVar }));
+            return IfStatement(
+                LogicalNotExpression(InvocationExpression(
+                    MemberAccessExpression(VarName("predicate"), InvokeMethod),
+                    ArgumentList(WithIndex
+                        ? new ExpressionSyntax[] { CurrentVar, PreIncrementExpression(VarName("index")) }
+                        : new ExpressionSyntax[] { CurrentVar }))),
+                ContinueStatement());
         }
     }
 }

@@ -34,19 +34,14 @@ namespace Cathei.LinqGen.Generator
 
         public override TypeSyntax OutputElementType => Upstream.OutputElementType;
 
-        public override SourceText Render()
-        {
-            throw new NotImplementedException();
-        }
-
         public override IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
         {
             return Upstream.RenderInitialization(option);
         }
 
-        public override ExpressionSyntax RenderMoveNext(RenderOption option)
+        public override StatementSyntax? RenderMoveNext(RenderOption option)
         {
-            return Upstream.RenderMoveNext(option);
+            return null;
         }
 
         public override ExpressionSyntax? RenderCurrent(RenderOption option)
