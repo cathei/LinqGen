@@ -33,10 +33,14 @@ namespace Cathei.LinqGen.Generator
                     default)),
                 UsingLocalDeclarationStatement(IteratorVar.Identifier,
                     InvocationExpression(SourceVar, GetEnumeratorMethod)),
-                WhileStatement(InvocationExpression(MemberAccessExpression(IteratorVar, MoveNextMethod)),
-                    ExpressionStatement(InvocationExpression(
-                        MemberAccessExpression(ListVar, AddMethod),
-                        ArgumentList(MemberAccessExpression(IteratorVar, CurrentProperty))))),
+
+                ExpressionStatement(InvocationExpression(
+                    MemberAccessExpression(ListVar, AddRangeMethod), ArgumentList(IteratorVar))),
+                // WhileStatement(InvocationExpression(MemberAccessExpression(IteratorVar, MoveNextMethod)),
+                //     ExpressionStatement(InvocationExpression(
+                //         MemberAccessExpression(ListVar, AddMethod),
+                //         ArgumentList(MemberAccessExpression(IteratorVar, CurrentProperty))))),
+
                 ReturnStatement(InvocationExpression(MemberAccessExpression(ListVar, IdentifierName("ToArray")))));
         }
     }

@@ -42,9 +42,6 @@ namespace Cathei.LinqGen.Generator
 
             yield return new MemberInfo(
                 MemberKind.Enumerator, IntType, IndexVar);
-
-            yield return new MemberInfo(
-                MemberKind.Enumerator, OutputElementType, CurrentVar);
         }
 
         public override BlockSyntax RenderCountGetBody()
@@ -77,23 +74,14 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderMoveNextBody()
         {
-            return Block(
-                LocalDeclarationStatement(ArrayVar.Identifier, SourceVar),
-                LocalDeclarationStatement(IndexVar.Identifier,
-                    PreIncrementExpression(MemberAccessExpression(ThisExpression(), IndexVar))),
-                IfStatement(LessThanExpression(
-                        CastExpression(UIntType, IndexVar),
-                        CastExpression(UIntType, MemberAccessExpression(ArrayVar, LengthProperty))),
-                    Block(
-                        ExpressionStatement(SimpleAssignmentExpression(CurrentVar,
-                            ElementAccessExpression(ArrayVar, BracketedArgumentList(IndexVar)))),
-                        ReturnStatement(TrueExpression()))),
-                ReturnStatement(FalseExpression()));
+            return Block(ReturnStatement(LessThanExpression(
+                CastExpression(UIntType, PreIncrementExpression(IndexVar)),
+                CastExpression(UIntType, MemberAccessExpression(SourceVar, LengthProperty)))));
         }
 
         public override BlockSyntax RenderCurrentGetBody()
         {
-            return Block(ReturnStatement(CurrentVar));
+            return Block(ReturnStatement(ElementAccessExpression(SourceVar, BracketedArgumentList(IndexVar))));
         }
     }
 }

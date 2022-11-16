@@ -104,6 +104,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax GetEnumeratorMethod = IdentifierName("GetEnumerator");
         public static readonly IdentifierNameSyntax GetSliceEnumeratorMethod = IdentifierName("GetSliceEnumerator");
         public static readonly IdentifierNameSyntax AddMethod = IdentifierName("Add");
+        public static readonly IdentifierNameSyntax AddRangeMethod = IdentifierName("AddRange");
         public static readonly IdentifierNameSyntax CompareMethod = IdentifierName("Compare");
         public static readonly IdentifierNameSyntax CompareToMethod = IdentifierName("CompareTo");
 
@@ -126,8 +127,6 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax SkipVar = IdentifierName("skip");
         public static readonly IdentifierNameSyntax TakeVar = IdentifierName("take");
         public static readonly IdentifierNameSyntax ValueVar = IdentifierName("value");
-        public static readonly IdentifierNameSyntax CurrentVar = IdentifierName("current");
-        public static readonly IdentifierNameSyntax ArrayVar = IdentifierName("array");
         public static readonly IdentifierNameSyntax HashSetVar = IdentifierName("hashSet");
         public static readonly IdentifierNameSyntax ListVar = IdentifierName("list");
 

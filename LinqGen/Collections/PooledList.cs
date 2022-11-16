@@ -10,103 +10,169 @@ namespace Cathei.LinqGen.Hidden
     /// </summary>
     public struct PooledList<T> : IDisposable
     {
-        private T[] array;
-        private int count;
+        private T[] _array;
+        private int _count;
 
         private static readonly T[] EmptyArray = new T[0];
 
         public PooledList(int capacity)
         {
-            array = capacity > 0 ? SharedArrayPool<T>.Rent(capacity) : EmptyArray;
-            count = 0;
+            _array = capacity > 0 ? SharedArrayPool<T>.Rent(capacity) : EmptyArray;
+            _count = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void IncreaseCapacity()
         {
-            var newItems = SharedArrayPool<T>.Rent(count + 1);
-
-            if (count > 0)
-                System.Array.Copy(array, newItems, count);
+            var newItems = SharedArrayPool<T>.Rent(_count + 1);
+            System.Array.Copy(_array, newItems, _count);
 
             ReturnArray();
-            array = newItems;
+            _array = newItems;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ReturnArray()
         {
-            if (array.Length == 0)
+            if (_array.Length == 0)
                 return;
 
             try
             {
                 // Clear the elements so that the gc can reclaim the references.
-                SharedArrayPool<T>.Return(array, default(T) is not ValueType);
+                // TODO no need to clear for unmanaged type
+                SharedArrayPool<T>.Return(_array, true);
             }
             catch (ArgumentException)
             {
                 // oh well, the array pool didn't like our array
             }
 
-            array = EmptyArray;
+            _array = EmptyArray;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(T item)
         {
-            var localArray = array;
-            uint index = unchecked((uint)count);
+            var localArray = _array;
+            int index = _count;
 
-            if (index >= array.Length)
+            // this should remove array bound check
+            if ((uint)index < (uint)localArray.Length)
+            {
+                localArray[index] = item;
+            }
+            else
             {
                 IncreaseCapacity();
-                localArray = array;
+                _array[index] = item;
             }
 
-            localArray[index] = item;
-            count++;
+            _count++;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddRange<TEnumerator>(TEnumerator iter)
+            where TEnumerator : IEnumerator<T>
+        {
+            var localArray = _array;
+            int index = _count;
+
+            while (iter.MoveNext())
+            {
+                // this should remove array bound check
+                if ((uint)index < (uint)localArray.Length)
+                {
+                    localArray[index] = iter.Current;
+                    index++;
+                }
+                else
+                {
+                    // resize and assign
+                    _count = index;
+                    IncreaseCapacity();
+                    localArray = _array;
+                    localArray[index] = iter.Current;
+                }
+            }
+
+            _count = index;
+        }
+
+        // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // public void AddRange<TEnumerator>(TEnumerator iter)
+        //     where TEnumerator : IEnumerator<T>
+        // {
+        //     var localArray = _array;
+        //     int index = _count;
+        //
+        //     while (true)
+        //     {
+        //         // this should remove array bound check
+        //         while ((uint)index < (uint)localArray.Length)
+        //         {
+        //             if (!iter.MoveNext())
+        //             {
+        //                 _count = index;
+        //                 return;
+        //             }
+        //
+        //             localArray[index] = iter.Current;
+        //             index++;
+        //         }
+        //
+        //         _count = index;
+        //
+        //         if (!iter.MoveNext())
+        //             return;
+        //
+        //         // resize and assign
+        //         IncreaseCapacity();
+        //         localArray = _array;
+        //         localArray[index] = iter.Current;
+        //     }
+        // }
 
         public int Count
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => count;
+            get => _count;
         }
 
-        public T[] Array => array;
+        public T[] Array => _array;
 
         public T this[int index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => array[index];
+            get => _array[index];
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => array[index] = value;
+            set => _array[index] = value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
             ReturnArray();
-            count = 0;
+            _count = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T[] ToArray()
         {
 #if NET5_0_OR_GREATER
-            var result = GC.AllocateUninitializedArray<T>(count);
+            var result = GC.AllocateUninitializedArray<T>(_count);
 #else
-            var result = new T[count];
+            var result = new T[_count];
 #endif
-            System.Array.Copy(array, result, count);
+            System.Array.Copy(_array, result, _count);
             return result;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public List<T> ToList()
         {
-            var localArray = array;
+            var localArray = _array;
+            int count = _count;
             var result = new List<T>(count);
 
             // TODO this can be optimized with Unsafe..

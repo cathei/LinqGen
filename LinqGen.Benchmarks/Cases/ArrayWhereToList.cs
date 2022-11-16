@@ -17,7 +17,7 @@ public class ArrayWhereToList
 
     static ArrayWhereToList()
     {
-        Random r = new Random();
+        Random r = new Random(42);
 
         TestData = new int[Count];
 
@@ -67,43 +67,43 @@ public class ArrayWhereToList
             .ToList();
     }
 
-    [Benchmark]
-    public List<int> StructLinqDelegate()
-    {
-        return TestData
-            .ToStructEnumerable()
-            .Where(x => x % 2 == 0)
-            .ToList();
-    }
-
-    [Benchmark]
-    public List<int> StructLinqStruct()
-    {
-        var predicate = new Predicate();
-
-        return TestData
-            .ToStructEnumerable()
-            .Where(ref predicate, x => x)
-            .ToList(x => x);
-    }
-
-    [Benchmark]
-    public List<int> HyperLinqDelegate()
-    {
-        return TestData
-            .AsValueEnumerable()
-            .Where(x => x % 2 == 0)
-            .ToList();
-    }
-
-    [Benchmark]
-    public List<int> HyperLinqStruct()
-    {
-        return TestData
-            .AsValueEnumerable()
-            .Where<Predicate>()
-            .ToList();
-    }
+    // [Benchmark]
+    // public List<int> StructLinqDelegate()
+    // {
+    //     return TestData
+    //         .ToStructEnumerable()
+    //         .Where(x => x % 2 == 0)
+    //         .ToList();
+    // }
+    //
+    // [Benchmark]
+    // public List<int> StructLinqStruct()
+    // {
+    //     var predicate = new Predicate();
+    //
+    //     return TestData
+    //         .ToStructEnumerable()
+    //         .Where(ref predicate, x => x)
+    //         .ToList(x => x);
+    // }
+    //
+    // [Benchmark]
+    // public List<int> HyperLinqDelegate()
+    // {
+    //     return TestData
+    //         .AsValueEnumerable()
+    //         .Where(x => x % 2 == 0)
+    //         .ToList();
+    // }
+    //
+    // [Benchmark]
+    // public List<int> HyperLinqStruct()
+    // {
+    //     return TestData
+    //         .AsValueEnumerable()
+    //         .Where<Predicate>()
+    //         .ToList();
+    // }
 
     readonly struct Predicate :
         StructLinq.IFunction<int, bool>,

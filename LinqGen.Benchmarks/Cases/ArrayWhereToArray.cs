@@ -11,85 +11,103 @@ namespace LinqGen.Benchmarks.Cases;
 [MemoryDiagnoser]
 public class ArrayWhereToArray
 {
-    private const int Count = 1_000_000;
-
-    private static int[] TestData;
+    private static int[] smallTestData;
+    private static int[] mediumTestData;
+    private static int[] largeTestData;
 
     static ArrayWhereToArray()
     {
-        Random r = new Random();
+        Random r = new Random(42);
 
-        TestData = new int[Count];
+        Fill(smallTestData = new int[100], r);
+        Fill(mediumTestData = new int[10_000], r);
+        Fill(largeTestData = new int[1_000_000], r);
+    }
 
-        for (int i = 0; i < Count; i++)
+    static void Fill(int[] testData, Random r)
+    {
+        for (int i = 0; i < testData.Length; i++)
         {
-            TestData[i] = r.Next(0, 100);
+            testData[i] = r.Next(0, 100);
+        }
+    }
+
+    public static IEnumerable<int[]> TestData
+    {
+        get
+        {
+            yield return smallTestData;
+            yield return mediumTestData;
+            yield return largeTestData;
         }
     }
 
     [Benchmark(Baseline = true)]
-    public int[] Linq()
+    [ArgumentsSource(nameof(TestData))]
+    public int[] Linq(int[] testData)
     {
-        return TestData
+        return testData
             .Where(x=> x % 2 == 0)
             .ToArray();
     }
 
     [Benchmark]
-    public int[] LinqGenDelegate()
+    [ArgumentsSource(nameof(TestData))]
+    public int[] LinqGenDelegate(int[] testData)
     {
-        return TestData
+        return testData
             .Specialize()
             .Where(x => x % 2 == 0)
             .ToArray();
     }
 
     [Benchmark]
-    public int[] LinqGenStruct()
+    [ArgumentsSource(nameof(TestData))]
+    public int[] LinqGenStruct(int[] testData)
     {
-        return TestData
+        return testData
             .Specialize()
             .Where(new Predicate())
             .ToArray();
     }
 
-    [Benchmark]
-    public int[] StructLinqDelegate()
-    {
-        return TestData
-            .ToStructEnumerable()
-            .Where(x => x % 2 == 0)
-            .ToArray();
-    }
-
-    [Benchmark]
-    public int[] StructLinqStruct()
-    {
-        var predicate = new Predicate();
-
-        return TestData
-            .ToStructEnumerable()
-            .Where(ref predicate, x => x)
-            .ToArray(x => x);
-    }
-
-    [Benchmark]
-    public int[] HyperLinqDelegate()
-    {
-        return TestData
-            .AsValueEnumerable()
-            .Where(x => x % 2 == 0)
-            .ToArray();
-    }
-
-    [Benchmark]
-    public int[] HyperLinqStruct()
-    {
-        return TestData
-            .AsValueEnumerable()
-            .Where<Predicate>()
-            .ToArray();
-    }
+    // [Benchmark]
+    // public int[] StructLinqDelegate()
+    // {
+    //     return TestData
+    //         .ToStructEnumerable()
+    //         .Where(x => x % 2 == 0)
+    //         .ToArray();
+    // }
+    //
+    // [Benchmark]
+    // public int[] StructLinqStruct()
+    // {
+    //     var predicate = new Predicate();
+    //
+    //     return TestData
+    //         .ToStructEnumerable()
+    //         .Where(ref predicate, x => x)
+    //         .ToArray(x => x);
+    // }
+    //
+    // [Benchmark]
+    // public int[] HyperLinqDelegate()
+    // {
+    //     return TestData
+    //         .AsValueEnumerable()
+    //         .Where(x => x % 2 == 0)
+    //         .ToArray();
+    // }
+    //
+    // [Benchmark]
+    // public int[] HyperLinqStruct()
+    // {
+    //     return TestData
+    //         .AsValueEnumerable()
+    //         .Where<Predicate>()
+    //         .ToArray();
+    // }
 
     readonly struct Predicate :
         StructLinq.IFunction<int, bool>,
