@@ -116,25 +116,25 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax ValueProperty = IdentifierName("Value");
 
         // custom variable names
-        public static readonly IdentifierNameSyntax SourceVar = IdentifierName("source");
-        public static readonly IdentifierNameSyntax IteratorVar = IdentifierName("iter");
-        public static readonly IdentifierNameSyntax IndexVar = IdentifierName("index");
-        public static readonly IdentifierNameSyntax ResultVar = IdentifierName("result");
-        public static readonly IdentifierNameSyntax SelectorVar = IdentifierName("select");
-        public static readonly IdentifierNameSyntax PredicateVar = IdentifierName("predicate");
-        public static readonly IdentifierNameSyntax ComparerVar = IdentifierName("comparer");
-        public static readonly IdentifierNameSyntax InitialValueVar = IdentifierName("initialValue");
-        public static readonly IdentifierNameSyntax SkipVar = IdentifierName("skip");
-        public static readonly IdentifierNameSyntax TakeVar = IdentifierName("take");
-        public static readonly IdentifierNameSyntax ValueVar = IdentifierName("value");
-        public static readonly IdentifierNameSyntax HashSetVar = IdentifierName("hashSet");
-        public static readonly IdentifierNameSyntax ListVar = IdentifierName("list");
+        // public static readonly IdentifierNameSyntax SourceVar = IdentifierName("source");
+        // public static readonly IdentifierNameSyntax IteratorVar = IdentifierName("iter");
+        // public static readonly IdentifierNameSyntax IndexVar = IdentifierName("index");
+        // public static readonly IdentifierNameSyntax ResultVar = IdentifierName("result");
+        // public static readonly IdentifierNameSyntax SelectorVar = IdentifierName("select");
+        // public static readonly IdentifierNameSyntax PredicateVar = IdentifierName("predicate");
+        // public static readonly IdentifierNameSyntax ComparerVar = IdentifierName("comparer");
+        // public static readonly IdentifierNameSyntax InitialValueVar = IdentifierName("initialValue");
+        // public static readonly IdentifierNameSyntax SkipVar = IdentifierName("skip");
+        // public static readonly IdentifierNameSyntax TakeVar = IdentifierName("take");
+        // public static readonly IdentifierNameSyntax ValueVar = IdentifierName("value");
+        // public static readonly IdentifierNameSyntax HashSetVar = IdentifierName("hashSet");
+        // public static readonly IdentifierNameSyntax ListVar = IdentifierName("list");
 
         public static readonly TypeSyntax VarType = IdentifierName("var");
         public static readonly TypeSyntax ObjectType = IdentifierName("object");
 
         public static readonly LiteralExpressionSyntax DefaultLiteral =
-            SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression);
+            SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression)
         public static readonly LiteralExpressionSyntax NullLiteral =
             SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression);
 

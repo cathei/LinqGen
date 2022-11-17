@@ -13,22 +13,14 @@ namespace Cathei.LinqGen.Generator
 
     public readonly struct LinqGenExpression
     {
-        public SemanticModel SemanticModel { get; }
-        public InvocationExpressionSyntax InvocationSyntax { get; }
-        public MemberAccessExpressionSyntax MemberAccessSyntax { get; }
         public IMethodSymbol MethodSymbol { get; }
         public INamedTypeSymbol? SignatureSymbol { get; }
         public ITypeSymbol? InputElementSymbol { get; }
         public INamedTypeSymbol? UpstreamSignatureSymbol { get; }
 
-        private LinqGenExpression(SemanticModel semanticModel, InvocationExpressionSyntax invocationSyntax,
-            MemberAccessExpressionSyntax memberAccessSyntax, IMethodSymbol methodSymbol,
-            INamedTypeSymbol? signatureSymbol, ITypeSymbol? inputElementSymbol,
-            INamedTypeSymbol? upstreamSignatureSymbol)
+        private LinqGenExpression(IMethodSymbol methodSymbol, INamedTypeSymbol? signatureSymbol,
+            ITypeSymbol? inputElementSymbol, INamedTypeSymbol? upstreamSignatureSymbol)
         {
-            SemanticModel = semanticModel;
-            InvocationSyntax = invocationSyntax;
-            MemberAccessSyntax = memberAccessSyntax;
             MethodSymbol = methodSymbol;
             SignatureSymbol = signatureSymbol;
             InputElementSymbol = inputElementSymbol;
@@ -98,10 +90,49 @@ namespace Cathei.LinqGen.Generator
                 upstreamSignatureSymbol = NormalizeSignature(upstreamSignatureSymbol);
 
             result = new LinqGenExpression(
-                semanticModel, invocationSyntax, memberAccessSyntax, methodSymbol,
-                signatureSymbol, inputElementSymbol, upstreamSignatureSymbol);
+                methodSymbol, signatureSymbol, inputElementSymbol, upstreamSignatureSymbol);
 
             return true;
+        }
+
+        public static bool TryParse(SemanticModel semanticModel,
+            CommonForEachStatementSyntax forEachSyntax, out LinqGenExpression result)
+        {
+            result = default;
+
+            var expressionTypeSymbol = semanticModel.GetTypeInfo(forEachSyntax.Expression).Type;
+
+            ITypeSymbol? inputElementSymbol = null;
+            INamedTypeSymbol? upstreamSignatureSymbol = null;
+
+            // this means it takes LinqGen enumerable as input, and upstream type is required
+            if (expressionTypeSymbol is INamedTypeSymbol receiverTypeSymbol &&
+                IsInputStubEnumerable(receiverTypeSymbol))
+            {
+                if (!TryParseStubInterface(receiverTypeSymbol, out inputElementSymbol, out upstreamSignatureSymbol))
+                {
+                    // How did this happen?
+                    // TODO: Can we allow generic constrained upstream type?
+                    return false;
+                }
+            }
+
+            if (inputElementSymbol == null)
+            {
+                // evaluations must have known input element symbol
+                return false;
+            }
+
+            // Create method symbol
+            var methodSymbol = semanticModel.GetSymbolInfo(
+                MemberAccessExpression(forEachSyntax.Expression, GetEnumeratorMethod)).Symbol as IMethodSymbol;
+
+            if (methodSymbol == null)
+            {
+                return false;
+            }
+
+            result = new LinqGenExpression(methodSymbol, null, inputElementSymbol, upstreamSignatureSymbol);
         }
 
         public bool TryGetParameterType(int index, out ITypeSymbol result)

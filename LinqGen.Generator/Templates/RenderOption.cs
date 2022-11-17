@@ -8,18 +8,42 @@ namespace Cathei.LinqGen.Generator
 {
     using static SyntaxFactory;
 
-    public readonly struct RenderOption
+    public struct RenderOption
     {
         /// <summary>
         /// Is it rendering for local enumeration?
-        /// This means we don't have to worry about versioning
-        /// When we enumerating for IList
+        /// This means we don't have to worry about versioning, When we enumerating for IList.
+        /// As well as we can use foreach enumeration for Array (faster).
         /// </summary>
-        public readonly bool IsLocal;
+        public bool IsLocal;
 
-        public RenderOption(bool isLocal)
+        /// <summary>
+        /// Skip variable, can be overriden if Upstream supports partitioning.
+        /// </summary>
+        public IdentifierNameSyntax? SkipVar;
+
+        /// <summary>
+        /// Take variable, can be overriden if Upstream supports partitioning.
+        /// </summary>
+        public IdentifierNameSyntax? TakeVar;
+
+        public RenderOption(bool isLocal) : this()
         {
             IsLocal = isLocal;
+        }
+
+        public RenderOption WithSkip(IdentifierNameSyntax varName)
+        {
+            var copy = this;
+            copy.SkipVar = varName;
+            return copy;
+        }
+
+        public RenderOption WithTake(IdentifierNameSyntax varName)
+        {
+            var copy = this;
+            copy.TakeVar = varName;
+            return copy;
         }
     }
 }

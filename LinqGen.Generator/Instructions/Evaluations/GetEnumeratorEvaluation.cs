@@ -118,12 +118,6 @@ namespace Cathei.LinqGen.Generator
             {
                 return node.WithBody(_instruction.RenderDisposeBody());
             }
-
-            private PropertyDeclarationSyntax RewriteEnumeratorCurrent(PropertyDeclarationSyntax node)
-            {
-                var getAccessor = node.AccessorList!.Accessors[0].WithBody(_instruction.RenderCurrentGetBody());
-                return node.WithAccessorList(AccessorList(SingletonList(getAccessor)));
-            }
         }
 
         private readonly EnumeratorRewriter _rewriter;
@@ -152,7 +146,7 @@ namespace Cathei.LinqGen.Generator
 
         private BlockSyntax RenderConstructorBody()
         {
-            var assignments = Upstream.GetAssignments(MemberKind.Both, SourceVar);
+            var assignments = Upstream.GetFieldAssignments(MemberKind.Both, IdentifierName("source"));
             var initialization = Upstream.RenderInitialization(_renderOption);
 
             return Block(assignments.Concat(initialization));
@@ -165,7 +159,17 @@ namespace Cathei.LinqGen.Generator
 
         private BlockSyntax RenderMoveNextBody()
         {
-            return Upstream.RenderIteration(_renderOption);
+            var successStatements = new StatementSyntax[]
+            {
+                ExpressionStatement(SimpleAssignmentExpression(
+                    IdentifierName("current"), CurrentPlaceholder)),
+                ReturnStatement(TrueExpression())
+            };
+
+            var failStatement = ReturnStatement(FalseExpression());
+
+            return Upstream.RenderIteration(_renderOption, new(successStatements))
+                .AddStatements(failStatement);
         }
 
         private BlockSyntax RenderDisposeBody()

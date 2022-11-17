@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -75,82 +76,29 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        protected abstract IEnumerable<MemberInfo> GetMemberInfos();
-
-        public abstract IEnumerable<StatementSyntax> RenderInitialization(RenderOption option);
+        protected abstract IEnumerable<MemberInfo> GetMemberInfos(bool isLocal);
 
         /// <summary>
-        /// Return value is the return value of MoveNext().
-        /// Returning null means the operation will not have breaking condition.
+        /// Additional initialization statements.
         /// </summary>
-        public abstract StatementSyntax? RenderMoveNext(RenderOption option);
-
-        /// <summary>
-        /// Return value is the value of Current.
-        /// Returning Null means the operation will not change the value of Upstream Current.
-        /// </summary>
-        public abstract ExpressionSyntax? RenderCurrent(RenderOption option);
-
-        public abstract IEnumerable<StatementSyntax> RenderDispose(RenderOption option);
-
-        /// <summary>
-        /// Can be overriden to true for fresh iterations that requires upstream to be ran to the end.
-        /// For example, OrderBy or GroupBy.
-        /// </summary>
-        public virtual bool IsFreshIteration => false;
-
-        /// <summary>
-        /// Writes full body of iteration.
-        /// </summary>
-        public BlockSyntax RenderIteration(RenderOption option)
+        public virtual IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
         {
-            var upstreams = new Stack<Generation>();
-            {
-                var upstream = this;
-
-                while (upstream != null)
-                {
-                    upstreams.Push(upstream);
-
-                    if (upstream.IsFreshIteration)
-                        break;
-
-                    upstream = upstream.Upstream;
-                }
-            }
-
-            var statements = new List<StatementSyntax>();
-
-            int currentIndex = 0;
-            IdentifierNameSyntax currentName = IdentifierName("_invalid_");
-
-            foreach (var upstream in upstreams)
-            {
-                var moveNext = upstream.RenderMoveNext(option);
-
-                if (moveNext != null)
-                {
-                    moveNext = moveNext.ReplaceNode(CurrentVar, currentName);
-                    statements.Add(moveNext);
-                }
-
-                var getCurrent = upstream.RenderCurrent(option);
-
-                if (getCurrent != null)
-                {
-                    getCurrent = getCurrent.ReplaceNode(CurrentVar, currentName);
-
-                    currentIndex++;
-                    currentName = IdentifierName($"current{currentIndex}");
-
-                    statements.Add(LocalDeclarationStatement(currentName.Identifier, getCurrent));
-                }
-            }
-
-            statements.Add(ReturnStatement(TrueExpression()));
-
-            return Block(WhileStatement(TrueExpression(), Block(statements)), ReturnStatement(FalseExpression()));
+            yield break;
         }
+
+        /// <summary>
+        /// Dispose statements if needed.
+        /// </summary>
+        public virtual IEnumerable<StatementSyntax> RenderDispose(RenderOption option)
+        {
+            yield break;
+        }
+
+        /// <summary>
+        /// Writes full body of iteration. Can be overriden to change behaviour.
+        /// </summary>
+        public abstract BlockSyntax RenderIteration(
+            RenderOption option, SyntaxList<StatementSyntax> statements);
 
         public IEnumerable<ParameterSyntax> GetParameters(
             MemberKind kind, bool includeUpstream, bool defaultValue = false)
@@ -161,7 +109,7 @@ namespace Cathei.LinqGen.Generator
                     yield return param;
             }
 
-            foreach (var member in GetMemberInfos())
+            foreach (var member in GetMemberInfos(false))
             {
                 if ((member.Kind & kind) != kind)
                     continue;
@@ -178,7 +126,7 @@ namespace Cathei.LinqGen.Generator
                     yield return arg;
             }
 
-            foreach (var member in GetMemberInfos())
+            foreach (var member in GetMemberInfos(false))
             {
                 if ((member.Kind & kind) != kind)
                     continue;
@@ -195,7 +143,7 @@ namespace Cathei.LinqGen.Generator
                     yield return field;
             }
 
-            foreach (var member in GetMemberInfos())
+            foreach (var member in GetMemberInfos(false))
             {
                 if ((member.Kind & kind) != kind)
                     continue;
@@ -206,15 +154,15 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public IEnumerable<StatementSyntax> GetAssignments(MemberKind kind, IdentifierNameSyntax? source = null)
+        public IEnumerable<StatementSyntax> GetFieldAssignments(MemberKind kind, IdentifierNameSyntax? source = null)
         {
             if (Upstream != null)
             {
-                foreach (var assignment in Upstream.GetAssignments(kind, source))
+                foreach (var assignment in Upstream.GetFieldAssignments(kind, source))
                     yield return assignment;
             }
 
-            foreach (var member in GetMemberInfos())
+            foreach (var member in GetMemberInfos(false))
             {
                 if ((member.Kind & kind) != kind)
                     continue;
@@ -222,6 +170,49 @@ namespace Cathei.LinqGen.Generator
                 yield return ExpressionStatement(SimpleAssignmentExpression(
                     MemberAccessExpression(ThisExpression(), member.Name),
                     source == null ? member.Name : MemberAccessExpression(source, member.Name)));
+            }
+        }
+
+        public IEnumerable<LocalDeclarationStatementSyntax> GetLocalDeclarations(MemberKind kind)
+        {
+            if (Upstream != null)
+            {
+                foreach (var local in Upstream.GetLocalDeclarations(kind))
+                    yield return local;
+            }
+
+            foreach (var member in GetMemberInfos(true))
+            {
+                if ((member.Kind & kind) != kind)
+                    continue;
+
+                yield return LocalDeclarationStatement(default, VariableDeclaration(
+                    member.Type, SingletonSeparatedList(VariableDeclarator(
+                        member.Name.Identifier, null,
+                        member.DefaultValue != null ? EqualsValueClause(member.DefaultValue) : null))));
+
+                yield return LocalDeclarationStatement(default, VariableDeclaration(
+                    member.Type, SingletonSeparatedList(VariableDeclarator(member.Name.Identifier))));
+            }
+        }
+
+        public IEnumerable<StatementSyntax> GetLocalAssignments(MemberKind kind, ExpressionSyntax? source = null)
+        {
+            source ??= ThisExpression();
+
+            if (Upstream != null)
+            {
+                foreach (var assignment in Upstream.GetLocalAssignments(kind, source))
+                    yield return assignment;
+            }
+
+            foreach (var member in GetMemberInfos(true))
+            {
+                if ((member.Kind & kind) != kind)
+                    continue;
+
+                yield return ExpressionStatement(SimpleAssignmentExpression(
+                    member.Name, MemberAccessExpression(source, member.Name)));
             }
         }
     }

@@ -54,6 +54,31 @@ namespace Cathei.LinqGen.Generator
             return Upstream.RenderDispose(option);
         }
 
+        public override BlockSyntax RenderIteration(RenderOption option, SyntaxList<StatementSyntax> statements = default)
+        {
+            // note that we are adding statements in reversed order
+            var getCurrent = RenderCurrent(option);
+
+            if (getCurrent != null)
+            {
+                var currentName = IdentifierName($"current_{Id}");
+
+                // replace current variables of downstream
+                statements = new(statements.Select(x => x.ReplaceNode(CurrentPlaceholder, currentName)));
+
+                // define current variable
+                statements = statements.Insert(0, LocalDeclarationStatement(currentName.Identifier, getCurrent));
+            }
+
+            // MoveNext should be passed to get current
+            var moveNext = RenderMoveNext(option);
+
+            if (moveNext != null)
+                statements = statements.Insert(0, moveNext);
+
+            return Upstream.RenderIteration(option, statements);
+        }
+
 
         // public override IEnumerable<MemberInfo> GetMemberInfos()
         // {

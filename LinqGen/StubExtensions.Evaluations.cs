@@ -13,6 +13,11 @@ namespace Cathei.LinqGen
     /// </summary>
     public static partial class StubExtensions
     {
+        public static IEnumerator<T> GetEnumerator<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
         public static T First<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
         {
             throw new NotImplementedException();
