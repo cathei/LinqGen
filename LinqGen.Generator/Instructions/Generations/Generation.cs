@@ -20,8 +20,11 @@ namespace Cathei.LinqGen.Generator
     /// </summary>
     public abstract class Generation : Instruction
     {
+        public IdentifierNameSyntax MethodName { get; }
+
         protected Generation(in LinqGenExpression expression, int id) : base(expression, id)
         {
+            MethodName = IdentifierName(expression.MethodSymbol.Name);
             ClassName = IdentifierName($"{expression.SignatureSymbol!.Name}_{id}");
         }
 
@@ -30,7 +33,17 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// The qualified class name cached for rendering
         /// </summary>
-        public NameSyntax ClassName { get; }
+        public IdentifierNameSyntax ClassName { get; }
+
+        public TypeSyntax ResolvedClassName
+        {
+            get
+            {
+                if (Arity == 0)
+                    return ClassName;
+                return GenericName(ClassName.Identifier, GetTypeArguments()!);
+            }
+        }
 
         // /// <summary>
         // /// If True, method will be embedded as member method
@@ -66,6 +79,12 @@ namespace Cathei.LinqGen.Generator
 
         public virtual IEnumerable<MemberDeclarationSyntax> RenderEnumerableMembers()
         {
+            if (Downstream != null)
+            {
+                foreach (var operation in Downstream)
+                    yield return operation.RenderMethod();
+            }
+
             if (Evaluations != null)
             {
                 foreach (var evaluation in Evaluations)
@@ -190,9 +209,6 @@ namespace Cathei.LinqGen.Generator
                     member.Type, SingletonSeparatedList(VariableDeclarator(
                         member.Name.Identifier, null,
                         member.DefaultValue != null ? EqualsValueClause(member.DefaultValue) : null))));
-
-                yield return LocalDeclarationStatement(default, VariableDeclaration(
-                    member.Type, SingletonSeparatedList(VariableDeclarator(member.Name.Identifier))));
             }
         }
 

@@ -39,12 +39,12 @@ namespace Cathei.LinqGen.Generator
             return Upstream.RenderInitialization(option);
         }
 
-        public override StatementSyntax? RenderMoveNext(RenderOption option)
+        public virtual StatementSyntax? RenderMoveNext(RenderOption option)
         {
             return null;
         }
 
-        public override ExpressionSyntax? RenderCurrent(RenderOption option)
+        public virtual ExpressionSyntax? RenderCurrent(RenderOption option)
         {
             return null;
         }
@@ -79,6 +79,18 @@ namespace Cathei.LinqGen.Generator
             return Upstream.RenderIteration(option, statements);
         }
 
+        public MethodDeclarationSyntax RenderMethod()
+        {
+            int arityDiff = Arity - Upstream.Arity;
+
+            return MethodDeclaration(new(AggressiveInliningAttributeList), PublicTokenList,
+                ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(arityDiff),
+                ParameterList(GetParameters(MemberKind.Enumerable, false, true)),
+                GetGenericConstraints(arityDiff), null,
+                ArrowExpressionClause(ObjectCreationExpression(
+                    ResolvedClassName, ArgumentList(GetArguments(MemberKind.Enumerable, true)), null)),
+                SemicolonToken);
+        }
 
         // public override IEnumerable<MemberInfo> GetMemberInfos()
         // {

@@ -26,6 +26,7 @@ namespace Cathei.LinqGen.Generator
         protected Instruction(in LinqGenExpression expression, int id)
         {
             UpstreamSignatureSymbol = expression.UpstreamSignatureSymbol;
+            Id = id;
         }
 
         /// <summary>

@@ -14,16 +14,16 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public class WhereOperation : Operation
+    public class SelectOperation : Operation
     {
-        private TypeSyntax PredicateType { get; }
+        private TypeSyntax SelectorType { get; }
         private bool WithIndex { get; }
         private bool WithStruct { get; }
 
-        public WhereOperation(in LinqGenExpression expression, int id,
+        public SelectOperation(in LinqGenExpression expression, int id,
             ITypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression, id)
         {
-            PredicateType = ParseTypeName(parameterType);
+            SelectorType = ParseTypeName(parameterType);
             WithIndex = withIndex;
             WithStruct = withStruct;
         }
@@ -32,28 +32,26 @@ namespace Cathei.LinqGen.Generator
         {
             if (WithStruct)
             {
-                yield return new TypeParameterInfo(TypeName("1"), PredicateType);
+                yield return new TypeParameterInfo(TypeName("1"), SelectorType);
             }
         }
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Both,
-                WithStruct ? TypeName("1") : PredicateType, VarName("predicate"));
+                WithStruct ? TypeName("1") : SelectorType, VarName("selector"));
 
             if (WithIndex)
                 yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));
         }
 
-        public override StatementSyntax RenderMoveNext(RenderOption option)
+        public override ExpressionSyntax RenderCurrent(RenderOption option)
         {
-            return IfStatement(
-                LogicalNotExpression(InvocationExpression(
-                    MemberAccessExpression(VarName("predicate"), InvokeMethod),
-                    ArgumentList(WithIndex
-                        ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(VarName("index")) }
-                        : new ExpressionSyntax[] { CurrentPlaceholder }))),
-                ContinueStatement());
+            return InvocationExpression(
+                MemberAccessExpression(VarName("selector"), InvokeMethod),
+                ArgumentList(WithIndex
+                    ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(VarName("index")) }
+                    : new ExpressionSyntax[] { CurrentPlaceholder }));
         }
     }
 }

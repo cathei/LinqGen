@@ -135,7 +135,9 @@ namespace Cathei.LinqGen.Generator
                 //     compiledGenerations.Add(upstreamSymbol, upstream);
                 // }
 
-                var upstream = _generations[upstreamSymbol];
+                if (!_generations.TryGetValue(upstreamSymbol, out var upstream))
+                    continue;
+
                 generation.SetUpstream(upstream);
             }
 
@@ -151,7 +153,9 @@ namespace Cathei.LinqGen.Generator
                 //     compiledGenerations.Add(upstreamSymbol, upstream);
                 // }
 
-                var upstream = _generations[upstreamSymbol];
+                if (!_generations.TryGetValue(upstreamSymbol, out var upstream))
+                    continue;
+
                 evaluation.SetUpstream(upstream);
             }
 

@@ -11,6 +11,22 @@ namespace Cathei.LinqGen.Tests;
 [TestFixture]
 public class ToArrayTests
 {
+
+    public void Test_ArrayWhereToArray()
+    {
+        int[] values = new []{ 1, 2, 3, 7 , 8, 24, 242,};
+
+        var arr =values.Specialize()
+            .Where(x => x % 2 == 0)
+            .Select(x => x * 2)
+            .ToArray();
+
+
+    }
+
+
+
+
     [TestCase(0, 0)]
     [TestCase(0, 10)]
     [TestCase(-5, 10)]

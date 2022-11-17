@@ -29,7 +29,7 @@ namespace Cathei.LinqGen.Hidden
 {
     // Enumerable is always readonly
     // Non-exported Enumerable should consider anonymous type, thus it will be internal
-    internal readonly struct _Enumerable_ : _Interface_
+    internal readonly struct _Enumerable_ : IInternalStub<_Element_>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal _Enumerable_() : this()
@@ -89,12 +89,18 @@ namespace Cathei.LinqGen.Hidden
 
             private StructDeclarationSyntax RewriteEnumerableStruct(StructDeclarationSyntax node)
             {
-                return node.AddMembers(_instruction.RenderEnumerableMembers().ToArray());
+                return node.WithIdentifier(_instruction.ClassName.Identifier)
+                    .WithTypeParameterList(_instruction.GetTypeParameters())
+                    .WithConstraintClauses(_instruction.GetGenericConstraints())
+                    .AddMembers(_instruction.RenderEnumerableMembers().ToArray())
+                    .AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerable, true).ToArray());
             }
 
             private ConstructorDeclarationSyntax RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
             {
-
+                return node.WithIdentifier(_instruction.ClassName.Identifier)
+                    .WithParameterList(ParameterList(_instruction.GetParameters(MemberKind.Enumerable, true)))
+                    .WithBody(Block(_instruction.GetFieldAssignments(MemberKind.Enumerable)));
             }
         }
 

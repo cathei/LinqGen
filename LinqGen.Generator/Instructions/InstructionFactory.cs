@@ -29,35 +29,34 @@ namespace Cathei.LinqGen.Generator
                     {
                         if (arraySymbol.Rank == 1)
                             return new ArrayGeneration(expression, id, arraySymbol);
-                        return null;
                         // return new SpecializeArrayMultiGeneration(expression, id, arraySymbol);
                     }
 
-                    if (typeArgument is INamedTypeSymbol namedTypeSymbol)
-                        return new SpecializeGeneration(expression, id, namedTypeSymbol);
+                    // if (typeArgument is INamedTypeSymbol namedTypeSymbol)
+                    //     return new SpecializeGeneration(expression, id, namedTypeSymbol);
 
                     break;
                 }
-                //
-                // case "Select":
-                //     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                //         break;
-                //     return new SelectOperation(expression, id, typeSymbol, false, false);
-                //
-                // case "SelectStruct":
-                //     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                //         break;
-                //     return new SelectOperation(expression, id, typeSymbol, false, true);
-                //
-                // case "SelectAt":
-                //     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                //         break;
-                //     return new SelectOperation(expression, id, typeSymbol, true, false);
-                //
-                // case "SelectAtStruct":
-                //     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                //         break;
-                //     return new SelectOperation(expression, id, typeSymbol, true, true);
+
+                case "Select":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new SelectOperation(expression, id, typeSymbol, false, false);
+
+                case "SelectStruct":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new SelectOperation(expression, id, typeSymbol, false, true);
+
+                case "SelectAt":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new SelectOperation(expression, id, typeSymbol, true, false);
+
+                case "SelectAtStruct":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new SelectOperation(expression, id, typeSymbol, true, true);
 
                 case "Where":
                     if (!expression.TryGetNamedParameterType(0, out typeSymbol))

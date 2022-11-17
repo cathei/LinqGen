@@ -134,7 +134,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly TypeSyntax ObjectType = IdentifierName("object");
 
         public static readonly LiteralExpressionSyntax DefaultLiteral =
-            SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression)
+            SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression);
         public static readonly LiteralExpressionSyntax NullLiteral =
             SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression);
 

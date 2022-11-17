@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -123,9 +124,11 @@ namespace Cathei.LinqGen.Generator
                 return false;
             }
 
-            // Create method symbol
-            var methodSymbol = semanticModel.GetSymbolInfo(
-                MemberAccessExpression(forEachSyntax.Expression, GetEnumeratorMethod)).Symbol as IMethodSymbol;
+            // Lookup for GetEnumerator symbol
+            var methodSymbol = semanticModel
+                .LookupSymbols(0, expressionTypeSymbol, "GetEnumerator", true)
+                .OfType<IMethodSymbol>()
+                .FirstOrDefault();
 
             if (methodSymbol == null)
             {
@@ -133,6 +136,7 @@ namespace Cathei.LinqGen.Generator
             }
 
             result = new LinqGenExpression(methodSymbol, null, inputElementSymbol, upstreamSignatureSymbol);
+            return true;
         }
 
         public bool TryGetParameterType(int index, out ITypeSymbol result)

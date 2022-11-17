@@ -32,7 +32,7 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
-            yield return new MemberInfo(MemberKind.Both, SourceType, VarName("source"), LiteralExpression(-1));
+            yield return new MemberInfo(MemberKind.Both, SourceType, VarName("source"));
 
             if (!isLocal)
             {
@@ -51,7 +51,7 @@ namespace Cathei.LinqGen.Generator
 
             if (option.IsLocal)
             {
-                result = ForEachVariableStatement(currentName, VarName("source"), Block(statements));
+                result = ForEachStatement(VarType, currentName.Identifier, VarName("source"), Block(statements));
             }
             else
             {
