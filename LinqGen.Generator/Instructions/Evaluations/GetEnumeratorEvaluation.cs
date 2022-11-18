@@ -129,7 +129,7 @@ namespace Cathei.LinqGen.Generator
             _renderOption = new(false);
         }
 
-        public override IEnumerable<MemberDeclarationSyntax> RenderMembers()
+        public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
         {
             var structSyntax = EnumeratorTemplate.GetRoot()
                 .DescendantNodesAndSelf()
@@ -139,9 +139,9 @@ namespace Cathei.LinqGen.Generator
             yield return (MemberDeclarationSyntax)_rewriter.Visit(structSyntax);
 
             yield return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList,
-                IdentifierName("Enumerator"), null, Identifier("GetEnumerator"), null, ParameterList(), default, null,
+                IdentifierName("Enumerator"), null, MethodName.Identifier, null, ParameterList(), default, null,
                 ArrowExpressionClause(ObjectCreationExpression(
-                    IdentifierName("Enumerator"), ArgumentList(ThisExpression()), null)), default);
+                    IdentifierName("Enumerator"), ArgumentList(ThisExpression()), null)), SemicolonToken);
         }
 
         private BlockSyntax RenderConstructorBody()
@@ -154,7 +154,7 @@ namespace Cathei.LinqGen.Generator
 
         private IEnumerable<MemberDeclarationSyntax> GetFieldDeclarations()
         {
-            return Upstream.GetFieldDeclarations(MemberKind.Enumerator, false);
+            return Upstream.GetFieldDeclarations(MemberKind.Enumerator);
         }
 
         private BlockSyntax RenderMoveNextBody()

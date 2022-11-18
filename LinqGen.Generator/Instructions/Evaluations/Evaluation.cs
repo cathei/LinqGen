@@ -28,6 +28,11 @@ namespace Cathei.LinqGen.Generator
         public IdentifierNameSyntax MethodName { get; }
 
         /// <summary>
+        /// Evaluations are exposed as enumerable member by default.
+        /// </summary>
+        public override MethodKind MethodKind => MethodKind.Enumerable;
+
+        /// <summary>
         /// Evaluation should not rendered individually. Instead it will be rendered with upstream.
         /// </summary>
         public void SetUpstream(Generation upstream)
@@ -41,7 +46,7 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public new Generation Upstream => base.Upstream!;
 
-        public abstract IEnumerable<MemberDeclarationSyntax> RenderMembers();
+        public abstract IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers();
 
         // public virtual IEnumerable<ParameterSyntax> GetParameters()
         // {

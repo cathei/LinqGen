@@ -12,6 +12,7 @@ namespace Cathei.LinqGen.Tests;
 public class ToArrayTests
 {
 
+    [Test]
     public void Test_ArrayWhereToArray()
     {
         int[] values = new []{ 1, 2, 3, 7 , 8, 24, 242,};

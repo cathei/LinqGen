@@ -35,10 +35,18 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public virtual TypeSyntax? InputElementType => null;
 
+        /// <summary>
+        /// Defines which kind of method should instruction exposed as.
+        /// </summary>
+        public abstract MethodKind MethodKind { get; }
+
         public Generation? Upstream { get; protected set; }
 
         private NameSyntax? _upstreamResolvedClassName;
 
+        /// <summary>
+        /// Upstream resolved name after type replacement.
+        /// </summary>
         public NameSyntax UpstreamResolvedClassName
         {
             get
@@ -79,17 +87,17 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// Context variable, affected by downstream
         /// </summary>
-        protected static readonly IdentifierNameSyntax SkipPlaceholder = IdentifierName("_skip_");
+        public static readonly IdentifierNameSyntax SkipPlaceholder = IdentifierName("_skip_");
 
         /// <summary>
         /// Context variable, affected by downstream
         /// </summary>
-        protected static readonly IdentifierNameSyntax TakePlaceholder = IdentifierName("_take_");
+        public static readonly IdentifierNameSyntax TakePlaceholder = IdentifierName("_take_");
 
         /// <summary>
         /// Context variable, affected by upstream
         /// </summary>
-        protected static readonly IdentifierNameSyntax CurrentPlaceholder = IdentifierName("_current_");
+        public static readonly IdentifierNameSyntax CurrentPlaceholder = IdentifierName("_current_");
 
         protected virtual IEnumerable<TypeParameterInfo> GetTypeParameterInfos() => Array.Empty<TypeParameterInfo>();
 

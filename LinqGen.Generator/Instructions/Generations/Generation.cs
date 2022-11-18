@@ -45,11 +45,10 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        // /// <summary>
-        // /// If True, method will be embedded as member method
-        // /// If false, method will be extension method
-        // /// </summary>
-        // public virtual bool ShouldBeMemberMethod => false;
+        /// <summary>
+        /// Non-operation generations has to be exposed as extension method.
+        /// </summary>
+        public override MethodKind MethodKind => MethodKind.Extension;
 
         public List<Operation>? Downstream { get; private set; }
         public List<Evaluation>? Evaluations { get; private set; }
@@ -82,16 +81,35 @@ namespace Cathei.LinqGen.Generator
             if (Downstream != null)
             {
                 foreach (var operation in Downstream)
-                    yield return operation.RenderMethod();
+                {
+                    foreach (var member in operation.RenderUpstreamMembers())
+                        yield return member;
+                }
             }
 
             if (Evaluations != null)
             {
                 foreach (var evaluation in Evaluations)
                 {
-                    foreach (var member in evaluation.RenderMembers())
+                    foreach (var member in evaluation.RenderUpstreamMembers())
                         yield return member;
                 }
+            }
+        }
+
+        public virtual IEnumerable<MemberDeclarationSyntax> RenderExtensionMembers()
+        {
+            if (MethodKind == MethodKind.Extension)
+            {
+                var parameters = GetParameters(MemberKind.Enumerable, false, true).ToList();
+                parameters[0] = parameters[0].WithModifiers(ThisTokenList);
+
+                var expression = ObjectCreationExpression(ResolvedClassName,
+                    ArgumentList(GetArguments(MemberKind.Enumerable, false)), null);
+
+                yield return MethodDeclaration(new(AggressiveInliningAttributeList), PublicStaticTokenList,
+                    ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(), ParameterList(parameters),
+                    GetGenericConstraints(), null, ArrowExpressionClause(expression), SemicolonToken);
             }
         }
 
@@ -154,11 +172,11 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public IEnumerable<MemberDeclarationSyntax> GetFieldDeclarations(MemberKind kind, bool isReadOnly)
+        public IEnumerable<MemberDeclarationSyntax> GetFieldDeclarations(MemberKind kind)
         {
             if (Upstream != null)
             {
-                foreach (var field in Upstream.GetFieldDeclarations(kind, isReadOnly))
+                foreach (var field in Upstream.GetFieldDeclarations(kind))
                     yield return field;
             }
 
@@ -167,8 +185,7 @@ namespace Cathei.LinqGen.Generator
                 if ((member.Kind & kind) != kind)
                     continue;
 
-                var tokenList = isReadOnly ? PrivateReadOnlyTokenList : PrivateTokenList;
-                yield return FieldDeclaration(default, tokenList, VariableDeclaration(
+                yield return FieldDeclaration(default, PrivateTokenList, VariableDeclaration(
                     member.Type, SingletonSeparatedList(VariableDeclarator(member.Name.Identifier))));
             }
         }

@@ -99,40 +99,6 @@ namespace Cathei.LinqGen.Hidden
             _count = index;
         }
 
-        // [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        // public void AddRange<TEnumerator>(TEnumerator iter)
-        //     where TEnumerator : IEnumerator<T>
-        // {
-        //     var localArray = _array;
-        //     int index = _count;
-        //
-        //     while (true)
-        //     {
-        //         // this should remove array bound check
-        //         while ((uint)index < (uint)localArray.Length)
-        //         {
-        //             if (!iter.MoveNext())
-        //             {
-        //                 _count = index;
-        //                 return;
-        //             }
-        //
-        //             localArray[index] = iter.Current;
-        //             index++;
-        //         }
-        //
-        //         _count = index;
-        //
-        //         if (!iter.MoveNext())
-        //             return;
-        //
-        //         // resize and assign
-        //         IncreaseCapacity();
-        //         localArray = _array;
-        //         localArray[index] = iter.Current;
-        //     }
-        // }
-
         public int Count
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -159,11 +125,7 @@ namespace Cathei.LinqGen.Hidden
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T[] ToArray()
         {
-#if NET5_0_OR_GREATER
-            var result = GC.AllocateUninitializedArray<T>(_count);
-#else
             var result = new T[_count];
-#endif
             System.Array.Copy(_array, result, _count);
             return result;
         }

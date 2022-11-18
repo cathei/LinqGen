@@ -71,43 +71,47 @@ public class ArrayWhereToArray
             .ToArray();
     }
 
-    // [Benchmark]
-    // public int[] StructLinqDelegate()
-    // {
-    //     return TestData
-    //         .ToStructEnumerable()
-    //         .Where(x => x % 2 == 0)
-    //         .ToArray();
-    // }
-    //
-    // [Benchmark]
-    // public int[] StructLinqStruct()
-    // {
-    //     var predicate = new Predicate();
-    //
-    //     return TestData
-    //         .ToStructEnumerable()
-    //         .Where(ref predicate, x => x)
-    //         .ToArray(x => x);
-    // }
-    //
-    // [Benchmark]
-    // public int[] HyperLinqDelegate()
-    // {
-    //     return TestData
-    //         .AsValueEnumerable()
-    //         .Where(x => x % 2 == 0)
-    //         .ToArray();
-    // }
-    //
-    // [Benchmark]
-    // public int[] HyperLinqStruct()
-    // {
-    //     return TestData
-    //         .AsValueEnumerable()
-    //         .Where<Predicate>()
-    //         .ToArray();
-    // }
+    [Benchmark]
+    [ArgumentsSource(nameof(TestData))]
+    public int[] StructLinqDelegate(int[] testData)
+    {
+        return testData
+            .ToStructEnumerable()
+            .Where(x => x % 2 == 0)
+            .ToArray();
+    }
+
+    [Benchmark]
+    [ArgumentsSource(nameof(TestData))]
+    public int[] StructLinqStruct(int[] testData)
+    {
+        var predicate = new Predicate();
+
+        return testData
+            .ToStructEnumerable()
+            .Where(ref predicate, x => x)
+            .ToArray(x => x);
+    }
+
+    [Benchmark]
+    [ArgumentsSource(nameof(TestData))]
+    public int[] HyperLinqDelegate(int[] testData)
+    {
+        return testData
+            .AsValueEnumerable()
+            .Where(x => x % 2 == 0)
+            .ToArray();
+    }
+
+    [Benchmark]
+    [ArgumentsSource(nameof(TestData))]
+    public int[] HyperLinqStruct(int[] testData)
+    {
+        return testData
+            .AsValueEnumerable()
+            .Where<Predicate>()
+            .ToArray();
+    }
 
     readonly struct Predicate :
         StructLinq.IFunction<int, bool>,

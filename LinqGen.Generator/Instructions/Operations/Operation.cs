@@ -34,6 +34,11 @@ namespace Cathei.LinqGen.Generator
 
         public override TypeSyntax OutputElementType => Upstream.OutputElementType;
 
+        /// <summary>
+        /// Operations are exposed as enumerable member by default.
+        /// </summary>
+        public override MethodKind MethodKind => MethodKind.Enumerable;
+
         public override IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
         {
             return Upstream.RenderInitialization(option);
@@ -62,9 +67,10 @@ namespace Cathei.LinqGen.Generator
             if (getCurrent != null)
             {
                 var currentName = IdentifierName($"current_{Id}");
+                var currentRewriter = new CurrentRewriter(currentName);
 
                 // replace current variables of downstream
-                statements = new(statements.Select(x => x.ReplaceNode(CurrentPlaceholder, currentName)));
+                statements = currentRewriter.VisitStatementSyntaxList(statements);
 
                 // define current variable
                 statements = statements.Insert(0, LocalDeclarationStatement(currentName.Identifier, getCurrent));
@@ -79,17 +85,20 @@ namespace Cathei.LinqGen.Generator
             return Upstream.RenderIteration(option, statements);
         }
 
-        public MethodDeclarationSyntax RenderMethod()
+        public IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
         {
-            int arityDiff = Arity - Upstream.Arity;
+            if (MethodKind == MethodKind.Enumerable)
+            {
+                int arityDiff = Arity - Upstream.Arity;
 
-            return MethodDeclaration(new(AggressiveInliningAttributeList), PublicTokenList,
-                ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(arityDiff),
-                ParameterList(GetParameters(MemberKind.Enumerable, false, true)),
-                GetGenericConstraints(arityDiff), null,
-                ArrowExpressionClause(ObjectCreationExpression(
-                    ResolvedClassName, ArgumentList(GetArguments(MemberKind.Enumerable, true)), null)),
-                SemicolonToken);
+                yield return MethodDeclaration(new(AggressiveInliningAttributeList), PublicTokenList,
+                    ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(arityDiff),
+                    ParameterList(GetParameters(MemberKind.Enumerable, false, true)),
+                    GetGenericConstraints(arityDiff), null,
+                    ArrowExpressionClause(ObjectCreationExpression(
+                        ResolvedClassName, ArgumentList(GetArguments(MemberKind.Enumerable, true)), null)),
+                    SemicolonToken);
+            }
         }
 
         // public override IEnumerable<MemberInfo> GetMemberInfos()

@@ -14,13 +14,13 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public sealed class ToArrayEvaluation : Evaluation
+    public sealed class ToListEvaluation : Evaluation
     {
         private readonly RenderOption _renderOption;
 
         private TypeSyntax ReturnType { get; }
 
-        public ToArrayEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+        public ToListEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
         {
             _renderOption = new(true);
 
@@ -54,7 +54,7 @@ namespace Cathei.LinqGen.Generator
                     ArgumentList(CurrentPlaceholder))),
             };
 
-            var returnStatement = ReturnStatement(InvocationExpression(VarName("list"), IdentifierName("ToArray")));
+            var returnStatement = ReturnStatement(InvocationExpression(VarName("list"), IdentifierName("ToList")));
 
             var body = Upstream.RenderIteration(_renderOption, new(successStatements));
             var statements = body.Statements;

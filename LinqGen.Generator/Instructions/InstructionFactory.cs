@@ -140,6 +140,9 @@ namespace Cathei.LinqGen.Generator
         {
             switch (expression.MethodSymbol.Name)
             {
+                case "GetEnumerator":
+                    return new GetEnumeratorEvaluation(expression, id);
+
                 // case "First":
                 //     return new FirstEvaluation(expression, false);
                 //
@@ -169,9 +172,9 @@ namespace Cathei.LinqGen.Generator
 
                 case "ToArray":
                     return new ToArrayEvaluation(expression, id);
-            //
-            //     case "ToList":
-            //         return new ToListEvaluation(expression);
+
+                case "ToList":
+                    return new ToListEvaluation(expression, id);
             }
 
             return null;

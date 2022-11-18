@@ -27,15 +27,22 @@ using Cathei.LinqGen.Hidden;
 
 namespace Cathei.LinqGen.Hidden
 {
-    // Enumerable is always readonly
     // Non-exported Enumerable should consider anonymous type, thus it will be internal
-    internal readonly struct _Enumerable_ : IInternalStub<_Element_>
+    internal struct _Enumerable_ : IInternalStub<_Element_>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal _Enumerable_() : this()
         {
 
         }
+    }
+}
+
+namespace Cathei.LinqGen
+{
+    // Extensions needs to be internal to prevent ambiguous resolution
+    internal static partial class _Extensions_
+    {
     }
 }
 ");
@@ -47,6 +54,18 @@ namespace Cathei.LinqGen.Hidden
             public Rewriter(Generation instruction)
             {
                 _instruction = instruction;
+            }
+
+            public override SyntaxNode? VisitClassDeclaration(ClassDeclarationSyntax? node)
+            {
+                switch (node!.Identifier.ValueText)
+                {
+                    case "_Extensions_":
+                        node = RewriteExtensionClass(node);
+                        break;
+                }
+
+                return node == null ? null : base.VisitClassDeclaration(node);
             }
 
             public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
@@ -80,11 +99,26 @@ namespace Cathei.LinqGen.Hidden
                     case "_Element_":
                         return _instruction.OutputElementType;
 
+                    case "_Enumerable_":
+                        return _instruction.ResolvedClassName;
+
                     // case "_Interface_":
                     //     return _instruction.InterfaceType;
                 }
 
                 return base.VisitIdentifierName(node);
+            }
+
+            private ClassDeclarationSyntax? RewriteExtensionClass(ClassDeclarationSyntax node)
+            {
+                var extensionMethods = _instruction.RenderExtensionMembers().ToArray();
+
+                if (extensionMethods.Length == 0)
+                    return null;
+
+                return node.WithIdentifier(
+                        Identifier($"LinqGenExtensions_{_instruction.ClassName.Identifier.ValueText}"))
+                    .AddMembers(extensionMethods);
             }
 
             private StructDeclarationSyntax RewriteEnumerableStruct(StructDeclarationSyntax node)
@@ -93,7 +127,7 @@ namespace Cathei.LinqGen.Hidden
                     .WithTypeParameterList(_instruction.GetTypeParameters())
                     .WithConstraintClauses(_instruction.GetGenericConstraints())
                     .AddMembers(_instruction.RenderEnumerableMembers().ToArray())
-                    .AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerable, true).ToArray());
+                    .AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerable).ToArray());
             }
 
             private ConstructorDeclarationSyntax RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
