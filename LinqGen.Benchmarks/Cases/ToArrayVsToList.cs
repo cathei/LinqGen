@@ -7,7 +7,7 @@ using StructLinq;
 using NetFabric.Hyperlinq;
 using StructLinq.Range;
 
-namespace LinqGen.Benchmarks.Cases;
+namespace Cathei.LinqGen.Benchmarks.Cases;
 
 [MemoryDiagnoser]
 public class ToArrayVsToList

@@ -10,18 +10,15 @@ namespace Cathei.LinqGen.Benchmarks.Cases;
 [MemoryDiagnoser]
 public class ArrayWhereSelectSum
 {
-    private const int Count = 10_000;
+    private int[] TestData { get; set; }
 
-    private static int[] TestData;
+    [Params(100, 10_000, 1_000_000)]
+    public int Count { get; set; }
 
-    static ArrayWhereSelectSum()
+    [GlobalSetup]
+    public void GlobalSetup()
     {
-        var list = new List<int>();
-
-        for (int i = 0; i < Count; ++i)
-            list.Add(i);
-
-        TestData = list.ToArray();
+        TestData = Utils.Generate(42, Count).ToArray();
     }
 
     [Benchmark]

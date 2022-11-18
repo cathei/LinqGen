@@ -9,9 +9,9 @@ using StructLinq.Range;
 namespace Cathei.LinqGen.Benchmarks.Cases;
 
 [MemoryDiagnoser]
-public class ArrayWhereToArray
+public class ListWhereToArray
 {
-    private int[] TestData { get; set; }
+    private List<int> TestData { get; set; }
 
     [Params(100, 10_000, 1_000_000)]
     public int Count { get; set; }
@@ -19,13 +19,13 @@ public class ArrayWhereToArray
     [GlobalSetup]
     public void GlobalSetup()
     {
-        TestData = Utils.Generate(42, Count).ToArray();
+        TestData = Utils.Generate(42, Count).ToList();
     }
 
     [Benchmark(Baseline = true)]
-    public int[] Linq()
+    public int[] Linq(int[] testData)
     {
-        return TestData
+        return testData
             .Where(x=> x % 2 == 0)
             .ToArray();
     }

@@ -356,6 +356,18 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.BinaryExpression(SyntaxKind.IsExpression, left, right);
         }
 
+
+        public static ForStatementSyntax ForStatement(
+            IdentifierNameSyntax loopVariable, ExpressionSyntax start, ExpressionSyntax end, StatementSyntax body)
+        {
+            return SyntaxFactory.ForStatement(
+                SyntaxFactory.VariableDeclaration(IntType, SingletonSeparatedList(VariableDeclarator(
+                    loopVariable.Identifier, null, EqualsValueClause(start)))),
+                default, LessThanExpression(loopVariable, end),
+                SingletonSeparatedList<ExpressionSyntax>(PreIncrementExpression(loopVariable)),
+                body);
+        }
+
         public static ExpressionSyntax MathMin(ExpressionSyntax left, ExpressionSyntax right)
         {
             return SyntaxFactory.InvocationExpression(
@@ -432,6 +444,18 @@ namespace Cathei.LinqGen.Generator
                 SymbolEqualityComparer.Default.Equals(x.TypeArguments[0], symbol))!;
 
             return interfaceSymbol != null!;
+        }
+
+        public static ITypeSymbol GetEnumeratorSymbol(INamedTypeSymbol enumerableSymbol)
+        {
+            // find GetEnumerator with same rule as C# duck typing
+            // TODO fallback to interface implementation
+            return enumerableSymbol.GetMembers()
+                .OfType<IMethodSymbol>()
+                .First(x =>
+                    x.DeclaredAccessibility == Accessibility.Public &&
+                    x.Name == "GetEnumerator" && x.Parameters.Length == 0 && x.TypeParameters.Length == 0)
+                .ReturnType;
         }
 
         public static INamedTypeSymbol NormalizeSignature(INamedTypeSymbol signature)

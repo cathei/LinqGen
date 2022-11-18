@@ -6,21 +6,20 @@ using StructLinq;
 using NetFabric.Hyperlinq;
 using StructLinq.Range;
 
-namespace LinqGen.Benchmarks.Cases;
+namespace Cathei.LinqGen.Benchmarks.Cases;
 
 [MemoryDiagnoser]
 public class ListSelectSum
 {
-    private const int Count = 10_000;
+    private List<int> TestData { get; set; }
 
-    private static List<int> TestData;
+    [Params(100, 10_000, 1_000_000)]
+    public int Count { get; set; }
 
-    static ListSelectSum()
+    [GlobalSetup]
+    public void GlobalSetup()
     {
-        TestData = new List<int>();
-
-        for (int i = 0; i < Count; ++i)
-            TestData.Add(i);
+        TestData = Utils.Generate(42, Count).ToList();
     }
 
     [Benchmark]

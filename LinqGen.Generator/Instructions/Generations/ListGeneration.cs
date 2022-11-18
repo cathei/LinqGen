@@ -14,18 +14,21 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public sealed class ArrayGeneration : Generation
+    public sealed class ListGeneration : Generation
     {
         public TypeSyntax SourceType { get; }
+        public TypeSyntax SourceEnumeratorType { get; }
 
-        public ArrayGeneration(in LinqGenExpression expression, int id,
-            IArrayTypeSymbol arraySymbol) : base(expression, id)
+        public ListGeneration(in LinqGenExpression expression, int id,
+            INamedTypeSymbol enumerableSymbol, INamedTypeSymbol listSymbol) : base(expression, id)
         {
             // TODO generic type element
-            ITypeSymbol elementSymbol = arraySymbol.ElementType;
+            ITypeSymbol elementSymbol = listSymbol.TypeArguments[0];
+            ITypeSymbol enumeratorSymbol = GetEnumeratorSymbol(enumerableSymbol);
 
             OutputElementType = ParseTypeName(elementSymbol);
-            SourceType = ParseTypeName(arraySymbol);
+            SourceType = ParseTypeName(enumerableSymbol);
+            SourceEnumeratorType = ParseTypeName(enumeratorSymbol);
         }
 
         public override TypeSyntax OutputElementType { get; }
@@ -36,7 +39,7 @@ namespace Cathei.LinqGen.Generator
 
             if (!isLocal)
             {
-                yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
+                yield return new MemberInfo(MemberKind.Both, SourceType, VarName("iter"));
             }
         }
 
@@ -45,7 +48,7 @@ namespace Cathei.LinqGen.Generator
             if (!option.IsLocal)
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
-                    VarName("index"), LiteralExpression(-1)));
+                    VarName("iter"), InvocationExpression(VarName("source"), GetEnumeratorMethod)));
             }
         }
 
@@ -61,17 +64,20 @@ namespace Cathei.LinqGen.Generator
 
             if (option.IsLocal)
             {
-                result = ForEachStatement(VarType, currentName.Identifier, VarName("source"), Block(statements));
+                // In local loop we don't have to worry about collection changing during iteration.
+                statements = statements.Insert(0, LocalDeclarationStatement(
+                    currentName.Identifier, ElementAccessExpression(VarName("source"), VarName("index"))));
+
+                result = ForStatement(
+                    VarName("index"), LiteralExpression(0), MemberAccessExpression(VarName("source"), CountProperty),
+                    Block(statements));
             }
             else
             {
                 statements = statements.Insert(0, LocalDeclarationStatement(
-                    currentName.Identifier, ElementAccessExpression(VarName("source"), VarName("index"))));
+                    currentName.Identifier, MemberAccessExpression(VarName("source"), CurrentProperty)));
 
-                result = WhileStatement(LessThanExpression(
-                        CastExpression(UIntType, PreIncrementExpression(VarName("index"))),
-                        CastExpression(UIntType, MemberAccessExpression(VarName("source"), LengthProperty))),
-                    Block(statements));
+                result = WhileStatement(InvocationExpression(VarName("iter"), MoveNextMethod), Block(statements));
             }
 
             return Block(result);

@@ -7,24 +7,20 @@ using StructLinq;
 using NetFabric.Hyperlinq;
 using StructLinq.Range;
 
-namespace LinqGen.Benchmarks.Cases;
+namespace Cathei.LinqGen.Benchmarks.Cases;
 
 [MemoryDiagnoser]
 public class AddVsAddRange
 {
-    private const int Count = 1_000_000;
-    private static int[] TestData;
+    private int[] TestData { get; set; }
 
-    static AddVsAddRange()
+    [Params(100, 10_000, 1_000_000)]
+    public int Count { get; set; }
+
+    [GlobalSetup]
+    public void GlobalSetup()
     {
-        Random r = new Random(42);
-
-        TestData = new int[Count];
-
-        for (int i = 0; i < Count; i++)
-        {
-            TestData[i] = r.Next(0, 100);
-        }
+        TestData = Utils.Generate(42, Count).ToArray();
     }
 
     [Benchmark()]
