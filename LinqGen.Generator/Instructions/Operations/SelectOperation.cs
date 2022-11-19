@@ -21,12 +21,19 @@ namespace Cathei.LinqGen.Generator
         private bool WithStruct { get; }
 
         public SelectOperation(in LinqGenExpression expression, int id,
-            ITypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression, id)
+            INamedTypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression, id)
         {
             SelectorType = ParseTypeName(parameterType);
+
+            // Func<TIn, TOut> or IStructFunction<TIn, TOut>
+            // Func<TIn, int, TOut> or IStructFunction<TIn, int, TOut>
+            OutputElementType = ParseTypeName(parameterType.TypeArguments[withIndex ? 2 : 1]);
+
             WithIndex = withIndex;
             WithStruct = withStruct;
         }
+
+        public override TypeSyntax OutputElementType { get; }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {

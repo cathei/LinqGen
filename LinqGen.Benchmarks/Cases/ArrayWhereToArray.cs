@@ -11,7 +11,7 @@ namespace Cathei.LinqGen.Benchmarks.Cases;
 [MemoryDiagnoser]
 public class ArrayWhereToArray
 {
-    private int[] TestData { get; set; }
+    private int[] TestData { get; set; } = null!;
 
     [Params(100, 10_000, 1_000_000)]
     public int Count { get; set; }

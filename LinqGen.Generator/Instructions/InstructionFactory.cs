@@ -31,6 +31,11 @@ namespace Cathei.LinqGen.Generator
                             return new ArrayGeneration(expression, id, arraySymbol);
                         // return new SpecializeArrayMultiGeneration(expression, id, arraySymbol);
                     }
+                    else if (typeArgument is INamedTypeSymbol namedTypeSymbol)
+                    {
+                        if (TryGetGenericListInterface(namedTypeSymbol, out var listSymbol))
+                            return new ListGeneration(expression, id, namedTypeSymbol, listSymbol);
+                    }
 
                     // if (typeArgument is INamedTypeSymbol namedTypeSymbol)
                     //     return new SpecializeGeneration(expression, id, namedTypeSymbol);

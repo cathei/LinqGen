@@ -14,7 +14,7 @@ public class OrderByReference
 
         public int CompareTo(IntWrapper? other)
         {
-            return inner.CompareTo(other.inner);
+            return inner.CompareTo(other!.inner);
         }
     }
 
@@ -126,9 +126,9 @@ public class OrderByReference
             return arg1.inner - arg2.inner;
         }
 
-        public int Compare(IntWrapper x, IntWrapper y)
+        public int Compare(IntWrapper? x, IntWrapper? y)
         {
-            return x.inner - y.inner;
+            return x!.inner - y!.inner;
         }
     }
 }

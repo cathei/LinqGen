@@ -39,7 +39,7 @@ namespace Cathei.LinqGen.Generator
 
             if (!isLocal)
             {
-                yield return new MemberInfo(MemberKind.Both, SourceType, VarName("iter"));
+                yield return new MemberInfo(MemberKind.Enumerator, SourceType, VarName("iter"));
             }
         }
 

@@ -9,7 +9,7 @@ using StructLinq.Range;
 namespace Cathei.LinqGen.Benchmarks.Cases;
 
 [MemoryDiagnoser]
-public class ListWhereToArray
+public class ListWhereToList
 {
     private List<int> TestData { get; set; } = null!;
 
@@ -23,67 +23,67 @@ public class ListWhereToArray
     }
 
     [Benchmark(Baseline = true)]
-    public int[] Linq()
+    public List<int> Linq()
     {
         return TestData
             .Where(x=> x % 2 == 0)
-            .ToArray();
+            .ToList();
     }
 
     [Benchmark]
-    public int[] LinqGenDelegate()
+    public List<int> LinqGenDelegate()
     {
         return TestData
             .Specialize()
             .Where(x => x % 2 == 0)
-            .ToArray();
+            .ToList();
     }
 
     [Benchmark]
-    public int[] LinqGenStruct()
+    public List<int> LinqGenStruct()
     {
         return TestData
             .Specialize()
             .Where(new Predicate())
-            .ToArray();
+            .ToList();
     }
 
     [Benchmark]
-    public int[] StructLinqDelegate()
+    public List<int> StructLinqDelegate()
     {
         return TestData
             .ToStructEnumerable()
             .Where(x => x % 2 == 0)
-            .ToArray();
+            .ToList();
     }
 
     [Benchmark]
-    public int[] StructLinqStruct()
+    public List<int> StructLinqStruct()
     {
         var predicate = new Predicate();
 
         return TestData
             .ToStructEnumerable()
             .Where(ref predicate, x => x)
-            .ToArray(x => x);
+            .ToList(x => x);
     }
 
     [Benchmark]
-    public int[] HyperLinqDelegate()
+    public List<int> HyperLinqDelegate()
     {
         return TestData
             .AsValueEnumerable()
             .Where(x => x % 2 == 0)
-            .ToArray();
+            .ToList();
     }
 
     [Benchmark]
-    public int[] HyperLinqStruct()
+    public List<int> HyperLinqStruct()
     {
         return TestData
             .AsValueEnumerable()
             .Where<Predicate>()
-            .ToArray();
+            .ToList();
     }
 
     readonly struct Predicate :
