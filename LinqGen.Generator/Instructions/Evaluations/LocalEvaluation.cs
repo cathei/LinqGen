@@ -18,26 +18,16 @@ namespace Cathei.LinqGen.Generator
     {
         private readonly RenderOption _renderOption;
 
-        protected abstract TypeSyntax ReturnType { get; }
-
         public LocalEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
         {
             _renderOption = new(true);
-        }
-
-        public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
-        {
-            yield return MethodDeclaration(
-                SingletonList(AggressiveInliningAttributeList), PublicTokenList,
-                ReturnType, null, MethodName.Identifier, null,
-                ParameterList(), default, RenderBody(), null, default);
         }
 
         protected abstract IEnumerable<StatementSyntax> RenderInitialization();
         protected abstract IEnumerable<StatementSyntax> RenderAccumulation();
         protected abstract IEnumerable<StatementSyntax> RenderReturn();
 
-        private BlockSyntax RenderBody()
+        protected BlockSyntax RenderBody()
         {
             var initialStatements =
                 Upstream.GetLocalDeclarations(MemberKind.Enumerator)

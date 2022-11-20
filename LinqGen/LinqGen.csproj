@@ -6,7 +6,7 @@
         <LangVersion>9</LangVersion>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'" >
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
         <PackageReference Include="System.Buffers" Version="4.5.1" />
     </ItemGroup>
 

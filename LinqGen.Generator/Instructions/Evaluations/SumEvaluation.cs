@@ -20,7 +20,15 @@ namespace Cathei.LinqGen.Generator
         {
         }
 
-        protected override TypeSyntax ReturnType => Upstream.OutputElementType;
+        private TypeSyntax ReturnType => Upstream.OutputElementType;
+
+        public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
+        {
+            yield return MethodDeclaration(
+                SingletonList(AggressiveInliningAttributeList), PublicTokenList,
+                ReturnType, null, MethodName.Identifier, null,
+                ParameterList(), default, RenderBody(), null, default);
+        }
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {

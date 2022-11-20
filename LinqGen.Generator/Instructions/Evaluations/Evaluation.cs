@@ -22,10 +22,13 @@ namespace Cathei.LinqGen.Generator
         {
             MethodSymbol = expression.MethodSymbol;
             MethodName = IdentifierName(MethodSymbol.Name);
+            InputElementSymbol = expression.InputElementSymbol!;
         }
 
         public IMethodSymbol MethodSymbol { get; }
         public IdentifierNameSyntax MethodName { get; }
+
+        public ITypeSymbol InputElementSymbol { get; }
 
         /// <summary>
         /// Evaluations are exposed as enumerable member by default.

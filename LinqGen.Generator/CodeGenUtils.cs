@@ -151,6 +151,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly SyntaxTokenList PublicStaticTokenList =
             TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword));
 
+        public static readonly ParameterListSyntax EmptyParameterList = SyntaxFactory.ParameterList();
         public static readonly ArgumentListSyntax EmptyArgumentList = SyntaxFactory.ArgumentList();
 
         public static readonly ConstructorInitializerSyntax ThisInitializer =
@@ -350,6 +351,16 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, left, right);
         }
 
+        public static BinaryExpressionSyntax LogicalAndExpression(ExpressionSyntax left, ExpressionSyntax right)
+        {
+            return SyntaxFactory.BinaryExpression(SyntaxKind.LogicalAndExpression, left, right);
+        }
+
+        public static BinaryExpressionSyntax LogicalOrExpression(ExpressionSyntax left, ExpressionSyntax right)
+        {
+            return SyntaxFactory.BinaryExpression(SyntaxKind.LogicalOrExpression, left, right);
+        }
+
         public static BinaryExpressionSyntax AddExpression(ExpressionSyntax left, ExpressionSyntax right)
         {
             return SyntaxFactory.BinaryExpression(SyntaxKind.AddExpression, left, right);
@@ -430,7 +441,7 @@ namespace Cathei.LinqGen.Generator
                 return (INamedTypeSymbol)symbol;
 
             return symbol.AllInterfaces.FirstOrDefault(x =>
-                x.MetadataName == interfaceMetadataName && CompareNamespace(symbol, namespaceName));
+                x.MetadataName == interfaceMetadataName && CompareNamespace(x, namespaceName));
         }
 
         public static bool TryGetGenericListInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)

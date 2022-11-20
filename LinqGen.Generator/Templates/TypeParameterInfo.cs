@@ -10,37 +10,37 @@ namespace Cathei.LinqGen.Generator
 
     public readonly struct TypeParameterInfo
     {
-        public readonly IdentifierNameSyntax Identifier;
+        public readonly IdentifierNameSyntax Name;
         // public readonly TypeSyntax? ConstraintType;
         public readonly TypeParameterConstraintClauseSyntax? GenericConstraint;
 
-        public TypeParameterInfo(IdentifierNameSyntax identifier)
+        public TypeParameterInfo(IdentifierNameSyntax name)
         {
-            Identifier = identifier;
+            Name = name;
             GenericConstraint = null;
         }
 
-        public TypeParameterInfo(IdentifierNameSyntax identifier, TypeSyntax constraintType)
+        public TypeParameterInfo(IdentifierNameSyntax name, TypeSyntax constraintType)
         {
-            Identifier = identifier;
-            GenericConstraint = TypeParameterConstraintClause(identifier,
+            Name = name;
+            GenericConstraint = TypeParameterConstraintClause(name,
                 SingletonSeparatedList<TypeParameterConstraintSyntax>(TypeConstraint(constraintType)));
         }
 
-        public TypeParameterInfo(IdentifierNameSyntax identifier, params TypeParameterConstraintSyntax[] constraints)
+        public TypeParameterInfo(IdentifierNameSyntax name, params TypeParameterConstraintSyntax[] constraints)
         {
-            Identifier = identifier;
-            GenericConstraint = TypeParameterConstraintClause(identifier, SeparatedList(constraints));
+            Name = name;
+            GenericConstraint = TypeParameterConstraintClause(name, SeparatedList(constraints));
         }
 
         public TypeParameterSyntax AsTypeParameter()
         {
-            return TypeParameter(Identifier.Identifier);
+            return TypeParameter(Name.Identifier);
         }
 
         public TypeSyntax AsTypeArgument()
         {
-            return Identifier;
+            return Name;
         }
 
         public TypeParameterConstraintClauseSyntax? AsGenericConstraint()

@@ -134,7 +134,7 @@ namespace Cathei.LinqGen.Generator
             {
                 // generic output element type will be replace with input element type
                 result.AddRange(Upstream.TypeParameters
-                    .Where(x => !x.Identifier.IsEquivalentTo(Upstream.OutputElementType)));
+                    .Where(x => !x.Name.IsEquivalentTo(Upstream.OutputElementType)));
             }
 
             return result;
@@ -179,7 +179,7 @@ namespace Cathei.LinqGen.Generator
 
             return TypeArgumentList(SeparatedList(parameters.Select((x) =>
             {
-                if (InputElementType != null && x.Identifier.IsEquivalentTo(Upstream!.OutputElementType))
+                if (InputElementType != null && x.Name.IsEquivalentTo(Upstream!.OutputElementType))
                     return InputElementType;
                 return x.AsTypeArgument();
             })));
