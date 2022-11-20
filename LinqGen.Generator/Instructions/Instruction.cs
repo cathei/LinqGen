@@ -74,11 +74,17 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
+        /// <summary>
+        /// Creating unique type parameter name for this instruction
+        /// </summary>
         protected IdentifierNameSyntax TypeName(string identifier)
         {
             return IdentifierName($"T{Id}_{identifier}");
         }
 
+        /// <summary>
+        /// Creating unique variable name for this instruction
+        /// </summary>
         protected IdentifierNameSyntax VarName(string identifier)
         {
             return IdentifierName($"{identifier}_{Id}");

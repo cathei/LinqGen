@@ -404,7 +404,7 @@ namespace Cathei.LinqGen.Generator
                 return (INamedTypeSymbol)symbol;
 
             return symbol.AllInterfaces.FirstOrDefault(x =>
-                x.MetadataName == interfaceMetadataName && CompareNamespace(symbol, namespaceName));
+                x.MetadataName == interfaceMetadataName && CompareNamespace(x, namespaceName));
         }
 
         public static bool TryGetGenericListInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)

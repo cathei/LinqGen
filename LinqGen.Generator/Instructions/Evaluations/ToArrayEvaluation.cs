@@ -14,56 +14,33 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public sealed class ToArrayEvaluation : Evaluation
+    public sealed class ToArrayEvaluation : LocalEvaluation
     {
-        private readonly RenderOption _renderOption;
-
-        private TypeSyntax ReturnType { get; }
-
         public ToArrayEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
         {
-            _renderOption = new(true);
-
             ReturnType = ParseTypeName(expression.MethodSymbol.ReturnType);
         }
 
-        public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
+        protected override TypeSyntax ReturnType { get; }
+
+        protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
-            yield return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList,
-                ReturnType, null, MethodName.Identifier, null, ParameterList(), default, RenderBody(), null, default);
+            yield return UsingLocalDeclarationStatement(VarName("list").Identifier,
+                ObjectCreationExpression(GenericName(Identifier("PooledList"),
+                        TypeArgumentList(Upstream.OutputElementType)),
+                    ArgumentList(LiteralExpression(0)), null));
         }
 
-        private BlockSyntax RenderBody()
+        protected override IEnumerable<StatementSyntax> RenderAccumulation()
         {
-            var initialStatements =
-                Upstream.GetLocalDeclarations(MemberKind.Enumerator)
-                    .Concat(Upstream.GetLocalAssignments(MemberKind.Both));
+            yield return ExpressionStatement(InvocationExpression(
+                MemberAccessExpression(VarName("list"), AddMethod),
+                ArgumentList(CurrentPlaceholder)));
+        }
 
-            initialStatements = initialStatements.Append(
-                UsingLocalDeclarationStatement(VarName("list").Identifier,
-                    ObjectCreationExpression(GenericName(Identifier("PooledList"),
-                            TypeArgumentList(Upstream.OutputElementType)),
-                        ArgumentList(LiteralExpression(0)), null)));
-
-            var disposeStatements = Upstream.RenderDispose(_renderOption);
-
-            var successStatements = new StatementSyntax[]
-            {
-                ExpressionStatement(InvocationExpression(
-                    MemberAccessExpression(VarName("list"), AddMethod),
-                    ArgumentList(CurrentPlaceholder))),
-            };
-
-            var returnStatement = ReturnStatement(InvocationExpression(VarName("list"), IdentifierName("ToArray")));
-
-            var body = Upstream.RenderIteration(_renderOption, new(successStatements));
-            var statements = body.Statements;
-
-            statements = statements.InsertRange(0, initialStatements);
-            statements = statements.AddRange(disposeStatements);
-            statements = statements.Add(returnStatement);
-
-            return body.WithStatements(statements);
+        protected override IEnumerable<StatementSyntax> RenderReturn()
+        {
+            yield return ReturnStatement(InvocationExpression(VarName("list"), IdentifierName("ToArray")));
         }
     }
 }

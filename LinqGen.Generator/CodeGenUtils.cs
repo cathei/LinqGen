@@ -205,6 +205,12 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.AssignmentExpression(SyntaxKind.SimpleAssignmentExpression, left, right);
         }
 
+        public static AssignmentExpressionSyntax AddAssignmentExpression(
+            ExpressionSyntax left, ExpressionSyntax right)
+        {
+            return SyntaxFactory.AssignmentExpression(SyntaxKind.AddAssignmentExpression, left, right);
+        }
+
         public static ArgumentListSyntax ArgumentList(ExpressionSyntax expression)
         {
             return SyntaxFactory.ArgumentList(SingletonSeparatedList(Argument(expression)));
@@ -264,6 +270,14 @@ namespace Cathei.LinqGen.Generator
         {
             return SyntaxFactory.LocalDeclarationStatement(default, UsingKeywordToken, default,
                 VariableDeclaration(identifier, initialValue), SemicolonToken);
+        }
+
+        public static LocalDeclarationStatementSyntax LocalDeclarationStatement(
+            TypeSyntax type, SyntaxToken identifier, ExpressionSyntax initialValue)
+        {
+            return SyntaxFactory.LocalDeclarationStatement(
+                SyntaxFactory.VariableDeclaration(type, SingletonSeparatedList(
+                    VariableDeclarator(identifier, null, EqualsValueClause(initialValue)))));
         }
 
         public static LocalDeclarationStatementSyntax LocalDeclarationStatement(

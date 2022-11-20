@@ -26,7 +26,6 @@ public class SumTests
         Assert.AreEqual(expected, actual);
     }
 
-
     [TestCase(0, 0)]
     [TestCase(0, 10)]
     [TestCase(-5, 10)]

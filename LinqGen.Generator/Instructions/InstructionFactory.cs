@@ -163,8 +163,8 @@ namespace Cathei.LinqGen.Generator
                 // case "Single":
                 //     break;
                 //
-                // case "Sum":
-                //     return new SumEvaluation(expression);
+                case "Sum":
+                    return new SumEvaluation(expression, id);
                 //
                 // case "Min":
                 //     return new MinMaxEvaluation(expression, true);
