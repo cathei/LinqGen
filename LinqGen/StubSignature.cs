@@ -14,6 +14,12 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class Compiled : IStubSignature { }
 
+    public abstract class Range : IStubSignature { }
+
+    public abstract class Empty<T> : IStubSignature { }
+
+    public abstract class Repeat<T> : IStubSignature { }
+
     public abstract class Specialize<TEnumerable> : IStubSignature { }
 
     public abstract class AsEnumerable<TUp> : IStubSignature { }

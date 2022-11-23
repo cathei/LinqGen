@@ -111,13 +111,12 @@ namespace Cathei.LinqGen
 
             private ClassDeclarationSyntax? RewriteExtensionClass(ClassDeclarationSyntax node)
             {
-                var extensionMethods = _instruction.RenderExtensionMembers().ToArray();
+                var extensionMethods = _instruction.RenderStaticClassMembers().ToArray();
 
                 if (extensionMethods.Length == 0)
                     return null;
 
-                return node.WithIdentifier(
-                        Identifier($"LinqGenExtensions_{_instruction.ClassName.Identifier.ValueText}"))
+                return node.WithIdentifier(_instruction.StaticClassName.Identifier)
                     .AddMembers(extensionMethods);
             }
 

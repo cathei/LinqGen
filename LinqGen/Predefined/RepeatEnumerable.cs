@@ -64,15 +64,3 @@ namespace Cathei.LinqGen.Hidden
         }
     }
 }
-
-namespace Cathei.LinqGen
-{
-    public static partial class GenEnumerable
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RepeatEnumerable<T> Repeat<T>(T element, int count)
-        {
-            return new RepeatEnumerable<T>(element, count);
-        }
-    }
-}

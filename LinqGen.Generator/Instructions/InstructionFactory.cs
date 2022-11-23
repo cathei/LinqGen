@@ -43,6 +43,9 @@ namespace Cathei.LinqGen.Generator
                     break;
                 }
 
+                case "Range":
+                    return new RangeGeneration(expression, id);
+
                 case "Select":
                     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
                         break;

@@ -21,15 +21,7 @@ namespace Cathei.LinqGen.Generator
             ReturnType = ParseTypeName(expression.MethodSymbol.ReturnType);
         }
 
-        private TypeSyntax ReturnType { get; }
-
-        public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
-        {
-            yield return MethodDeclaration(
-                SingletonList(AggressiveInliningAttributeList), PublicTokenList,
-                ReturnType, null, MethodName.Identifier, null,
-                ParameterList(), default, RenderBody(), null, default);
-        }
+        protected override TypeSyntax ReturnType { get; }
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {

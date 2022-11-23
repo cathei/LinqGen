@@ -17,6 +17,7 @@ namespace Cathei.LinqGen.Generator
     {
         private const string LinqGenAssemblyName = "LinqGen";
         private const string LinqGenStubExtensionsTypeName = "StubExtensions";
+        private const string LinqGenGenEnumerableTypeName = "GenEnumerable";
 
         private const string LinqGenStubEnumerableTypeName = "Stub`2";
         private const string LinqGenBoxedStubEnumerableTypeName = "BoxedStub`2";
@@ -32,7 +33,8 @@ namespace Cathei.LinqGen.Generator
         {
             // is it member of extension class or member of stub enumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.ContainingType.MetadataName is LinqGenStubExtensionsTypeName or LinqGenStubEnumerableTypeName;
+                   symbol.ContainingType.MetadataName is LinqGenStubExtensionsTypeName or
+                       LinqGenStubEnumerableTypeName or LinqGenGenEnumerableTypeName;
         }
 
         public static bool IsOutputStubEnumerable(INamedTypeSymbol symbol)
@@ -40,8 +42,7 @@ namespace Cathei.LinqGen.Generator
             // is return type defined for method is stub enumerable or boxed IEnumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
                    symbol.MetadataName is LinqGenStubEnumerableTypeName or
-                       LinqGenBoxedStubEnumerableTypeName or
-                       LinqGenOrderedStubEnumerableTypeName;
+                       LinqGenBoxedStubEnumerableTypeName or LinqGenOrderedStubEnumerableTypeName;
         }
 
         public static bool IsInputStubEnumerable(INamedTypeSymbol symbol)
@@ -49,8 +50,7 @@ namespace Cathei.LinqGen.Generator
             // is input parameter defined for method is stub interface or stub enumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
                    symbol.MetadataName is LinqGenStubInterfaceTypeName or
-                       LinqGenStubEnumerableTypeName or
-                       LinqGenOrderedStubInterfaceTypeName;
+                       LinqGenStubEnumerableTypeName or LinqGenOrderedStubInterfaceTypeName;
         }
 
         public static bool IsCountable(INamedTypeSymbol symbol)

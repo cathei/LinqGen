@@ -39,14 +39,14 @@ namespace Cathei.LinqGen.Generator
         {
             if (WithStruct)
             {
-                yield return new TypeParameterInfo(TypeName("1"), SelectorType);
+                yield return new TypeParameterInfo(TypeName("Selector"), SelectorType);
             }
         }
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Both,
-                WithStruct ? TypeName("1") : SelectorType, VarName("selector"));
+                WithStruct ? TypeName("Selector") : SelectorType, VarName("selector"));
 
             if (WithIndex)
                 yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));

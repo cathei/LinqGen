@@ -27,11 +27,28 @@ namespace Cathei.LinqGen.Generator
         protected abstract IEnumerable<StatementSyntax> RenderAccumulation();
         protected abstract IEnumerable<StatementSyntax> RenderReturn();
 
+        protected abstract TypeSyntax ReturnType { get; }
+
+        protected virtual IEnumerable<ParameterSyntax> GetParameters()
+        {
+            yield break;
+        }
+
+        public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
+        {
+            yield return MethodDeclaration(
+                SingletonList(AggressiveInliningAttributeList), PublicTokenList,
+                ReturnType, null, MethodName.Identifier,
+                GetTypeParameters(Arity), ParameterList(GetParameters()),
+                GetGenericConstraints(Arity), RenderBody(), null, default);
+        }
+
         protected BlockSyntax RenderBody()
         {
             var initialStatements =
                 Upstream.GetLocalDeclarations(MemberKind.Enumerator)
                     .Concat(Upstream.GetLocalAssignments(MemberKind.Both))
+                    .Concat(Upstream.RenderInitialization(_renderOption))
                     .Concat(RenderInitialization());
 
             var disposeStatements = Upstream.RenderDispose(_renderOption);

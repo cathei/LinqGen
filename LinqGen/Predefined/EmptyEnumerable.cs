@@ -44,15 +44,3 @@ namespace Cathei.LinqGen.Hidden
         }
     }
 }
-
-namespace Cathei.LinqGen
-{
-    public static partial class GenEnumerable
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static EmptyEnumerable<T> Empty<T>()
-        {
-            return new EmptyEnumerable<T>();
-        }
-    }
-}

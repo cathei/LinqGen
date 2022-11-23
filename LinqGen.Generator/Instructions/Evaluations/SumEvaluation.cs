@@ -16,18 +16,41 @@ namespace Cathei.LinqGen.Generator
 
     public sealed class SumEvaluation : LocalEvaluation
     {
+        private TypeSyntax? SelectorType { get; }
+        private bool WithStruct { get; }
+
         public SumEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
         {
+            ReturnType = ParseTypeName(MethodSymbol.ReturnType);
+
+            if (MethodSymbol.Parameters.Length >= 1)
+            {
+                // Sum with a parameter uses selector
+                var parameterType = MethodSymbol.Parameters[0].Type;
+
+                SelectorType = ParseTypeName(parameterType);
+                WithStruct = IsStructFunction(parameterType);
+            }
+            else
+            {
+                // and single parameter only has default value
+                SelectorType = null;
+                WithStruct = false;
+            }
         }
 
-        private TypeSyntax ReturnType => Upstream.OutputElementType;
+        protected override TypeSyntax ReturnType { get; }
 
-        public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
+        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
-            yield return MethodDeclaration(
-                SingletonList(AggressiveInliningAttributeList), PublicTokenList,
-                ReturnType, null, MethodName.Identifier, null,
-                ParameterList(), default, RenderBody(), null, default);
+            if (WithStruct)
+                yield return new(TypeName("Selector"), SelectorType!);
+        }
+
+        protected override IEnumerable<ParameterSyntax> GetParameters()
+        {
+            if (SelectorType != null)
+                yield return Parameter(WithStruct ? TypeName("Selector") : SelectorType, Identifier("selector"));
         }
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
@@ -37,7 +60,16 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()
         {
-            yield return ExpressionStatement(AddAssignmentExpression(VarName("result"), CurrentPlaceholder));
+            ExpressionSyntax value = CurrentPlaceholder;
+
+            if (SelectorType != null)
+            {
+                value = InvocationExpression(
+                    MemberAccessExpression(IdentifierName("selector"), InvokeMethod),
+                    ArgumentList(value));
+            }
+
+            yield return ExpressionStatement(AddAssignmentExpression(VarName("result"), value));
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()

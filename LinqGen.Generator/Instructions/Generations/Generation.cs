@@ -45,6 +45,9 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
+        public virtual IdentifierNameSyntax StaticClassName =>
+            IdentifierName($"LinqGenExtensions_{ClassName.Identifier.ValueText}");
+
         /// <summary>
         /// Non-operation generations has to be exposed as extension method.
         /// </summary>
@@ -97,20 +100,22 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public virtual IEnumerable<MemberDeclarationSyntax> RenderExtensionMembers()
+        public IEnumerable<MemberDeclarationSyntax> RenderStaticClassMembers()
         {
+            if (MethodKind == MethodKind.Enumerable)
+                yield break;
+
+            var parameters = GetParameters(MemberKind.Enumerable, false, true).ToList();
+
             if (MethodKind == MethodKind.Extension)
-            {
-                var parameters = GetParameters(MemberKind.Enumerable, false, true).ToList();
                 parameters[0] = parameters[0].WithModifiers(ThisTokenList);
 
-                var expression = ObjectCreationExpression(ResolvedClassName,
-                    ArgumentList(GetArguments(MemberKind.Enumerable, false)), null);
+            var expression = ObjectCreationExpression(ResolvedClassName,
+                ArgumentList(GetArguments(MemberKind.Enumerable, false)), null);
 
-                yield return MethodDeclaration(new(AggressiveInliningAttributeList), PublicStaticTokenList,
-                    ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(), ParameterList(parameters),
-                    GetGenericConstraints(), null, ArrowExpressionClause(expression), SemicolonToken);
-            }
+            yield return MethodDeclaration(new(AggressiveInliningAttributeList), PublicStaticTokenList,
+                ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(), ParameterList(parameters),
+                GetGenericConstraints(), null, ArrowExpressionClause(expression), SemicolonToken);
         }
 
         protected abstract IEnumerable<MemberInfo> GetMemberInfos(bool isLocal);

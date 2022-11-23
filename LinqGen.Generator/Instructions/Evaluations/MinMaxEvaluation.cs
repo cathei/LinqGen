@@ -29,31 +29,17 @@ namespace Cathei.LinqGen.Generator
             IsElementComparable = TryGetComparableSelfInterface(InputElementSymbol, out _);
         }
 
-        private TypeSyntax ReturnType => Upstream.OutputElementType;
+        protected override TypeSyntax ReturnType => Upstream.OutputElementType;
 
         private TypeParameterInfo ComparerType => new(TypeName("Comparer"), ComparerInterfaceType);
 
         private TypeSyntax ComparerInterfaceType =>
             GenericName(Identifier("IComparer"), TypeArgumentList(Upstream.OutputElementType));
 
-        public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
+        protected override IEnumerable<ParameterSyntax> GetParameters()
         {
             if (WithComparer)
-            {
-                yield return MethodDeclaration(
-                    SingletonList(AggressiveInliningAttributeList), PublicTokenList,
-                    ReturnType, null, MethodName.Identifier,
-                    TypeParameterList(SingletonSeparatedList(ComparerType.AsTypeParameter())),
-                    ParameterList(Parameter(ComparerType.Name, Identifier("comparer"))),
-                    SingletonList(ComparerType.AsGenericConstraint()!),
-                    RenderBody(), null);
-            }
-            else
-            {
-                yield return MethodDeclaration(
-                    SingletonList(AggressiveInliningAttributeList), PublicTokenList, ReturnType, null,
-                    MethodName.Identifier, null, EmptyParameterList, default, RenderBody(), null);
-            }
+                yield return Parameter(ComparerType.Name, Identifier("comparer"));
         }
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()

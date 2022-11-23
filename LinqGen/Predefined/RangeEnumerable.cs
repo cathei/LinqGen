@@ -65,15 +65,3 @@ namespace Cathei.LinqGen.Hidden
         }
     }
 }
-
-namespace Cathei.LinqGen
-{
-    public static partial class GenEnumerable
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RangeEnumerable Range(int start, int count)
-        {
-            return new RangeEnumerable(start, count);
-        }
-    }
-}

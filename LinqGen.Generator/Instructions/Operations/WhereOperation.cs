@@ -32,14 +32,14 @@ namespace Cathei.LinqGen.Generator
         {
             if (WithStruct)
             {
-                yield return new TypeParameterInfo(TypeName("1"), PredicateType);
+                yield return new TypeParameterInfo(TypeName("Predicate"), PredicateType);
             }
         }
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Both,
-                WithStruct ? TypeName("1") : PredicateType, VarName("predicate"));
+                WithStruct ? TypeName("Predicate") : PredicateType, VarName("predicate"));
 
             if (WithIndex)
                 yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));

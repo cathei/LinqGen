@@ -8,6 +8,7 @@ namespace Cathei.LinqGen.Generator
     public enum MethodKind
     {
         Enumerable,
-        Extension
+        Extension,
+        Predefined
     }
 }
