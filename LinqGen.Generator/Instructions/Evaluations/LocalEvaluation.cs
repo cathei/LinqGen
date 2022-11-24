@@ -16,51 +16,219 @@ namespace Cathei.LinqGen.Generator
 
     public abstract class LocalEvaluation : Evaluation
     {
+        private static readonly SyntaxTree VisitorTemplate = CSharpSyntaxTree.ParseText(@"
+        private struct _Visitor_ : IVisitor<_Input_>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void Init()
+            {
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void Visit(_Input_ element)
+            {
+            }
+
+            public _Output_ Result
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void Dispose()
+            {
+            }
+        }
+");
+
+        private class VisitorRewriter : CSharpSyntaxRewriter
+        {
+            private readonly LocalEvaluation _instruction;
+
+            public VisitorRewriter(LocalEvaluation instruction)
+            {
+                _instruction = instruction;
+            }
+
+            public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
+            {
+                var members = _instruction.GetParameterInfos()
+                    .Select(x => (MemberDeclarationSyntax)FieldDeclaration(
+                        PrivateTokenList, x.Type, x.Name.Identifier));
+
+                members = members.Concat(_instruction.RenderVisitorFields());
+
+                node = node
+                    .WithIdentifier(_instruction.VisitorStructName.Identifier)
+                    .WithTypeParameterList(_instruction.GetTypeParameters(_instruction.Arity))
+                    .WithConstraintClauses(_instruction.GetGenericConstraints(_instruction.Arity))
+                    .AddMembers(members.ToArray());
+
+                return base.VisitStructDeclaration(node);
+            }
+
+            public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
+            {
+                switch (node.Identifier.ValueText)
+                {
+                    case "Init":
+                        node = RewriteInitMethod(node);
+                        break;
+
+                    case "Visit":
+                        node = RewriteVisitMethod(node);
+                        break;
+
+                    case "Dispose":
+                        node = RewriteDisposeMethod(node);
+                        break;
+                }
+
+                return base.VisitMethodDeclaration(node);
+            }
+
+            public override SyntaxNode? VisitAccessorDeclaration(AccessorDeclarationSyntax node)
+            {
+                node = node.WithBody(Block(_instruction.RenderReturn()));
+
+                return base.VisitAccessorDeclaration(node);
+            }
+
+            public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+            {
+                switch (node.Identifier.ValueText)
+                {
+                    case "_Input_":
+                        return _instruction.InputElementType;
+
+                    case "_Output_":
+                        return _instruction.ReturnType;
+                }
+
+                return base.VisitIdentifierName(node);
+            }
+
+            private MethodDeclarationSyntax RewriteInitMethod(MethodDeclarationSyntax node)
+            {
+                var statements = _instruction.GetParameterInfos()
+                    .Select(x => (StatementSyntax)ExpressionStatement(SimpleAssignmentExpression(
+                        MemberAccessExpression(ThisExpression(), x.Name), x.Name)));
+
+                statements = statements.Concat(_instruction.RenderInitialization());
+
+                return node
+                    .WithParameterList(_instruction.GetParameters(false))
+                    .WithBody(Block(statements));
+            }
+
+            private MethodDeclarationSyntax RewriteVisitMethod(MethodDeclarationSyntax node)
+            {
+                return node.WithBody(Block(_instruction.RenderAccumulation()));
+            }
+
+            private MethodDeclarationSyntax RewriteDisposeMethod(MethodDeclarationSyntax node)
+            {
+                return node.WithBody(Block(_instruction.RenderDispose()));
+            }
+        }
+
         private readonly RenderOption _renderOption;
+        private readonly VisitorRewriter _rewriter;
 
         public LocalEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
         {
             _renderOption = new(true);
+            _rewriter = new VisitorRewriter(this);
         }
 
-        protected abstract IEnumerable<StatementSyntax> RenderInitialization();
+        private IdentifierNameSyntax VisitorStructName =>
+            IdentifierName($"Visitor_{MethodName.Identifier.ValueText}_{Id}");
+
+        protected static readonly IdentifierNameSyntax ElementVar = IdentifierName("element");
+
+        protected abstract IEnumerable<MemberDeclarationSyntax> RenderVisitorFields();
         protected abstract IEnumerable<StatementSyntax> RenderAccumulation();
         protected abstract IEnumerable<StatementSyntax> RenderReturn();
 
-        protected abstract TypeSyntax ReturnType { get; }
-
-        protected virtual IEnumerable<ParameterSyntax> GetParameters()
+        protected virtual IEnumerable<StatementSyntax> RenderInitialization()
         {
             yield break;
         }
 
+        protected virtual IEnumerable<StatementSyntax> RenderDispose()
+        {
+            yield break;
+        }
+
+        protected abstract TypeSyntax ReturnType { get; }
+
+        protected virtual IEnumerable<ParameterInfo> GetParameterInfos()
+        {
+            yield break;
+        }
+
+        private ParameterListSyntax GetParameters(bool defaultValue)
+        {
+            return ParameterList(GetParameterInfos().Select(x => x.AsParameter(defaultValue)));
+        }
+
+        private ArgumentListSyntax GetArguments()
+        {
+            return ArgumentList(GetParameterInfos().Select(x => x.AsArgument()));
+        }
+
         public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
         {
+            if (!Upstream.HasLocalVisitMethod)
+            {
+                yield return Upstream.RenderLocalVisitMethod();
+            }
+        }
+
+        public override IEnumerable<MemberDeclarationSyntax> RenderExtensionMembers()
+        {
+            var structSyntax = VisitorTemplate.GetRoot()
+                .DescendantNodesAndSelf()
+                .OfType<StructDeclarationSyntax>()
+                .First();
+
+            yield return (StructDeclarationSyntax)_rewriter.Visit(structSyntax);
+
+            var sourceParameter =
+                Parameter(UpstreamResolvedClassName, Identifier("source")).WithModifiers(ThisTokenList);
+
+            var parameters = GetParameters(true);
+            parameters = ParameterList(parameters.Parameters.Insert(0, sourceParameter));
+
             yield return MethodDeclaration(
-                SingletonList(AggressiveInliningAttributeList), PublicTokenList,
-                ReturnType, null, MethodName.Identifier,
-                GetTypeParameters(Arity), ParameterList(GetParameters()),
+                SingletonList(AggressiveInliningAttributeList), PublicStaticTokenList,
+                ReturnType, null, MethodName.Identifier, GetTypeParameters(Arity), parameters,
                 GetGenericConstraints(Arity), RenderBody(), null, default);
         }
 
-        protected BlockSyntax RenderBody()
+        private BlockSyntax RenderBody()
         {
-            var initialStatements =
-                Upstream.GetLocalDeclarations(MemberKind.Enumerator)
-                    .Concat(Upstream.GetLocalAssignments(MemberKind.Both))
-                    .Concat(Upstream.RenderInitialization(_renderOption))
-                    .Concat(RenderInitialization());
+            var visitorName = IdentifierName("visitor");
 
-            var disposeStatements = Upstream.RenderDispose(_renderOption);
+            var body = Block(
+                ExpressionStatement(InvocationExpression(
+                    MemberAccessExpression(visitorName, IdentifierName("Init")), GetArguments())),
+                ExpressionStatement(InvocationExpression(
+                    MemberAccessExpression(IdentifierName("source"), VisitMethod),
+                    ArgumentList(SingletonSeparatedList(Argument(null, Token(SyntaxKind.RefKeyword),
+                        visitorName))))),
+                ReturnStatement(MemberAccessExpression(visitorName, IdentifierName("Result"))));
 
-            var body = Upstream.RenderIteration(_renderOption, new(RenderAccumulation()));
-            var statements = body.Statements;
+            var visitorResolvedName = MakeGenericName(VisitorStructName, GetTypeArguments(Arity));
 
-            statements = statements.InsertRange(0, initialStatements);
-            statements = statements.AddRange(disposeStatements);
-            statements = statements.AddRange(RenderReturn());
-
-            return body.WithStatements(statements);
+            return Block(
+                LocalDeclarationStatement(
+                    visitorName.Identifier, ObjectCreationExpression(visitorResolvedName, EmptyArgumentList, null)),
+                TryStatement(body, default,
+                    FinallyClause(Block(ExpressionStatement(InvocationExpression(visitorName, DisposeMethod))))));
         }
     }
 }

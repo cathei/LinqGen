@@ -38,9 +38,13 @@ namespace Cathei.LinqGen.Hidden
     }
 }
 
+// static classes needs to be internal to prevent ambiguous resolution
 namespace Cathei.LinqGen
 {
-    // Extensions needs to be internal to prevent ambiguous resolution
+    internal static partial class GenEnumerable
+    {
+    }
+
     internal static partial class _Extensions_
     {
     }
@@ -60,6 +64,10 @@ namespace Cathei.LinqGen
             {
                 switch (node!.Identifier.ValueText)
                 {
+                    case "GenEnumerable":
+                        node = RewriteGenEnumerableClass(node);
+                        break;
+
                     case "_Extensions_":
                         node = RewriteExtensionClass(node);
                         break;
@@ -109,14 +117,25 @@ namespace Cathei.LinqGen
                 return base.VisitIdentifierName(node);
             }
 
+            private ClassDeclarationSyntax? RewriteGenEnumerableClass(ClassDeclarationSyntax node)
+            {
+                var staticMethods = _instruction.RenderPredefinedClassMembers().ToArray();
+
+                if (staticMethods.Length == 0)
+                    return null;
+
+                return node.AddMembers(staticMethods);
+            }
+
             private ClassDeclarationSyntax? RewriteExtensionClass(ClassDeclarationSyntax node)
             {
-                var extensionMethods = _instruction.RenderStaticClassMembers().ToArray();
+                var extensionMethods = _instruction.RenderExtensionClassMembers().ToArray();
 
                 if (extensionMethods.Length == 0)
                     return null;
 
-                return node.WithIdentifier(_instruction.StaticClassName.Identifier)
+                return node
+                    .WithIdentifier(Identifier($"LinqGenExtensions_{_instruction.ClassName.Identifier.ValueText}"))
                     .AddMembers(extensionMethods);
             }
 

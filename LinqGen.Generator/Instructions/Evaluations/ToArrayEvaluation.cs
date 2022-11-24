@@ -23,19 +23,28 @@ namespace Cathei.LinqGen.Generator
 
         protected override TypeSyntax ReturnType { get; }
 
+        protected override IEnumerable<MemberDeclarationSyntax> RenderVisitorFields()
+        {
+            yield return FieldDeclaration(
+                PrivateTokenList, PooledListType(InputElementType), VarName("list").Identifier);
+        }
+
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
-            yield return UsingLocalDeclarationStatement(VarName("list").Identifier,
-                ObjectCreationExpression(GenericName(Identifier("PooledList"),
-                        TypeArgumentList(Upstream.OutputElementType)),
-                    ArgumentList(LiteralExpression(0)), null));
+            yield return ExpressionStatement(SimpleAssignmentExpression(VarName("list"),
+                ObjectCreationExpression(PooledListType(InputElementType),
+                    ArgumentList(LiteralExpression(0)), null)));
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()
         {
             yield return ExpressionStatement(InvocationExpression(
-                MemberAccessExpression(VarName("list"), AddMethod),
-                ArgumentList(CurrentPlaceholder)));
+                MemberAccessExpression(VarName("list"), AddMethod), ArgumentList(ElementVar)));
+        }
+
+        protected override IEnumerable<StatementSyntax> RenderDispose()
+        {
+            yield return ExpressionStatement(InvocationExpression(VarName("list"), DisposeMethod));
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()

@@ -47,26 +47,29 @@ namespace Cathei.LinqGen.Generator
                 yield return new(TypeName("Selector"), SelectorType!);
         }
 
-        protected override IEnumerable<ParameterSyntax> GetParameters()
+        protected override IEnumerable<ParameterInfo> GetParameterInfos()
         {
             if (SelectorType != null)
-                yield return Parameter(WithStruct ? TypeName("Selector") : SelectorType, Identifier("selector"));
+            {
+                yield return new ParameterInfo(
+                    WithStruct ? TypeName("Selector") : SelectorType, IdentifierName("selector"));
+            }
         }
 
-        protected override IEnumerable<StatementSyntax> RenderInitialization()
+        protected override IEnumerable<MemberDeclarationSyntax> RenderVisitorFields()
         {
-            yield return LocalDeclarationStatement(ReturnType, VarName("result").Identifier, DefaultLiteral);
+            yield return FieldDeclaration(PrivateTokenList, ReturnType, VarName("result").Identifier);
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()
         {
-            ExpressionSyntax value = CurrentPlaceholder;
+            ExpressionSyntax value = ElementVar;
 
             if (SelectorType != null)
             {
                 value = InvocationExpression(
                     MemberAccessExpression(IdentifierName("selector"), InvokeMethod),
-                    ArgumentList(value));
+                    ArgumentList(ElementVar));
             }
 
             yield return ExpressionStatement(AddAssignmentExpression(VarName("result"), value));

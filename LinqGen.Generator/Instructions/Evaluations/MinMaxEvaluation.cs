@@ -19,6 +19,7 @@ namespace Cathei.LinqGen.Generator
         private bool IsMin { get; }
         private bool WithComparer { get; }
         private bool IsElementComparable { get; }
+        private TypeSyntax ComparerType { get; }
 
         public MinMaxEvaluation(in LinqGenExpression expression, int id, bool isMin) : base(expression, id)
         {
@@ -26,35 +27,58 @@ namespace Cathei.LinqGen.Generator
 
             // generic Min and Max with type parameter
             WithComparer = expression.MethodSymbol.TypeParameters.Length == 1;
-            IsElementComparable = TryGetComparableSelfInterface(InputElementSymbol, out _);
+
+            if (WithComparer)
+            {
+                ComparerType = TypeName("Comparer");
+            }
+            else if (TryGetComparableSelfInterface(InputElementSymbol, out _))
+            {
+                IsElementComparable = true;
+                ComparerType = GenericName(
+                    Identifier("CompareToComparer"), TypeArgumentList(InputElementType));
+            }
+            else
+            {
+                ComparerType = ComparerInterfaceType;
+            }
         }
 
-        protected override TypeSyntax ReturnType => Upstream.OutputElementType;
-
-        private TypeParameterInfo ComparerType => new(TypeName("Comparer"), ComparerInterfaceType);
+        protected override TypeSyntax ReturnType => InputElementType;
 
         private TypeSyntax ComparerInterfaceType =>
-            GenericName(Identifier("IComparer"), TypeArgumentList(Upstream.OutputElementType));
+            GenericName(Identifier("IComparer"), TypeArgumentList(InputElementType));
 
-        protected override IEnumerable<ParameterSyntax> GetParameters()
+        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
             if (WithComparer)
-                yield return Parameter(ComparerType.Name, Identifier("comparer"));
+                yield return new(TypeName("Comparer"), ComparerInterfaceType);
+        }
+
+        protected override IEnumerable<ParameterInfo> GetParameterInfos()
+        {
+            if (WithComparer)
+                yield return new(ComparerType, IdentifierName("comparer"));
+        }
+
+        protected override IEnumerable<MemberDeclarationSyntax> RenderVisitorFields()
+        {
+            if (!WithComparer)
+                yield return FieldDeclaration(PrivateTokenList, ComparerType, Identifier("comparer"));
+
+            yield return FieldDeclaration(PrivateTokenList, BoolType, VarName("isSet").Identifier);
+            yield return FieldDeclaration(PrivateTokenList, ReturnType, VarName("result").Identifier);
         }
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
             if (!WithComparer)
             {
-                yield return LocalDeclarationStatement(ComparerType.Name.Identifier,
-                    IsElementComparable
-                        ? ObjectCreationExpression(GenericName(
-                            Identifier("CompareToComparer"), TypeArgumentList(Upstream.OutputElementType)))
-                        : ComparerDefault(Upstream.OutputElementType));
+                yield return ExpressionStatement(SimpleAssignmentExpression(
+                    IdentifierName("comparer"), IsElementComparable
+                        ? ObjectCreationExpression(ComparerType)
+                        : ComparerDefault(Upstream.OutputElementType)));
             }
-
-            yield return LocalDeclarationStatement(BoolType, VarName("isSet").Identifier, FalseExpression());
-            yield return LocalDeclarationStatement(ReturnType, VarName("result").Identifier, DefaultLiteral);
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()
@@ -64,12 +88,12 @@ namespace Cathei.LinqGen.Generator
             var comparison = BinaryExpression(expressionKind,
                 LiteralExpression(0),
                 InvocationExpression(MemberAccessExpression(IdentifierName("comparer"), CompareMethod),
-                    ArgumentList(VarName("result"), CurrentPlaceholder)));
+                    ArgumentList(VarName("result"), ElementVar)));
 
             yield return IfStatement(
                 LogicalOrExpression(LogicalNotExpression(VarName("isSet")), comparison), Block(
                     ExpressionStatement(SimpleAssignmentExpression(VarName("isSet"), TrueExpression())),
-                    ExpressionStatement(SimpleAssignmentExpression(VarName("result"), CurrentPlaceholder))));
+                    ExpressionStatement(SimpleAssignmentExpression(VarName("result"), ElementVar))));
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()

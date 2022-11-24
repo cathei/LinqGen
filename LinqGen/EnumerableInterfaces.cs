@@ -23,4 +23,12 @@ namespace Cathei.LinqGen.Hidden
     {
         int Count { get; }
     }
+
+    /// <summary>
+    /// Visitor that local evaluations will implement
+    /// </summary>
+    public interface IVisitor<in T> : IDisposable
+    {
+        void Visit(T element);
+    }
 }

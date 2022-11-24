@@ -16,7 +16,7 @@ namespace Cathei.LinqGen.Generator
 
     public sealed class GetEnumeratorEvaluation : Evaluation
     {
-        private static readonly SyntaxTree EnumeratorTemplate = CSharpSyntaxTree.ParseText(@"// DO NOT EDIT
+        private static readonly SyntaxTree EnumeratorTemplate = CSharpSyntaxTree.ParseText(@"
         public struct Enumerator : IEnumerator<_Element_>
         {
             private _Element_ current;

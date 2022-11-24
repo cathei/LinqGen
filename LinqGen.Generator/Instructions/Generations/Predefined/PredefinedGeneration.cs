@@ -20,8 +20,6 @@ namespace Cathei.LinqGen.Generator
         {
         }
 
-        public override IdentifierNameSyntax StaticClassName => IdentifierName("GenEnumerable");
-
         public override MethodKind MethodKind => MethodKind.Predefined;
     }
 }

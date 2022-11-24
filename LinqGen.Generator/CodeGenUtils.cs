@@ -92,6 +92,7 @@ namespace Cathei.LinqGen.Generator
         }
 
         // known type names
+        public static readonly PredefinedTypeSyntax VoidType = PredefinedType(Token(SyntaxKind.VoidKeyword));
         public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));
         public static readonly PredefinedTypeSyntax UIntType = PredefinedType(Token(SyntaxKind.UIntKeyword));
         public static readonly PredefinedTypeSyntax BoolType = PredefinedType(Token(SyntaxKind.BoolKeyword));
@@ -107,6 +108,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax AddRangeMethod = IdentifierName("AddRange");
         public static readonly IdentifierNameSyntax CompareMethod = IdentifierName("Compare");
         public static readonly IdentifierNameSyntax CompareToMethod = IdentifierName("CompareTo");
+        public static readonly IdentifierNameSyntax VisitMethod = IdentifierName("Visit");
 
         // known property names
         public static readonly IdentifierNameSyntax CurrentProperty = IdentifierName("Current");
@@ -145,6 +147,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly SyntaxTokenList PrivateTokenList = TokenList(Token(SyntaxKind.PrivateKeyword));
         public static readonly SyntaxTokenList PublicTokenList = TokenList(Token(SyntaxKind.PublicKeyword));
         public static readonly SyntaxTokenList InternalTokenList = TokenList(Token(SyntaxKind.InternalKeyword));
+        public static readonly SyntaxTokenList RefTokenList = TokenList(Token(SyntaxKind.RefKeyword));
 
         public static readonly SyntaxTokenList PrivateReadOnlyTokenList =
             TokenList(Token(SyntaxKind.PrivateKeyword), Token(SyntaxKind.ReadOnlyKeyword));
@@ -254,8 +257,11 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.TypeArgumentList(SeparatedList(arguments));
         }
 
-        public static NameSyntax MakeGenericName(NameSyntax name, TypeArgumentListSyntax arguments)
+        public static NameSyntax MakeGenericName(NameSyntax name, TypeArgumentListSyntax? arguments)
         {
+            if (arguments == null)
+                return name;
+
             return name switch
             {
                 QualifiedNameSyntax qualifiedName =>
@@ -264,6 +270,13 @@ namespace Cathei.LinqGen.Generator
                 SimpleNameSyntax simpleName => GenericName(simpleName.Identifier, arguments),
                 _ => name
             };
+        }
+
+        public static FieldDeclarationSyntax FieldDeclaration(
+            SyntaxTokenList modifiers, TypeSyntax type, SyntaxToken identifier)
+        {
+            return SyntaxFactory.FieldDeclaration(default, modifiers,
+                SyntaxFactory.VariableDeclaration(type, SingletonSeparatedList(VariableDeclarator(identifier))));
         }
 
         public static LocalDeclarationStatementSyntax UsingLocalDeclarationStatement(
@@ -381,7 +394,6 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.BinaryExpression(SyntaxKind.IsExpression, left, right);
         }
 
-
         public static ForStatementSyntax ForStatement(
             IdentifierNameSyntax loopVariable, ExpressionSyntax start, ExpressionSyntax end, StatementSyntax body)
         {
@@ -427,6 +439,11 @@ namespace Cathei.LinqGen.Generator
         {
             return MemberAccessExpression(
                 GenericName(Identifier("EqualityComparer"), TypeArgumentList(type)), IdentifierName("Default"));
+        }
+
+        public static TypeSyntax PooledListType(TypeSyntax elementType)
+        {
+            return GenericName(Identifier("PooledList"), TypeArgumentList(elementType));
         }
 
         private static bool CompareNamespace(ITypeSymbol symbol, string name)

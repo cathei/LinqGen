@@ -61,15 +61,7 @@ namespace Cathei.LinqGen.Generator
                     return _upstreamResolvedClassName;
                 }
 
-                if (Upstream.Arity == 0)
-                {
-                    _upstreamResolvedClassName = Upstream.ClassName;
-                    return _upstreamResolvedClassName;
-                }
-
-                _upstreamResolvedClassName = MakeGenericName(
-                    Upstream.ClassName, GetUpstreamTypeArguments()!);
-
+                _upstreamResolvedClassName = MakeGenericName(Upstream.ClassName, GetUpstreamTypeArguments());
                 return _upstreamResolvedClassName;
             }
         }

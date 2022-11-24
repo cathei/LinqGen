@@ -18,7 +18,7 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        public static Stub<IContent<T>, Empty<T>> Empty<T>()
+        public static Stub<IContent<T>, Empty> Empty<T>()
         {
             throw new NotImplementedException();
         }

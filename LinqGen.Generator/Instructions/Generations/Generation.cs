@@ -45,9 +45,6 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public virtual IdentifierNameSyntax StaticClassName =>
-            IdentifierName($"LinqGenExtensions_{ClassName.Identifier.ValueText}");
-
         /// <summary>
         /// Non-operation generations has to be exposed as extension method.
         /// </summary>
@@ -100,22 +97,46 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public IEnumerable<MemberDeclarationSyntax> RenderStaticClassMembers()
+        public IEnumerable<MemberDeclarationSyntax> RenderPredefinedClassMembers()
         {
-            if (MethodKind == MethodKind.Enumerable)
-                yield break;
+            if (MethodKind == MethodKind.Predefined)
+            {
+                var parameters = GetParameters(MemberKind.Enumerable, false, true);
+                var expression = ObjectCreationExpression(ResolvedClassName,
+                    ArgumentList(GetArguments(MemberKind.Enumerable, false)), null);
 
-            var parameters = GetParameters(MemberKind.Enumerable, false, true).ToList();
+                yield return MethodDeclaration(new(AggressiveInliningAttributeList), PublicStaticTokenList,
+                    ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(), ParameterList(parameters),
+                    GetGenericConstraints(), null, ArrowExpressionClause(expression), SemicolonToken);
+            }
+        }
 
+        public IEnumerable<MemberDeclarationSyntax> RenderExtensionClassMembers()
+        {
             if (MethodKind == MethodKind.Extension)
-                parameters[0] = parameters[0].WithModifiers(ThisTokenList);
+            {
+                var parameters = GetParameters(MemberKind.Enumerable, false, true).ToList();
 
-            var expression = ObjectCreationExpression(ResolvedClassName,
-                ArgumentList(GetArguments(MemberKind.Enumerable, false)), null);
+                if (MethodKind == MethodKind.Extension)
+                    parameters[0] = parameters[0].WithModifiers(ThisTokenList);
 
-            yield return MethodDeclaration(new(AggressiveInliningAttributeList), PublicStaticTokenList,
-                ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(), ParameterList(parameters),
-                GetGenericConstraints(), null, ArrowExpressionClause(expression), SemicolonToken);
+                var expression = ObjectCreationExpression(ResolvedClassName,
+                    ArgumentList(GetArguments(MemberKind.Enumerable, false)), null);
+
+                yield return MethodDeclaration(new(AggressiveInliningAttributeList), PublicStaticTokenList,
+                    ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(), ParameterList(parameters),
+                    GetGenericConstraints(), null, ArrowExpressionClause(expression), SemicolonToken);
+            }
+
+            if (Evaluations != null)
+            {
+                foreach (var evaluation in Evaluations)
+                {
+                    foreach (var member in evaluation.RenderExtensionMembers())
+                        yield return member;
+                }
+            }
+
         }
 
         protected abstract IEnumerable<MemberInfo> GetMemberInfos(bool isLocal);
@@ -190,8 +211,7 @@ namespace Cathei.LinqGen.Generator
                 if ((member.Kind & kind) != kind)
                     continue;
 
-                yield return FieldDeclaration(default, PrivateTokenList, VariableDeclaration(
-                    member.Type, SingletonSeparatedList(VariableDeclarator(member.Name.Identifier))));
+                yield return FieldDeclaration(PrivateTokenList, member.Type, member.Name.Identifier);
             }
         }
 
@@ -252,6 +272,45 @@ namespace Cathei.LinqGen.Generator
                 yield return ExpressionStatement(SimpleAssignmentExpression(
                     member.Name, MemberAccessExpression(source, member.Name)));
             }
+        }
+
+        /// <summary>
+        /// Used for local evaluation
+        /// </summary>
+        public bool HasLocalVisitMethod { get; private set; }
+
+        public MethodDeclarationSyntax RenderLocalVisitMethod()
+        {
+            HasLocalVisitMethod = true;
+
+            var renderOption = new RenderOption(true);
+
+            var visitorInterface = GenericName(Identifier("IVisitor"), TypeArgumentList(OutputElementType));
+            var visitorType = new TypeParameterInfo(IdentifierName("TVisitor"), visitorInterface);
+            var visitorName = IdentifierName("visitor");
+
+            var initialStatements =
+                GetLocalDeclarations(MemberKind.Enumerator)
+                    .Concat(GetLocalAssignments(MemberKind.Both))
+                    .Concat(RenderInitialization(renderOption));
+
+            var disposeStatements = RenderDispose(renderOption);
+
+            StatementSyntax accumulationStatement = ExpressionStatement(InvocationExpression(
+                MemberAccessExpression(visitorName, VisitMethod), ArgumentList(CurrentPlaceholder)));
+
+            var body = RenderIteration(renderOption, SingletonList(accumulationStatement));
+
+            var statements = body.Statements;
+            statements = statements.InsertRange(0, initialStatements);
+            statements = statements.AddRange(disposeStatements);
+
+            body = body.WithStatements(statements);
+
+            return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList, VoidType, null,
+                VisitMethod.Identifier, TypeParameterList(SingletonSeparatedList(visitorType.AsTypeParameter())),
+                ParameterList(Parameter(visitorType.Name, visitorName.Identifier).WithModifiers(RefTokenList)),
+                SingletonList(visitorType.AsGenericConstraint()!), body, null);
         }
     }
 }

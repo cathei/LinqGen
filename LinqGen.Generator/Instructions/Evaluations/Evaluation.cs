@@ -22,12 +22,15 @@ namespace Cathei.LinqGen.Generator
         {
             MethodSymbol = expression.MethodSymbol;
             MethodName = IdentifierName(MethodSymbol.Name);
+
             InputElementSymbol = expression.InputElementSymbol!;
+            InputElementType = ParseTypeName(InputElementSymbol);
         }
 
         public IMethodSymbol MethodSymbol { get; }
         public IdentifierNameSyntax MethodName { get; }
 
+        public override TypeSyntax InputElementType { get; }
         public ITypeSymbol InputElementSymbol { get; }
 
         /// <summary>
@@ -49,14 +52,14 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public new Generation Upstream => base.Upstream!;
 
-        public abstract IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers();
+        public virtual IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
+        {
+            yield break;
+        }
 
-        // public virtual IEnumerable<ParameterSyntax> GetParameters()
-        // {
-        //     yield return Parameter(default, ThisTokenList,
-        //         UpstreamResolvedClassName, SourceVar.Identifier, default);
-        // }
-        //
-        // public abstract BlockSyntax RenderMethodBody();
+        public virtual IEnumerable<MemberDeclarationSyntax> RenderExtensionMembers()
+        {
+            yield break;
+        }
     }
 }
