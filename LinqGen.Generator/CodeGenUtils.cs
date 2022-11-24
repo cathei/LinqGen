@@ -33,8 +33,8 @@ namespace Cathei.LinqGen.Generator
         {
             // is it member of extension class or member of stub enumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.ContainingType.MetadataName is LinqGenStubExtensionsTypeName or
-                       LinqGenStubEnumerableTypeName or LinqGenGenEnumerableTypeName;
+                   symbol.ContainingType.MetadataName is
+                       LinqGenStubExtensionsTypeName or LinqGenStubEnumerableTypeName;
         }
 
         public static bool IsOutputStubEnumerable(INamedTypeSymbol symbol)

@@ -24,9 +24,12 @@ namespace Cathei.LinqGen.Generator
             {
                 var syntaxReceiver = new LinqGenSyntaxReceiver(logBuilder);
 
+                var semanticModel = context.Compilation.GetSemanticModel(context.Compilation.SyntaxTrees.First());
+                syntaxReceiver.InitPredefinedGenerations(semanticModel);
+
                 foreach (var syntaxTree in context.Compilation.SyntaxTrees)
                 {
-                    var semanticModel = context.Compilation.GetSemanticModel(syntaxTree);
+                    semanticModel = context.Compilation.GetSemanticModel(syntaxTree);
                     syntaxReceiver.VisitSyntaxTree(semanticModel, syntaxTree);
                 }
 

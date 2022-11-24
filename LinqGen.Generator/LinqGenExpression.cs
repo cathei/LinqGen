@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -137,6 +138,38 @@ namespace Cathei.LinqGen.Generator
 
             result = new LinqGenExpression(methodSymbol, null, inputElementSymbol, upstreamSignatureSymbol);
             return true;
+        }
+
+        public static LinqGenExpression CreatePredefined(
+            SemanticModel semanticModel, string name, StringBuilder logBuilder)
+        {
+            var rootNamespace = semanticModel.LookupNamespacesAndTypes(0, null, "Cathei")
+                .OfType<INamespaceSymbol>()
+                .First();
+
+            var linqGenNamespace = semanticModel.LookupNamespacesAndTypes(0, rootNamespace, "LinqGen")
+                .OfType<INamespaceSymbol>()
+                .First();
+
+            var hiddenNamespace = semanticModel.LookupNamespacesAndTypes(0, linqGenNamespace, "Hidden")
+                .OfType<INamespaceSymbol>()
+                .First();
+
+            var genEnumerableType = semanticModel.LookupNamespacesAndTypes(0, linqGenNamespace, "GenEnumerable")
+                .OfType<INamedTypeSymbol>()
+                .First();
+
+            var methodSymbol = semanticModel.LookupSymbols(0, genEnumerableType, name)
+                .OfType<IMethodSymbol>()
+                .First();
+
+            var signatureSymbol = semanticModel.LookupNamespacesAndTypes(0, hiddenNamespace, name)
+                .OfType<INamedTypeSymbol>()
+                .First();
+
+            signatureSymbol = NormalizeSignature(signatureSymbol);
+
+            return new LinqGenExpression(methodSymbol, signatureSymbol, null, null);
         }
 
         public bool TryGetParameterType(int index, out ITypeSymbol result)

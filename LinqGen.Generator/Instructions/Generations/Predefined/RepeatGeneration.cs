@@ -22,6 +22,11 @@ namespace Cathei.LinqGen.Generator
 
         public override TypeSyntax OutputElementType => TypeName("Element");
 
+        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+        {
+            yield return new TypeParameterInfo(TypeName("Element"));
+        }
+
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Both, OutputElementType, VarName("element"));

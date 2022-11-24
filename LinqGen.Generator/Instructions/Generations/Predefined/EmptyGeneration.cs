@@ -14,38 +14,32 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    // public sealed class EmptyGeneration : PredefinedGeneration
-    // {
-    //     public EmptyGeneration(in LinqGenExpression expression, int id) : base(expression, id)
-    //     {
-    //     }
-    //
-    //     // public override TypeSyntax OutputElementType { get; }
-    //
-    //     // protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
-    //     // {
-    //     //     yield return new MemberInfo(MemberKind.Both, OutputElementType, VarName("element"));
-    //     //     yield return new MemberInfo(MemberKind.Both, IntType, VarName("count"));
-    //     //
-    //     //     yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
-    //     // }
-    //
-    //     public override IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
-    //     {
-    //         yield return ExpressionStatement(SimpleAssignmentExpression(VarName("index"), LiteralExpression(-1)));
-    //     }
-    //
-    //     public override BlockSyntax RenderIteration(RenderOption option, SyntaxList<StatementSyntax> statements)
-    //     {
-    //         var currentName = VarName("element");
-    //         var currentRewriter = new CurrentRewriter(currentName);
-    //
-    //         // replace current variables of downstream
-    //         statements = currentRewriter.VisitStatementSyntaxList(statements);
-    //
-    //         return Block(WhileStatement(
-    //             LessThanExpression(PreIncrementExpression(VarName("index")), VarName("count")),
-    //             Block(statements)));
-    //     }
-    // }
+    public sealed class EmptyGeneration : PredefinedGeneration
+    {
+        public EmptyGeneration(in LinqGenExpression expression, int id) : base(expression, id)
+        {
+        }
+
+        public override TypeSyntax OutputElementType => TypeName("Element");
+
+        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+        {
+            yield return new TypeParameterInfo(TypeName("Element"));
+        }
+
+        protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
+        {
+            yield break;
+        }
+
+        public override IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
+        {
+            yield break;
+        }
+
+        public override BlockSyntax RenderIteration(RenderOption option, SyntaxList<StatementSyntax> statements)
+        {
+            return Block();
+        }
+    }
 }

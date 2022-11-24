@@ -18,7 +18,7 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class Empty : IStubSignature { }
 
-    public abstract class Repeat<T> : IStubSignature { }
+    public abstract class Repeat : IStubSignature { }
 
     public abstract class Specialize<TEnumerable> : IStubSignature { }
 

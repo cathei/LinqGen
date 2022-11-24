@@ -28,6 +28,13 @@ namespace Cathei.LinqGen.Generator
             _logBuilder = logBuilder;
         }
 
+        public void InitPredefinedGenerations(SemanticModel semanticModel)
+        {
+            AddPredefinedGeneration(semanticModel, "Range");
+            AddPredefinedGeneration(semanticModel, "Repeat");
+            AddPredefinedGeneration(semanticModel, "Empty");
+        }
+
         public void VisitSyntaxTree(SemanticModel semanticModel, SyntaxTree syntaxTree)
         {
             foreach (var node in syntaxTree.GetRoot().DescendantNodes())
@@ -84,6 +91,12 @@ namespace Cathei.LinqGen.Generator
                 generation.GetType().Name, expression.SignatureSymbol!.Name);
 
             _generations.Add(expression.SignatureSymbol!, generation);
+        }
+
+        private void AddPredefinedGeneration(SemanticModel semanticModel, string name)
+        {
+            var expression = LinqGenExpression.CreatePredefined(semanticModel, name, _logBuilder);
+            AddGeneration(expression);
         }
 
         private void AddEvaluation(in LinqGenExpression expression)

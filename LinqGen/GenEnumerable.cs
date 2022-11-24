@@ -23,7 +23,7 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        public static Stub<IContent<T>, Repeat<T>> Repeat<T>(T element, int count)
+        public static Stub<IContent<T>, Repeat> Repeat<T>(T element, int count)
         {
             throw new NotImplementedException();
         }

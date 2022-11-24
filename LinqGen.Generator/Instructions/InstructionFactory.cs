@@ -46,6 +46,12 @@ namespace Cathei.LinqGen.Generator
                 case "Range":
                     return new RangeGeneration(expression, id);
 
+                case "Repeat":
+                    return new RepeatGeneration(expression, id);
+
+                case "Empty":
+                    return new EmptyGeneration(expression, id);
+
                 case "Select":
                     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
                         break;
