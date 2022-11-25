@@ -177,12 +177,12 @@ namespace Cathei.LinqGen.Generator
                 //
                 case "Sum":
                     return new SumEvaluation(expression, id);
-                //
-                // case "Min":
-                //     return new MinMaxEvaluation(expression, true);
-                //
-                // case "Max":
-                //     return new MinMaxEvaluation(expression, false);
+
+                case "Min":
+                    return new MinMaxEvaluation(expression, id, true);
+
+                case "Max":
+                    return new MinMaxEvaluation(expression, id, false);
                 //
                 // case "Count":
                 //     return new CountEvaluation(expression);

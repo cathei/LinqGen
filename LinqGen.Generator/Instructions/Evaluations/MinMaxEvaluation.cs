@@ -17,7 +17,7 @@ namespace Cathei.LinqGen.Generator
     public sealed class MinMaxEvaluation : LocalEvaluation
     {
         private bool IsMin { get; }
-        private bool WithComparer { get; }
+        private bool WithComparerParameter { get; }
         private bool IsElementComparable { get; }
         private TypeSyntax ComparerType { get; }
 
@@ -25,10 +25,10 @@ namespace Cathei.LinqGen.Generator
         {
             IsMin = isMin;
 
-            // generic Min and Max with type parameter
-            WithComparer = expression.MethodSymbol.TypeParameters.Length == 1;
+            // Min and Max with parameter
+            WithComparerParameter = expression.MethodSymbol.Parameters.Length == 1;
 
-            if (WithComparer)
+            if (WithComparerParameter)
             {
                 ComparerType = TypeName("Comparer");
             }
@@ -51,19 +51,19 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
-            if (WithComparer)
+            if (WithComparerParameter)
                 yield return new(TypeName("Comparer"), ComparerInterfaceType);
         }
 
         protected override IEnumerable<ParameterInfo> GetParameterInfos()
         {
-            if (WithComparer)
+            if (WithComparerParameter)
                 yield return new(ComparerType, IdentifierName("comparer"));
         }
 
         protected override IEnumerable<MemberDeclarationSyntax> RenderVisitorFields()
         {
-            if (!WithComparer)
+            if (!WithComparerParameter)
                 yield return FieldDeclaration(PrivateTokenList, ComparerType, Identifier("comparer"));
 
             yield return FieldDeclaration(PrivateTokenList, BoolType, VarName("isSet").Identifier);
@@ -72,11 +72,11 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
-            if (!WithComparer)
+            if (!WithComparerParameter)
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
                     IdentifierName("comparer"), IsElementComparable
-                        ? ObjectCreationExpression(ComparerType)
+                        ? ObjectCreationExpression(ComparerType, EmptyArgumentList, null)
                         : ComparerDefault(Upstream.OutputElementType)));
             }
         }
