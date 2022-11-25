@@ -13,7 +13,7 @@ public class WhereTests : GenerationTestBase<int>
 {
     public override IEnumerable<int> Build(int count)
     {
-        return GenEnumerable.Range(0, count * 2)
+        return Gen.Enumerable.Range(0, count * 2)
             .Where(x => x % 2 == 0)
             .AsEnumerable();
     }
@@ -27,7 +27,7 @@ public class WhereTests : GenerationTestBase<int>
         var expected = Enumerable.Range(start, count)
             .Where(x => x < 0);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Where(x => x < 0);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -42,7 +42,7 @@ public class WhereTests : GenerationTestBase<int>
         var expected = Enumerable.Range(start, count)
             .Where(x => x % 3 == 0);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Where(new Predicate());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());

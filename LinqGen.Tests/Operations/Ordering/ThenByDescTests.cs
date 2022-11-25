@@ -13,7 +13,7 @@ public class ThenByDescTests : GenerationTestBase<int>
 {
     public override IEnumerable<int> Build(int count)
     {
-        return GenEnumerable.Range(-2, count)
+        return Gen.Enumerable.Range(-2, count)
             .OrderBy(x => x % 3)
             .ThenByDescending(x => -x)
             .AsEnumerable();
@@ -28,7 +28,7 @@ public class ThenByDescTests : GenerationTestBase<int>
             .OrderBy(x => x % 2)
             .ThenByDescending(x => x);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .OrderBy(x => x % 2)
             .ThenByDescending();
 
@@ -44,7 +44,7 @@ public class ThenByDescTests : GenerationTestBase<int>
             .OrderBy(x => x % 2)
             .ThenByDescending(x => x, new Comparer());
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .OrderBy(x => x % 2)
             .ThenByDescending(new Comparer());
 
@@ -60,7 +60,7 @@ public class ThenByDescTests : GenerationTestBase<int>
             .OrderBy(x => x % 2)
             .ThenByDescending(x => 3 - x);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .OrderBy(x => x % 2)
             .ThenByDescending(x => 3 - x);
 
@@ -79,7 +79,7 @@ public class ThenByDescTests : GenerationTestBase<int>
             .OrderBy(selector1.Invoke)
             .ThenByDescending(selector2.Invoke);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .OrderBy(selector1, Comparer<bool>.Default)
             .ThenByDescending(selector2, Comparer<double>.Default);
 

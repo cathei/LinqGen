@@ -20,11 +20,6 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        public static BoxedStub<T, AsEnumerable<TUp>> AsEnumerable<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
-        {
-            throw new NotImplementedException();
-        }
-
         // fake stub for autocomplete, not used for parsing because can't take signature type from extension
         public static Stub<IContent<TOut>, Cast<Compiled>> Cast<TOut>(this IInternalStub enumerable)
         {

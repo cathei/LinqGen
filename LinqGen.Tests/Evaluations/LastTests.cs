@@ -18,7 +18,7 @@ public class LastTests
         var expected = Enumerable.Range(start, count)
             .Last();
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Last();
 
         Assert.AreEqual(expected, actual);
@@ -51,7 +51,7 @@ public class LastTests
     //     var expected = Enumerable.Range(start, count)
     //         .First(x => x * 10);
     //
-    //     var actual = GenEnumerable.Range(start, count)
+    //     var actual = Gen.Enumerable.Range(start, count)
     //         .First(x => x * 10);
     //
     //     Assert.AreEqual(expected, actual);
@@ -65,7 +65,7 @@ public class LastTests
     //     var expected = Enumerable.Range(start, count)
     //         .First(x => x * 0.1m);
     //
-    //     var actual = GenEnumerable.Range(start, count)
+    //     var actual = Gen.Enumerable.Range(start, count)
     //         .First(new Selector());
     //
     //     Assert.AreEqual(expected, actual);

@@ -38,13 +38,9 @@ namespace Cathei.LinqGen.Hidden
     }
 }
 
-// static classes needs to be internal to prevent ambiguous resolution
 namespace Cathei.LinqGen
 {
-    internal static partial class GenEnumerable
-    {
-    }
-
+    // Extension class needs to be internal to prevent ambiguous resolution
     internal static partial class _Extensions_
     {
     }
@@ -64,10 +60,6 @@ namespace Cathei.LinqGen
             {
                 switch (node!.Identifier.ValueText)
                 {
-                    case "GenEnumerable":
-                        node = RewriteGenEnumerableClass(node);
-                        break;
-
                     case "_Extensions_":
                         node = RewriteExtensionClass(node);
                         break;
@@ -88,16 +80,16 @@ namespace Cathei.LinqGen
                 return base.VisitStructDeclaration(node);
             }
 
-            public override SyntaxNode? VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
+            public override SyntaxNode? VisitConstructorDeclaration(ConstructorDeclarationSyntax? node)
             {
-                switch (node.Identifier.ValueText)
+                switch (node!.Identifier.ValueText)
                 {
                     case "_Enumerable_":
                         node = RewriteEnumerableConstructor(node);
                         break;
                 }
 
-                return base.VisitConstructorDeclaration(node);
+                return node == null ? null : base.VisitConstructorDeclaration(node);
             }
 
             public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
@@ -115,16 +107,6 @@ namespace Cathei.LinqGen
                 }
 
                 return base.VisitIdentifierName(node);
-            }
-
-            private ClassDeclarationSyntax? RewriteGenEnumerableClass(ClassDeclarationSyntax node)
-            {
-                var staticMethods = _instruction.RenderPredefinedClassMembers().ToArray();
-
-                if (staticMethods.Length == 0)
-                    return null;
-
-                return node.AddMembers(staticMethods);
             }
 
             private ClassDeclarationSyntax? RewriteExtensionClass(ClassDeclarationSyntax node)
@@ -148,10 +130,15 @@ namespace Cathei.LinqGen
                     .AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerable).ToArray());
             }
 
-            private ConstructorDeclarationSyntax RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
+            private ConstructorDeclarationSyntax? RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
             {
+                var parameters = ParameterList(_instruction.GetParameters(MemberKind.Enumerable, true));
+
+                if (parameters.Parameters.Count == 0)
+                    return null;
+
                 return node.WithIdentifier(_instruction.ClassName.Identifier)
-                    .WithParameterList(ParameterList(_instruction.GetParameters(MemberKind.Enumerable, true)))
+                    .WithParameterList(parameters)
                     .WithBody(Block(_instruction.GetFieldAssignments(MemberKind.Enumerable)));
             }
         }

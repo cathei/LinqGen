@@ -36,7 +36,7 @@ public class ToArrayTests
         var expected = Enumerable.Repeat(elem, count)
             .ToArray();
 
-        var actual = GenEnumerable.Repeat(elem, count)
+        var actual = Gen.Enumerable.Repeat(elem, count)
             .ToArray();
 
         Assert.AreEqual(expected, actual);

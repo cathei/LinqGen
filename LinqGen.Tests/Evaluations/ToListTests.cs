@@ -19,7 +19,7 @@ public class ToListTests
         var expected = Enumerable.Repeat(elem, count)
             .ToList();
 
-        var actual = GenEnumerable.Repeat(elem, count)
+        var actual = Gen.Enumerable.Repeat(elem, count)
             .ToList();
 
         Assert.AreEqual(expected, actual);

@@ -18,6 +18,11 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
+        public static IEnumerable<T> AsEnumerable<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
         public static T First<T, TUp>(this IStub<IContent<T>, TUp> enumerable)
         {
             throw new NotImplementedException();

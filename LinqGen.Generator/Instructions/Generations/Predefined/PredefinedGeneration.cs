@@ -16,10 +16,18 @@ namespace Cathei.LinqGen.Generator
 
     public abstract class PredefinedGeneration : Generation
     {
-        public PredefinedGeneration(in LinqGenExpression expression, int id) : base(expression, id)
+        protected PredefinedGeneration(in LinqGenExpression expression, int id) : base(expression, id)
         {
         }
 
-        public override MethodKind MethodKind => MethodKind.Predefined;
+        public override ParameterListSyntax GetExtensionMethodParameters()
+        {
+            var parameters = GetParameters(MemberKind.Enumerable, false, true);
+
+            parameters = parameters.Prepend(
+                Parameter(IdentifierName("GenerationStub"), Identifier("stub")).WithModifiers(ThisTokenList));
+
+            return ParameterList(parameters);
+        }
     }
 }

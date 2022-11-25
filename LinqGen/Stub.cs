@@ -69,18 +69,20 @@ namespace Cathei.LinqGen.Hidden
     /// </summary>
     public abstract class OrderedStub<T, TSignature> : IOrderedStub<T, TSignature>
     {
-
     }
 
     /// <summary>
-    /// Stub for AsEnumerable.
-    /// Note that this will not implement IStub, as it is the end of the call chain.
+    /// Stub for predefined generations
     /// </summary>
-    public abstract class BoxedStub<T, TSignature> : IEnumerable<T>
-        where TSignature : IStubSignature
+    public interface IGenerationStub
     {
-        public IEnumerator<T> GetEnumerator() => throw new NotImplementedException();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
+
+    /// <summary>
+    /// Stub for predefined generations
+    /// </summary>
+    public struct GenerationStub : IGenerationStub
+    {
+    }
+
 }

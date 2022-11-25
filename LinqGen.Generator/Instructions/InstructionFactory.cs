@@ -157,6 +157,9 @@ namespace Cathei.LinqGen.Generator
                 case "GetEnumerator":
                     return new GetEnumeratorEvaluation(expression, id);
 
+                case "AsEnumerable":
+                    return new AsEnumerableEvaluation(expression, id);
+
                 // case "First":
                 //     return new FirstEvaluation(expression, false);
                 //

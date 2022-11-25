@@ -13,7 +13,7 @@ public class SelectTests : GenerationTestBase<int>
 {
     public override IEnumerable<int> Build(int count)
     {
-        return GenEnumerable.Range(-2, count)
+        return Gen.Enumerable.Range(-2, count)
             .Select(x => x * 2)
             .AsEnumerable();
     }
@@ -26,7 +26,7 @@ public class SelectTests : GenerationTestBase<int>
         var expected = Enumerable.Range(start, count)
             .Select(x => x * 10);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Select(x => x * 10);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -40,7 +40,7 @@ public class SelectTests : GenerationTestBase<int>
         var expected = Enumerable.Range(start, count)
             .Select(x => x % 3 == 0);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Select(new Selector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());

@@ -13,7 +13,7 @@ public class SkipTests : GenerationTestBase<int>
 {
     public override IEnumerable<int> Build(int count)
     {
-        return GenEnumerable.Range(-2, count + 5)
+        return Gen.Enumerable.Range(-2, count + 5)
             .Skip(5)
             .AsEnumerable();
     }
@@ -26,7 +26,7 @@ public class SkipTests : GenerationTestBase<int>
         var expected = Enumerable.Range(start, count)
             .Skip(2);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Skip(2);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());

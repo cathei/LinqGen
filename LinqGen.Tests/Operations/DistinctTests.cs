@@ -13,7 +13,7 @@ public class DistinctTests : GenerationTestBase<int>
 {
     public override IEnumerable<int> Build(int count)
     {
-        return GenEnumerable.Range(-2, count)
+        return Gen.Enumerable.Range(-2, count)
             .Distinct()
             .AsEnumerable();
     }

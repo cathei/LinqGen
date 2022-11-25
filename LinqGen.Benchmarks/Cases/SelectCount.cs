@@ -24,7 +24,7 @@ public class SelectCount
     [Benchmark]
     public double LinqGenDelegate()
     {
-        return GenEnumerable
+        return Gen.Enumerable
             .Range(0, Count)
             .Select(x => x * 2.0)
             .Count();
@@ -35,7 +35,7 @@ public class SelectCount
     {
         var selector = new Selector();
 
-        return GenEnumerable
+        return Gen.Enumerable
                .Range(0, Count)
                .Select(selector)
                .Count();

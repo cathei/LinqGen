@@ -18,7 +18,7 @@ public class MinMaxTests
         var expected = Enumerable.Range(start, count)
             .Min();
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Min();
 
         Assert.AreEqual(expected, actual);
@@ -32,7 +32,7 @@ public class MinMaxTests
         var expected = Enumerable.Range(start, count)
             .Min(new Comparer());
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Min(new Comparer());
 
         Assert.AreEqual(expected, actual);
@@ -45,7 +45,7 @@ public class MinMaxTests
         var expected = Enumerable.Range(start, count)
             .Max();
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Max();
 
         Assert.AreEqual(expected, actual);
@@ -58,7 +58,7 @@ public class MinMaxTests
         var expected = Enumerable.Range(start, count)
             .Max(new Comparer());
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Max(new Comparer());
 
         Assert.AreEqual(expected, actual);

@@ -76,7 +76,7 @@ namespace Cathei.LinqGen.Generator
             return GenerationTemplate.Render(this);
         }
 
-        public virtual IEnumerable<MemberDeclarationSyntax> RenderEnumerableMembers()
+        public IEnumerable<MemberDeclarationSyntax> RenderEnumerableMembers()
         {
             if (Downstream != null)
             {
@@ -97,34 +97,23 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public IEnumerable<MemberDeclarationSyntax> RenderPredefinedClassMembers()
+        public virtual ParameterListSyntax GetExtensionMethodParameters()
         {
-            if (MethodKind == MethodKind.Predefined)
-            {
-                var parameters = GetParameters(MemberKind.Enumerable, false, true);
-                var expression = ObjectCreationExpression(ResolvedClassName,
-                    ArgumentList(GetArguments(MemberKind.Enumerable, false)), null);
+            var parameters = GetParameters(MemberKind.Enumerable, false, true).ToList();
+            parameters[0] = parameters[0].WithModifiers(ThisTokenList);
 
-                yield return MethodDeclaration(new(AggressiveInliningAttributeList), PublicStaticTokenList,
-                    ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(), ParameterList(parameters),
-                    GetGenericConstraints(), null, ArrowExpressionClause(expression), SemicolonToken);
-            }
+            return ParameterList(parameters);
         }
 
         public IEnumerable<MemberDeclarationSyntax> RenderExtensionClassMembers()
         {
             if (MethodKind == MethodKind.Extension)
             {
-                var parameters = GetParameters(MemberKind.Enumerable, false, true).ToList();
-
-                if (MethodKind == MethodKind.Extension)
-                    parameters[0] = parameters[0].WithModifiers(ThisTokenList);
-
                 var expression = ObjectCreationExpression(ResolvedClassName,
                     ArgumentList(GetArguments(MemberKind.Enumerable, false)), null);
 
                 yield return MethodDeclaration(new(AggressiveInliningAttributeList), PublicStaticTokenList,
-                    ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(), ParameterList(parameters),
+                    ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(), GetExtensionMethodParameters(),
                     GetGenericConstraints(), null, ArrowExpressionClause(expression), SemicolonToken);
             }
 
@@ -272,6 +261,20 @@ namespace Cathei.LinqGen.Generator
                 yield return ExpressionStatement(SimpleAssignmentExpression(
                     member.Name, MemberAccessExpression(source, member.Name)));
             }
+        }
+
+        public bool HasGetEnumerator { get; private set; }
+
+        public IEnumerable<MemberDeclarationSyntax> RenderGetEnumerator()
+        {
+            HasGetEnumerator = true;
+
+            yield return EnumeratorTemplate.Render(this);
+
+            yield return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList,
+                IdentifierName("Enumerator"), null, GetEnumeratorMethod.Identifier, null, ParameterList(),
+                default, null, ArrowExpressionClause(ObjectCreationExpression(
+                    IdentifierName("Enumerator"), ArgumentList(ThisExpression()), null)), SemicolonToken);
         }
 
         /// <summary>

@@ -53,7 +53,7 @@ public class WhereSelectSum
     [Benchmark]
     public double LinqGenDelegate()
     {
-        return GenEnumerable
+        return Gen.Enumerable
             .Range(0, Count)
             .Where(x => x % 2 == 0)
             .Select(x => x * 2.0)
@@ -66,7 +66,7 @@ public class WhereSelectSum
         var predicate = new Predicate();
         var selector = new Selector();
 
-        return GenEnumerable
+        return Gen.Enumerable
            .Range(0, Count)
            .Where(predicate)
            .Select(selector)

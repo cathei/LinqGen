@@ -47,7 +47,7 @@ public class SelectSum
     [Benchmark]
     public double LinqGenDelegate()
     {
-        return GenEnumerable
+        return Gen.Enumerable
             .Range(0, Count)
             .Select(x => x * 2.0)
             .Sum();
@@ -58,7 +58,7 @@ public class SelectSum
     {
         var selector = new Selector();
 
-        return GenEnumerable
+        return Gen.Enumerable
             .Range(0, Count)
             .Select(selector)
             .Sum();

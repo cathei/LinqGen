@@ -19,7 +19,7 @@ public class CountTests
         var expected = Enumerable.Repeat(elem, count)
             .Count();
 
-        var actual = GenEnumerable.Repeat(elem, count)
+        var actual = Gen.Enumerable.Repeat(elem, count)
             .Count();
 
         Assert.AreEqual(expected, actual);
@@ -34,7 +34,7 @@ public class CountTests
         var expected = Enumerable.Range(start, count)
             .Count(x => x % 2 == 0);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Count(x => x % 2 == 0);
 
         Assert.AreEqual(expected, actual);
@@ -48,7 +48,7 @@ public class CountTests
         var expected = Enumerable.Range(start, count)
             .Count(x => x % 2 == 0);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Count(new Predicate());
 
         Assert.AreEqual(expected, actual);

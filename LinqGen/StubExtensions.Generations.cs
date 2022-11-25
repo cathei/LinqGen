@@ -11,19 +11,24 @@ namespace Cathei.LinqGen
 {
     using Range = Hidden.Range;
 
-    public static class GenEnumerable
+    public static class Gen
     {
-        public static Stub<IContent<int>, Range> Range(int start, int count)
+        public static readonly GenerationStub Enumerable = default;
+    }
+
+    public static partial class StubExtensions
+    {
+        public static Stub<IContent<int>, Range> Range(this IGenerationStub stub, int start, int count)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IContent<T>, Empty> Empty<T>()
+        public static Stub<IContent<T>, Empty> Empty<T>(this IGenerationStub stub)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IContent<T>, Repeat> Repeat<T>(T element, int count)
+        public static Stub<IContent<T>, Repeat> Repeat<T>(this IGenerationStub stub, T element, int count)
         {
             throw new NotImplementedException();
         }

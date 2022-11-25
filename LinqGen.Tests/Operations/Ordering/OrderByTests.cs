@@ -13,7 +13,7 @@ public class OrderByTests : GenerationTestBase<int>
 {
     public override IEnumerable<int> Build(int count)
     {
-        return GenEnumerable.Range(-2, count)
+        return Gen.Enumerable.Range(-2, count)
             .OrderBy(x => -x)
             .AsEnumerable();
     }
@@ -26,7 +26,7 @@ public class OrderByTests : GenerationTestBase<int>
         var expected = Enumerable.Range(start, count)
             .OrderBy(x => x);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .OrderBy();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -40,7 +40,7 @@ public class OrderByTests : GenerationTestBase<int>
         var expected = Enumerable.Range(start, count)
             .OrderBy(x => x, new Comparer());
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .OrderBy(new Comparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -54,7 +54,7 @@ public class OrderByTests : GenerationTestBase<int>
         var expected = Enumerable.Range(start, count)
             .OrderBy(x => x % 2 == 0 ? -x : x);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .OrderBy(x => x % 2 == 0 ? -x : x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -70,7 +70,7 @@ public class OrderByTests : GenerationTestBase<int>
         var expected = Enumerable.Range(start, count)
             .OrderBy(selector.Invoke);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .OrderBy(selector, Comparer<double>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());

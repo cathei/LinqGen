@@ -9,6 +9,5 @@ namespace Cathei.LinqGen.Generator
     {
         Enumerable,
         Extension,
-        Predefined
     }
 }

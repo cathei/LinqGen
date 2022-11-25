@@ -20,7 +20,6 @@ namespace Cathei.LinqGen.Generator
         private const string LinqGenGenEnumerableTypeName = "GenEnumerable";
 
         private const string LinqGenStubEnumerableTypeName = "Stub`2";
-        private const string LinqGenBoxedStubEnumerableTypeName = "BoxedStub`2";
         private const string LinqGenStubInterfaceTypeName = "IStub`2";
         private const string LinqGenOrderedStubEnumerableTypeName = "OrderedStub`2";
         private const string LinqGenOrderedStubInterfaceTypeName = "IOrderedStub`2";
@@ -41,8 +40,8 @@ namespace Cathei.LinqGen.Generator
         {
             // is return type defined for method is stub enumerable or boxed IEnumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.MetadataName is LinqGenStubEnumerableTypeName or
-                       LinqGenBoxedStubEnumerableTypeName or LinqGenOrderedStubEnumerableTypeName;
+                   symbol.MetadataName is
+                       LinqGenStubEnumerableTypeName or LinqGenOrderedStubEnumerableTypeName;
         }
 
         public static bool IsInputStubEnumerable(INamedTypeSymbol symbol)
@@ -444,6 +443,11 @@ namespace Cathei.LinqGen.Generator
         public static TypeSyntax PooledListType(TypeSyntax elementType)
         {
             return GenericName(Identifier("PooledList"), TypeArgumentList(elementType));
+        }
+
+        public static TypeSyntax EnumerableInterfaceType(TypeSyntax elementType)
+        {
+            return GenericName(Identifier("IEnumerable"), TypeArgumentList(elementType));
         }
 
         private static bool CompareNamespace(ITypeSymbol symbol, string name)

@@ -20,7 +20,7 @@ public class SumTests
         var expected = Enumerable.Range(start, count)
             .Sum();
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Sum();
 
         Assert.AreEqual(expected, actual);
@@ -34,7 +34,7 @@ public class SumTests
         var expected = Enumerable.Range(start, count)
             .Sum(x => x * 10);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Sum(x => x * 10);
 
         Assert.AreEqual(expected, actual);
@@ -48,7 +48,7 @@ public class SumTests
         var expected = Enumerable.Range(start, count)
             .Sum(x => x * 0.1m);
 
-        var actual = GenEnumerable.Range(start, count)
+        var actual = Gen.Enumerable.Range(start, count)
             .Sum(new Selector());
 
         Assert.AreEqual(expected, actual);
