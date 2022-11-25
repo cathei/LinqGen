@@ -32,6 +32,11 @@ namespace Cathei.LinqGen.Generator
             yield break;
         }
 
+        public override ExpressionSyntax RenderCount()
+        {
+            return LiteralExpression(0);
+        }
+
         public override IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
         {
             yield break;

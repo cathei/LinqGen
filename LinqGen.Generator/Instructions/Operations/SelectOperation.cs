@@ -52,6 +52,11 @@ namespace Cathei.LinqGen.Generator
                 yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));
         }
 
+        public override ExpressionSyntax? RenderCount()
+        {
+            return Upstream.RenderCount();
+        }
+
         public override ExpressionSyntax RenderCurrent(RenderOption option)
         {
             return InvocationExpression(

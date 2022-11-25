@@ -49,6 +49,11 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
+        public override ExpressionSyntax RenderCount()
+        {
+            return MemberAccessExpression(VarName("source"), LengthProperty);
+        }
+
         public override BlockSyntax RenderIteration(RenderOption option, SyntaxList<StatementSyntax> statements)
         {
             var currentName = VarName("current");

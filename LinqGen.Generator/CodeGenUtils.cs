@@ -139,6 +139,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly LiteralExpressionSyntax NullLiteral =
             SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression);
 
+        public static readonly SyntaxToken GetKeywordToken = Token(SyntaxKind.GetKeyword);
         public static readonly SyntaxToken UsingKeywordToken = Token(SyntaxKind.UsingKeyword);
         public static readonly SyntaxToken SemicolonToken = Token(SyntaxKind.SemicolonToken);
 

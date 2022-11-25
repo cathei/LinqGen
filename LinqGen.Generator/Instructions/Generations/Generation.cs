@@ -78,6 +78,19 @@ namespace Cathei.LinqGen.Generator
 
         public IEnumerable<MemberDeclarationSyntax> RenderEnumerableMembers()
         {
+            var countExpression = RenderCount();
+
+            if (countExpression != null)
+            {
+                var getAccessor = AccessorDeclaration(SyntaxKind.GetAccessorDeclaration,
+                    SingletonList(AggressiveInliningAttributeList), default, GetKeywordToken,
+                    ArrowExpressionClause(countExpression), SemicolonToken);
+
+                yield return PropertyDeclaration(IntType, CountProperty.Identifier)
+                    .WithModifiers(PublicTokenList)
+                    .WithAccessorList(AccessorList(SingletonList(getAccessor)));
+            }
+
             if (Downstream != null)
             {
                 foreach (var operation in Downstream)
@@ -129,6 +142,11 @@ namespace Cathei.LinqGen.Generator
         }
 
         protected abstract IEnumerable<MemberInfo> GetMemberInfos(bool isLocal);
+
+        /// <summary>
+        /// Returns null if cannot get count without iteration.
+        /// </summary>
+        public abstract ExpressionSyntax? RenderCount();
 
         /// <summary>
         /// Additional initialization statements.

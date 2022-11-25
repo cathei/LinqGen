@@ -30,6 +30,11 @@ namespace Cathei.LinqGen.Generator
             yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
         }
 
+        public override ExpressionSyntax RenderCount()
+        {
+            return VarName("count");
+        }
+
         public override IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
         {
             yield return ExpressionStatement(SimpleAssignmentExpression(VarName("index"), LiteralExpression(-1)));

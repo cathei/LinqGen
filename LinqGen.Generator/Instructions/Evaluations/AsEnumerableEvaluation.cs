@@ -20,7 +20,7 @@ namespace Cathei.LinqGen.Generator
         // result of AsEnumerable, doesn't need to be public
         private class BoxedEnumerable : IEnumerable<_Element_>
         {
-            private readonly _Upstream_ source;
+            private _Upstream_ source;
 
             internal BoxedEnumerable(in _Upstream_ source)
             {

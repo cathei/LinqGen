@@ -43,6 +43,11 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
+        public override ExpressionSyntax RenderCount()
+        {
+            return MemberAccessExpression(VarName("source"), CountProperty);
+        }
+
         public override IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
         {
             if (!option.IsLocal)
