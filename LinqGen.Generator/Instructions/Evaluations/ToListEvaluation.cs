@@ -31,9 +31,13 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
+            ExpressionSyntax countExpression = Upstream.HasCount
+                ? MemberAccessExpression(IdentifierName("source"), CountProperty)
+                : LiteralExpression(0);
+
             yield return ExpressionStatement(SimpleAssignmentExpression(VarName("list"),
                 ObjectCreationExpression(PooledListType(InputElementType),
-                    ArgumentList(LiteralExpression(0)), null)));
+                    ArgumentList(countExpression), null)));
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()

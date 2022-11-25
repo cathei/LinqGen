@@ -170,14 +170,25 @@ namespace Cathei.LinqGen.Generator
             yield break;
         }
 
-        private ParameterListSyntax GetParameters(bool defaultValue)
+        protected ParameterListSyntax GetParameters(bool extensionMethod)
         {
-            return ParameterList(GetParameterInfos().Select(x => x.AsParameter(defaultValue)));
+            var parameters = GetParameterInfos()
+                .Select(x => x.AsParameter(extensionMethod));
+
+            var sourceParameter =
+                Parameter(UpstreamResolvedClassName, Identifier("source"));
+
+            if (extensionMethod)
+                sourceParameter = sourceParameter.WithModifiers(ThisTokenList);
+
+            return ParameterList(parameters.Prepend(sourceParameter));
         }
 
         private ArgumentListSyntax GetArguments()
         {
-            return ArgumentList(GetParameterInfos().Select(x => x.AsArgument()));
+            var arguments = GetParameterInfos().Select(x => x.AsArgument());
+
+            return ArgumentList(arguments.Prepend(Argument(IdentifierName("source"))));
         }
 
         public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
@@ -197,15 +208,9 @@ namespace Cathei.LinqGen.Generator
 
             yield return (StructDeclarationSyntax)_rewriter.Visit(structSyntax);
 
-            var sourceParameter =
-                Parameter(UpstreamResolvedClassName, Identifier("source")).WithModifiers(ThisTokenList);
-
-            var parameters = GetParameters(true);
-            parameters = ParameterList(parameters.Parameters.Insert(0, sourceParameter));
-
             yield return MethodDeclaration(
                 SingletonList(AggressiveInliningAttributeList), PublicStaticTokenList,
-                ReturnType, null, MethodName.Identifier, GetTypeParameters(Arity), parameters,
+                ReturnType, null, MethodName.Identifier, GetTypeParameters(Arity), GetParameters(true),
                 GetGenericConstraints(Arity), RenderBody(), null, default);
         }
 

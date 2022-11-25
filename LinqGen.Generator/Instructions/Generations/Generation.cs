@@ -143,6 +143,8 @@ namespace Cathei.LinqGen.Generator
 
         protected abstract IEnumerable<MemberInfo> GetMemberInfos(bool isLocal);
 
+        public bool HasCount => RenderCount() != null;
+
         /// <summary>
         /// Returns null if cannot get count without iteration.
         /// </summary>

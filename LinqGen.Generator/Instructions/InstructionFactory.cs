@@ -183,9 +183,9 @@ namespace Cathei.LinqGen.Generator
 
                 case "Max":
                     return new MinMaxEvaluation(expression, id, false);
-                //
-                // case "Count":
-                //     return new CountEvaluation(expression);
+
+                case "Count":
+                    return new CountEvaluation(expression, id);
 
                 case "ToArray":
                     return new ToArrayEvaluation(expression, id);
