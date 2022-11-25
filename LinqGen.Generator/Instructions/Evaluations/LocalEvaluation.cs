@@ -25,7 +25,7 @@ namespace Cathei.LinqGen.Generator
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public void Visit(_Input_ element)
+            public bool Visit(_Input_ element)
             {
             }
 

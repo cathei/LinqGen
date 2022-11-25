@@ -40,6 +40,7 @@ namespace Cathei.LinqGen.Generator
         {
             yield return ExpressionStatement(InvocationExpression(
                 MemberAccessExpression(VarName("list"), AddMethod), ArgumentList(ElementVar)));
+            yield return ReturnStatement(TrueExpression());
         }
 
         protected override IEnumerable<StatementSyntax> RenderDispose()

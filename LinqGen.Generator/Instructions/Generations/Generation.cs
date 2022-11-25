@@ -292,23 +292,26 @@ namespace Cathei.LinqGen.Generator
             var visitorType = new TypeParameterInfo(IdentifierName("TVisitor"), visitorInterface);
             var visitorName = IdentifierName("visitor");
 
-            var initialStatements =
-                GetLocalDeclarations(MemberKind.Enumerator)
-                    .Concat(GetLocalAssignments(MemberKind.Both))
+            var initialDeclarations = GetLocalDeclarations(MemberKind.Enumerator);
+
+            var initialAssignments = GetLocalAssignments(MemberKind.Both)
                     .Concat(RenderInitialization(renderOption));
+
+            StatementSyntax accumulationStatement = IfStatement(LogicalNotExpression(InvocationExpression(
+                    MemberAccessExpression(visitorName, VisitMethod), ArgumentList(CurrentPlaceholder))),
+                ReturnStatement());
+
+            var iterationBlock = RenderIteration(renderOption, SingletonList(accumulationStatement));
 
             var disposeStatements = RenderDispose(renderOption);
 
-            StatementSyntax accumulationStatement = ExpressionStatement(InvocationExpression(
-                MemberAccessExpression(visitorName, VisitMethod), ArgumentList(CurrentPlaceholder)));
+            var iterationStatements = iterationBlock.Statements;
+            iterationStatements = iterationStatements.InsertRange(0, initialAssignments);
 
-            var body = RenderIteration(renderOption, SingletonList(accumulationStatement));
+            StatementSyntax tryStatement = TryStatement(
+                Block(iterationStatements), default, FinallyClause(Block(disposeStatements)));
 
-            var statements = body.Statements;
-            statements = statements.InsertRange(0, initialStatements);
-            statements = statements.AddRange(disposeStatements);
-
-            body = body.WithStatements(statements);
+            var body = Block(initialDeclarations.Append(tryStatement));
 
             return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList, VoidType, null,
                 VisitMethod.Identifier, TypeParameterList(SingletonSeparatedList(visitorType.AsTypeParameter())),

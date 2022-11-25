@@ -73,6 +73,7 @@ namespace Cathei.LinqGen.Generator
             }
 
             yield return ExpressionStatement(AddAssignmentExpression(VarName("result"), value));
+            yield return ReturnStatement(TrueExpression());
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()

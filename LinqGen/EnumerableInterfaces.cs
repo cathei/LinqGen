@@ -29,6 +29,6 @@ namespace Cathei.LinqGen.Hidden
     /// </summary>
     public interface IVisitor<in T> : IDisposable
     {
-        void Visit(T element);
+        bool Visit(T element);
     }
 }

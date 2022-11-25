@@ -94,6 +94,8 @@ namespace Cathei.LinqGen.Generator
                 LogicalOrExpression(LogicalNotExpression(VarName("isSet")), comparison), Block(
                     ExpressionStatement(SimpleAssignmentExpression(VarName("isSet"), TrueExpression())),
                     ExpressionStatement(SimpleAssignmentExpression(VarName("result"), ElementVar))));
+
+            yield return ReturnStatement(TrueExpression());
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()
