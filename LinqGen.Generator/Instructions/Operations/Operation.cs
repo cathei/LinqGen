@@ -39,35 +39,38 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public override MethodKind MethodKind => MethodKind.Enumerable;
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
+        public override bool SupportPartition => Upstream.SupportPartition;
+
+        public override IEnumerable<StatementSyntax> RenderInitialization(
+            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            return Upstream.RenderInitialization(option);
+            return Upstream.RenderInitialization(isLocal, skipVar, takeVar);
         }
 
-        public virtual StatementSyntax? RenderMoveNext(RenderOption option)
-        {
-            return null;
-        }
-
-        public virtual ExpressionSyntax? RenderCurrent(RenderOption option)
+        protected virtual StatementSyntax? RenderMoveNext()
         {
             return null;
         }
 
-        public override IEnumerable<StatementSyntax> RenderDispose(RenderOption option)
+        protected virtual ExpressionSyntax? RenderCurrent()
         {
-            return Upstream.RenderDispose(option);
+            return null;
         }
 
-        public override BlockSyntax RenderIteration(RenderOption option, SyntaxList<StatementSyntax> statements = default)
+        public override IEnumerable<StatementSyntax> RenderDispose(bool isLocal)
+        {
+            return Upstream.RenderDispose(isLocal);
+        }
+
+        public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
         {
             // note that we are adding statements in reversed order
-            var getCurrent = RenderCurrent(option);
+            var getCurrent = RenderCurrent();
 
             if (getCurrent != null)
             {
-                var currentName = IdentifierName($"current_{Id}");
-                var currentRewriter = new CurrentRewriter(currentName);
+                var currentName = VarName("current");
+                var currentRewriter = new PlaceholderRewriter(currentName);
 
                 // replace current variables of downstream
                 statements = currentRewriter.VisitStatementSyntaxList(statements);
@@ -77,12 +80,12 @@ namespace Cathei.LinqGen.Generator
             }
 
             // MoveNext should be passed to get current
-            var moveNext = RenderMoveNext(option);
+            var moveNext = RenderMoveNext();
 
             if (moveNext != null)
                 statements = statements.Insert(0, moveNext);
 
-            return Upstream.RenderIteration(option, statements);
+            return Upstream.RenderIteration(isLocal, statements);
         }
 
         public IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()

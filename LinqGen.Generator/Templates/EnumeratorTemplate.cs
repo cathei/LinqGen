@@ -52,12 +52,10 @@ namespace Cathei.LinqGen.Generator
         private class Rewriter : CSharpSyntaxRewriter
         {
             private readonly Generation _instruction;
-            private readonly RenderOption _renderOption;
 
             public Rewriter(Generation instruction)
             {
                 _instruction = instruction;
-                _renderOption = new(false);
             }
 
             public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
@@ -109,7 +107,7 @@ namespace Cathei.LinqGen.Generator
             private ConstructorDeclarationSyntax RewriteEnumeratorConstructor(ConstructorDeclarationSyntax node)
             {
                 var assignments = _instruction.GetFieldAssignments(MemberKind.Both, IdentifierName("source"));
-                var initialization = _instruction.RenderInitialization(_renderOption);
+                var initialization = _instruction.RenderInitialization(false, null, null);
 
                 var body = Block(assignments.Concat(initialization));
                 return node.WithBody(body);
@@ -126,7 +124,7 @@ namespace Cathei.LinqGen.Generator
 
                 var failStatement = ReturnStatement(FalseExpression());
 
-                var body = _instruction.RenderIteration(_renderOption, new(successStatements))
+                var body = _instruction.RenderIteration(false, new(successStatements))
                     .AddStatements(failStatement);
 
                 return node.WithBody(body);
@@ -134,7 +132,7 @@ namespace Cathei.LinqGen.Generator
 
             private MethodDeclarationSyntax RewriteEnumeratorDispose(MethodDeclarationSyntax node)
             {
-                var body = Block(_instruction.RenderDispose(_renderOption));
+                var body = Block(_instruction.RenderDispose(false));
                 return node.WithBody(body);
             }
         }

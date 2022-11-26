@@ -56,7 +56,7 @@ namespace Cathei.LinqGen.Generator
 
         public override IEnumerable<MemberDeclarationSyntax> RenderExtensionMembers()
         {
-            if (PredicateType == null && Upstream.HasCount)
+            if (PredicateType == null && Upstream.SupportCount)
             {
                 yield return MethodDeclaration(
                     SingletonList(AggressiveInliningAttributeList), PublicStaticTokenList,

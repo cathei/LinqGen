@@ -45,12 +45,14 @@ namespace Cathei.LinqGen.Generator
                 yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));
         }
 
+        public override bool SupportPartition => false;
+
         public override ExpressionSyntax? RenderCount()
         {
             return null;
         }
 
-        public override StatementSyntax RenderMoveNext(RenderOption option)
+        protected override StatementSyntax RenderMoveNext()
         {
             return IfStatement(
                 LogicalNotExpression(InvocationExpression(

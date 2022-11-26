@@ -20,6 +20,8 @@ namespace Cathei.LinqGen.Generator
         {
         }
 
+        public override bool SupportPartition => true;
+
         public override ParameterListSyntax GetExtensionMethodParameters()
         {
             var parameters = GetParameters(MemberKind.Enumerable, false, true);

@@ -83,16 +83,6 @@ namespace Cathei.LinqGen.Generator
         }
 
         /// <summary>
-        /// Context variable, affected by downstream
-        /// </summary>
-        public static readonly IdentifierNameSyntax SkipPlaceholder = IdentifierName("_skip_");
-
-        /// <summary>
-        /// Context variable, affected by downstream
-        /// </summary>
-        public static readonly IdentifierNameSyntax TakePlaceholder = IdentifierName("_take_");
-
-        /// <summary>
         /// Context variable, affected by upstream
         /// </summary>
         public static readonly IdentifierNameSyntax CurrentPlaceholder = IdentifierName("_current_");

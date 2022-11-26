@@ -143,7 +143,9 @@ namespace Cathei.LinqGen.Generator
 
         protected abstract IEnumerable<MemberInfo> GetMemberInfos(bool isLocal);
 
-        public bool HasCount => RenderCount() != null;
+        public abstract bool SupportPartition { get; }
+
+        public bool SupportCount => RenderCount() != null;
 
         /// <summary>
         /// Returns null if cannot get count without iteration.
@@ -153,7 +155,8 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// Additional initialization statements.
         /// </summary>
-        public virtual IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
+        public virtual IEnumerable<StatementSyntax> RenderInitialization(
+            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             yield break;
         }
@@ -161,7 +164,7 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// Dispose statements if needed.
         /// </summary>
-        public virtual IEnumerable<StatementSyntax> RenderDispose(RenderOption option)
+        public virtual IEnumerable<StatementSyntax> RenderDispose(bool isLocal)
         {
             yield break;
         }
@@ -169,8 +172,7 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// Writes full body of iteration. Can be overriden to change behaviour.
         /// </summary>
-        public abstract BlockSyntax RenderIteration(
-            RenderOption option, SyntaxList<StatementSyntax> statements);
+        public abstract BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements);
 
         public IEnumerable<ParameterSyntax> GetParameters(
             MemberKind kind, bool includeUpstream, bool defaultValue = false)
@@ -306,8 +308,6 @@ namespace Cathei.LinqGen.Generator
         {
             HasLocalVisitMethod = true;
 
-            var renderOption = new RenderOption(true);
-
             var visitorInterface = GenericName(Identifier("IVisitor"), TypeArgumentList(OutputElementType));
             var visitorType = new TypeParameterInfo(IdentifierName("TVisitor"), visitorInterface);
             var visitorName = IdentifierName("visitor");
@@ -315,15 +315,15 @@ namespace Cathei.LinqGen.Generator
             var initialDeclarations = GetLocalDeclarations(MemberKind.Enumerator);
 
             var initialAssignments = GetLocalAssignments(MemberKind.Both)
-                    .Concat(RenderInitialization(renderOption));
+                    .Concat(RenderInitialization(true, null, null));
 
             StatementSyntax accumulationStatement = IfStatement(LogicalNotExpression(InvocationExpression(
                     MemberAccessExpression(visitorName, VisitMethod), ArgumentList(CurrentPlaceholder))),
                 ReturnStatement());
 
-            var iterationBlock = RenderIteration(renderOption, SingletonList(accumulationStatement));
+            var iterationBlock = RenderIteration(true, SingletonList(accumulationStatement));
 
-            var disposeStatements = RenderDispose(renderOption);
+            var disposeStatements = RenderDispose(true);
 
             var iterationStatements = iterationBlock.Statements;
             iterationStatements = iterationStatements.InsertRange(0, initialAssignments);

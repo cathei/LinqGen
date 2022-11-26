@@ -33,51 +33,46 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Both, SourceType, VarName("source"));
-
-            if (!isLocal)
-            {
-                yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
-            }
+            yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
-        {
-            if (!option.IsLocal)
-            {
-                yield return ExpressionStatement(SimpleAssignmentExpression(
-                    VarName("index"), LiteralExpression(-1)));
-            }
-        }
+        public override bool SupportPartition => true;
 
         public override ExpressionSyntax RenderCount()
         {
             return MemberAccessExpression(VarName("source"), LengthProperty);
         }
 
-        public override BlockSyntax RenderIteration(RenderOption option, SyntaxList<StatementSyntax> statements)
+        public override IEnumerable<StatementSyntax> RenderInitialization(
+            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+        {
+            if (skipVar != null)
+            {
+                yield return ExpressionStatement(SimpleAssignmentExpression(
+                    VarName("index"), SubtractExpression(skipVar, LiteralExpression(1))));
+            }
+            else
+            {
+                yield return ExpressionStatement(SimpleAssignmentExpression(
+                    VarName("index"), LiteralExpression(-1)));
+            }
+        }
+
+        public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
         {
             var currentName = VarName("current");
-            var currentRewriter = new CurrentRewriter(currentName);
+            var currentRewriter = new PlaceholderRewriter(currentName);
 
             // replace current variables of downstream
             statements = currentRewriter.VisitStatementSyntaxList(statements);
 
-            StatementSyntax result;
+            statements = statements.Insert(0, LocalDeclarationStatement(
+                currentName.Identifier, ElementAccessExpression(VarName("source"), VarName("index"))));
 
-            if (option.IsLocal)
-            {
-                result = ForEachStatement(VarType, currentName.Identifier, VarName("source"), Block(statements));
-            }
-            else
-            {
-                statements = statements.Insert(0, LocalDeclarationStatement(
-                    currentName.Identifier, ElementAccessExpression(VarName("source"), VarName("index"))));
-
-                result = WhileStatement(LessThanExpression(
-                        CastExpression(UIntType, PreIncrementExpression(VarName("index"))),
-                        CastExpression(UIntType, MemberAccessExpression(VarName("source"), LengthProperty))),
-                    Block(statements));
-            }
+            var result = WhileStatement(LessThanExpression(
+                    CastExpression(UIntType, PreIncrementExpression(VarName("index"))),
+                    CastExpression(UIntType, MemberAccessExpression(VarName("source"), LengthProperty))),
+                Block(statements));
 
             return Block(result);
         }

@@ -37,12 +37,14 @@ namespace Cathei.LinqGen.Generator
             return LiteralExpression(0);
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
+        public override IEnumerable<StatementSyntax> RenderInitialization(
+            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             yield break;
         }
 
-        public override BlockSyntax RenderIteration(RenderOption option, SyntaxList<StatementSyntax> statements)
+        public override BlockSyntax RenderIteration(bool isLocal,
+            SyntaxList<StatementSyntax> statements)
         {
             return Block();
         }

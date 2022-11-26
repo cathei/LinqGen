@@ -57,7 +57,7 @@ namespace Cathei.LinqGen.Generator
             return Upstream.RenderCount();
         }
 
-        public override ExpressionSyntax RenderCurrent(RenderOption option)
+        protected override ExpressionSyntax RenderCurrent()
         {
             return InvocationExpression(
                 MemberAccessExpression(VarName("selector"), InvokeMethod),

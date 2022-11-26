@@ -17,18 +17,18 @@ namespace Cathei.LinqGen.Generator
     public sealed class ListGeneration : Generation
     {
         public TypeSyntax SourceType { get; }
-        public TypeSyntax SourceEnumeratorType { get; }
+        // public TypeSyntax SourceEnumeratorType { get; }
 
         public ListGeneration(in LinqGenExpression expression, int id,
             INamedTypeSymbol enumerableSymbol, INamedTypeSymbol listSymbol) : base(expression, id)
         {
             // TODO generic type element
             ITypeSymbol elementSymbol = listSymbol.TypeArguments[0];
-            ITypeSymbol enumeratorSymbol = GetEnumeratorSymbol(enumerableSymbol);
+            // ITypeSymbol enumeratorSymbol = GetEnumeratorSymbol(enumerableSymbol);
 
             OutputElementType = ParseTypeName(elementSymbol);
             SourceType = ParseTypeName(enumerableSymbol);
-            SourceEnumeratorType = ParseTypeName(enumeratorSymbol);
+            // SourceEnumeratorType = ParseTypeName(enumeratorSymbol);
         }
 
         public override TypeSyntax OutputElementType { get; }
@@ -36,54 +36,46 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Both, SourceType, VarName("source"));
-
-            if (!isLocal)
-            {
-                yield return new MemberInfo(MemberKind.Enumerator, SourceType, VarName("iter"));
-            }
+            yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
         }
+
+        public override bool SupportPartition => true;
 
         public override ExpressionSyntax RenderCount()
         {
             return MemberAccessExpression(VarName("source"), CountProperty);
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
+        public override IEnumerable<StatementSyntax> RenderInitialization(
+            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            if (!option.IsLocal)
+            if (skipVar != null)
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
-                    VarName("iter"), InvocationExpression(VarName("source"), GetEnumeratorMethod)));
+                    VarName("index"), SubtractExpression(skipVar, LiteralExpression(1))));
+            }
+            else
+            {
+                yield return ExpressionStatement(SimpleAssignmentExpression(
+                    VarName("index"), LiteralExpression(-1)));
             }
         }
 
-        public override BlockSyntax RenderIteration(RenderOption option, SyntaxList<StatementSyntax> statements)
+        public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
         {
             var currentName = VarName("current");
-            var currentRewriter = new CurrentRewriter(currentName);
+            var currentRewriter = new PlaceholderRewriter(currentName);
 
             // replace current variables of downstream
             statements = currentRewriter.VisitStatementSyntaxList(statements);
 
-            StatementSyntax result;
+            statements = statements.Insert(0, LocalDeclarationStatement(
+                currentName.Identifier, ElementAccessExpression(VarName("source"), VarName("index"))));
 
-            if (option.IsLocal)
-            {
-                // In local loop we don't have to worry about collection changing during iteration.
-                statements = statements.Insert(0, LocalDeclarationStatement(
-                    currentName.Identifier, ElementAccessExpression(VarName("source"), VarName("index"))));
-
-                result = ForStatement(
-                    VarName("index"), LiteralExpression(0), MemberAccessExpression(VarName("source"), CountProperty),
-                    Block(statements));
-            }
-            else
-            {
-                statements = statements.Insert(0, LocalDeclarationStatement(
-                    currentName.Identifier, MemberAccessExpression(VarName("source"), CurrentProperty)));
-
-                result = WhileStatement(InvocationExpression(VarName("iter"), MoveNextMethod), Block(statements));
-            }
+            var result = WhileStatement(LessThanExpression(
+                    CastExpression(UIntType, PreIncrementExpression(VarName("index"))),
+                    CastExpression(UIntType, MemberAccessExpression(VarName("source"), LengthProperty))),
+                Block(statements));
 
             return Block(result);
         }

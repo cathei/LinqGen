@@ -8,11 +8,14 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Cathei.LinqGen.Generator
 {
-    public class CurrentRewriter : CSharpSyntaxRewriter
-    {
-        private readonly IdentifierNameSyntax _current;
+    using static SyntaxFactory;
+    using static CodeGenUtils;
 
-        public CurrentRewriter(IdentifierNameSyntax current)
+    public class PlaceholderRewriter : CSharpSyntaxRewriter
+    {
+        private readonly ExpressionSyntax _current;
+
+        public PlaceholderRewriter(ExpressionSyntax current)
         {
             _current = current;
         }
@@ -20,16 +23,14 @@ namespace Cathei.LinqGen.Generator
         public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
         {
             if (node.IsEquivalentTo(Instruction.CurrentPlaceholder))
-            {
-                node = _current;
-            }
+                return _current;
 
             return base.VisitIdentifierName(node);
         }
 
         public SyntaxList<StatementSyntax> VisitStatementSyntaxList(SyntaxList<StatementSyntax> nodes)
         {
-            return new(nodes.Select(node => (StatementSyntax)Visit(node)));
+            return List(nodes.Select(node => (StatementSyntax)Visit(node)));
         }
     }
 }

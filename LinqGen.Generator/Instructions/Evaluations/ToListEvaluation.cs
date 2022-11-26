@@ -31,7 +31,7 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
-            ExpressionSyntax countExpression = Upstream.HasCount
+            ExpressionSyntax countExpression = Upstream.SupportCount
                 ? MemberAccessExpression(IdentifierName("source"), CountProperty)
                 : LiteralExpression(0);
 

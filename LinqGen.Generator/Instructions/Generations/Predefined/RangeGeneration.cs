@@ -35,15 +35,22 @@ namespace Cathei.LinqGen.Generator
             return VarName("count");
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(RenderOption option)
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax? skipVar,
+            ExpressionSyntax? takeVar)
         {
-            yield return ExpressionStatement(SimpleAssignmentExpression(VarName("index"), LiteralExpression(-1)));
+            ExpressionSyntax initialValue = LiteralExpression(-1);
+
+            if (skipVar != null)
+                initialValue = SubtractExpression(skipVar, LiteralExpression(1));
+
+            yield return ExpressionStatement(SimpleAssignmentExpression(VarName("index"), initialValue));
         }
 
-        public override BlockSyntax RenderIteration(RenderOption option, SyntaxList<StatementSyntax> statements)
+        public override BlockSyntax RenderIteration(bool isLocal,
+            SyntaxList<StatementSyntax> statements)
         {
             var currentName = VarName("current");
-            var currentRewriter = new CurrentRewriter(currentName);
+            var currentRewriter = new PlaceholderRewriter(currentName);
 
             // replace current variables of downstream
             statements = currentRewriter.VisitStatementSyntaxList(statements);

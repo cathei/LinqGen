@@ -135,12 +135,10 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        private readonly RenderOption _renderOption;
         private readonly VisitorRewriter _rewriter;
 
         public LocalEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
         {
-            _renderOption = new(true);
             _rewriter = new VisitorRewriter(this);
         }
 
