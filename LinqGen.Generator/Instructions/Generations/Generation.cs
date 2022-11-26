@@ -245,6 +245,27 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
+        public IEnumerable<StatementSyntax> GetFieldDefaultAssignments(MemberKind kind)
+        {
+            if (Upstream != null)
+            {
+                foreach (var assignment in Upstream.GetFieldDefaultAssignments(kind))
+                    yield return assignment;
+            }
+
+            foreach (var member in GetMemberInfos(false))
+            {
+                if ((member.Kind & kind) != kind)
+                    continue;
+
+                if (member.DefaultValue == null)
+                    continue;
+
+                yield return ExpressionStatement(SimpleAssignmentExpression(
+                    MemberAccessExpression(ThisExpression(), member.Name), member.DefaultValue));
+            }
+        }
+
         public IEnumerable<LocalDeclarationStatementSyntax> GetLocalDeclarations(MemberKind kind)
         {
             if (Upstream != null)

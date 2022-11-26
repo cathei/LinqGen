@@ -446,6 +446,11 @@ namespace Cathei.LinqGen.Generator
             return GenericName(Identifier("PooledList"), TypeArgumentList(elementType));
         }
 
+        public static TypeSyntax PooledSetType(TypeSyntax elementType, TypeSyntax comparerType)
+        {
+            return GenericName(Identifier("PooledSet"), TypeArgumentList(elementType, comparerType));
+        }
+
         public static TypeSyntax EnumerableInterfaceType(TypeSyntax elementType)
         {
             return GenericName(Identifier("IEnumerable"), TypeArgumentList(elementType));
@@ -488,6 +493,15 @@ namespace Cathei.LinqGen.Generator
         {
             interfaceSymbol = symbol.AllInterfaces.FirstOrDefault(x =>
                 x.MetadataName == "IComparable`1" && CompareNamespace(x, SystemNamespace) &&
+                SymbolEqualityComparer.Default.Equals(x.TypeArguments[0], symbol))!;
+
+            return interfaceSymbol != null!;
+        }
+
+        public static bool TryGetEquatableSelfInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
+        {
+            interfaceSymbol = symbol.AllInterfaces.FirstOrDefault(x =>
+                x.MetadataName == "IEquatable`1" && CompareNamespace(x, SystemNamespace) &&
                 SymbolEqualityComparer.Default.Equals(x.TypeArguments[0], symbol))!;
 
             return interfaceSymbol != null!;

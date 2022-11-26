@@ -1,5 +1,6 @@
 ﻿// LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -106,11 +107,13 @@ namespace Cathei.LinqGen.Generator
 
             private ConstructorDeclarationSyntax RewriteEnumeratorConstructor(ConstructorDeclarationSyntax node)
             {
-                var assignments = _instruction.GetFieldAssignments(MemberKind.Both, IdentifierName("source"));
-                var initialization = _instruction.RenderInitialization(false, null, null);
+                IEnumerable<StatementSyntax> statements;
 
-                var body = Block(assignments.Concat(initialization));
-                return node.WithBody(body);
+                statements = _instruction.GetFieldAssignments(MemberKind.Both, IdentifierName("source"))
+                    .Concat(_instruction.GetFieldDefaultAssignments(MemberKind.Enumerator))
+                    .Concat(_instruction.RenderInitialization(false, null, null));
+
+                return node.WithBody(Block(statements));
             }
 
             private MethodDeclarationSyntax RewriteEnumeratorMoveNext(MethodDeclarationSyntax node)
