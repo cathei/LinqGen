@@ -44,6 +44,12 @@ namespace Cathei.LinqGen.Generator
         public override IEnumerable<StatementSyntax> RenderInitialization(
             bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
+            if (!Upstream.SupportPartition)
+            {
+                skipVar = null;
+                takeVar = null;
+            }
+
             return Upstream.RenderInitialization(isLocal, skipVar, takeVar);
         }
 

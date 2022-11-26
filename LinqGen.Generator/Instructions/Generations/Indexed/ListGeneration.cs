@@ -74,7 +74,7 @@ namespace Cathei.LinqGen.Generator
 
             var result = WhileStatement(LessThanExpression(
                     CastExpression(UIntType, PreIncrementExpression(VarName("index"))),
-                    CastExpression(UIntType, MemberAccessExpression(VarName("source"), LengthProperty))),
+                    CastExpression(UIntType, MemberAccessExpression(VarName("source"), CountProperty))),
                 Block(statements));
 
             return Block(result);
