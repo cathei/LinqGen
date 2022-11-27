@@ -28,6 +28,7 @@ namespace Cathei.LinqGen.Generator
             ClassName = IdentifierName($"{expression.SignatureSymbol!.Name}_{id}");
         }
 
+        public abstract ITypeSymbol OutputElementSymbol { get; }
         public abstract TypeSyntax OutputElementType { get; }
 
         /// <summary>
@@ -138,7 +139,6 @@ namespace Cathei.LinqGen.Generator
                         yield return member;
                 }
             }
-
         }
 
         protected abstract IEnumerable<MemberInfo> GetMemberInfos(bool isLocal);

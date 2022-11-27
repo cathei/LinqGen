@@ -91,16 +91,13 @@ namespace Cathei.LinqGen.Generator
                     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
                         break;
                     return new WhereOperation(expression, id, typeSymbol, true, true);
-                //
-                // case "AsEnumerable":
-                //     return new AsEnumerableOperation(expression, id);
-                //
-                // case "Cast":
-                //     return new CastOperation(expression, id, false);
-                //
-                // case "OfType":
-                //     return new CastOperation(expression, id, true);
-                //
+
+                case "Cast":
+                    return new CastOperation(expression, id, false);
+
+                case "OfType":
+                    return new CastOperation(expression, id, true);
+
                 case "Skip":
                     return new SkipOperation(expression, id);
 

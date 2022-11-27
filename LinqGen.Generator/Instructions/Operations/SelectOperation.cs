@@ -27,12 +27,15 @@ namespace Cathei.LinqGen.Generator
 
             // Func<TIn, TOut> or IStructFunction<TIn, TOut>
             // Func<TIn, int, TOut> or IStructFunction<TIn, int, TOut>
-            OutputElementType = ParseTypeName(parameterType.TypeArguments[withIndex ? 2 : 1]);
+            var elementSymbol = parameterType.TypeArguments[withIndex ? 2 : 1];
+            OutputElementSymbol = elementSymbol;
+            OutputElementType = ParseTypeName(elementSymbol);
 
             WithIndex = withIndex;
             WithStruct = withStruct;
         }
 
+        public override ITypeSymbol OutputElementSymbol { get; }
         public override TypeSyntax OutputElementType { get; }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()

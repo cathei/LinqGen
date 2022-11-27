@@ -22,12 +22,12 @@ namespace Cathei.LinqGen.Generator
             IArrayTypeSymbol arraySymbol) : base(expression, id)
         {
             // TODO generic type element
-            ITypeSymbol elementSymbol = arraySymbol.ElementType;
-
-            OutputElementType = ParseTypeName(elementSymbol);
+            OutputElementSymbol = arraySymbol.ElementType;
+            OutputElementType = ParseTypeName(OutputElementSymbol);
             SourceType = ParseTypeName(arraySymbol);
         }
 
+        public override ITypeSymbol OutputElementSymbol { get; }
         public override TypeSyntax OutputElementType { get; }
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)

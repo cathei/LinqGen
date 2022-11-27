@@ -18,8 +18,10 @@ namespace Cathei.LinqGen.Generator
     {
         public RangeGeneration(in LinqGenExpression expression, int id) : base(expression, id)
         {
+            OutputElementSymbol = expression.MethodSymbol.Parameters[0].Type;
         }
 
+        public override ITypeSymbol OutputElementSymbol { get; }
         public override TypeSyntax OutputElementType => IntType;
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)

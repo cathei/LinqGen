@@ -47,7 +47,7 @@ namespace Cathei.LinqGen.Generator
                 switch (node.Identifier.ValueText)
                 {
                     case "_Upstream_":
-                        return _instruction.UpstreamResolvedClassName;
+                        return _instruction.Upstream.ResolvedClassName;
                 }
 
                 return base.VisitIdentifierName(node);

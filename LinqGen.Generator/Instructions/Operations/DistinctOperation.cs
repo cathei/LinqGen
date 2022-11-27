@@ -17,32 +17,31 @@ namespace Cathei.LinqGen.Generator
     public class DistinctOperation : Operation
     {
         private bool WithComparerParameter { get; }
-        private bool IsElementEquatable { get; }
-        private TypeSyntax ComparerType { get; }
 
         public DistinctOperation(in LinqGenExpression expression, int id) : base(expression, id)
         {
             // Distinct with parameter
             WithComparerParameter = expression.MethodSymbol.Parameters.Length == 1;
+        }
 
-            if (WithComparerParameter)
+        private bool IsElementEquatable => TryGetEquatableSelfInterface(OutputElementSymbol, out _);
+
+        private TypeSyntax ComparerType
+        {
+            get
             {
-                ComparerType = TypeName("Comparer");
-            }
-            else if (TryGetEquatableSelfInterface(expression.InputElementSymbol!, out _))
-            {
-                IsElementEquatable = true;
-                ComparerType = GenericName(
-                    Identifier("EquatableComparer"), TypeArgumentList(InputElementType));
-            }
-            else
-            {
-                ComparerType = ComparerInterfaceType;
+                if (WithComparerParameter)
+                    return TypeName("Comparer");
+
+                if (IsElementEquatable)
+                    return GenericName(Identifier("EquatableComparer"), TypeArgumentList(OutputElementType));
+
+                return ComparerInterfaceType;
             }
         }
 
         private TypeSyntax ComparerInterfaceType =>
-            GenericName(Identifier("IEqualityComparer"), TypeArgumentList(InputElementType));
+            GenericName(Identifier("IEqualityComparer"), TypeArgumentList(OutputElementType));
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
@@ -65,12 +64,12 @@ namespace Cathei.LinqGen.Generator
             {
                 comparerExpression = IsElementEquatable
                     ? ObjectCreationExpression(ComparerType, EmptyArgumentList, null)
-                    : EqualityComparerDefault(InputElementType);
+                    : EqualityComparerDefault(OutputElementType);
             }
 
             var countExpression = Upstream.RenderCount() ?? LiteralExpression(0);
 
-            var pooledSetType = PooledSetType(InputElementType, ComparerType);
+            var pooledSetType = PooledSetType(OutputElementType, ComparerType);
             var pooledSetCreation = ObjectCreationExpression(
                 pooledSetType, ArgumentList(countExpression, comparerExpression), null);
 

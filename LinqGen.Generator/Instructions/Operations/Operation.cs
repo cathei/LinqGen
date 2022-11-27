@@ -32,9 +32,7 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public new Generation Upstream => base.Upstream!;
 
-        public new ITypeSymbol InputElementSymbol => base.InputElementSymbol!;
-        public new TypeSyntax InputElementType => base.InputElementType!;
-
+        public override ITypeSymbol OutputElementSymbol => Upstream.OutputElementSymbol;
         public override TypeSyntax OutputElementType => Upstream.OutputElementType;
 
         /// <summary>

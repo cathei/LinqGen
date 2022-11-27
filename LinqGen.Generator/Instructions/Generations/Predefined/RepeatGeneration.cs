@@ -18,8 +18,10 @@ namespace Cathei.LinqGen.Generator
     {
         public RepeatGeneration(in LinqGenExpression expression, int id) : base(expression, id)
         {
+            OutputElementSymbol = expression.MethodSymbol.ConstructedFrom.TypeParameters[0];
         }
 
+        public override ITypeSymbol OutputElementSymbol { get; }
         public override TypeSyntax OutputElementType => TypeName("Element");
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()

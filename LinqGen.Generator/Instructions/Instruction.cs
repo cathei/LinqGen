@@ -27,17 +27,12 @@ namespace Cathei.LinqGen.Generator
         {
             UpstreamSignatureSymbol = expression.UpstreamSignatureSymbol;
             Id = id;
-
-            InputElementSymbol = expression.InputElementSymbol;
-            InputElementType = InputElementSymbol != null ? ParseTypeName(InputElementSymbol) : null;
         }
-
-        public ITypeSymbol? InputElementSymbol { get; }
 
         /// <summary>
         /// Input element type that can substitute upstream output element type.
         /// </summary>
-        public TypeSyntax? InputElementType { get; }
+        protected virtual TypeSyntax? InputElementType => null;
 
         /// <summary>
         /// Defines which kind of method should instruction exposed as.

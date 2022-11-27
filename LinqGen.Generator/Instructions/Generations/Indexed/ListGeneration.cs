@@ -23,14 +23,12 @@ namespace Cathei.LinqGen.Generator
             INamedTypeSymbol enumerableSymbol, INamedTypeSymbol listSymbol) : base(expression, id)
         {
             // TODO generic type element
-            ITypeSymbol elementSymbol = listSymbol.TypeArguments[0];
-            // ITypeSymbol enumeratorSymbol = GetEnumeratorSymbol(enumerableSymbol);
-
-            OutputElementType = ParseTypeName(elementSymbol);
+            OutputElementSymbol = listSymbol.TypeArguments[0];
+            OutputElementType = ParseTypeName(OutputElementSymbol);
             SourceType = ParseTypeName(enumerableSymbol);
-            // SourceEnumeratorType = ParseTypeName(enumeratorSymbol);
         }
 
+        public override ITypeSymbol OutputElementSymbol { get; }
         public override TypeSyntax OutputElementType { get; }
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
