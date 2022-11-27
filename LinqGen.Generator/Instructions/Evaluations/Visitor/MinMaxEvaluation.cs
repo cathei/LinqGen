@@ -14,7 +14,7 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public sealed class MinMaxEvaluation : LocalEvaluation
+    public sealed class MinMaxEvaluation : VisitorEvaluation
     {
         private bool IsMin { get; }
         private bool WithComparerParameter { get; }

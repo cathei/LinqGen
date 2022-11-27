@@ -14,7 +14,7 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public abstract class LocalEvaluation : Evaluation
+    public abstract class VisitorEvaluation : Evaluation
     {
         private static readonly SyntaxTree VisitorTemplate = CSharpSyntaxTree.ParseText(@"
         private struct _Visitor_ : IVisitor<_Input_>
@@ -46,9 +46,9 @@ namespace Cathei.LinqGen.Generator
 
         private class VisitorRewriter : CSharpSyntaxRewriter
         {
-            private readonly LocalEvaluation _instruction;
+            private readonly VisitorEvaluation _instruction;
 
-            public VisitorRewriter(LocalEvaluation instruction)
+            public VisitorRewriter(VisitorEvaluation instruction)
             {
                 _instruction = instruction;
             }
@@ -137,7 +137,7 @@ namespace Cathei.LinqGen.Generator
 
         private readonly VisitorRewriter _rewriter;
 
-        public LocalEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+        public VisitorEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
         {
             _rewriter = new VisitorRewriter(this);
         }

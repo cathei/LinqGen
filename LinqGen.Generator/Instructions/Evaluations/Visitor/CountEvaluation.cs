@@ -14,7 +14,7 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public sealed class CountEvaluation : LocalEvaluation
+    public sealed class CountEvaluation : VisitorEvaluation
     {
         private TypeSyntax? PredicateType { get; }
         private bool WithStruct { get; }

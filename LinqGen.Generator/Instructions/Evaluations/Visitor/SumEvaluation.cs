@@ -14,7 +14,7 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public sealed class SumEvaluation : LocalEvaluation
+    public sealed class SumEvaluation : VisitorEvaluation
     {
         private TypeSyntax? SelectorType { get; }
         private bool WithStruct { get; }
