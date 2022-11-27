@@ -160,12 +160,12 @@ namespace Cathei.LinqGen.Generator
                 case "AsEnumerable":
                     return new AsEnumerableEvaluation(expression, id);
 
-                // case "First":
-                //     return new FirstEvaluation(expression, false);
-                //
-                // case "FirstOrDefault":
-                //     return new FirstEvaluation(expression, true);
-                //
+                case "First":
+                    return new FirstEvaluation(expression, id, false);
+
+                case "FirstOrDefault":
+                    return new FirstEvaluation(expression, id, true);
+
                 // case "Last":
                 //     return new LastEvaluation(expression, false);
                 //

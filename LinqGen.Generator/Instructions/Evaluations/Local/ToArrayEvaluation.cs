@@ -39,9 +39,9 @@ namespace Cathei.LinqGen.Generator
                 MemberAccessExpression(VarName("list"), AddMethod), ArgumentList(CurrentPlaceholder)));
         }
 
-        protected override ExpressionSyntax RenderResult()
+        protected override IEnumerable<StatementSyntax> RenderReturn()
         {
-            return InvocationExpression(VarName("list"), IdentifierName("ToArray"));
+            yield return ReturnStatement(InvocationExpression(VarName("list"), IdentifierName("ToArray")));
         }
     }
 }

@@ -287,6 +287,14 @@ namespace Cathei.LinqGen.Generator
         }
 
         public static LocalDeclarationStatementSyntax LocalDeclarationStatement(
+            TypeSyntax type, SyntaxToken identifier)
+        {
+            return SyntaxFactory.LocalDeclarationStatement(
+                SyntaxFactory.VariableDeclaration(type, SingletonSeparatedList(
+                    VariableDeclarator(identifier, null, null))));
+        }
+
+        public static LocalDeclarationStatementSyntax LocalDeclarationStatement(
             TypeSyntax type, SyntaxToken identifier, ExpressionSyntax initialValue)
         {
             return SyntaxFactory.LocalDeclarationStatement(

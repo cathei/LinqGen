@@ -20,8 +20,11 @@ namespace Cathei.LinqGen.Generator
         {
         }
 
+        protected virtual ExpressionSyntax? SkipExpression => null;
+        protected virtual ExpressionSyntax? TakeExpression => null;
+
         protected abstract IEnumerable<StatementSyntax> RenderAccumulation();
-        protected abstract ExpressionSyntax RenderResult();
+        protected abstract IEnumerable<StatementSyntax> RenderReturn();
 
         protected virtual IEnumerable<StatementSyntax> RenderInitialization()
         {
@@ -59,8 +62,12 @@ namespace Cathei.LinqGen.Generator
         {
             var initialDeclarations = Upstream.GetLocalDeclarations(MemberKind.Enumerator);
 
+            var supportPartition = Upstream.SupportPartition;
+            var skipVar = supportPartition ? SkipExpression : null;
+            var takeVar = supportPartition ? TakeExpression : null;
+
             var initialAssignments = Upstream.GetLocalAssignments(MemberKind.Both)
-                .Concat(Upstream.RenderInitialization(true, null, null))
+                .Concat(Upstream.RenderInitialization(true, skipVar, takeVar))
                 .Concat(RenderInitialization());
 
             var accumulationStatements = RenderAccumulation();
@@ -71,7 +78,7 @@ namespace Cathei.LinqGen.Generator
 
             var iterationStatements = iterationBlock.Statements;
             iterationStatements = iterationStatements.InsertRange(0, initialAssignments);
-            iterationStatements = iterationStatements.Add(ReturnStatement(RenderResult()));
+            iterationStatements = iterationStatements.AddRange(RenderReturn());
 
             BlockSyntax body;
 
