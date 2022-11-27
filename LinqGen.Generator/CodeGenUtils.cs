@@ -323,11 +323,9 @@ namespace Cathei.LinqGen.Generator
 
         public static StatementSyntax ThrowInvalidOperationStatement()
         {
-            return Block(
-                ExpressionStatement(InvocationExpression(
-                    IdentifierName("ExceptionUtils"),
-                    IdentifierName("ThrowInvalidOperation"))),
-                ReturnDefaultStatement());
+            return ExpressionStatement(InvocationExpression(
+                IdentifierName("ExceptionUtils"),
+                IdentifierName("ThrowInvalidOperation")));
         }
 
         public static LiteralExpressionSyntax LiteralExpression(int value)

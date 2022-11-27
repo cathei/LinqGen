@@ -166,12 +166,12 @@ namespace Cathei.LinqGen.Generator
                 case "FirstOrDefault":
                     return new FirstEvaluation(expression, id, true);
 
-                // case "Last":
-                //     return new LastEvaluation(expression, false);
-                //
-                // case "LastOrDefault":
-                //     return new LastEvaluation(expression, true);
-                //
+                case "Last":
+                    return new LastEvaluation(expression, id, false);
+
+                case "LastOrDefault":
+                    return new LastEvaluation(expression, id, true);
+
                 // case "Single":
                 //     break;
                 //
