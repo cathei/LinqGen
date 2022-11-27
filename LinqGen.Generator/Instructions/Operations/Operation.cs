@@ -95,15 +95,26 @@ namespace Cathei.LinqGen.Generator
             return Upstream.RenderIteration(isLocal, statements);
         }
 
+        /// <summary>
+        /// "Dummy" parameter to prevent signature conflict.
+        /// This also can be solved by using extension method, but for now all operation is enumerable method.
+        /// </summary>
+        public virtual TypeSyntax? DummyParameterType => null;
+
         public IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
         {
             if (MethodKind == MethodKind.Enumerable)
             {
                 int arityDiff = Arity - Upstream.Arity;
 
+                var parameters = GetParameters(MemberKind.Enumerable, false, true);
+
+                if (DummyParameterType != null)
+                    parameters = parameters.Append(Parameter(DummyParameterType, Identifier("unused"), DefaultLiteral));
+
                 yield return MethodDeclaration(new(AggressiveInliningAttributeList), PublicTokenList,
                     ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(arityDiff),
-                    ParameterList(GetParameters(MemberKind.Enumerable, false, true)),
+                    ParameterList(parameters),
                     GetGenericConstraints(arityDiff), null,
                     ArrowExpressionClause(ObjectCreationExpression(
                         ResolvedClassName, ArgumentList(GetArguments(MemberKind.Enumerable, true)), null)),

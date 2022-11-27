@@ -38,6 +38,8 @@ namespace Cathei.LinqGen.Generator
         public override ITypeSymbol OutputElementSymbol { get; }
         public override TypeSyntax OutputElementType { get; }
 
+        public override TypeSyntax? DummyParameterType => WithStruct ? OutputElementType : null;
+
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
             if (WithStruct)
