@@ -36,7 +36,7 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public IdentifierNameSyntax ClassName { get; }
 
-        public TypeSyntax ResolvedClassName
+        public NameSyntax ResolvedClassName
         {
             get
             {
@@ -77,7 +77,7 @@ namespace Cathei.LinqGen.Generator
             return GenerationTemplate.Render(this);
         }
 
-        public IEnumerable<MemberDeclarationSyntax> RenderEnumerableMembers()
+        public virtual IEnumerable<MemberDeclarationSyntax> RenderEnumerableMembers()
         {
             var countExpression = RenderCount();
 
@@ -148,6 +148,19 @@ namespace Cathei.LinqGen.Generator
         public bool SupportCount => RenderCount() != null;
 
         /// <summary>
+        /// This means the operation will locally run to the end on timing of initialization.
+        /// For example, OrderBy needs to run to end first to sort the upstream.
+        /// </summary>
+        protected virtual bool ClearsUpstreamEnumerator => false;
+
+        private bool ShouldIgnoreUpstream(MemberKind kind)
+        {
+            if ((kind & MemberKind.Enumerator) == 0)
+                return false;
+            return ClearsUpstreamEnumerator;
+        }
+
+        /// <summary>
         /// Returns null if cannot get count without iteration.
         /// </summary>
         public abstract ExpressionSyntax? RenderCount();
@@ -177,7 +190,7 @@ namespace Cathei.LinqGen.Generator
         public IEnumerable<ParameterSyntax> GetParameters(
             MemberKind kind, bool includeUpstream, bool defaultValue = false)
         {
-            if (includeUpstream && Upstream != null)
+            if (includeUpstream && Upstream != null && !ShouldIgnoreUpstream(kind))
             {
                 foreach (var param in Upstream.GetParameters(kind, includeUpstream))
                     yield return param;
@@ -194,7 +207,7 @@ namespace Cathei.LinqGen.Generator
 
         public IEnumerable<ArgumentSyntax> GetArguments(MemberKind kind, bool includeUpstream)
         {
-            if (includeUpstream && Upstream != null)
+            if (includeUpstream && Upstream != null && !ShouldIgnoreUpstream(kind))
             {
                 foreach (var arg in Upstream.GetArguments(kind, includeUpstream))
                     yield return arg;
@@ -211,7 +224,7 @@ namespace Cathei.LinqGen.Generator
 
         public IEnumerable<MemberDeclarationSyntax> GetFieldDeclarations(MemberKind kind)
         {
-            if (Upstream != null)
+            if (Upstream != null && !ShouldIgnoreUpstream(kind))
             {
                 foreach (var field in Upstream.GetFieldDeclarations(kind))
                     yield return field;
@@ -228,7 +241,7 @@ namespace Cathei.LinqGen.Generator
 
         public IEnumerable<StatementSyntax> GetFieldAssignments(MemberKind kind, IdentifierNameSyntax? source = null)
         {
-            if (Upstream != null)
+            if (Upstream != null && !ShouldIgnoreUpstream(kind))
             {
                 foreach (var assignment in Upstream.GetFieldAssignments(kind, source))
                     yield return assignment;
@@ -247,7 +260,7 @@ namespace Cathei.LinqGen.Generator
 
         public IEnumerable<StatementSyntax> GetFieldDefaultAssignments(MemberKind kind)
         {
-            if (Upstream != null)
+            if (Upstream != null && !ShouldIgnoreUpstream(kind))
             {
                 foreach (var assignment in Upstream.GetFieldDefaultAssignments(kind))
                     yield return assignment;
@@ -268,7 +281,7 @@ namespace Cathei.LinqGen.Generator
 
         public IEnumerable<LocalDeclarationStatementSyntax> GetLocalDeclarations(MemberKind kind)
         {
-            if (Upstream != null)
+            if (Upstream != null && !ShouldIgnoreUpstream(kind))
             {
                 foreach (var local in Upstream.GetLocalDeclarations(kind))
                     yield return local;

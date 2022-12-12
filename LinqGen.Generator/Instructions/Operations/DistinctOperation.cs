@@ -18,10 +18,9 @@ namespace Cathei.LinqGen.Generator
     {
         private bool WithComparerParameter { get; }
 
-        public DistinctOperation(in LinqGenExpression expression, int id) : base(expression, id)
+        public DistinctOperation(in LinqGenExpression expression, int id, bool withComparer) : base(expression, id)
         {
-            // Distinct with parameter
-            WithComparerParameter = expression.MethodSymbol.Parameters.Length == 1;
+            WithComparerParameter = withComparer;
         }
 
         private bool IsElementEquatable => TryGetEquatableSelfInterface(OutputElementSymbol, out _);
