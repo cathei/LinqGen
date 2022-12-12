@@ -110,37 +110,69 @@ namespace Cathei.LinqGen.Generator
                 case "DistinctComparer":
                     return new DistinctOperation(expression, id, true);
 
-                // case "OrderBy":
-                //     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                //         break;
-                //     return new OrderByOperation(expression, id, typeSymbol, false);
-                //
-                // case "OrderByStruct":
-                //     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                //         break;
-                //     return new OrderByOperation(expression, id, typeSymbol, true);
-                //
-                // case "OrderBySelf":
-                //     return new OrderByOperation(expression, id, null, false);
-                //
-                // case "OrderBySelfStruct":
-                //     return new OrderByOperation(expression, id, null, true);
-                //
-                // case "ThenBy":
-                //     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                //         break;
-                //     return new ThenByOperation(expression, id, typeSymbol, false);
-                //
-                // case "ThenByStruct":
-                //     if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                //         break;
-                //     return new ThenByOperation(expression, id, typeSymbol, true);
-                //
-                // case "ThenBySelf":
-                //     return new ThenByOperation(expression, id, null, false);
-                //
-                // case "ThenBySelfStruct":
-                //     return new ThenByOperation(expression, id, null, true);
+                case "OrderBy":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new OrderByOperation(expression, id, typeSymbol, false, false);
+
+                case "OrderByStruct":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new OrderByOperation(expression, id, typeSymbol, true, false);
+
+                case "OrderBySelf":
+                    return new OrderByOperation(expression, id, null, false, false);
+
+                case "OrderBySelfStruct":
+                    return new OrderByOperation(expression, id, null, true, false);
+
+                case "ThenBy":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new ThenByOperation(expression, id, typeSymbol, false, false);
+
+                case "ThenByStruct":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new ThenByOperation(expression, id, typeSymbol, true, false);
+
+                case "ThenBySelf":
+                    return new ThenByOperation(expression, id, null, false, false);
+
+                case "ThenBySelfStruct":
+                    return new ThenByOperation(expression, id, null, true, false);
+
+                case "OrderByDesc":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new OrderByOperation(expression, id, typeSymbol, false, true);
+
+                case "OrderByDescStruct":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new OrderByOperation(expression, id, typeSymbol, true, true);
+
+                case "OrderByDescSelf":
+                    return new OrderByOperation(expression, id, null, false, true);
+
+                case "OrderByDescSelfStruct":
+                    return new OrderByOperation(expression, id, null, true, true);
+
+                case "ThenByDesc":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new ThenByOperation(expression, id, typeSymbol, false, true);
+
+                case "ThenByDescStruct":
+                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
+                        break;
+                    return new ThenByOperation(expression, id, typeSymbol, true, true);
+
+                case "ThenByDescSelf":
+                    return new ThenByOperation(expression, id, null, false, true);
+
+                case "ThenByDescSelfStruct":
+                    return new ThenByOperation(expression, id, null, true, true);
             }
 
             // not yet implemented

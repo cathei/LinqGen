@@ -141,6 +141,9 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
+        public virtual TypeSyntax EnumerableInterfaceType =>
+            GenericName(Identifier("IInternalStub"), TypeArgumentList(OutputElementType));
+
         protected abstract IEnumerable<MemberInfo> GetMemberInfos(bool isLocal);
 
         public abstract bool SupportPartition { get; }
@@ -303,7 +306,7 @@ namespace Cathei.LinqGen.Generator
         {
             source ??= ThisExpression();
 
-            if (Upstream != null)
+            if (Upstream != null && !ShouldIgnoreUpstream(kind))
             {
                 foreach (var assignment in Upstream.GetLocalAssignments(kind, source))
                     yield return assignment;

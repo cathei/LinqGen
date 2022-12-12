@@ -22,7 +22,6 @@ namespace Cathei.LinqGen.Generator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public Sorter(PooledList<_Element_> elements)
             {
-                this.source = source;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -66,11 +65,11 @@ namespace Cathei.LinqGen.Generator
                 {
                     // Move the left index to the right at least once and while the element at
                     // the left index is less than the pivot
-                    while (Compare(indexesToSort[++i], pivotIndex) < 0) { }
+                    while (Compare(indexesToSort[++i], pivotIndex) < 0);
 
                     // Move the right index to the left at least once and while the element at
                     // the right index is greater than the pivot
-                    while (Compare(indexesToSort[--j], pivotIndex) > 0) { }
+                    while (Compare(indexesToSort[--j], pivotIndex) > 0);
 
                     // If the indices crossed, return
                     if (i >= j)

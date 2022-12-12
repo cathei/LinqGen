@@ -28,7 +28,7 @@ using Cathei.LinqGen.Hidden;
 namespace Cathei.LinqGen.Hidden
 {
     // Non-exported Enumerable should consider anonymous type, thus it will be internal
-    internal struct _Enumerable_ : IInternalStub<_Element_>
+    internal struct _Enumerable_ : _Interface_
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal _Enumerable_() : this()
@@ -102,8 +102,8 @@ namespace Cathei.LinqGen
                     case "_Enumerable_":
                         return _instruction.ResolvedClassName;
 
-                    // case "_Interface_":
-                    //     return _instruction.InterfaceType;
+                    case "_Interface_":
+                        return _instruction.EnumerableInterfaceType;
                 }
 
                 return base.VisitIdentifierName(node);
