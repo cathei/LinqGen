@@ -175,6 +175,14 @@ namespace Cathei.LinqGen.Generator
                     list.Add(ExpressionStatement(SimpleAssignmentExpression(
                         MemberAccessExpression(ThisExpression(), member.ComparerName), member.ComparerName)));
 
+                    if (!member.Operation.WithStruct)
+                    {
+                        // default comparer if null
+                        list.Add(ExpressionStatement(AssignmentExpression(SyntaxKind.CoalesceAssignmentExpression,
+                            MemberAccessExpression(ThisExpression(), member.ComparerName),
+                            ComparerDefault(member.KeyType))));
+                    }
+
                     if (member.SelectorType == null)
                     {
                         needElement = true;

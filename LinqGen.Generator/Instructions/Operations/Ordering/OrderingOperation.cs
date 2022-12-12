@@ -17,8 +17,8 @@ namespace Cathei.LinqGen.Generator
     public abstract class OrderingOperation : Operation
     {
         private bool WithSelector { get; }
-        private bool WithStruct { get; }
-        private bool Descending { get; }
+        public bool WithStruct { get; }
+        public bool Descending { get; }
 
         public OrderingOperation(in LinqGenExpression expression, int id,
             INamedTypeSymbol? selectorType, bool withStruct, bool descending) : base(expression, id)
@@ -247,15 +247,13 @@ namespace Cathei.LinqGen.Generator
 
             if (WithStruct)
             {
-                yield return new OrderMemberInfo(
-                    WithSelector ? TypeName("Selector") : null,
-                    TypeName("Comparer"), KeyType, Id, Descending);
+                yield return new OrderMemberInfo(this,
+                    WithSelector ? TypeName("Selector") : null, TypeName("Comparer"), KeyType);
             }
             else
             {
-                yield return new OrderMemberInfo(
-                    WithSelector ? SelectorInterfaceType : null,
-                    ComparerInterfaceType, KeyType, Id, Descending);
+                yield return new OrderMemberInfo(this,
+                    WithSelector ? SelectorInterfaceType : null, ComparerInterfaceType, KeyType);
             }
         }
 

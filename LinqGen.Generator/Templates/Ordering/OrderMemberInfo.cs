@@ -10,20 +10,22 @@ namespace Cathei.LinqGen.Generator
 
     public readonly struct OrderMemberInfo
     {
+        public readonly OrderingOperation Operation;
         public readonly TypeSyntax? SelectorType;
         public readonly TypeSyntax ComparerType;
         public readonly TypeSyntax KeyType;
-        public readonly int Id;
-        public readonly bool Desc;
 
-        public OrderMemberInfo(TypeSyntax? selectorType, TypeSyntax comparerType, TypeSyntax keyType, int id, bool desc)
+        public OrderMemberInfo(OrderingOperation operation,
+            TypeSyntax? selectorType, TypeSyntax comparerType, TypeSyntax keyType)
         {
+            Operation = operation;
             SelectorType = selectorType;
             ComparerType = comparerType;
             KeyType = keyType;
-            Id = id;
-            Desc = desc;
         }
+
+        public int Id => Operation.Id;
+        public bool Desc => Operation.Descending;
 
         public IdentifierNameSyntax SelectorName => IdentifierName($"selector_{Id}");
         public IdentifierNameSyntax ComparerName => IdentifierName($"comparer_{Id}");
