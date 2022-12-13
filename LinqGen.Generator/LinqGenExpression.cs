@@ -104,11 +104,23 @@ namespace Cathei.LinqGen.Generator
 
             var expressionTypeSymbol = semanticModel.GetTypeInfo(forEachSyntax.Expression).Type;
 
+            if (expressionTypeSymbol == null)
+                return false;
+
+            // Lookup for GetEnumerator Stub extension method
+            var methodSymbol = semanticModel
+                .LookupSymbols(forEachSyntax.SpanStart, expressionTypeSymbol, "GetEnumerator", true)
+                .OfType<IMethodSymbol>()
+                .FirstOrDefault();
+
+            if (methodSymbol == null)
+                return false;
+
             ITypeSymbol? inputElementSymbol = null;
             INamedTypeSymbol? upstreamSignatureSymbol = null;
 
             // this means it takes LinqGen enumerable as input, and upstream type is required
-            if (expressionTypeSymbol is INamedTypeSymbol receiverTypeSymbol &&
+            if (methodSymbol.ReceiverType is INamedTypeSymbol receiverTypeSymbol &&
                 IsInputStubEnumerable(receiverTypeSymbol))
             {
                 if (!TryParseStubInterface(receiverTypeSymbol, out inputElementSymbol, out upstreamSignatureSymbol))
@@ -122,17 +134,6 @@ namespace Cathei.LinqGen.Generator
             if (inputElementSymbol == null)
             {
                 // evaluations must have known input element symbol
-                return false;
-            }
-
-            // Lookup for GetEnumerator symbol
-            var methodSymbol = semanticModel
-                .LookupSymbols(0, expressionTypeSymbol, "GetEnumerator", true)
-                .OfType<IMethodSymbol>()
-                .FirstOrDefault();
-
-            if (methodSymbol == null)
-            {
                 return false;
             }
 
