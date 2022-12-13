@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
+// LinqGen.Tests, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
+
 using System.Linq;
-using System.Linq.Expressions;
 using NUnit.Framework;
 
 namespace Cathei.LinqGen.Tests;

@@ -513,16 +513,24 @@ namespace Cathei.LinqGen.Generator
             return interfaceSymbol != null!;
         }
 
-        public static ITypeSymbol GetEnumeratorSymbol(INamedTypeSymbol enumerableSymbol)
+        public static IMethodSymbol? GetEnumeratorSymbol(ITypeSymbol enumerableSymbol)
         {
             // find GetEnumerator with same rule as C# duck typing
             // TODO fallback to interface implementation
             return enumerableSymbol.GetMembers()
                 .OfType<IMethodSymbol>()
-                .First(x =>
+                .FirstOrDefault(x =>
                     x.DeclaredAccessibility == Accessibility.Public &&
-                    x.Name == "GetEnumerator" && x.Parameters.Length == 0 && x.TypeParameters.Length == 0)
-                .ReturnType;
+                    x.Name == "GetEnumerator" && x.Parameters.Length == 0 && x.TypeParameters.Length == 0);
+        }
+
+        public static ITypeSymbol GetCurrentSymbol(ITypeSymbol enumeratorSymbol)
+        {
+            // find Current property with same rule as C# duck typing
+            return enumeratorSymbol.GetMembers()
+                .OfType<IPropertySymbol>()
+                .First(x => x.DeclaredAccessibility == Accessibility.Public && x.Name == "Current")
+                .Type;
         }
 
         public static INamedTypeSymbol NormalizeSignature(INamedTypeSymbol signature)
