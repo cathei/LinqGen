@@ -30,15 +30,15 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(
-            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+            ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             ExpressionSyntax newSkipVar = VarName("skip");
 
             if (skipVar != null)
                 newSkipVar = AddExpression(newSkipVar, skipVar);
 
-            return base.RenderInitialization(isLocal, newSkipVar, takeVar);
+            return base.RenderInitialization(isLocal, source, newSkipVar, takeVar);
         }
 
         public override ExpressionSyntax? RenderCount()

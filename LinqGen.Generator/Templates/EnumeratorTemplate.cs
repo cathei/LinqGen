@@ -111,7 +111,7 @@ namespace Cathei.LinqGen.Generator
 
                 statements = _instruction.GetFieldAssignments(MemberKind.Both, IdentifierName("source"))
                     .Concat(_instruction.GetFieldDefaultAssignments(MemberKind.Enumerator))
-                    .Concat(_instruction.RenderInitialization(false, null, null));
+                    .Concat(_instruction.RenderInitialization(false, IdentifierName("source"), null, null));
 
                 return node.WithBody(Block(statements));
             }

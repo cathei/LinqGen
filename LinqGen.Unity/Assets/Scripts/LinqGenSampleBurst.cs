@@ -12,14 +12,6 @@ public class LinqGenSampleBurst : MonoBehaviour
     {
         var nativeArray = new NativeArray<int>(myArray, Allocator.Temp);
 
-        var enumerable = nativeArray.Specialize();
-        var enumerable2 = enumerable.Where(x => x % 2 == 0);
-
-        foreach (var i in enumerable)
-        {
-            Debug.Log(i);
-        }
-
         foreach (var i in nativeArray.Specialize().OrderBy().Select(x => x * 2))
         {
             Debug.Log(i);

@@ -63,7 +63,7 @@ namespace Cathei.LinqGen.Generator
             var takeVar = supportPartition ? TakeExpression : null;
 
             var initialAssignments = Upstream.GetLocalAssignments(MemberKind.Both)
-                .Concat(Upstream.RenderInitialization(true, skipVar, takeVar))
+                .Concat(Upstream.RenderInitialization(true, ThisExpression(), skipVar, takeVar))
                 .Concat(RenderInitialization());
 
             var accumulationStatements = RenderAccumulation();

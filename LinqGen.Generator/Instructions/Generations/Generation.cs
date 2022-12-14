@@ -171,8 +171,8 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// Additional initialization statements.
         /// </summary>
-        public virtual IEnumerable<StatementSyntax> RenderInitialization(
-            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+        public virtual IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+            ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             yield break;
         }
@@ -352,7 +352,7 @@ namespace Cathei.LinqGen.Generator
             var initialDeclarations = GetLocalDeclarations(MemberKind.Enumerator);
 
             var initialAssignments = GetLocalAssignments(MemberKind.Both)
-                    .Concat(RenderInitialization(true, null, null));
+                    .Concat(RenderInitialization(true, ThisExpression(), null, null));
 
             StatementSyntax accumulationStatement = IfStatement(LogicalNotExpression(InvocationExpression(
                     MemberAccessExpression(visitorName, VisitMethod), ArgumentList(CurrentPlaceholder))),

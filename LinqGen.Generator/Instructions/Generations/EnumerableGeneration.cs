@@ -62,12 +62,7 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Enumerable, SourceEnumerableType, VarName("source"));
-
-            var defaultValue = isLocal
-                ? InvocationExpression(VarName("source"), GetEnumeratorMethod)
-                : InvocationExpression(IdentifierName("source"), VarName("source"), GetEnumeratorMethod);
-
-            yield return new MemberInfo(MemberKind.Enumerator, SourceEnumeratorType, VarName("iter"), defaultValue);
+            yield return new MemberInfo(MemberKind.Enumerator, SourceEnumeratorType, VarName("iter"));
         }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
@@ -79,6 +74,13 @@ namespace Cathei.LinqGen.Generator
         public override ExpressionSyntax? RenderCount()
         {
             return IsCollection ? MemberAccessExpression(VarName("source"), CountProperty) : null;
+        }
+
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+            ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+        {
+            yield return ExpressionStatement(SimpleAssignmentExpression(VarName("iter"),
+                InvocationExpression(source, VarName("source"), GetEnumeratorMethod)));
         }
 
         public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)

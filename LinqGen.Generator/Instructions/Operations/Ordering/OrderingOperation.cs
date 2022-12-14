@@ -156,8 +156,8 @@ namespace Cathei.LinqGen.Generator
             yield return SorterTemplate.Render(this);
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(
-            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+            ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             var rootUpstream = RootOrder.Upstream;
             ExpressionSyntax sourceName = isLocal ? ThisExpression() : IdentifierName("source");
@@ -168,7 +168,7 @@ namespace Cathei.LinqGen.Generator
             foreach (var statement in rootUpstream.GetLocalAssignments(MemberKind.Both, sourceName))
                 yield return statement;
 
-            foreach (var statement in rootUpstream.RenderInitialization(true, null, null))
+            foreach (var statement in rootUpstream.RenderInitialization(true, source, null, null))
                 yield return statement;
 
             ExpressionSyntax countExpression = rootUpstream.RenderCount() ?? LiteralExpression(0);

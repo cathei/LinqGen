@@ -44,8 +44,8 @@ namespace Cathei.LinqGen.Generator
             return MemberAccessExpression(VarName("source"), CountProperty);
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(
-            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+            ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             if (skipVar != null)
             {

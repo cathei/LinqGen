@@ -26,8 +26,8 @@ namespace Cathei.LinqGen.Generator
             yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(
-            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+            ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             ExpressionSyntax newTakeVar = VarName("take");
 
@@ -37,7 +37,7 @@ namespace Cathei.LinqGen.Generator
             if (takeVar != null)
                 newTakeVar = MathMin(newTakeVar, takeVar);
 
-            return base.RenderInitialization(isLocal, skipVar, newTakeVar);
+            return base.RenderInitialization(isLocal, source, skipVar, newTakeVar);
         }
 
         public override ExpressionSyntax? RenderCount()

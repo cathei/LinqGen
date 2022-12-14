@@ -42,8 +42,8 @@ namespace Cathei.LinqGen.Generator
 
         public override bool SupportPartition => Upstream.SupportPartition;
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(
-            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+            ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             if (!Upstream.SupportPartition)
             {
@@ -51,7 +51,7 @@ namespace Cathei.LinqGen.Generator
                 takeVar = null;
             }
 
-            return Upstream.RenderInitialization(isLocal, skipVar, takeVar);
+            return Upstream.RenderInitialization(isLocal, source, skipVar, takeVar);
         }
 
         protected virtual StatementSyntax? RenderMoveNext()
