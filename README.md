@@ -1,6 +1,6 @@
 # LinqGen
 [![Nuget](https://img.shields.io/nuget/v/LinqGen)](https://www.nuget.org/packages?q=LinqGen)
-[![Discord](https://img.shields.io/discord/942240862354702376?color=%235865F2&label=discord&logo=discord&logoColor=%23FFFFFF)](https://discord.gg/htzm856QhA)
+[![Discord](https://img.shields.io/discord/942240862354702376?color=%235865F2&label=discord&logo=discord&logoColor=%23FFFFFF)](https://discord.gg/kpuRTkpeQC)
 
 ## Linq meets Source Generator
 
@@ -20,6 +20,10 @@ For Unity, you can install as Unity package.
 ```
 https://github.com/cathei/LinqGen.git?path=LinqGen.Unity/Packages/com.cathei.linqgen#v0.0.3-preview
 ```
+
+### Any questions?
+
+Feel free to make an issue, or ask me directly from [Discord](https://discord.gg/kpuRTkpeQC)!
 
 ## Usage
 Just add `Specialize()` in front of your Linq query.
