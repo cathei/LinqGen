@@ -22,6 +22,8 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class Specialize<TEnumerable> : IStubSignature { }
 
+    public abstract class SpecializeStruct<T> : IStubSignature { }
+
     public abstract class AsEnumerable<TUp> : IStubSignature { }
 
     public abstract class Cast<TUp> : IStubSignature { }

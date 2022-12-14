@@ -74,18 +74,18 @@ namespace Cathei.LinqGen.Generator
             out ITypeSymbol inputElementSymbol, out INamedTypeSymbol signatureSymbol)
         {
             // generic signature type should not be allowed
-            // receiver type is: IStub<IContent<T>, TSignature>
-            if (symbol.TypeArguments.Length < 2 ||
-                symbol.TypeArguments[0] is not INamedTypeSymbol contentTypeSymbol ||
+            // receiver type is: IStub<IEnumerable<T>, TSignature>
+            if (symbol.TypeArguments.Length != 2 ||
                 symbol.TypeArguments[1] is not INamedTypeSymbol resultSignatureSymbol ||
-                contentTypeSymbol.TypeArguments.Length < 1)
+                !TryGetGenericEnumerableInterface(symbol.TypeArguments[0], out var sourceTypeSymbol) ||
+                sourceTypeSymbol.TypeArguments.Length != 1)
             {
                 inputElementSymbol = default!;
                 signatureSymbol = default!;
                 return false;
             }
 
-            inputElementSymbol = contentTypeSymbol.TypeArguments[0];
+            inputElementSymbol = sourceTypeSymbol.TypeArguments[0];
             signatureSymbol = resultSignatureSymbol;
             return true;
         }
@@ -460,6 +460,16 @@ namespace Cathei.LinqGen.Generator
         public static TypeSyntax EnumerableInterfaceType(TypeSyntax elementType)
         {
             return GenericName(Identifier("IEnumerable"), TypeArgumentList(elementType));
+        }
+
+        public static TypeSyntax EnumeratorInterfaceType(TypeSyntax elementType)
+        {
+            return GenericName(Identifier("IEnumerator"), TypeArgumentList(elementType));
+        }
+
+        public static TypeSyntax StructFunctionInterfaceType(TypeSyntax inputType, TypeSyntax resultType)
+        {
+            return GenericName(Identifier("IStructFunction"), TypeArgumentList(inputType, resultType));
         }
 
         private static bool CompareNamespace(ITypeSymbol symbol, string name)

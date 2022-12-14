@@ -18,17 +18,30 @@ namespace Cathei.LinqGen
 
     public static partial class StubExtensions
     {
-        public static Stub<IContent<int>, Range> Range(this IGenerationStub stub, int start, int count)
+        /// <summary>
+        /// Reference type can use covariance support
+        /// </summary>
+        public static Stub<T, Specialize<T>> Specialize<T>(this T enumerable) where T : IEnumerable
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IContent<T>, Empty> Empty<T>(this IGenerationStub stub)
+        // public static Stub<IEnumerable<T>, SpecializeStruct<T>> Specialize<T>(this IEnumerable<T> enumerable)
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        public static Stub<IEnumerable<int>, Range> Range(this IGenerationStub stub, int start, int count)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IContent<T>, Repeat> Repeat<T>(this IGenerationStub stub, T element, int count)
+        public static Stub<IEnumerable<T>, Empty> Empty<T>(this IGenerationStub stub)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<T>, Repeat> Repeat<T>(this IGenerationStub stub, T element, int count)
         {
             throw new NotImplementedException();
         }

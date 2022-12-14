@@ -45,6 +45,9 @@ namespace Cathei.LinqGen.Generator
                     break;
                 }
 
+                // case "SpecializeStruct":
+                //     break;
+
                 case "Range":
                     return new RangeGeneration(expression, id);
 
