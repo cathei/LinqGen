@@ -106,6 +106,10 @@ public struct Selector : IStructFunction<int, int>
 }
 ```
 
+### Current limitation with Burst (to-be-fixed)
+* Only `NativeArray<T>` is supported for struct enumeration. 
+* Operations using `ArrayPool` cannot be used.
+
 ## Supported methods (working-in-progress)
 ### Generations
 * Empty
