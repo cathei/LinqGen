@@ -1,3 +1,4 @@
 {
-	"name": "LinqGen.Samples"
+	"name": "LinqGen.Samples",
+	"references":[ "GUID:7bc295bcaa777430493a3246f93b9288" ]
 }

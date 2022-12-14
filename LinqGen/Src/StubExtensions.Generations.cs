@@ -19,18 +19,21 @@ namespace Cathei.LinqGen
     public static partial class StubExtensions
     {
         /// <summary>
-        /// Reference type can use covariance support
+        /// Only reference type can use covariance support
         /// </summary>
         public static Stub<T, Specialize<T>> Specialize<T>(this T enumerable) where T : IEnumerable
         {
             throw new NotImplementedException();
         }
 
-        // public static Stub<IEnumerable<T>, SpecializeStruct<T>> Specialize<T>(this IEnumerable<T> enumerable)
-        // {
-        //     throw new NotImplementedException();
-        // }
-        //
+#if UNITY_COLLECTIONS
+        public static Stub<IEnumerable<T>, Specialize<Unity.Collections.NativeArray<T>>> Specialize<T>(
+            this Unity.Collections.NativeArray<T> enumerable) where T : struct
+        {
+            throw new NotImplementedException();
+        }
+#endif
+
         public static Stub<IEnumerable<int>, Range> Range(this IGenerationStub stub, int start, int count)
         {
             throw new NotImplementedException();
