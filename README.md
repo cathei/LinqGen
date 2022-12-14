@@ -77,6 +77,35 @@ After you write a Linq query with stub methods, then `LinqGen.Generator` runs an
 How is it possible, while modifying user code is not allowed with source generators?
 It's because everything `LinqGen.Generator` generates designed to be precede over stub methods on [overload resolution](https://learn.microsoft.com/en-us/dotnet/visual-basic/reference/language-specification/overload-resolution).
 
+## Does LinqGen works with Unity Burst compiler?
+
+**Yes!** LinqGen is aiming to support Unity Burst compiler. Below code is sample of using LinqGen in Burst-compiled job system.
+
+```csharp
+[BurstCompile(CompileSynchronously = true)]
+public struct LinqGenSampleJob : IJob
+{
+    [ReadOnly]
+    public NativeArray<int> Input;
+
+    [WriteOnly]
+    public NativeArray<int> Output;
+
+    public void Execute()
+    {
+        Output[0] = Input.Specialize().Select(new Selector()).Sum();
+    }
+}
+
+public struct Selector : IStructFunction<int, int>
+{
+    public int Invoke(int arg)
+    {
+        return arg * 10;
+    }
+}
+```
+
 ## Supported methods (working-in-progress)
 ### Generations
 * Empty
