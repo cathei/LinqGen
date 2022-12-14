@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cathei.LinqGen;
+using Unity.Burst;
 using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 
 public class LinqGenSampleBurst : MonoBehaviour
@@ -10,11 +12,43 @@ public class LinqGenSampleBurst : MonoBehaviour
 
     void Start()
     {
-        var nativeArray = new NativeArray<int>(myArray, Allocator.Temp);
+        var input = new NativeArray<int>(myArray, Allocator.Persistent);
+        var output = new NativeArray<int>(1, Allocator.Persistent);
 
-        foreach (var i in nativeArray.Specialize().OrderBy().Select(x => x * 2))
+        var job = new LinqGenSampleJob()
         {
-            Debug.Log(i);
-        }
+            Input = input,
+            Output = output
+        };
+
+        job.Schedule().Complete();
+
+        Debug.Log("The result of the sum is: " + output[0]);
+
+        input.Dispose();
+        output.Dispose();
+    }
+}
+
+[BurstCompile(CompileSynchronously = true)]
+public struct LinqGenSampleJob : IJob
+{
+    [ReadOnly]
+    public NativeArray<int> Input;
+
+    [WriteOnly]
+    public NativeArray<int> Output;
+
+    public void Execute()
+    {
+        Output[0] = Input.Specialize().Select(new Selector()).Sum();
+    }
+}
+
+public struct Selector : IStructFunction<int, int>
+{
+    public int Invoke(int arg)
+    {
+        return arg * 10;
     }
 }
