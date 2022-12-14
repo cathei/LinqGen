@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 
+#
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqGen", "LinqGen\LinqGen.csproj", "{DAA94512-4FC6-4389-8680-A633E0E6AD27}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqGen.Generator", "LinqGen.Generator\LinqGen.Generator.csproj", "{F6162D5E-0F93-415F-B33B-B733434F8864}"
@@ -8,8 +8,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqGen.Tests", "LinqGen.Tests\LinqGen.Tests.csproj", "{7A9A8B45-BC07-4DEB-BBFF-D721DC86D502}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqGen.Benchmarks", "LinqGen.Benchmarks\LinqGen.Benchmarks.csproj", "{AE90A690-FF14-499D-8BB2-4F0523A441A8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqGen.Generator.Legacy", "LinqGen.Generator.Legacy\LinqGen.Generator.Legacy.csproj", "{5DD522EA-B955-4570-A9B5-2AFBA1077AA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +31,5 @@ Global
 		{AE90A690-FF14-499D-8BB2-4F0523A441A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE90A690-FF14-499D-8BB2-4F0523A441A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE90A690-FF14-499D-8BB2-4F0523A441A8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5DD522EA-B955-4570-A9B5-2AFBA1077AA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DD522EA-B955-4570-A9B5-2AFBA1077AA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DD522EA-B955-4570-A9B5-2AFBA1077AA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DD522EA-B955-4570-A9B5-2AFBA1077AA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

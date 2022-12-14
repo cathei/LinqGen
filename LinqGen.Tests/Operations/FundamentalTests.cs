@@ -1,5 +1,8 @@
 // LinqGen.Tests, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -62,5 +65,79 @@ public class FundamentalTests
         return Enumerable.Repeat(value, 1)
             .Specialize()
             .First();
+    }
+
+    [Test]
+    public void CustomGenericEnumerableTest()
+    {
+        int value = new CustomEnumerable<int>().Specialize()
+            .Select(x => x * 10)
+            .First();
+
+        Assert.AreEqual(0, value);
+    }
+
+    public struct CustomEnumerable<T> : IEnumerable<T>
+    {
+        public struct Enumerator : IEnumerator<T>
+        {
+            public bool MoveNext()
+            {
+                return true;
+            }
+
+            public T Current => default!;
+
+            object IEnumerator.Current => Current!;
+
+            public void Reset() => throw new NotSupportedException();
+
+            public void Dispose() { }
+        }
+
+        public Enumerator GetEnumerator()
+        {
+            return new Enumerator();
+        }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    [Test]
+    public void CustomEnumerableTest()
+    {
+        string value = new CustomEnumerable().Specialize()
+            .Skip(3)
+            .First();
+
+        Assert.AreEqual("TestResult", value);
+    }
+
+    public struct CustomEnumerable : IEnumerable<string>
+    {
+        public struct Enumerator : IEnumerator<string>
+        {
+            public bool MoveNext()
+            {
+                return true;
+            }
+
+            public string Current => "TestResult";
+
+            object IEnumerator.Current => Current!;
+
+            public void Reset() => throw new NotSupportedException();
+
+            public void Dispose() { }
+        }
+
+        public Enumerator GetEnumerator()
+        {
+            return new Enumerator();
+        }
+
+        IEnumerator<string> IEnumerable<string>.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

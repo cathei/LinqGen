@@ -14,6 +14,9 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
+    /// <summary>
+    /// Visitor evaluation is used for extension methods to not expose private variables.
+    /// </summary>
     public abstract class VisitorEvaluation : Evaluation
     {
         private static readonly SyntaxTree VisitorTemplate = CSharpSyntaxTree.ParseText(@"

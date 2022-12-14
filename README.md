@@ -12,8 +12,8 @@ It aims to make allocation-free, specialized Linq queries per your type.
 Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as library and [LinqGen.Generator](https://www.nuget.org/packages/LinqGen.Generator) as source generator.
 
 ```xml
-    <PackageReference Include="LinqGen" Version="0.0.2-preview" />
-    <PackageReference Include="LinqGen.Generator" Version="0.0.2-preview" />
+    <PackageReference Include="LinqGen" Version="0.0.3-preview" />
+    <PackageReference Include="LinqGen.Generator" Version="0.0.3-preview" />
 ```
 
 For Unity, you can install as Unity package.
@@ -23,7 +23,7 @@ https://github.com/cathei/LinqGen.git?path=LinqGen.Unity/Packages/com.cathei.lin
 
 ## Usage
 Just add `Specialize()` in front of your Linq query.
-It will generate code to ensure zero-allocation slightly better performance.
+It will generate code to ensure zero-allocation, may have slightly better performance.
 ```csharp
 using Cathei.LinqGen;
  
@@ -45,13 +45,13 @@ int result = array.Specialize()
 
 This is benchmark result for above code. You can see full benchmark results [here](./docs/BenchmarksResults).
 
-|             Method |      Mean |     Error |    StdDev | Ratio |   Gen0 | Allocated | Alloc Ratio |
-|------------------- |----------:|----------:|----------:|------:|-------:|----------:|------------:|
-|            ForLoop | 11.228 μs | 0.0615 μs | 0.0514 μs |  0.32 |      - |         - |        0.00 |
-|        ForEachLoop |  9.577 μs | 0.0285 μs | 0.0267 μs |  0.27 |      - |         - |        0.00 |
-|               Linq | 35.388 μs | 0.1858 μs | 0.1647 μs |  1.00 |      - |     104 B |        1.00 |
-|    LinqGenDelegate | 22.625 μs | 0.0637 μs | 0.0596 μs |  0.64 |      - |         - |        0.00 |
-|      LinqGenStruct | 12.329 μs | 0.0394 μs | 0.0369 μs |  0.35 |      - |         - |        0.00 |
+|          Method |   Count |     Mean |     Error |    StdDev | Ratio | Allocated | Alloc Ratio |
+|---------------- |-------- |---------:|----------:|----------:|------:|----------:|------------:|
+|         ForLoop | 1000000 | 4.831 ms | 0.0952 ms | 0.1019 ms |  0.53 |       5 B |        0.04 |
+|     ForEachLoop | 1000000 | 4.674 ms | 0.0218 ms | 0.0204 ms |  0.51 |       5 B |        0.04 |
+|            Linq | 1000000 | 9.209 ms | 0.0424 ms | 0.0397 ms |  1.00 |     115 B |        1.00 |
+| LinqGenDelegate | 1000000 | 6.139 ms | 0.0597 ms | 0.0558 ms |  0.67 |       5 B |        0.04 |
+|   LinqGenStruct | 1000000 | 4.757 ms | 0.0219 ms | 0.0195 ms |  0.52 |       5 B |        0.04 |
 
 ## Why not just use struct Linq implementations?
 
@@ -66,8 +66,6 @@ Using source generation also makes your code friendly for AOT platforms, such as
 which has [maximum generic depth](https://forum.unity.com/threads/il2cpp-max-nested-generic-types.540534/).
 
 Being source generator makes `LinqGen` core library much small than other struct linq implementations, though it may grow as user uses Linq operations.
-
-It's worth to mention that `LinqGen` uses standard .NET enumerator like `List<T>.Enumerator` so it can give same behaviour when the iterating collection changed.
 
 ## How does LinqGen work?
 
