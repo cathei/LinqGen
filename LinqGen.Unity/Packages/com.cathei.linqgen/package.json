@@ -8,5 +8,8 @@
   "unity": "2020.1",
   "description": "Fast Linq-to-object source generator",
   "license": "MIT",
-  "documentationUrl": "https://github.com/cathei/LinqGen"
+  "documentationUrl": "https://github.com/cathei/LinqGen",
+  "dependencies": {
+    "com.unity.collections": "1.0.0"
+  }
 }

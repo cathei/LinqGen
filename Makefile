@@ -3,6 +3,6 @@
 #	dotnet publish -c Release -o LinqGen.Unity/Packages/com.cathei.linqgen LinqGen.Generator
 
 copy:
-	cp -R LinqGen/Src/* LinqGen.Unity/Packages/com.cathei.linqgen/Runtime
+	cp -R LinqGen/Core/* LinqGen.Unity/Packages/com.cathei.linqgen/Runtime/Core
 	dotnet publish -c Release -o LinqGen.Unity/Packages/com.cathei.linqgen LinqGen.Generator
 

@@ -26,14 +26,6 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-#if UNITY_COLLECTIONS
-        public static Stub<IEnumerable<T>, Specialize<Unity.Collections.NativeArray<T>>> Specialize<T>(
-            this Unity.Collections.NativeArray<T> enumerable) where T : struct
-        {
-            throw new NotImplementedException();
-        }
-#endif
-
         public static Stub<IEnumerable<int>, Range> Range(this IGenerationStub stub, int start, int count)
         {
             throw new NotImplementedException();
