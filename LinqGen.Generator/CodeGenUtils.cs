@@ -27,6 +27,12 @@ namespace Cathei.LinqGen.Generator
 
         private const string SystemNamespace = "System";
         private const string SystemCollectionsGenericNamespace = "System.Collections.Generic";
+        private const string SpanTypeName = "Span`1";
+        private const string ReadOnlySpanTypeName = "ReadOnlySpan`1";
+
+        private const string UnityCollectionsNamespace = "Unity.Collections";
+        private const string UnityNativeArrayTypeName = "NativeArray`1";
+        private const string UnityNativeSliceTypeName = "NativeSlice`1";
 
         public static bool IsStubMethod(IMethodSymbol symbol)
         {
@@ -52,22 +58,22 @@ namespace Cathei.LinqGen.Generator
                        LinqGenStubEnumerableTypeName or LinqGenOrderedStubInterfaceTypeName;
         }
 
-        public static bool IsCountable(INamedTypeSymbol symbol)
-        {
-            return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.MetadataName == "ICountable";
-        }
-
-        public static bool IsPartition(INamedTypeSymbol symbol)
-        {
-            return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.MetadataName == "IPartition`1";
-        }
-
         public static bool IsStructFunction(ITypeSymbol symbol)
         {
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
                    symbol is INamedTypeSymbol { Name: LinqGenStructFunctionTypeName };
+        }
+
+        public static bool IsSpanOrReadOnlySpan(ITypeSymbol symbol)
+        {
+            return symbol.MetadataName is SpanTypeName or ReadOnlySpanTypeName &&
+                   CompareNamespace(symbol, SystemNamespace);
+        }
+
+        public static bool IsUnityNativeArrayOrSlice(ITypeSymbol symbol)
+        {
+            return symbol.MetadataName is UnityNativeArrayTypeName or UnityNativeSliceTypeName &&
+                   CompareNamespace(symbol, UnityCollectionsNamespace);
         }
 
         public static bool TryParseStubInterface(INamedTypeSymbol symbol,

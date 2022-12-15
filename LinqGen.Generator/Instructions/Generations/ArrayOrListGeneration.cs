@@ -14,18 +14,20 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public sealed class ListGeneration : Generation
+    public sealed class ArrayOrListGeneration : Generation
     {
         public TypeSyntax SourceType { get; }
-        // public TypeSyntax SourceEnumeratorType { get; }
+        public IdentifierNameSyntax ListCountProperty { get; }
 
-        public ListGeneration(in LinqGenExpression expression, int id,
-            INamedTypeSymbol enumerableSymbol, INamedTypeSymbol listSymbol) : base(expression, id)
+        public ArrayOrListGeneration(in LinqGenExpression expression, int id,
+            ITypeSymbol listSymbol, ITypeSymbol elementSymbol, IdentifierNameSyntax countProperty)
+            : base(expression, id)
         {
             // TODO generic type element
-            OutputElementSymbol = listSymbol.TypeArguments[0];
+            OutputElementSymbol = elementSymbol;
             OutputElementType = ParseTypeName(OutputElementSymbol);
-            SourceType = ParseTypeName(enumerableSymbol);
+            SourceType = ParseTypeName(listSymbol);
+            ListCountProperty = countProperty;
         }
 
         public override ITypeSymbol OutputElementSymbol { get; }
@@ -41,7 +43,7 @@ namespace Cathei.LinqGen.Generator
 
         public override ExpressionSyntax RenderCount()
         {
-            return MemberAccessExpression(VarName("source"), CountProperty);
+            return MemberAccessExpression(VarName("source"), ListCountProperty);
         }
 
         public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
@@ -72,7 +74,7 @@ namespace Cathei.LinqGen.Generator
 
             var result = WhileStatement(LessThanExpression(
                     CastExpression(UIntType, PreIncrementExpression(VarName("index"))),
-                    CastExpression(UIntType, MemberAccessExpression(VarName("source"), CountProperty))),
+                    CastExpression(UIntType, MemberAccessExpression(VarName("source"), ListCountProperty))),
                 Block(statements));
 
             return Block(result);

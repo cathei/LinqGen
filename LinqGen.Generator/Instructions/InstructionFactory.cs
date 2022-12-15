@@ -28,7 +28,10 @@ namespace Cathei.LinqGen.Generator
                     if (typeArgument is IArrayTypeSymbol arraySymbol)
                     {
                         if (arraySymbol.Rank == 1)
-                            return new ArrayGeneration(expression, id, arraySymbol);
+                        {
+                            return new ArrayOrListGeneration(expression, id,
+                                arraySymbol, arraySymbol.ElementType, LengthProperty);
+                        }
 
                         // return new SpecializeArrayMultiGeneration(expression, id, arraySymbol);
                         return new EnumerableGeneration(expression, id, arraySymbol);
@@ -37,7 +40,16 @@ namespace Cathei.LinqGen.Generator
                     if (typeArgument is INamedTypeSymbol namedTypeSymbol)
                     {
                         if (TryGetGenericListInterface(namedTypeSymbol, out var listSymbol))
-                            return new ListGeneration(expression, id, namedTypeSymbol, listSymbol);
+                        {
+                            return new ArrayOrListGeneration(expression, id,
+                                namedTypeSymbol, listSymbol.TypeArguments[0], CountProperty);
+                        }
+
+                        if (IsUnityNativeArrayOrSlice(namedTypeSymbol))
+                        {
+                            return new ArrayOrListGeneration(expression, id,
+                                namedTypeSymbol, namedTypeSymbol.TypeArguments[0], LengthProperty);
+                        }
 
                         return new EnumerableGeneration(expression, id, namedTypeSymbol);
                     }

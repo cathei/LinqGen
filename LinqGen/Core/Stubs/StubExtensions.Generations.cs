@@ -26,6 +26,12 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
+        // TODO span support
+        public static Stub<IEnumerable<T>, SpecializeSpan<T>> Specialize<T>(this ReadOnlySpan<T> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
         public static Stub<IEnumerable<int>, Range> Range(this IGenerationStub stub, int start, int count)
         {
             throw new NotImplementedException();
