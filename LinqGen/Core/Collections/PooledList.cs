@@ -125,22 +125,21 @@ namespace Cathei.LinqGen.Hidden
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T[] ToArray()
         {
-            var result = new T[_count];
-            System.Array.Copy(_array, result, _count);
+            int count = _count;
+            var result = new T[count];
+            System.Array.Copy(_array, result, count);
             return result;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public List<T> ToList()
         {
-            var localArray = _array;
             int count = _count;
             var result = new List<T>(count);
+            var listLayout = UnsafeUtils.As<List<T>, ListLayout<T>>(ref result);
 
-            // TODO this can be optimized with Unsafe..
-            for (int i = 0; i < count; ++i)
-                result.Add(localArray[i]);
-
+            System.Array.Copy(_array, listLayout.Items, _count);
+            listLayout.Size = count;
             return result;
         }
     }
