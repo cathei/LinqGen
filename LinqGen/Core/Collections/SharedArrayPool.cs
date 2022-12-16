@@ -6,15 +6,15 @@ namespace Cathei.LinqGen.Hidden
 {
     internal static class SharedArrayPool<T>
     {
-        private static readonly ArrayPool<T> pool;
+        private static readonly ArrayPool<T> Pool;
 
         static SharedArrayPool()
         {
-            pool = ArrayPool<T>.Create();
+            Pool = ArrayPool<T>.Create();
         }
 
-        public static T[] Rent(int size) => pool.Rent(size);
+        public static T[] Rent(int size) => Pool.Rent(size);
 
-        public static void Return(T[] array, bool clearArray) => pool.Return(array, clearArray);
+        public static void Return(T[] array, bool clearArray) => Pool.Return(array, clearArray);
     }
 }

@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Cathei.LinqGen.Hidden
 {
@@ -15,5 +16,11 @@ namespace Cathei.LinqGen.Hidden
         {
             return ref Unsafe.As<TFrom, TTo>(ref source);
         }
+
+        // public static IntPtr Allocate<T>()
+        // {
+        //     // return Marshal.AllocHGlobal()
+        //
+        // }
     }
 }

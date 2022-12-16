@@ -20,7 +20,7 @@ namespace Cathei.LinqGen.Generator
         internal struct Sorter : IComparer<int>, IDisposable
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Sorter(PooledList<_Element_> elements)
+            public Sorter(_PooledList_ elements)
             {
             }
 
@@ -36,7 +36,7 @@ namespace Cathei.LinqGen.Generator
             }
 
             public void PartialQuickSort(
-                int[] indexesToSort, int left, int right, int min, int max)
+                DynamicArrayManaged<int> indexesToSort, int left, int right, int min, int max)
             {
                 do
                 {
@@ -52,7 +52,8 @@ namespace Cathei.LinqGen.Generator
 
             // Hoare partition scheme
             // This implementation is faster when using struct comparer (more comparison and less copy)
-            private int PartitionHoare(int[] indexesToSort, int left, int right)
+            private int PartitionHoare(
+                DynamicArrayManaged<int> indexesToSort, int left, int right)
             {
                 // preventing overflow of the pivot
                 int pivot = left + ((right - left) >> 1);
@@ -95,8 +96,8 @@ namespace Cathei.LinqGen.Generator
             {
                 switch (node.Identifier.ValueText)
                 {
-                    case "_Element_":
-                        return _operation.OutputElementType;
+                    case "_PooledList_":
+                        return PooledListType(_operation.OutputElementType);
                 }
 
                 return base.VisitIdentifierName(node);

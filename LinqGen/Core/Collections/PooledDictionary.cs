@@ -6,38 +6,42 @@ using System.Runtime.CompilerServices;
 
 namespace Cathei.LinqGen.Hidden
 {
+    public struct PooledDictionarySlot<TKey, TValue>
+    {
+        internal int hashCode;
+        internal int next; // index of next entry, -1 if last
+        internal TKey key;
+        internal TValue value;
+    }
+
     /// <summary>
     /// Do not use this struct manually, reserved for generated code
     /// No need to provide Remove operation
     /// </summary>
-    public struct PooledDictionary<TKey, TValue, TComparer> : IDisposable where TComparer : IEqualityComparer<TKey>
+    public struct PooledDictionary<TKey, TValue, TArray, TComparer> : IDisposable
+        where TArray : struct, IDynamicArray<PooledDictionarySlot<TKey, TValue>>
+        where TComparer : IEqualityComparer<TKey>
     {
-        private struct Slot
-        {
-            internal int hashCode;
-            internal int next; // index of next entry, -1 if last
-            internal TKey key;
-            internal TValue value;
-        }
-
         private readonly TComparer _comparer;
 
-        private int[] _buckets;
-        private Slot[] _slots;
+        private DynamicArrayManaged<int> _buckets;
+        private TArray _slots;
         private int _size;
 
         private int _count;
 
-        public PooledDictionary(int capacity, TComparer comparer)
+        public PooledDictionary(int capacity, TComparer comparer) : this()
         {
             _comparer = comparer;
 
             _size = HashHelpers.GetPrime(capacity);
-            _buckets = SharedArrayPool<int>.Rent(_size);
-            Array.Clear(_buckets, 0, _buckets.Length);
-
-            _slots = SharedArrayPool<Slot>.Rent(_size);
             _count = 0;
+
+            _buckets = new DynamicArrayManaged<int>();
+            _buckets.SetCapacity(_size, true);
+
+            _slots = new TArray();
+            _slots.SetCapacity(_size);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -66,79 +70,44 @@ namespace Cathei.LinqGen.Hidden
 
         private void SetCapacity(int newSize)
         {
-
-            int[] newBuckets;
-            Slot[] newSlots;
-            bool replaceArrays;
+            DynamicArrayManaged<int> newBuckets;
+            var localSlots = _slots;
+            bool replaceBucket;
 
             // Because ArrayPool might have given us larger arrays than we asked for, see if we can
             // use the existing capacity without actually resizing.
-            if (_buckets?.Length >= newSize && _slots?.Length >= newSize)
+            if (_buckets.Length >= newSize && _slots.Length >= newSize)
             {
-                Array.Clear(_buckets, 0, _buckets.Length);
-                Array.Clear(_slots, _size, newSize - _size);
+                _buckets.Clear(0, _buckets.Length);
                 newBuckets = _buckets;
-                newSlots = _slots;
-                replaceArrays = false;
+                replaceBucket = false;
+
+                localSlots.Clear(_size, newSize - _size);
             }
             else
             {
-                newSlots = SharedArrayPool<Slot>.Rent(newSize);
-                newBuckets = SharedArrayPool<int>.Rent(newSize);
+                newBuckets = new DynamicArrayManaged<int>();
+                newBuckets.SetCapacity(newSize, true);
+                replaceBucket = true;
 
-                Array.Clear(newBuckets, 0, newBuckets.Length);
-
-                if (_slots != null)
-                {
-                    Array.Copy(_slots, 0, newSlots, 0, _count);
-                }
-                replaceArrays = true;
+                localSlots.IncreaseCapacity(newSize, _count);
             }
 
             for (int i = 0; i < _count; i++)
             {
-                ref var newSlot = ref newSlots[i];
-                uint bucket = Reduce(newSlot.hashCode, newSize);
-                newSlot.next = newBuckets[bucket] - 1;
+                ref var slot = ref localSlots[i];
+                uint bucket = Reduce(slot.hashCode, newSize);
+                slot.next = newBuckets[bucket] - 1;
                 newBuckets[bucket] = i + 1;
             }
 
-            if (replaceArrays)
+            if (replaceBucket)
             {
-                ReturnArrays();
-                _slots = newSlots;
+                _buckets.Dispose();
                 _buckets = newBuckets;
             }
 
             _size = newSize;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ReturnArrays()
-        {
-            if (_size > 0)
-            {
-                try
-                {
-                    SharedArrayPool<Slot>.Return(_slots, true);
-                }
-                catch (ArgumentException)
-                {
-                    // oh well, the array pool didn't like our array
-                }
-
-                try
-                {
-                    SharedArrayPool<int>.Return(_buckets, false);
-                }
-                catch (ArgumentException)
-                {
-                    // shucks
-                }
-            }
-
-            // size 0 means that arrays are returned
-            _size = 0;
         }
 
         public bool Add(TKey key, TValue value)
@@ -146,10 +115,11 @@ namespace Cathei.LinqGen.Hidden
             int hashCode = GetHashCode(key);
             uint bucket = Reduce(hashCode, _size);
             int collisionCount = 0;
-            Slot[] tmpSlots = _slots;
+            var localSlots = _slots;
+
             for (int i = _buckets[bucket] - 1; i >= 0; )
             {
-                ref var slot = ref tmpSlots[i];
+                ref var slot = ref localSlots[i];
                 if (slot.hashCode == hashCode && _comparer.Equals(slot.key, key))
                     return false;
 
@@ -166,13 +136,13 @@ namespace Cathei.LinqGen.Hidden
             {
                 IncreaseCapacity();
                 // this will change during resize
-                tmpSlots = _slots;
+                localSlots = _slots;
                 bucket = Reduce(hashCode, _size);
             }
 
             int index = _count;
 
-            ref var lastSlot = ref tmpSlots[index];
+            ref var lastSlot = ref localSlots[index];
             lastSlot.hashCode = hashCode;
             lastSlot.key = key;
             lastSlot.value = value;
@@ -186,7 +156,9 @@ namespace Cathei.LinqGen.Hidden
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
-            ReturnArrays();
+            _buckets.Dispose();
+            _slots.Dispose();
+            _size = 0;
             _count = 0;
         }
 
@@ -198,11 +170,11 @@ namespace Cathei.LinqGen.Hidden
         /// </summary>
         public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>
         {
-            private PooledDictionary<TKey, TValue, TComparer> _dictionary;
+            private PooledDictionary<TKey, TValue, TArray, TComparer> _dictionary;
             private int _index;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Enumerator(PooledDictionary<TKey, TValue, TComparer> dictionary)
+            public Enumerator(PooledDictionary<TKey, TValue, TArray, TComparer> dictionary)
             {
                 _dictionary = dictionary;
                 _index = -1;

@@ -453,14 +453,23 @@ namespace Cathei.LinqGen.Generator
                 GenericName(Identifier("EqualityComparer"), TypeArgumentList(type)), IdentifierName("Default"));
         }
 
+        public static TypeSyntax DynamicArrayType(TypeSyntax elementType)
+        {
+            return GenericName(Identifier("DynamicArrayManaged"), TypeArgumentList(elementType));
+        }
+
         public static TypeSyntax PooledListType(TypeSyntax elementType)
         {
-            return GenericName(Identifier("PooledList"), TypeArgumentList(elementType));
+            return GenericName(Identifier("PooledList"),
+                TypeArgumentList(elementType, DynamicArrayType(elementType)));
         }
 
         public static TypeSyntax PooledSetType(TypeSyntax elementType, TypeSyntax comparerType)
         {
-            return GenericName(Identifier("PooledSet"), TypeArgumentList(elementType, comparerType));
+            var slotType = GenericName(Identifier("PooledSetSlot"), TypeArgumentList(elementType));
+
+            return GenericName(Identifier("PooledSet"),
+                TypeArgumentList(elementType, DynamicArrayType(slotType), comparerType));
         }
 
         public static TypeSyntax EnumerableInterfaceType(TypeSyntax elementType)

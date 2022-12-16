@@ -8,47 +8,25 @@ namespace Cathei.LinqGen.Hidden
     /// <summary>
     /// Do not use this struct manually, reserved for generated code
     /// </summary>
-    public struct PooledList<T> : IDisposable
+    public struct PooledList<T, TArray> : IDisposable
+        where TArray : struct, IDynamicArray<T>
     {
-        private T[] _array;
+        private TArray _array;
         private int _count;
 
-        private static readonly T[] EmptyArray = new T[0];
-
-        public PooledList(int capacity)
+        public PooledList(int capacity) : this()
         {
-            _array = capacity > 0 ? SharedArrayPool<T>.Rent(capacity) : EmptyArray;
+            _array = new TArray();
+            if (capacity > 0)
+                _array.SetCapacity(capacity);
+
             _count = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void IncreaseCapacity()
         {
-            var newItems = SharedArrayPool<T>.Rent(_count + 1);
-            System.Array.Copy(_array, newItems, _count);
-
-            ReturnArray();
-            _array = newItems;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ReturnArray()
-        {
-            if (_array.Length == 0)
-                return;
-
-            try
-            {
-                // Clear the elements so that the gc can reclaim the references.
-                // TODO no need to clear for unmanaged type
-                SharedArrayPool<T>.Return(_array, true);
-            }
-            catch (ArgumentException)
-            {
-                // oh well, the array pool didn't like our array
-            }
-
-            _array = EmptyArray;
+            _array.IncreaseCapacity(_count + 1, _count);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -105,7 +83,7 @@ namespace Cathei.LinqGen.Hidden
             get => _count;
         }
 
-        public T[] Array => _array;
+        public TArray Array => _array;
 
         public T this[int index]
         {
@@ -118,7 +96,7 @@ namespace Cathei.LinqGen.Hidden
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
-            ReturnArray();
+            _array.Dispose();
             _count = 0;
         }
 
@@ -127,7 +105,8 @@ namespace Cathei.LinqGen.Hidden
         {
             int count = _count;
             var result = new T[count];
-            System.Array.Copy(_array, result, count);
+
+            _array.CopyTo(result, count);
             return result;
         }
 
@@ -138,7 +117,7 @@ namespace Cathei.LinqGen.Hidden
             var result = new List<T>(count);
             var listLayout = UnsafeUtils.As<List<T>, ListLayout<T>>(ref result);
 
-            System.Array.Copy(_array, listLayout.Items, _count);
+            _array.CopyTo(listLayout.Items, _count);
             listLayout.Size = count;
             return result;
         }
