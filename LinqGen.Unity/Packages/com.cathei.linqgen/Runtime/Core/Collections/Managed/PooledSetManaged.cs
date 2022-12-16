@@ -9,32 +9,28 @@ namespace Cathei.LinqGen.Hidden
     /// Do not use this struct manually, reserved for generated code
     /// No need to provide Remove operation
     /// </summary>
-    public struct PooledSet<T, TComparer> : IDisposable where TComparer : IEqualityComparer<T>
+    public struct PooledSetManaged<T, TComparer> : IDisposable
+        where TComparer : IEqualityComparer<T>
     {
-        private struct Slot
-        {
-            internal int hashCode;
-            internal int next; // Index of next entry, -1 if last
-            internal T value;
-        }
-
         private readonly TComparer _comparer;
 
-        private int[] _buckets;
-        private Slot[] _slots;
+        private DynamicArrayNative<int> _buckets;
+        private DynamicArrayManaged<PooledSetSlot<T>> _slots;
+
         private int _size;
         private int _count;
 
-        public PooledSet(int capacity, TComparer comparer)
+        public PooledSetManaged(int capacity, TComparer comparer) : this()
         {
-            this._comparer = comparer;
+            _comparer = comparer;
 
             _size = HashHelpers.GetPrime(capacity);
-            _buckets = SharedArrayPool<int>.Rent(_size);
-            Array.Clear(_buckets, 0, _buckets.Length);
-
-            _slots = SharedArrayPool<Slot>.Rent(_size);
             _count = 0;
+
+            _buckets = new DynamicArrayNative<int>(_size);
+            _slots = new DynamicArrayManaged<PooledSetSlot<T>>(_size);
+
+            _buckets.Clear();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -63,78 +59,42 @@ namespace Cathei.LinqGen.Hidden
 
         private void SetCapacity(int newSize)
         {
-            int[] newBuckets;
-            Slot[] newSlots;
-            bool replaceArrays;
+            DynamicArrayNative<int> newBuckets;
+            var localSlots = _slots;
+            bool replaceBucket;
 
             // Because ArrayPool might have given us larger arrays than we asked for, see if we can
             // use the existing capacity without actually resizing.
-            if (_buckets?.Length >= newSize && _slots?.Length >= newSize)
+            if (_buckets.Length >= newSize && _slots.Length >= newSize)
             {
-                Array.Clear(_buckets, 0, _buckets.Length);
-                Array.Clear(_slots, _size, newSize - _size);
+                _buckets.Clear();
                 newBuckets = _buckets;
-                newSlots = _slots;
-                replaceArrays = false;
+                replaceBucket = false;
             }
             else
             {
-                newSlots = SharedArrayPool<Slot>.Rent(newSize);
-                newBuckets = SharedArrayPool<int>.Rent(newSize);
+                newBuckets = new DynamicArrayNative<int>(newSize);
+                newBuckets.Clear();
+                replaceBucket = true;
 
-                Array.Clear(newBuckets, 0, newBuckets.Length);
-
-                if (_slots != null)
-                {
-                    Array.Copy(_slots, 0, newSlots, 0, _count);
-                }
-                replaceArrays = true;
+                localSlots.IncreaseCapacity(newSize, _count);
             }
 
             for (int i = 0; i < _count; i++)
             {
-                ref var newSlot = ref newSlots[i];
-                uint bucket = Reduce(newSlot.hashCode, newSize);
-                newSlot.next = newBuckets[bucket] - 1;
+                ref var slot = ref localSlots[i];
+                uint bucket = Reduce(slot.HashCode, newSize);
+                slot.Next = newBuckets[bucket] - 1;
                 newBuckets[bucket] = i + 1;
             }
 
-            if (replaceArrays)
+            if (replaceBucket)
             {
-                ReturnArrays();
-                _slots = newSlots;
+                _buckets.Dispose();
                 _buckets = newBuckets;
             }
 
             _size = newSize;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ReturnArrays()
-        {
-            if (_size > 0)
-            {
-                try
-                {
-                    SharedArrayPool<Slot>.Return(_slots, true);
-                }
-                catch (ArgumentException)
-                {
-                    // oh well, the array pool didn't like our array
-                }
-
-                try
-                {
-                    SharedArrayPool<int>.Return(_buckets, false);
-                }
-                catch (ArgumentException)
-                {
-                    // shucks
-                }
-            }
-
-            // size 0 means that arrays are returned
-            _size = 0;
         }
 
         public bool Add(T value)
@@ -142,11 +102,12 @@ namespace Cathei.LinqGen.Hidden
             int hashCode = GetHashCode(value);
             uint bucket = Reduce(hashCode, _size);
             int collisionCount = 0;
-            Slot[] tmpSlots = _slots;
+            var localSlots = _slots;
+
             for (int i = _buckets[bucket] - 1; i >= 0; )
             {
-                ref var slot = ref tmpSlots[i];
-                if (slot.hashCode == hashCode && _comparer.Equals(slot.value, value))
+                ref var slot = ref localSlots[i];
+                if (slot.HashCode == hashCode && _comparer.Equals(slot.Value, value))
                     return false;
 
                 if (collisionCount >= _size)
@@ -155,23 +116,23 @@ namespace Cathei.LinqGen.Hidden
                     throw new InvalidOperationException("Concurrent operations are not supported.");
                 }
                 collisionCount++;
-                i = slot.next;
+                i = slot.Next;
             }
 
             if (_count == _size)
             {
                 IncreaseCapacity();
                 // this will change during resize
-                tmpSlots = _slots;
+                localSlots = _slots;
                 bucket = Reduce(hashCode, _size);
             }
 
             int index = _count;
 
-            ref var lastSlot = ref tmpSlots[index];
-            lastSlot.hashCode = hashCode;
-            lastSlot.value = value;
-            lastSlot.next = _buckets[bucket] - 1;
+            ref var lastSlot = ref localSlots[index];
+            lastSlot.HashCode = hashCode;
+            lastSlot.Value = value;
+            lastSlot.Next = _buckets[bucket] - 1;
 
             _buckets[bucket] = index + 1;
             _count++;
@@ -183,15 +144,15 @@ namespace Cathei.LinqGen.Hidden
             int hashCode = GetHashCode(value);
             uint bucket = Reduce(hashCode, _size);
 
-            Slot[] tmpSlots = _slots;
+            var localSlots = _slots;
 
             for (int i = _buckets[bucket] - 1; i >= 0;)
             {
-                ref var slot = ref tmpSlots[i];
-                if (slot.hashCode == hashCode && _comparer.Equals(slot.value, value))
+                ref var slot = ref localSlots[i];
+                if (slot.HashCode == hashCode && _comparer.Equals(slot.Value, value))
                     return true;
 
-                i = slot.next;
+                i = slot.Next;
             }
 
             return false;
@@ -200,7 +161,10 @@ namespace Cathei.LinqGen.Hidden
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
-            ReturnArrays();
+            _slots.Dispose();
+            _buckets.Dispose();
+
+            _size = 0;
             _count = 0;
         }
     }

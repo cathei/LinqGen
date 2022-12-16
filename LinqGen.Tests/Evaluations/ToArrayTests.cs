@@ -11,7 +11,6 @@ namespace Cathei.LinqGen.Tests;
 [TestFixture]
 public class ToArrayTests
 {
-
     [Test]
     public void Test_ArrayWhereToArray()
     {
@@ -21,12 +20,18 @@ public class ToArrayTests
             .Where(x => x % 2 == 0)
             .Select(x => x * 2)
             .ToArray();
-
-
     }
 
+    [Test]
+    public void Test_BigArrayToArray()
+    {
+        int[] values = new int[1_000_000];
 
-
+        var arr =values.Specialize()
+            .Where(x => x % 2 == 0)
+            .Select(x => x * 2)
+            .ToArray();
+    }
 
     [TestCase(0, 0)]
     [TestCase(0, 10)]

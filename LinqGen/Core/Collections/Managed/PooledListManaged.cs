@@ -15,10 +15,7 @@ namespace Cathei.LinqGen.Hidden
 
         public PooledListManaged(int capacity) : this()
         {
-            _array = new DynamicArrayManaged<T>();
-            if (capacity > 0)
-                _array.SetCapacity(capacity);
-
+            _array = new DynamicArrayManaged<T>(capacity);
             _count = 0;
         }
 

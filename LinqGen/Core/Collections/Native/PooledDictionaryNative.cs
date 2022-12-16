@@ -30,11 +30,10 @@ namespace Cathei.LinqGen.Hidden
             _size = HashHelpers.GetPrime(capacity);
             _count = 0;
 
-            _buckets = new DynamicArrayNative<int>();
-            _buckets.SetCapacity(_size, true);
+            _buckets = new DynamicArrayNative<int>(_size);
+            _slots = new DynamicArrayNative<PooledDictionarySlot<TKey, TValue>>(_size);
 
-            _slots = new DynamicArrayNative<PooledDictionarySlot<TKey, TValue>>();
-            _slots.SetCapacity(_size);
+            _buckets.Clear();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -77,8 +76,8 @@ namespace Cathei.LinqGen.Hidden
             }
             else
             {
-                newBuckets = new DynamicArrayNative<int>();
-                newBuckets.SetCapacity(newSize, true);
+                newBuckets = new DynamicArrayNative<int>(newSize);
+                newBuckets.Clear();
                 replaceBucket = true;
 
                 localSlots.IncreaseCapacity(newSize, _count);

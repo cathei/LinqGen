@@ -5,6 +5,7 @@
     <explicitIncludes>
       <Path>.gitignore</Path>
       <Path>LICENSE</Path>
+      <Path>Makefile</Path>
       <Path>README.md</Path>
       <Path>docs</Path>
     </explicitIncludes>

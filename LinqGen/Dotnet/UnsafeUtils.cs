@@ -12,34 +12,40 @@ namespace Cathei.LinqGen.Hidden
     /// </summary>
     public static class UnsafeUtils
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref TTo As<TFrom, TTo>(ref TFrom source)
         {
             return ref Unsafe.As<TFrom, TTo>(ref source);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe ref T ArrayElement<T>(IntPtr array, int index)
             where T : unmanaged
         {
             return ref Unsafe.AsRef<T>((void*)(array + index * sizeof(T)));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe IntPtr ArrayAlloc<T>(int size)
             where T : unmanaged
         {
             return Marshal.AllocHGlobal(size * sizeof(T));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ArrayFree(IntPtr array)
         {
             Marshal.FreeHGlobal(array);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void ArrayClear<T>(IntPtr array, int size)
             where T : unmanaged
         {
             Unsafe.InitBlock((void*)array, 0, (uint)(size * sizeof(T)));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void ArrayCopy<T>(IntPtr src, IntPtr dst, int size)
             where T : unmanaged
         {
