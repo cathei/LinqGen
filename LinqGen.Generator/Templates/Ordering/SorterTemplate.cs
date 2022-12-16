@@ -36,7 +36,7 @@ namespace Cathei.LinqGen.Generator
             }
 
             public void PartialQuickSort(
-                DynamicArrayManaged<int> indexesToSort, int left, int right, int min, int max)
+                DynamicArrayNative<int> indexesToSort, int left, int right, int min, int max)
             {
                 do
                 {
@@ -53,7 +53,7 @@ namespace Cathei.LinqGen.Generator
             // Hoare partition scheme
             // This implementation is faster when using struct comparer (more comparison and less copy)
             private int PartitionHoare(
-                DynamicArrayManaged<int> indexesToSort, int left, int right)
+                DynamicArrayNative<int> indexesToSort, int left, int right)
             {
                 // preventing overflow of the pivot
                 int pivot = left + ((right - left) >> 1);
@@ -97,7 +97,7 @@ namespace Cathei.LinqGen.Generator
                 switch (node.Identifier.ValueText)
                 {
                     case "_PooledList_":
-                        return PooledListType(_operation.OutputElementType);
+                        return _operation.ElementListType;
                 }
 
                 return base.VisitIdentifierName(node);
@@ -149,13 +149,12 @@ namespace Cathei.LinqGen.Generator
                     }
 
                     list.Add(FieldDeclaration(
-                        PrivateTokenList, PooledListType(member.KeyType), member.KeysName.Identifier));
+                        PrivateTokenList, member.KeyListType, member.KeysName.Identifier));
                 }
 
                 if (needElement)
                 {
-                    list.Add(FieldDeclaration(
-                        PrivateTokenList, PooledListType(_operation.OutputElementType), Identifier("elements")));
+                    list.Add(FieldDeclaration(PrivateTokenList, _operation.ElementListType, Identifier("elements")));
                 }
 
                 return node.AddMembers(list.ToArray());
@@ -191,7 +190,7 @@ namespace Cathei.LinqGen.Generator
                     }
 
                     list.Add(ExpressionStatement(SimpleAssignmentExpression(member.KeysName,
-                        ObjectCreationExpression(PooledListType(member.KeyType), ArgumentList(elementCount), null))));
+                        ObjectCreationExpression(member.KeyListType, ArgumentList(elementCount), null))));
 
                     var indexName = IdentifierName("i");
 

@@ -30,7 +30,8 @@ namespace Cathei.LinqGen.Generator
                 : LiteralExpression(0);
 
             yield return UsingLocalDeclarationStatement(VarName("list").Identifier, ObjectCreationExpression(
-                PooledListType(Upstream.OutputElementType), ArgumentList(countExpression), null));
+                PooledListType(Upstream.OutputElementType, Upstream.OutputElementSymbol.IsUnmanagedType),
+                ArgumentList(countExpression), null));
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()

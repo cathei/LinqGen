@@ -6,38 +6,6 @@ using System.Runtime.CompilerServices;
 
 namespace Cathei.LinqGen.Hidden
 {
-    public interface IDynamicArray<T> : IDisposable
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        void SetCapacity(int newSize, bool clear = false);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        void IncreaseCapacity(int newSize, int copyCount = 0);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        void Clear(int start, int end);
-
-        void CopyTo(T[] array, int count);
-
-        ref T this[int index]
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-        }
-
-        ref T this[uint index]
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-        }
-
-        int Length
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-        }
-    }
-
     public struct DynamicArrayManaged<T> : IDynamicArray<T>
     {
         private T[] _array;
@@ -68,7 +36,7 @@ namespace Cathei.LinqGen.Hidden
             _array = SharedArrayPool<T>.Rent(newSize);
 
             if (clear)
-                Array.Clear(_array, 0, _array.Length);
+                Clear();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -82,9 +50,9 @@ namespace Cathei.LinqGen.Hidden
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Clear(int start, int end)
+        public void Clear()
         {
-            Array.Clear(_array, start, end);
+            Array.Clear(_array, 0, _array.Length);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

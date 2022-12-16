@@ -14,14 +14,16 @@ namespace Cathei.LinqGen.Generator
         public readonly TypeSyntax? SelectorType;
         public readonly TypeSyntax ComparerType;
         public readonly TypeSyntax KeyType;
+        public readonly TypeSyntax KeyListType;
 
         public OrderMemberInfo(OrderingOperation operation,
-            TypeSyntax? selectorType, TypeSyntax comparerType, TypeSyntax keyType)
+            TypeSyntax? selectorType, TypeSyntax comparerType, TypeSyntax keyType, TypeSyntax keyListType)
         {
             Operation = operation;
             SelectorType = selectorType;
             ComparerType = comparerType;
             KeyType = keyType;
+            KeyListType = keyListType;
         }
 
         public int Id => Operation.Id;

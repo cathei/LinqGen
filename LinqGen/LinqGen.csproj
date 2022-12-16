@@ -4,6 +4,7 @@
         <TargetFrameworks>netstandard2.1;net6</TargetFrameworks>
         <Nullable>enable</Nullable>
         <LangVersion>9</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">

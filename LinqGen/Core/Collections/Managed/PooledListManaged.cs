@@ -8,15 +8,14 @@ namespace Cathei.LinqGen.Hidden
     /// <summary>
     /// Do not use this struct manually, reserved for generated code
     /// </summary>
-    public struct PooledList<T, TArray> : IDisposable
-        where TArray : struct, IDynamicArray<T>
+    public struct PooledListManaged<T> : IDisposable
     {
-        private TArray _array;
+        private DynamicArrayManaged<T> _array;
         private int _count;
 
-        public PooledList(int capacity) : this()
+        public PooledListManaged(int capacity) : this()
         {
-            _array = new TArray();
+            _array = new DynamicArrayManaged<T>();
             if (capacity > 0)
                 _array.SetCapacity(capacity);
 
@@ -83,7 +82,7 @@ namespace Cathei.LinqGen.Hidden
             get => _count;
         }
 
-        public TArray Array => _array;
+        public DynamicArrayManaged<T> Array => _array;
 
         public T this[int index]
         {

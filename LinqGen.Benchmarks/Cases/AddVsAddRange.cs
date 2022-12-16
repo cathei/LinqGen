@@ -88,7 +88,7 @@ public class AddVsAddRange
     {
         var query = TestData.Specialize().Where(x => x % 2 == 0);
 
-        using var temp = new PooledList<int, DynamicArrayManaged<int>>(0);
+        using var temp = new PooledListNative<int>(0);
 
         using var iter = query.GetEnumerator();
 
@@ -103,7 +103,7 @@ public class AddVsAddRange
     {
         var query = TestData.Specialize().Where(x => x % 2 == 0);
 
-        using var temp = new PooledList<int, DynamicArrayManaged<int>>(0);
+        using var temp = new PooledListNative<int>(0);
 
         using var iter = query.GetEnumerator();
 

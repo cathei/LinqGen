@@ -5,47 +5,40 @@ using System.Runtime.CompilerServices;
 
 namespace Cathei.LinqGen.Hidden
 {
-    public struct PooledSetSlot<T>
-    {
-        internal int hashCode;
-        internal int next; // Index of next entry, -1 if last
-        internal T value;
-    }
-
     /// <summary>
     /// Do not use this struct manually, reserved for generated code
     /// No need to provide Remove operation
     /// </summary>
-    public struct PooledSet<T, TArray, TComparer> : IDisposable
-        where TArray : struct, IDynamicArray<PooledSetSlot<T>>
+    public struct PooledSetNative<T, TComparer> : IDisposable
+        where T : unmanaged
         where TComparer : IEqualityComparer<T>
     {
         private readonly TComparer _comparer;
 
-        private DynamicArrayManaged<int> _buckets;
-        private TArray _slots;
+        private DynamicArrayNative<int> _buckets;
+        private DynamicArrayNative<PooledSetSlot<T>> _slots;
 
         private int _size;
         private int _count;
 
-        public PooledSet(int capacity, TComparer comparer) : this()
+        public PooledSetNative(int capacity, TComparer comparer) : this()
         {
             _comparer = comparer;
 
             _size = HashHelpers.GetPrime(capacity);
             _count = 0;
 
-            _buckets = new DynamicArrayManaged<int>();
+            _buckets = new DynamicArrayNative<int>();
             _buckets.SetCapacity(_size, true);
 
-            _slots = new TArray();
+            _slots = new DynamicArrayNative<PooledSetSlot<T>>();
             _slots.SetCapacity(_size);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int GetHashCode(T item)
         {
-            return item == null ? 0 : _comparer.GetHashCode(item);
+            return _comparer.GetHashCode(item);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -68,7 +61,7 @@ namespace Cathei.LinqGen.Hidden
 
         private void SetCapacity(int newSize)
         {
-            DynamicArrayManaged<int> newBuckets;
+            DynamicArrayNative<int> newBuckets;
             var localSlots = _slots;
             bool replaceBucket;
 
@@ -76,15 +69,13 @@ namespace Cathei.LinqGen.Hidden
             // use the existing capacity without actually resizing.
             if (_buckets.Length >= newSize && _slots.Length >= newSize)
             {
-                _buckets.Clear(0, _buckets.Length);
+                _buckets.Clear();
                 newBuckets = _buckets;
                 replaceBucket = false;
-
-                localSlots.Clear(_size, newSize - _size);
             }
             else
             {
-                newBuckets = new DynamicArrayManaged<int>();
+                newBuckets = new DynamicArrayNative<int>();
                 newBuckets.SetCapacity(newSize, true);
                 replaceBucket = true;
 
@@ -94,8 +85,8 @@ namespace Cathei.LinqGen.Hidden
             for (int i = 0; i < _count; i++)
             {
                 ref var slot = ref localSlots[i];
-                uint bucket = Reduce(slot.hashCode, newSize);
-                slot.next = newBuckets[bucket] - 1;
+                uint bucket = Reduce(slot.HashCode, newSize);
+                slot.Next = newBuckets[bucket] - 1;
                 newBuckets[bucket] = i + 1;
             }
 
@@ -118,7 +109,7 @@ namespace Cathei.LinqGen.Hidden
             for (int i = _buckets[bucket] - 1; i >= 0; )
             {
                 ref var slot = ref localSlots[i];
-                if (slot.hashCode == hashCode && _comparer.Equals(slot.value, value))
+                if (slot.HashCode == hashCode && _comparer.Equals(slot.Value, value))
                     return false;
 
                 if (collisionCount >= _size)
@@ -127,7 +118,7 @@ namespace Cathei.LinqGen.Hidden
                     throw new InvalidOperationException("Concurrent operations are not supported.");
                 }
                 collisionCount++;
-                i = slot.next;
+                i = slot.Next;
             }
 
             if (_count == _size)
@@ -141,9 +132,9 @@ namespace Cathei.LinqGen.Hidden
             int index = _count;
 
             ref var lastSlot = ref localSlots[index];
-            lastSlot.hashCode = hashCode;
-            lastSlot.value = value;
-            lastSlot.next = _buckets[bucket] - 1;
+            lastSlot.HashCode = hashCode;
+            lastSlot.Value = value;
+            lastSlot.Next = _buckets[bucket] - 1;
 
             _buckets[bucket] = index + 1;
             _count++;
@@ -160,10 +151,10 @@ namespace Cathei.LinqGen.Hidden
             for (int i = _buckets[bucket] - 1; i >= 0;)
             {
                 ref var slot = ref localSlots[i];
-                if (slot.hashCode == hashCode && _comparer.Equals(slot.value, value))
+                if (slot.HashCode == hashCode && _comparer.Equals(slot.Value, value))
                     return true;
 
-                i = slot.next;
+                i = slot.Next;
             }
 
             return false;

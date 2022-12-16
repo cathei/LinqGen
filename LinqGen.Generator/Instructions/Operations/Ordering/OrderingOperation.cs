@@ -30,12 +30,14 @@ namespace Cathei.LinqGen.Generator
             {
                 WithSelector = true;
                 SelectorInterfaceType = ParseTypeName(selectorType);
-                SelectorKeyType = ParseTypeName(selectorType.TypeArguments[1]);
+                SelectorKeySymbol = selectorType.TypeArguments[1];
+                SelectorKeyType = ParseTypeName(SelectorKeySymbol);
             }
             else
             {
                 WithSelector = false;
                 SelectorInterfaceType = null;
+                SelectorKeySymbol = null;
                 SelectorKeyType = null;
             }
         }
@@ -48,15 +50,24 @@ namespace Cathei.LinqGen.Generator
         protected OrderingOperation RootOrder => UpstreamOrder?.RootOrder ?? this;
 
         private TypeSyntax? SelectorInterfaceType { get; }
+        private ITypeSymbol? SelectorKeySymbol { get; }
         private TypeSyntax? SelectorKeyType { get; }
 
         private TypeSyntax KeyType => WithSelector ? SelectorKeyType! : OutputElementType;
+
+        private TypeSyntax KeyListType => WithSelector
+            ? PooledListType(SelectorKeyType!, SelectorKeySymbol!.IsUnmanagedType)
+            : ElementListType;
 
         private TypeSyntax ComparerInterfaceType =>
             GenericName(Identifier("IComparer"), TypeArgumentList(KeyType));
 
         public override TypeSyntax EnumerableInterfaceType =>
             GenericName(Identifier("IInternalOrderedStub"), TypeArgumentList(OutputElementType));
+
+        public TypeSyntax ElementListType => PooledListType(OutputElementType, OutputElementSymbol.IsUnmanagedType);
+
+        public TypeSyntax IndexListType => PooledListType(IntType, true);
 
         public override TypeSyntax? DummyParameterType
         {
@@ -80,15 +91,11 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
-            var elementsType = PooledListType(OutputElementType);
+            yield return new MemberInfo(MemberKind.Enumerator, ElementListType, VarName("elements"),
+                ObjectCreationExpression(ElementListType, ArgumentList(LiteralExpression(0)), null));
 
-            yield return new MemberInfo(MemberKind.Enumerator, elementsType, VarName("elements"),
-                ObjectCreationExpression(elementsType, ArgumentList(LiteralExpression(0)), null));
-
-            var indicesType = PooledListType(IntType);
-
-            yield return new MemberInfo(MemberKind.Enumerator, PooledListType(IntType), VarName("indices"),
-                ObjectCreationExpression(indicesType, ArgumentList(LiteralExpression(0)), null));
+            yield return new MemberInfo(MemberKind.Enumerator, IndexListType, VarName("indices"),
+                ObjectCreationExpression(IndexListType, ArgumentList(LiteralExpression(0)), null));
 
             yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));
 
@@ -177,7 +184,7 @@ namespace Cathei.LinqGen.Generator
             var elementsCount = MemberAccessExpression(elementsName, CountProperty);
 
             yield return ExpressionStatement(SimpleAssignmentExpression(elementsName,
-                ObjectCreationExpression(PooledListType(OutputElementType), ArgumentList(countExpression), null)));
+                ObjectCreationExpression(ElementListType, ArgumentList(countExpression), null)));
 
             var addElementStatements = SingletonList<StatementSyntax>(
                 ExpressionStatement(InvocationExpression(
@@ -205,7 +212,7 @@ namespace Cathei.LinqGen.Generator
             var sorterName = IdentifierName("sorter");
 
             sortBody.Add(ExpressionStatement(SimpleAssignmentExpression(indicesName,
-                ObjectCreationExpression(PooledListType(IntType), ArgumentList(elementsCount), null))));
+                ObjectCreationExpression(IndexListType, ArgumentList(elementsCount), null))));
 
             var loopVar = IdentifierName("i");
 
@@ -248,12 +255,12 @@ namespace Cathei.LinqGen.Generator
             if (WithStruct)
             {
                 yield return new OrderMemberInfo(this,
-                    WithSelector ? TypeName("Selector") : null, TypeName("Comparer"), KeyType);
+                    WithSelector ? TypeName("Selector") : null, TypeName("Comparer"), KeyType, KeyListType);
             }
             else
             {
                 yield return new OrderMemberInfo(this,
-                    WithSelector ? SelectorInterfaceType : null, ComparerInterfaceType, KeyType);
+                    WithSelector ? SelectorInterfaceType : null, ComparerInterfaceType, KeyType, KeyListType);
             }
         }
 

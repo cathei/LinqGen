@@ -68,7 +68,7 @@ namespace Cathei.LinqGen.Generator
 
             var countExpression = Upstream.RenderCount() ?? LiteralExpression(0);
 
-            var pooledSetType = PooledSetType(OutputElementType, ComparerType);
+            var pooledSetType = PooledSetType(OutputElementType, ComparerType, OutputElementSymbol.IsUnmanagedType);
             var pooledSetCreation = ObjectCreationExpression(
                 pooledSetType, ArgumentList(countExpression, comparerExpression), null);
 
