@@ -12,8 +12,8 @@ It aims to make allocation-free, specialized Linq queries per your type.
 Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as library and [LinqGen.Generator](https://www.nuget.org/packages/LinqGen.Generator) as source generator.
 
 ```xml
-    <PackageReference Include="LinqGen" Version="0.0.3-preview" />
-    <PackageReference Include="LinqGen.Generator" Version="0.0.3-preview" />
+    <PackageReference Include="LinqGen" Version="0.0.4-preview" />
+    <PackageReference Include="LinqGen.Generator" Version="0.0.4-preview" />
 ```
 
 For Unity, you can install as Unity package.
@@ -111,8 +111,7 @@ public struct Selector : IStructFunction<int, int>
 ```
 
 ### Current limitation with Burst (to-be-fixed)
-* Only `NativeArray<T>` is supported for struct enumeration. 
-* Operations using `ArrayPool` cannot be used.
+* Only `NativeArray<T>` and `NativeSlice<T>` is supported for struct enumeration. 
 
 ## Supported methods (working-in-progress)
 ### Generations
