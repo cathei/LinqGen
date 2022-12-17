@@ -97,16 +97,25 @@ public struct LinqGenSampleJob : IJob
 
     public void Execute()
     {
-        Output[0] = Input.Specialize().Select(new Selector()).Sum();
+        int index = 0;
+
+        foreach (var item in Input.Specialize()
+                                  .Select(new Selector())
+                                  .OrderBy(new Comparer()))
+        {
+            Output[index++] = item;
+        }
     }
 }
 
 public struct Selector : IStructFunction<int, int>
 {
-    public int Invoke(int arg)
-    {
-        return arg * 10;
-    }
+    public int Invoke(int arg) => arg * 10;
+}
+
+public struct Comparer : IComparer<int>
+{
+    public int Compare(int x, int y) => x - y;
 }
 ```
 
