@@ -2,7 +2,8 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFrameworks>net472;net6.0</TargetFrameworks>
+        <LangVersion>10</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -13,8 +14,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
-      <PackageReference Include="NetFabric.Hyperlinq" Version="3.0.0-beta48" />
-      <PackageReference Include="StructLinq" Version="0.27.1" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+        <PackageReference Include="NetFabric.Hyperlinq" Version="3.0.0-beta48" />
+        <PackageReference Include="StructLinq" Version="0.27.1" />
     </ItemGroup>
+
 </Project>
