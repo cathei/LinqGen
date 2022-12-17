@@ -16,18 +16,18 @@ Apple M1 Pro, 1 CPU, 10 logical and 10 physical cores
 ```
 |             Method |         list |           Mean |       Error |      StdDev |    Gen0 | Allocated |
 |------------------- |------------- |---------------:|------------:|------------:|--------:|----------:|
-|               **Linq** | **Int32[10000]** | **1,198,507.2 ns** | **4,697.87 ns** | **4,394.39 ns** | **54.6875** |  **120313 B** |
-|    LinqGenDelegate | Int32[10000] | 1,149,516.3 ns | 3,485.15 ns | 3,089.49 ns |       - |       1 B |
-|      LinqGenStruct | Int32[10000] |   849,740.8 ns | 5,003.20 ns | 4,680.00 ns |       - |       1 B |
-| StructLinqDelegate | Int32[10000] | 1,219,230.2 ns | 3,520.15 ns | 3,120.52 ns |       - |      90 B |
-|   StructLinqStruct | Int32[10000] |   925,544.4 ns | 8,802.34 ns | 7,803.05 ns |       - |       1 B |
-|               **Linq** |    **Int32[20]** |       **678.2 ns** |     **4.16 ns** |     **3.89 ns** |  **0.2632** |     **552 B** |
-|    LinqGenDelegate |    Int32[20] |       630.4 ns |     2.51 ns |     2.35 ns |       - |         - |
-|      LinqGenStruct |    Int32[20] |       383.6 ns |     2.61 ns |     2.32 ns |       - |         - |
-| StructLinqDelegate |    Int32[20] |       713.7 ns |     5.67 ns |     5.03 ns |  0.0420 |      88 B |
-|   StructLinqStruct |    Int32[20] |       443.1 ns |     4.10 ns |     3.84 ns |       - |         - |
-|               **Linq** |   **Int32[500]** |    **32,886.6 ns** |   **159.65 ns** |   **141.53 ns** |  **2.9907** |    **6312 B** |
-|    LinqGenDelegate |   Int32[500] |    27,203.3 ns |   361.41 ns |   338.06 ns |       - |         - |
-|      LinqGenStruct |   Int32[500] |    11,055.5 ns |   175.66 ns |   155.72 ns |       - |         - |
-| StructLinqDelegate |   Int32[500] |    28,760.3 ns |   573.99 ns |   563.74 ns |  0.0305 |      88 B |
-|   StructLinqStruct |   Int32[500] |    12,921.5 ns |    96.22 ns |    80.35 ns |       - |         - |
+|               **Linq** | **Int32[10000]** | **1,188,104.8 ns** | **5,794.67 ns** | **5,420.34 ns** | **54.6875** |  **120313 B** |
+|    LinqGenDelegate | Int32[10000] | 1,120,008.6 ns | 7,007.96 ns | 6,555.25 ns |       - |       1 B |
+|      LinqGenStruct | Int32[10000] |   813,058.2 ns | 5,122.06 ns | 4,791.18 ns |       - |       1 B |
+| StructLinqDelegate | Int32[10000] | 1,221,807.6 ns | 5,816.16 ns | 5,440.44 ns |       - |      90 B |
+|   StructLinqStruct | Int32[10000] |   906,275.8 ns | 5,717.33 ns | 5,347.99 ns |       - |       1 B |
+|               **Linq** |    **Int32[20]** |       **675.0 ns** |     **2.12 ns** |     **1.98 ns** |  **0.2632** |     **552 B** |
+|    LinqGenDelegate |    Int32[20] |       606.1 ns |     2.13 ns |     1.89 ns |       - |         - |
+|      LinqGenStruct |    Int32[20] |       338.4 ns |     2.24 ns |     1.99 ns |       - |         - |
+| StructLinqDelegate |    Int32[20] |       702.6 ns |     2.62 ns |     2.45 ns |  0.0420 |      88 B |
+|   StructLinqStruct |    Int32[20] |       434.5 ns |     1.71 ns |     1.60 ns |       - |         - |
+|               **Linq** |   **Int32[500]** |    **32,754.4 ns** |   **207.70 ns** |   **194.29 ns** |  **2.9907** |    **6312 B** |
+|    LinqGenDelegate |   Int32[500] |    29,479.3 ns |   341.48 ns |   319.42 ns |       - |         - |
+|      LinqGenStruct |   Int32[500] |     9,005.9 ns |    38.13 ns |    35.67 ns |       - |         - |
+| StructLinqDelegate |   Int32[500] |    28,213.1 ns |   249.59 ns |   221.25 ns |  0.0305 |      88 B |
+|   StructLinqStruct |   Int32[500] |    13,035.7 ns |   176.19 ns |   164.81 ns |       - |         - |

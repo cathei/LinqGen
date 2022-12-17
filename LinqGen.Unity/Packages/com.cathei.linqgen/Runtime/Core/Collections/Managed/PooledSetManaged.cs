@@ -15,10 +15,14 @@ namespace Cathei.LinqGen.Hidden
         private readonly TComparer _comparer;
 
         private DynamicArrayNative<int> _buckets;
-        private DynamicArrayManaged<PooledSetSlot<T>> _slots;
+        private PooledSetSlot<T>[] _slots;
 
         private int _size;
         private int _count;
+
+        // Quick access without resolving generic static classes
+        private static readonly ArrayPool<PooledSetSlot<T>> Pool = SharedArrayPool<PooledSetSlot<T>>.Pool;
+        private static readonly PooledSetSlot<T>[] EmptyArray = Array.Empty<PooledSetSlot<T>>();
 
         public PooledSetManaged(int capacity, TComparer comparer) : this()
         {
@@ -28,7 +32,7 @@ namespace Cathei.LinqGen.Hidden
             _count = 0;
 
             _buckets = new DynamicArrayNative<int>(_size);
-            _slots = new DynamicArrayManaged<PooledSetSlot<T>>(_size);
+            _slots = _size > 0 ? Pool.Rent(_size) : EmptyArray;
 
             _buckets.Clear();
         }
@@ -77,7 +81,11 @@ namespace Cathei.LinqGen.Hidden
                 newBuckets.Clear();
                 replaceBucket = true;
 
-                localSlots.IncreaseCapacity(newSize, _count);
+                var newSlots = Pool.Rent(newSize);
+                Array.Copy(localSlots, newSlots, _count);
+                Pool.Return(localSlots, true);
+
+                _slots = localSlots = newSlots;
             }
 
             for (int i = 0; i < _count; i++)
@@ -161,8 +169,10 @@ namespace Cathei.LinqGen.Hidden
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
-            _slots.Dispose();
             _buckets.Dispose();
+
+            Pool.Return(_slots, true);
+            _slots = EmptyArray;
 
             _size = 0;
             _count = 0;

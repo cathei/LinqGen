@@ -6,10 +6,10 @@ using System.Runtime.CompilerServices;
 
 namespace Cathei.LinqGen.Hidden
 {
-    public struct DynamicArrayNative<T> : IDynamicArray<T>
+    public unsafe struct DynamicArrayNative<T>
         where T : unmanaged
     {
-        private IntPtr _array;
+        private T* _array;
         private int _capacity;
 
         // static readonly int SizePerItem = UnsafeUtils.SizeOf<T>();
@@ -18,20 +18,22 @@ namespace Cathei.LinqGen.Hidden
         public DynamicArrayNative(int capacity) : this()
         {
             if (capacity > 0)
-                _array = UnsafeUtils.ArrayAlloc<T>(capacity);
+                _array = (T*)UnsafeUtils.ArrayAlloc<T>(capacity);
             _capacity = capacity;
         }
 
         public ref T this[int index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => ref UnsafeUtils.ArrayElement<T>(_array, index);
+            get => ref _array[index];
+            //ref UnsafeUtils.ArrayElement<T>(_array, index);
         }
 
         public ref T this[uint index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => ref UnsafeUtils.ArrayElement<T>(_array, (int)index);
+            get => ref _array[index];
+            //UnsafeUtils.ArrayElement<T>(_array, (int)index);
         }
 
         public int Length
@@ -45,7 +47,7 @@ namespace Cathei.LinqGen.Hidden
         {
             var newItems = UnsafeUtils.ArrayAlloc<T>(newSize);
             if (copyCount > 0)
-                UnsafeUtils.ArrayCopy<T>(_array, newItems, copyCount);
+                UnsafeUtils.ArrayCopy(_array, newItems, copyCount);
 
             ReturnArray();
             _array = newItems;
@@ -55,28 +57,28 @@ namespace Cathei.LinqGen.Hidden
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear()
         {
-            UnsafeUtils.ArrayClear<T>(_array, _capacity);
+            UnsafeUtils.ArrayClear(_array, _capacity);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ReturnArray()
         {
-            if (_array == IntPtr.Zero)
+            if (_array == null)
                 return;
 
             UnsafeUtils.ArrayFree(_array);
-            _array = IntPtr.Zero;
+            _array = null;
             _capacity = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe void CopyTo(T[] array, int count)
+        public void CopyTo(T[] array, int count)
         {
-            if (_array == IntPtr.Zero)
+            if (_array == null)
                 return;
 
-            fixed (void* arrayPtr = array)
-                UnsafeUtils.ArrayCopy<T>(_array, (IntPtr)arrayPtr, count);
+            fixed (T* arrayPtr = array)
+                UnsafeUtils.ArrayCopy(_array, arrayPtr, count);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

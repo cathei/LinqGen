@@ -49,34 +49,6 @@ namespace Cathei.LinqGen.Hidden
             _count++;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddRange<TEnumerator>(TEnumerator iter)
-            where TEnumerator : IEnumerator<T>
-        {
-            var localArray = _array;
-            int index = _count;
-
-            while (iter.MoveNext())
-            {
-                // this should remove array bound check
-                if ((uint)index < (uint)localArray.Length)
-                {
-                    localArray[index] = iter.Current;
-                    index++;
-                }
-                else
-                {
-                    // resize and assign
-                    _count = index;
-                    IncreaseCapacity();
-                    localArray = _array;
-                    localArray[index] = iter.Current;
-                }
-            }
-
-            _count = index;
-        }
-
         public int Count
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -91,6 +63,13 @@ namespace Cathei.LinqGen.Hidden
             get => _array[index];
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set => _array[index] = value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Clear()
+        {
+            _array.Clear();
+            _count = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

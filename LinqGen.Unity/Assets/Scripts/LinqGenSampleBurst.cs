@@ -13,7 +13,7 @@ public class LinqGenSampleBurst : MonoBehaviour
     void Start()
     {
         var input = new NativeArray<int>(myArray, Allocator.Persistent);
-        var output = new NativeArray<int>(1, Allocator.Persistent);
+        var output = new NativeArray<int>(myArray.Length, Allocator.Persistent);
 
         var job = new LinqGenSampleJob()
         {
@@ -23,7 +23,10 @@ public class LinqGenSampleBurst : MonoBehaviour
 
         job.Schedule().Complete();
 
-        Debug.Log("The result of the sum is: " + output[0]);
+        foreach (var item in output)
+        {
+            Debug.Log(item);
+        }
 
         input.Dispose();
         output.Dispose();
@@ -41,7 +44,14 @@ public struct LinqGenSampleJob : IJob
 
     public void Execute()
     {
-        Output[0] = Input.Specialize().Select(new Selector()).Sum();
+        int index = 0;
+
+        foreach (var item in Input.Specialize()
+                     .Select(new Selector())
+                     .OrderBy(new Comparer()))
+        {
+            Output[index++] = item;
+        }
     }
 }
 
@@ -50,5 +60,13 @@ public struct Selector : IStructFunction<int, int>
     public int Invoke(int arg)
     {
         return arg * 10;
+    }
+}
+
+public struct Comparer : IComparer<int>
+{
+    public int Compare(int x, int y)
+    {
+        return x - y;
     }
 }

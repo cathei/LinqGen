@@ -10,7 +10,7 @@ namespace Cathei.LinqGen.Hidden
     /// <summary>
     /// Unsafe for .NET environment (in contrast of Unity)
     /// </summary>
-    public static class UnsafeUtils
+    public static unsafe class UnsafeUtils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref TTo As<TFrom, TTo>(ref TFrom source)
@@ -19,37 +19,30 @@ namespace Cathei.LinqGen.Hidden
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ref T ArrayElement<T>(IntPtr array, int index)
+        public static T* ArrayAlloc<T>(int size)
             where T : unmanaged
         {
-            return ref Unsafe.AsRef<T>((void*)(array + index * sizeof(T)));
+            return (T*)Marshal.AllocHGlobal(size * sizeof(T));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe IntPtr ArrayAlloc<T>(int size)
-            where T : unmanaged
+        public static void ArrayFree(void* array)
         {
-            return Marshal.AllocHGlobal(size * sizeof(T));
+            Marshal.FreeHGlobal((IntPtr)array);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ArrayFree(IntPtr array)
+        public static void ArrayClear<T>(T* array, int size)
+            where T : unmanaged
         {
-            Marshal.FreeHGlobal(array);
+            Unsafe.InitBlock(array, 0, (uint)(size * sizeof(T)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void ArrayClear<T>(IntPtr array, int size)
+        public static void ArrayCopy<T>(T* src, T* dst, int size)
             where T : unmanaged
         {
-            Unsafe.InitBlock((void*)array, 0, (uint)(size * sizeof(T)));
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void ArrayCopy<T>(IntPtr src, IntPtr dst, int size)
-            where T : unmanaged
-        {
-            Unsafe.CopyBlock((void*)src, (void*)dst, (uint)(size * sizeof(T)));
+            Unsafe.CopyBlock(src, dst, (uint)(size * sizeof(T)));
         }
     }
 }

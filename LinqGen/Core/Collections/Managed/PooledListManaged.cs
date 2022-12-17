@@ -10,19 +10,28 @@ namespace Cathei.LinqGen.Hidden
     /// </summary>
     public struct PooledListManaged<T> : IDisposable
     {
-        private DynamicArrayManaged<T> _array;
+        private T[] _array;
         private int _count;
+
+        // Quick access without resolving generic static classes
+        private static readonly ArrayPool<T> Pool = SharedArrayPool<T>.Pool;
+        private static readonly T[] EmptyArray = System.Array.Empty<T>();
 
         public PooledListManaged(int capacity) : this()
         {
-            _array = new DynamicArrayManaged<T>(capacity);
+            _array = capacity > 0 ? Pool.Rent(capacity) : EmptyArray;
             _count = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void IncreaseCapacity()
         {
-            _array.IncreaseCapacity(_count + 1, _count);
+            var newItems = Pool.Rent(_count + 1);
+            if (_count > 0)
+                System.Array.Copy(_array, newItems, _count);
+
+            ReturnArray();
+            _array = newItems;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -45,54 +54,39 @@ namespace Cathei.LinqGen.Hidden
             _count++;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddRange<TEnumerator>(TEnumerator iter)
-            where TEnumerator : IEnumerator<T>
-        {
-            var localArray = _array;
-            int index = _count;
-
-            while (iter.MoveNext())
-            {
-                // this should remove array bound check
-                if ((uint)index < (uint)localArray.Length)
-                {
-                    localArray[index] = iter.Current;
-                    index++;
-                }
-                else
-                {
-                    // resize and assign
-                    _count = index;
-                    IncreaseCapacity();
-                    localArray = _array;
-                    localArray[index] = iter.Current;
-                }
-            }
-
-            _count = index;
-        }
-
         public int Count
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _count;
         }
 
-        public DynamicArrayManaged<T> Array => _array;
-
-        public T this[int index]
+        public ref T this[int index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _array[index];
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => _array[index] = value;
+            get => ref _array[index];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Clear()
+        {
+            System.Array.Clear(_array, 0, _array.Length);
+            _count = 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ReturnArray()
+        {
+            if (_array == EmptyArray)
+                return;
+
+            Pool.Return(_array, true);
+            _array = EmptyArray;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
-            _array.Dispose();
+            ReturnArray();
             _count = 0;
         }
 
@@ -102,7 +96,7 @@ namespace Cathei.LinqGen.Hidden
             int count = _count;
             var result = new T[count];
 
-            _array.CopyTo(result, count);
+            System.Array.Copy(_array, result, count);
             return result;
         }
 
@@ -113,7 +107,7 @@ namespace Cathei.LinqGen.Hidden
             var result = new List<T>(count);
             var listLayout = UnsafeUtils.As<List<T>, ListLayout<T>>(ref result);
 
-            _array.CopyTo(listLayout.Items, _count);
+            System.Array.Copy(_array, listLayout.Items, count);
             listLayout.Size = count;
             return result;
         }

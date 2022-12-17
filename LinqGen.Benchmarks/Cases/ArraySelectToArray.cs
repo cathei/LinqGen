@@ -2,6 +2,7 @@
 
 using BenchmarkDotNet.Attributes;
 using Cathei.LinqGen;
+using Cathei.LinqGen.Hidden;
 using StructLinq;
 using NetFabric.Hyperlinq;
 using StructLinq.Range;

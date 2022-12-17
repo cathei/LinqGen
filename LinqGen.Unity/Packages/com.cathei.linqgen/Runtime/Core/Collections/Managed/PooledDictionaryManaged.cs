@@ -16,10 +16,17 @@ namespace Cathei.LinqGen.Hidden
         private readonly TComparer _comparer;
 
         private DynamicArrayNative<int> _buckets;
-        private DynamicArrayManaged<PooledDictionarySlot<TKey, TValue>> _slots;
+        private PooledDictionarySlot<TKey, TValue>[] _slots;
         private int _size;
 
         private int _count;
+
+        // Quick access without resolving generic static classes
+        private static readonly ArrayPool<PooledDictionarySlot<TKey, TValue>> Pool
+            = SharedArrayPool<PooledDictionarySlot<TKey, TValue>>.Pool;
+
+        private static readonly PooledDictionarySlot<TKey, TValue>[] EmptyArray
+            = Array.Empty<PooledDictionarySlot<TKey, TValue>>();
 
         public PooledDictionaryManaged(int capacity, TComparer comparer) : this()
         {
@@ -29,7 +36,7 @@ namespace Cathei.LinqGen.Hidden
             _count = 0;
 
             _buckets = new DynamicArrayNative<int>(_size);
-            _slots = new DynamicArrayManaged<PooledDictionarySlot<TKey, TValue>>(_size);
+            _slots = _size > 0 ? Pool.Rent(_size) : EmptyArray;
 
             _buckets.Clear();
         }
@@ -78,7 +85,11 @@ namespace Cathei.LinqGen.Hidden
                 newBuckets.Clear();
                 replaceBucket = true;
 
-                localSlots.IncreaseCapacity(newSize, _count);
+                var newSlots = Pool.Rent(newSize);
+                Array.Copy(localSlots, newSlots, _count);
+                Pool.Return(localSlots, true);
+
+                _slots = localSlots = newSlots;
             }
 
             for (int i = 0; i < _count; i++)
@@ -145,7 +156,10 @@ namespace Cathei.LinqGen.Hidden
         public void Dispose()
         {
             _buckets.Dispose();
-            _slots.Dispose();
+
+            Pool.Return(_slots, true);
+            _slots = EmptyArray;
+
             _size = 0;
             _count = 0;
         }
