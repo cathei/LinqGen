@@ -25,13 +25,17 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
-            ExpressionSyntax countExpression = Upstream.SupportCount
-                ? CountProperty
-                : LiteralExpression(0);
-
-            yield return UsingLocalDeclarationStatement(VarName("list").Identifier, ObjectCreationExpression(
-                PooledListType(Upstream.OutputElementType, Upstream.OutputElementSymbol.IsUnmanagedType),
-                ArgumentList(countExpression), null));
+            if (Upstream.SupportCount)
+            {
+                yield return LocalDeclarationStatement(VarName("list").Identifier, ObjectCreationExpression(
+                    ReturnType, ArgumentList(CountProperty), null));
+            }
+            else
+            {
+                yield return UsingLocalDeclarationStatement(VarName("list").Identifier, ObjectCreationExpression(
+                    PooledListType(Upstream.OutputElementType, Upstream.OutputElementSymbol.IsUnmanagedType),
+                    ArgumentList(LiteralExpression(0)), null));
+            }
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()
@@ -42,7 +46,14 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<StatementSyntax> RenderReturn()
         {
-            yield return ReturnStatement(InvocationExpression(VarName("list"), IdentifierName("ToList")));
+            if (Upstream.SupportCount)
+            {
+                yield return ReturnStatement(VarName("list"));
+            }
+            else
+            {
+                yield return ReturnStatement(InvocationExpression(VarName("list"), IdentifierName("ToList")));
+            }
         }
     }
 }

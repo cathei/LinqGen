@@ -25,24 +25,47 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
-            ExpressionSyntax countExpression = Upstream.SupportCount
-                ? CountProperty
-                : LiteralExpression(0);
+            if (Upstream.SupportCount)
+            {
+                yield return LocalDeclarationStatement(VarName("array").Identifier,
+                    ObjectCreationExpression(ArrayType(Upstream.OutputElementType,
+                        SingletonList(ArrayRankSpecifier(SingletonSeparatedList((ExpressionSyntax)CountProperty))))));
 
-            yield return UsingLocalDeclarationStatement(VarName("list").Identifier, ObjectCreationExpression(
-                PooledListType(Upstream.OutputElementType, Upstream.OutputElementSymbol.IsUnmanagedType),
-                ArgumentList(countExpression), null));
+                yield return LocalDeclarationStatement(VarName("index").Identifier, LiteralExpression(-1));
+            }
+            else
+            {
+                yield return UsingLocalDeclarationStatement(VarName("list").Identifier, ObjectCreationExpression(
+                    PooledListType(Upstream.OutputElementType, Upstream.OutputElementSymbol.IsUnmanagedType),
+                    ArgumentList(LiteralExpression(0)), null));
+            }
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()
         {
-            yield return ExpressionStatement(InvocationExpression(
-                MemberAccessExpression(VarName("list"), AddMethod), ArgumentList(CurrentPlaceholder)));
+            if (Upstream.SupportCount)
+            {
+                yield return ExpressionStatement(SimpleAssignmentExpression(
+                    ElementAccessExpression(VarName("array"), PreIncrementExpression(VarName("index"))),
+                    CurrentPlaceholder));
+            }
+            else
+            {
+                yield return ExpressionStatement(InvocationExpression(
+                    MemberAccessExpression(VarName("list"), AddMethod), ArgumentList(CurrentPlaceholder)));
+            }
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()
         {
-            yield return ReturnStatement(InvocationExpression(VarName("list"), IdentifierName("ToArray")));
+            if (Upstream.SupportCount)
+            {
+                yield return ReturnStatement(VarName("array"));
+            }
+            else
+            {
+                yield return ReturnStatement(InvocationExpression(VarName("list"), IdentifierName("ToArray")));
+            }
         }
     }
 }
