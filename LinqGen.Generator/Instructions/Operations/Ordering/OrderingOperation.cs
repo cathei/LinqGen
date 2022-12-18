@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -16,26 +17,27 @@ namespace Cathei.LinqGen.Generator
 
     public abstract class OrderingOperation : Operation
     {
-        private bool WithSelector { get; }
-        public bool WithStruct { get; }
+        private FunctionKind SelectorKind { get; }
+        private ComparerKind ComparerKind { get; }
         public bool Descending { get; }
 
         public OrderingOperation(in LinqGenExpression expression, int id,
-            INamedTypeSymbol? selectorType, bool withStruct, bool descending) : base(expression, id)
+            FunctionKind selectorKind, ComparerKind comparerKind, bool descending) : base(expression, id)
         {
-            WithStruct = withStruct;
+            SelectorKind = selectorKind;
+            ComparerKind = comparerKind;
             Descending = descending;
 
-            if (selectorType != null)
+            if (selectorKind != FunctionKind.Default)
             {
-                WithSelector = true;
+                expression.TryGetNamedParameterType(0, out var selectorType);
+
                 SelectorInterfaceType = ParseTypeName(selectorType);
                 SelectorKeySymbol = selectorType.TypeArguments[1];
                 SelectorKeyType = ParseTypeName(SelectorKeySymbol);
             }
             else
             {
-                WithSelector = false;
                 SelectorInterfaceType = null;
                 SelectorKeySymbol = null;
                 SelectorKeyType = null;
@@ -53,11 +55,11 @@ namespace Cathei.LinqGen.Generator
         private ITypeSymbol? SelectorKeySymbol { get; }
         private TypeSyntax? SelectorKeyType { get; }
 
-        private TypeSyntax KeyType => WithSelector ? SelectorKeyType! : OutputElementType;
+        private TypeSyntax KeyType =>
+            SelectorKind == FunctionKind.Default ? OutputElementType : SelectorKeyType!;
 
-        private TypeSyntax KeyListType => WithSelector
-            ? PooledListType(SelectorKeyType!, SelectorKeySymbol!.IsUnmanagedType)
-            : ElementListType;
+        private ITypeSymbol KeySymbol =>
+            SelectorKind == FunctionKind.Default ? OutputElementSymbol : SelectorKeySymbol!;
 
         private TypeSyntax ComparerInterfaceType =>
             GenericName(Identifier("IComparer"), TypeArgumentList(KeyType));
@@ -74,7 +76,7 @@ namespace Cathei.LinqGen.Generator
             get
             {
                 // parameter can collide in this case
-                if (WithSelector && WithStruct)
+                if (SelectorKind == FunctionKind.Struct)
                     return SelectorKeyType;
                 return null;
             }
@@ -99,39 +101,41 @@ namespace Cathei.LinqGen.Generator
 
             yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));
 
-            if (WithStruct)
+            switch (SelectorKind)
             {
-                if (WithSelector)
-                    yield return new MemberInfo(MemberKind.Enumerable, TypeName("Selector"), VarName("selector"));
-
-                yield return new MemberInfo(
-                    MemberKind.Enumerable, TypeName("Comparer"), VarName("comparer"));
-            }
-            else
-            {
-                if (WithSelector)
+                case FunctionKind.Delegate:
                     yield return new MemberInfo(MemberKind.Enumerable, SelectorInterfaceType!, VarName("selector"));
+                    break;
 
-                yield return new MemberInfo(
-                    MemberKind.Enumerable, ComparerInterfaceType, VarName("comparer"), NullLiteral);
+                case FunctionKind.Struct:
+                    yield return new MemberInfo(MemberKind.Enumerable, TypeName("Selector"), VarName("selector"));
+                    break;
+            }
+
+            switch (ComparerKind)
+            {
+                case ComparerKind.Interface:
+                    yield return new MemberInfo(MemberKind.Enumerable, ComparerInterfaceType, VarName("comparer"));
+                    break;
+
+                case ComparerKind.Struct:
+                    yield return new MemberInfo(MemberKind.Enumerable, TypeName("Comparer"), VarName("comparer"));
+                    break;
             }
         }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
-            if (WithStruct)
+            if (SelectorKind == FunctionKind.Struct)
             {
-                if (WithSelector)
-                {
-                    yield return new TypeParameterInfo(TypeName("Selector"), SelectorInterfaceType!);
-                    yield return new TypeParameterInfo(TypeName("Comparer"), ComparerInterfaceType);
-                }
-                else
-                {
-                    // comparer requires struct type constraint for now... may refactor overloads
-                    yield return new TypeParameterInfo(TypeName("Comparer"),
-                        ClassOrStructConstraint(SyntaxKind.StructConstraint), TypeConstraint(ComparerInterfaceType));
-                }
+                yield return new TypeParameterInfo(
+                    TypeName("Selector"), SelectorInterfaceType!);
+            }
+
+            if (ComparerKind == ComparerKind.Struct)
+            {
+                yield return new TypeParameterInfo(
+                    TypeName("Comparer"), StructConstraint, TypeConstraint(ComparerInterfaceType));
             }
         }
 
@@ -141,7 +145,8 @@ namespace Cathei.LinqGen.Generator
             {
                 if (member.SelectorType != null)
                     yield return Parameter(member.SelectorType, member.SelectorName.Identifier);
-                yield return Parameter(member.ComparerType, member.ComparerName.Identifier);
+                if (member.ComparerType != null)
+                    yield return Parameter(member.ComparerType, member.ComparerName.Identifier);
             }
         }
 
@@ -151,7 +156,8 @@ namespace Cathei.LinqGen.Generator
             {
                 if (member.SelectorType != null)
                     yield return Argument(MemberAccessExpression(sourceName, member.SelectorName));
-                yield return Argument(MemberAccessExpression(sourceName, member.ComparerName));
+                if (member.ComparerType != null)
+                    yield return Argument(MemberAccessExpression(sourceName, member.ComparerName));
             }
         }
 
@@ -252,16 +258,46 @@ namespace Cathei.LinqGen.Generator
                     yield return member;
             }
 
-            if (WithStruct)
+            TypeSyntax? selectorType;
+            TypeSyntax? comparerType;
+
+            switch (SelectorKind)
             {
-                yield return new OrderMemberInfo(this,
-                    WithSelector ? TypeName("Selector") : null, TypeName("Comparer"), KeyType, KeyListType);
+                case FunctionKind.Default:
+                    selectorType = null;
+                    break;
+
+                case FunctionKind.Delegate:
+                    selectorType = SelectorInterfaceType;
+                    break;
+
+                case FunctionKind.Struct:
+                    selectorType = TypeName("Selector");
+                    break;
+
+                default:
+                    throw new InvalidOperationException();
             }
-            else
+
+            switch (ComparerKind)
             {
-                yield return new OrderMemberInfo(this,
-                    WithSelector ? SelectorInterfaceType : null, ComparerInterfaceType, KeyType, KeyListType);
+                case ComparerKind.Default:
+                    comparerType = null;
+                    break;
+
+                case ComparerKind.Interface:
+                    comparerType = ComparerInterfaceType;
+                    break;
+
+                case ComparerKind.Struct:
+                    comparerType = TypeName("Comparer");
+                    break;
+
+                default:
+                    throw new InvalidOperationException();
             }
+
+            yield return new OrderMemberInfo(this, selectorType, comparerType, KeyType, KeySymbol);
         }
 
         public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)

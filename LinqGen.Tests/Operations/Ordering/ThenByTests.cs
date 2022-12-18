@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Cathei.LinqGen;
+using Cathei.LinqGen.Hidden;
 
 namespace Cathei.LinqGen.Tests;
 
@@ -80,8 +81,8 @@ public class ThenByTests : GenerationTestBase<int>
             .ThenBy(selector2.Invoke);
 
         var actual = Gen.Enumerable.Range(start, count)
-            .OrderBy(selector1, Comparer<bool>.Default)
-            .ThenBy(selector2, Comparer<double>.Default);
+            .OrderBy(selector1)
+            .ThenBy(selector2);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }

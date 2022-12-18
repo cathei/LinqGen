@@ -17,30 +17,21 @@ namespace Cathei.LinqGen.Generator
     public sealed class MinMaxEvaluation : VisitorEvaluation
     {
         private bool IsMin { get; }
-        private bool WithComparerParameter { get; }
-        private bool IsElementComparable { get; }
-        private TypeSyntax ComparerType { get; }
+
+        private ComparerKind ComparerKind { get; }
 
         public MinMaxEvaluation(in LinqGenExpression expression, int id, bool isMin) : base(expression, id)
         {
             IsMin = isMin;
 
-            // Min and Max with parameter
-            WithComparerParameter = expression.MethodSymbol.Parameters.Length == 1;
-
-            if (WithComparerParameter)
+            if (expression.MethodSymbol.Parameters.Length == 1)
             {
-                ComparerType = TypeName("Comparer");
-            }
-            else if (TryGetComparableSelfInterface(InputElementSymbol, out _))
-            {
-                IsElementComparable = true;
-                ComparerType = GenericName(
-                    Identifier("CompareToComparer"), TypeArgumentList(InputElementType));
+                // Min and Max with parameter
+                ComparerKind = ComparerKind.Struct;
             }
             else
             {
-                ComparerType = ComparerInterfaceType;
+                ComparerKind = ComparerKind.Default;
             }
         }
 
@@ -51,20 +42,23 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
-            if (WithComparerParameter)
+            if (ComparerKind == ComparerKind.Struct)
                 yield return new(TypeName("Comparer"), ComparerInterfaceType);
         }
 
         protected override IEnumerable<ParameterInfo> GetParameterInfos()
         {
-            if (WithComparerParameter)
-                yield return new(ComparerType, IdentifierName("comparer"));
+            if (ComparerKind == ComparerKind.Struct)
+                yield return new(TypeName("Comparer"), IdentifierName("comparer"));
         }
 
         protected override IEnumerable<MemberDeclarationSyntax> RenderVisitorFields()
         {
-            if (!WithComparerParameter)
-                yield return FieldDeclaration(PrivateTokenList, ComparerType, Identifier("comparer"));
+            if (ComparerKind == ComparerKind.Default)
+            {
+                yield return FieldDeclaration(PrivateTokenList,
+                    ComparerDefaultType(InputElementType, InputElementSymbol), Identifier("comparer"));
+            }
 
             yield return FieldDeclaration(PrivateTokenList, BoolType, VarName("isSet").Identifier);
             yield return FieldDeclaration(PrivateTokenList, ReturnType, VarName("result").Identifier);
@@ -72,12 +66,10 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
-            if (!WithComparerParameter)
+            if (ComparerKind == ComparerKind.Default)
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
-                    IdentifierName("comparer"), IsElementComparable
-                        ? ObjectCreationExpression(ComparerType, EmptyArgumentList, null)
-                        : ComparerDefault(Upstream.OutputElementType)));
+                    IdentifierName("comparer"), ComparerDefault(InputElementType, InputElementSymbol)));
             }
         }
 

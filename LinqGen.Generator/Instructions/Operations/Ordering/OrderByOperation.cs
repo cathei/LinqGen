@@ -17,8 +17,8 @@ namespace Cathei.LinqGen.Generator
     public sealed class OrderByOperation : OrderingOperation
     {
         public OrderByOperation(in LinqGenExpression expression, int id,
-            INamedTypeSymbol? selectorType, bool withStruct, bool descending)
-            : base(in expression, id, selectorType, withStruct, descending)
+            FunctionKind selectorKind, ComparerKind comparerKind, bool descending)
+            : base(in expression, id, selectorKind, comparerKind, descending)
         {
         }
     }

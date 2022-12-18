@@ -1,5 +1,6 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -12,18 +13,18 @@ namespace Cathei.LinqGen.Generator
     {
         public readonly OrderingOperation Operation;
         public readonly TypeSyntax? SelectorType;
-        public readonly TypeSyntax ComparerType;
+        public readonly TypeSyntax? ComparerType;
         public readonly TypeSyntax KeyType;
-        public readonly TypeSyntax KeyListType;
+        public readonly ITypeSymbol KeySymbol;
 
-        public OrderMemberInfo(OrderingOperation operation,
-            TypeSyntax? selectorType, TypeSyntax comparerType, TypeSyntax keyType, TypeSyntax keyListType)
+        public OrderMemberInfo(OrderingOperation operation, TypeSyntax? selectorType, TypeSyntax? comparerType,
+            TypeSyntax keyType, ITypeSymbol keySymbol)
         {
             Operation = operation;
             SelectorType = selectorType;
             ComparerType = comparerType;
             KeyType = keyType;
-            KeyListType = keyListType;
+            KeySymbol = keySymbol;
         }
 
         public int Id => Operation.Id;
@@ -32,5 +33,7 @@ namespace Cathei.LinqGen.Generator
         public IdentifierNameSyntax SelectorName => IdentifierName($"selector_{Id}");
         public IdentifierNameSyntax ComparerName => IdentifierName($"comparer_{Id}");
         public IdentifierNameSyntax KeysName => IdentifierName($"keys_{Id}");
+
+        public TypeSyntax KeyListType => PooledListType(KeyType, KeySymbol.IsUnmanagedType);
     }
 }

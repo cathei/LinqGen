@@ -166,6 +166,9 @@ namespace Cathei.LinqGen.Generator
         public static readonly ConstructorInitializerSyntax ThisInitializer =
             ConstructorInitializer(SyntaxKind.ThisConstructorInitializer);
 
+        public static readonly ClassOrStructConstraintSyntax StructConstraint =
+            ClassOrStructConstraint(SyntaxKind.StructConstraint);
+
         public static readonly AttributeListSyntax AggressiveInliningAttributeList =
             AttributeList(SingletonSeparatedList(
                 Attribute(IdentifierName("MethodImpl"),
@@ -441,14 +444,46 @@ namespace Cathei.LinqGen.Generator
             return SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression);
         }
 
-        public static MemberAccessExpressionSyntax ComparerDefault(TypeSyntax type)
+        public static TypeSyntax ComparerDefaultType(TypeSyntax type, ITypeSymbol symbol)
         {
+            if (TryGetComparableSelfInterface(symbol, out _))
+                return GenericName(Identifier("CompareToComparer"), TypeArgumentList(type));
+
+            return ComparerInterfaceType(type);
+        }
+
+        public static TypeSyntax ComparerInterfaceType(TypeSyntax type)
+        {
+            return GenericName(Identifier("IComparer"), TypeArgumentList(type));
+        }
+
+        public static ExpressionSyntax ComparerDefault(TypeSyntax type, ITypeSymbol symbol)
+        {
+            if (TryGetComparableSelfInterface(symbol, out _))
+                return DefaultLiteral;
+
             return MemberAccessExpression(
                 GenericName(Identifier("Comparer"), TypeArgumentList(type)), IdentifierName("Default"));
         }
 
-        public static MemberAccessExpressionSyntax EqualityComparerDefault(TypeSyntax type)
+        public static TypeSyntax EqualityComparerDefaultType(TypeSyntax type, ITypeSymbol symbol)
         {
+            if (TryGetEquatableSelfInterface(symbol, out _))
+                return GenericName(Identifier("EquatableComparer"), TypeArgumentList(type));
+
+            return EqualityComparerInterfaceType(type);
+        }
+
+        public static TypeSyntax EqualityComparerInterfaceType(TypeSyntax type)
+        {
+            return GenericName(Identifier("IEqualityComparer"), TypeArgumentList(type));
+        }
+
+        public static ExpressionSyntax EqualityComparerDefault(TypeSyntax type, ITypeSymbol symbol)
+        {
+            if (TryGetEquatableSelfInterface(symbol, out _))
+                return DefaultLiteral;
+
             return MemberAccessExpression(
                 GenericName(Identifier("EqualityComparer"), TypeArgumentList(type)), IdentifierName("Default"));
         }

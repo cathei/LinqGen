@@ -139,17 +139,26 @@ namespace Cathei.LinqGen.Generator
 
                 foreach (var member in _operation.GetOrderMemberInfos())
                 {
-                    list.Add(FieldDeclaration(
-                        PrivateTokenList, member.ComparerType, member.ComparerName.Identifier));
-
-                    if (member.SelectorType == null)
+                    if (member.ComparerType != null)
                     {
-                        needElement = true;
-                        continue;
+                        list.Add(FieldDeclaration(
+                            PrivateTokenList, member.ComparerType, member.ComparerName.Identifier));
+                    }
+                    else
+                    {
+                        list.Add(FieldDeclaration(PrivateTokenList,
+                            ComparerDefaultType(member.KeyType, member.KeySymbol), member.ComparerName.Identifier));
                     }
 
-                    list.Add(FieldDeclaration(
-                        PrivateTokenList, member.KeyListType, member.KeysName.Identifier));
+                    if (member.SelectorType != null)
+                    {
+                        list.Add(FieldDeclaration(
+                            PrivateTokenList, member.KeyListType, member.KeysName.Identifier));
+                    }
+                    else
+                    {
+                        needElement = true;
+                    }
                 }
 
                 if (needElement)
@@ -171,16 +180,18 @@ namespace Cathei.LinqGen.Generator
 
                 foreach (var member in _operation.GetOrderMemberInfos())
                 {
-                    // assign to field
-                    list.Add(ExpressionStatement(SimpleAssignmentExpression(
-                        MemberAccessExpression(ThisExpression(), member.ComparerName), member.ComparerName)));
-
-                    if (!member.Operation.WithStruct)
+                    if (member.ComparerType != null)
                     {
-                        // default comparer if null
-                        list.Add(ExpressionStatement(AssignmentExpression(SyntaxKind.CoalesceAssignmentExpression,
+                        // assign to field
+                        list.Add(ExpressionStatement(SimpleAssignmentExpression(
                             MemberAccessExpression(ThisExpression(), member.ComparerName),
-                            ComparerDefault(member.KeyType))));
+                            member.ComparerName)));
+                    }
+                    else
+                    {
+                        list.Add(ExpressionStatement(SimpleAssignmentExpression(
+                            MemberAccessExpression(ThisExpression(), member.ComparerName),
+                            ComparerDefault(member.KeyType, member.KeySymbol))));
                     }
 
                     if (member.SelectorType == null)

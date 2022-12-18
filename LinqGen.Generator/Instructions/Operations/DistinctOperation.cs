@@ -16,37 +16,40 @@ namespace Cathei.LinqGen.Generator
 
     public class DistinctOperation : Operation
     {
-        private bool WithComparerParameter { get; }
+        private ComparerKind ComparerKind { get; }
 
-        public DistinctOperation(in LinqGenExpression expression, int id, bool withComparer) : base(expression, id)
+        public DistinctOperation(in LinqGenExpression expression, int id, ComparerKind comparerKind)
+            : base(expression, id)
         {
-            WithComparerParameter = withComparer;
+            ComparerKind = comparerKind;
         }
-
-        private bool IsElementEquatable => TryGetEquatableSelfInterface(OutputElementSymbol, out _);
 
         private TypeSyntax ComparerType
         {
             get
             {
-                if (WithComparerParameter)
-                    return TypeName("Comparer");
+                switch (ComparerKind)
+                {
+                    case ComparerKind.Default:
+                        return EqualityComparerDefaultType(OutputElementType, OutputElementSymbol);
 
-                if (IsElementEquatable)
-                    return GenericName(Identifier("EquatableComparer"), TypeArgumentList(OutputElementType));
+                    case ComparerKind.Interface:
+                        return EqualityComparerInterfaceType(OutputElementType);
 
-                return ComparerInterfaceType;
+                    case ComparerKind.Struct:
+                        return TypeName("Comparer");
+                }
+
+                throw new InvalidOperationException();
             }
         }
 
-        private TypeSyntax ComparerInterfaceType =>
-            GenericName(Identifier("IEqualityComparer"), TypeArgumentList(OutputElementType));
-
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
-            if (WithComparerParameter)
+            if (ComparerKind == ComparerKind.Struct)
             {
-                yield return new TypeParameterInfo(TypeName("Comparer"), ComparerInterfaceType);
+                yield return new TypeParameterInfo(TypeName("Comparer"),
+                    StructConstraint, TypeConstraint(EqualityComparerInterfaceType(OutputElementType)));
             }
         }
 
@@ -54,16 +57,14 @@ namespace Cathei.LinqGen.Generator
         {
             ExpressionSyntax comparerExpression;
 
-            if (WithComparerParameter)
+            if (ComparerKind == ComparerKind.Default)
             {
-                comparerExpression = VarName("comparer");
-                yield return new MemberInfo(MemberKind.Both, ComparerType, VarName("comparer"));
+                comparerExpression = EqualityComparerDefault(OutputElementType, OutputElementSymbol);
             }
             else
             {
-                comparerExpression = IsElementEquatable
-                    ? ObjectCreationExpression(ComparerType, EmptyArgumentList, null)
-                    : EqualityComparerDefault(OutputElementType);
+                comparerExpression = VarName("comparer");
+                yield return new MemberInfo(MemberKind.Both, ComparerType, VarName("comparer"));
             }
 
             var countExpression = Upstream.RenderCount() ?? LiteralExpression(0);

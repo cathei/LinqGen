@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Cathei.LinqGen;
+using Cathei.LinqGen.Hidden;
 
 namespace Cathei.LinqGen.Tests;
 
@@ -71,7 +72,7 @@ public class OrderByDescTests : GenerationTestBase<int>
             .OrderByDescending(selector.Invoke);
 
         var actual = Gen.Enumerable.Range(start, count)
-            .OrderByDescending(selector, Comparer<double>.Default);
+            .OrderByDescending(selector);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }

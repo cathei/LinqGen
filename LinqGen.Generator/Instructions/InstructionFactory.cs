@@ -122,74 +122,97 @@ namespace Cathei.LinqGen.Generator
                     return new TakeOperation(expression, id);
 
                 case "Distinct":
-                    return new DistinctOperation(expression, id, false);
+                    return new DistinctOperation(expression, id, ComparerKind.Default);
 
                 case "DistinctComparer":
-                    return new DistinctOperation(expression, id, true);
+                    return new DistinctOperation(expression, id, ComparerKind.Interface);
+
+                case "DistinctStruct":
+                    return new DistinctOperation(expression, id, ComparerKind.Struct);
 
                 case "OrderBy":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new OrderByOperation(expression, id, typeSymbol, false, false);
+                    return new OrderByOperation(expression, id, FunctionKind.Delegate, ComparerKind.Default, false);
+
+                case "OrderByKey":
+                    return new OrderByOperation(expression, id, FunctionKind.Struct, ComparerKind.Default, false);
+
+                case "OrderByComparer":
+                    return new OrderByOperation(expression, id, FunctionKind.Delegate, ComparerKind.Interface, false);
 
                 case "OrderByStruct":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new OrderByOperation(expression, id, typeSymbol, true, false);
+                    return new OrderByOperation(expression, id, FunctionKind.Struct, ComparerKind.Struct, false);
 
                 case "OrderBySelf":
-                    return new OrderByOperation(expression, id, null, false, false);
+                    return new OrderByOperation(expression, id, FunctionKind.Default, ComparerKind.Default, false);
+
+                case "OrderBySelfComparer":
+                    return new OrderByOperation(expression, id, FunctionKind.Default, ComparerKind.Interface, false);
 
                 case "OrderBySelfStruct":
-                    return new OrderByOperation(expression, id, null, true, false);
+                    return new OrderByOperation(expression, id, FunctionKind.Default, ComparerKind.Struct, false);
 
                 case "ThenBy":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new ThenByOperation(expression, id, typeSymbol, false, false);
+                    return new ThenByOperation(expression, id, FunctionKind.Delegate, ComparerKind.Default, false);
+
+                case "ThenByKey":
+                    return new ThenByOperation(expression, id, FunctionKind.Struct, ComparerKind.Default, false);
+
+                case "ThenByComparer":
+                    return new ThenByOperation(expression, id, FunctionKind.Delegate, ComparerKind.Interface, false);
 
                 case "ThenByStruct":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new ThenByOperation(expression, id, typeSymbol, true, false);
+                    return new ThenByOperation(expression, id, FunctionKind.Struct, ComparerKind.Struct, false);
 
                 case "ThenBySelf":
-                    return new ThenByOperation(expression, id, null, false, false);
+                    return new ThenByOperation(expression, id, FunctionKind.Default, ComparerKind.Default, false);
+
+                case "ThenBySelfComparer":
+                    return new ThenByOperation(expression, id, FunctionKind.Default, ComparerKind.Interface, false);
 
                 case "ThenBySelfStruct":
-                    return new ThenByOperation(expression, id, null, true, false);
+                    return new ThenByOperation(expression, id, FunctionKind.Default, ComparerKind.Struct, false);
 
                 case "OrderByDesc":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new OrderByOperation(expression, id, typeSymbol, false, true);
+                    return new OrderByOperation(expression, id, FunctionKind.Delegate, ComparerKind.Default, true);
+
+                case "OrderByDescKey":
+                    return new OrderByOperation(expression, id, FunctionKind.Struct, ComparerKind.Default, true);
+
+                case "OrderByDescComparer":
+                    return new OrderByOperation(expression, id, FunctionKind.Delegate, ComparerKind.Interface, true);
 
                 case "OrderByDescStruct":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new OrderByOperation(expression, id, typeSymbol, true, true);
+                    return new OrderByOperation(expression, id, FunctionKind.Struct, ComparerKind.Struct, true);
 
                 case "OrderByDescSelf":
-                    return new OrderByOperation(expression, id, null, false, true);
+                    return new OrderByOperation(expression, id, FunctionKind.Default, ComparerKind.Default, true);
+
+                case "OrderByDescSelfComparer":
+                    return new OrderByOperation(expression, id, FunctionKind.Default, ComparerKind.Interface, true);
 
                 case "OrderByDescSelfStruct":
-                    return new OrderByOperation(expression, id, null, true, true);
+                    return new OrderByOperation(expression, id, FunctionKind.Default, ComparerKind.Struct, true);
 
                 case "ThenByDesc":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new ThenByOperation(expression, id, typeSymbol, false, true);
+                    return new ThenByOperation(expression, id, FunctionKind.Delegate, ComparerKind.Default, true);
+
+                case "ThenByDescKey":
+                    return new ThenByOperation(expression, id, FunctionKind.Struct, ComparerKind.Default, true);
+
+                case "ThenByDescComparer":
+                    return new ThenByOperation(expression, id, FunctionKind.Delegate, ComparerKind.Interface, true);
 
                 case "ThenByDescStruct":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new ThenByOperation(expression, id, typeSymbol, true, true);
+                    return new ThenByOperation(expression, id, FunctionKind.Struct, ComparerKind.Struct, true);
 
                 case "ThenByDescSelf":
-                    return new ThenByOperation(expression, id, null, false, true);
+                    return new ThenByOperation(expression, id, FunctionKind.Default, ComparerKind.Default, true);
+
+                case "ThenByDescSelfComparer":
+                    return new ThenByOperation(expression, id, FunctionKind.Default, ComparerKind.Interface, true);
 
                 case "ThenByDescSelfStruct":
-                    return new ThenByOperation(expression, id, null, true, true);
+                    return new ThenByOperation(expression, id, FunctionKind.Default, ComparerKind.Struct, true);
             }
 
             // not yet implemented
