@@ -159,6 +159,7 @@ public struct Comparer : IComparer<int>
 ## Limitations
 * Element or key types that used with LinqGen must have at least `internal` accessibility.
 * LinqGen queries should be treated as anonymous type, it cannot be used as return value or instance member. If you have these needs, use `AsEnumerable()` to convert.
+* LinqGen may not work well when `[InternalsVisibleTo]` is used while both assemblies are using LinqGen. It can be solved when [this language feature](https://github.com/dotnet/csharplang/issues/6794) is implemented.
 
 ## Further readings
 * Jon Skeet's [Edulinq](https://codeblog.jonskeet.uk/category/edulinq/), reimplementing Linq-to-objects.
