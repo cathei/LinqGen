@@ -7,8 +7,9 @@ using System.Runtime.CompilerServices;
 namespace Cathei.LinqGen.Hidden
 {
     /// <summary>
-    /// Do not use this struct manually, reserved for generated code
-    /// No need to provide Remove operation
+    /// Do not use this struct manually, reserved for generated code.
+    /// PooledDictionary has no Remove operation.
+    /// This means insertion order will be preserved and there will be no empty space in _slot.
     /// </summary>
     public struct PooledDictionaryNative<TKey, TValue, TComparer> : IDisposable
         where TKey : unmanaged
@@ -150,48 +151,6 @@ namespace Cathei.LinqGen.Hidden
             _slots.Dispose();
             _size = 0;
             _count = 0;
-        }
-
-        public Enumerator GetEnumerator() => new Enumerator(this);
-
-        /// <summary>
-        /// PooledDictionary has no Remove operation.
-        /// This means insertion order will be preserved and there will be no empty space in _slot.
-        /// </summary>
-        public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>
-        {
-            private PooledDictionaryNative<TKey, TValue, TComparer> _dictionary;
-            private int _index;
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Enumerator(PooledDictionaryNative<TKey, TValue, TComparer> dictionary)
-            {
-                _dictionary = dictionary;
-                _index = -1;
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public bool MoveNext()
-            {
-                return ++_index < _dictionary._count;
-            }
-
-            public KeyValuePair<TKey, TValue> Current
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get
-                {
-                    ref var slot = ref _dictionary._slots[_index];
-                    return new KeyValuePair<TKey, TValue>(slot.Key, slot.Value);
-                }
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public void Dispose() { }
-
-            public void Reset() => throw new NotSupportedException();
-
-            object IEnumerator.Current => Current;
         }
     }
 }

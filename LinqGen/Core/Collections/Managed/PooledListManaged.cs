@@ -54,6 +54,12 @@ namespace Cathei.LinqGen.Hidden
             _count++;
         }
 
+        public T[] Array
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _array;
+        }
+
         public int Count
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

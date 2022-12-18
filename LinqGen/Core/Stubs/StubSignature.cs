@@ -83,4 +83,6 @@ namespace Cathei.LinqGen.Hidden
     public abstract class ThenByDescSelf<TUp> : IStubSignature { }
 
     public abstract class ThenByDescSelfStruct<TUp> : IStubSignature { }
+
+    public abstract class GroupBy<TUp, TKey> : IStubSignature { }
 }

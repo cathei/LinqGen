@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Cathei.LinqGen.Hidden;
 
@@ -22,6 +23,26 @@ namespace Cathei.LinqGen
         /// Only reference type can use covariance support
         /// </summary>
         public static Stub<T, Specialize<T>> Specialize<T>(this T enumerable) where T : class, IEnumerable
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<TValue>, Specialize<GroupingManaged<TKey, TValue>>> Specialize<TKey, TValue>(
+            this GroupingManaged<TKey, TValue> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<TValue>, Specialize<GroupingNative<TKey, TValue>>> Specialize<TKey, TValue>(
+            this GroupingNative<TKey, TValue> enumerable)
+            where TKey : unmanaged
+            where TValue : unmanaged
+        {
+            throw new NotImplementedException();
+        }
+
+        // TODO span support
+        public static Stub<IEnumerable<T>, SpecializeSpan<T>> Specialize<T>(this Span<T> enumerable)
         {
             throw new NotImplementedException();
         }
