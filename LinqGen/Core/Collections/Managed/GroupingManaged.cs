@@ -62,7 +62,7 @@ namespace Cathei.LinqGen.Hidden
 
             public void Reset() => throw new NotSupportedException();
 
-            object IEnumerator.Current => Current;
+            object IEnumerator.Current => Current!;
         }
     }
 }

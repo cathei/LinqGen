@@ -17,7 +17,7 @@ public class ListVsPooledList
     [Params(100, 10_000, 1_000_000)]
     public int Count { get; set; }
 
-    private List<int> sharedList;
+    private List<int> sharedList = null!;
     private PooledListNative<int> sharedNative;
     private PooledListManaged<int> sharedManaged;
 

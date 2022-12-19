@@ -30,7 +30,7 @@ namespace Cathei.LinqGen.Generator
                         if (arraySymbol.Rank == 1)
                         {
                             return new ArrayOrListGeneration(expression, id,
-                                arraySymbol, arraySymbol.ElementType, LengthProperty);
+                                arraySymbol, arraySymbol.ElementType, LengthProperty, false);
                         }
 
                         // return new SpecializeArrayMultiGeneration(expression, id, arraySymbol);
@@ -42,13 +42,13 @@ namespace Cathei.LinqGen.Generator
                         if (TryGetGenericListInterface(namedTypeSymbol, out var listSymbol))
                         {
                             return new ArrayOrListGeneration(expression, id,
-                                namedTypeSymbol, listSymbol.TypeArguments[0], CountProperty);
+                                namedTypeSymbol, listSymbol.TypeArguments[0], CountProperty, false);
                         }
 
                         if (IsUnityNativeArrayOrSlice(namedTypeSymbol))
                         {
                             return new ArrayOrListGeneration(expression, id,
-                                namedTypeSymbol, namedTypeSymbol.TypeArguments[0], LengthProperty);
+                                namedTypeSymbol, namedTypeSymbol.TypeArguments[0], LengthProperty, false);
                         }
 
                         return new EnumerableGeneration(expression, id, namedTypeSymbol);
@@ -57,8 +57,22 @@ namespace Cathei.LinqGen.Generator
                     break;
                 }
 
-                // case "SpecializeStruct":
-                //     break;
+                case "SpecializeList":
+                {
+                    if (expression.MethodSymbol.ReceiverType is not INamedTypeSymbol listSymbol)
+                        break;
+
+                    return new ArrayOrListGeneration(expression, id,
+                        listSymbol, listSymbol.TypeArguments[0], CountProperty, true);
+                }
+
+                case "SpecializeStruct":
+                {
+                    if (expression.MethodSymbol.ReceiverType is not INamedTypeSymbol sourceSymbol)
+                        break;
+
+                    return new StructEnumerableGeneration(expression, id, sourceSymbol);
+                }
 
                 case "Range":
                     return new RangeGeneration(expression, id);

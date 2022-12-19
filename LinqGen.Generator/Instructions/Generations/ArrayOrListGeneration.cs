@@ -18,9 +18,10 @@ namespace Cathei.LinqGen.Generator
     {
         public TypeSyntax SourceType { get; }
         public IdentifierNameSyntax ListCountProperty { get; }
+        public bool AsStruct { get; }
 
         public ArrayOrListGeneration(in LinqGenExpression expression, int id,
-            ITypeSymbol listSymbol, ITypeSymbol elementSymbol, IdentifierNameSyntax countProperty)
+            ITypeSymbol listSymbol, ITypeSymbol elementSymbol, IdentifierNameSyntax countProperty, bool asStruct)
             : base(expression, id)
         {
             // TODO generic type element
@@ -28,6 +29,7 @@ namespace Cathei.LinqGen.Generator
             OutputElementType = ParseTypeName(OutputElementSymbol);
             SourceType = ParseTypeName(listSymbol);
             ListCountProperty = countProperty;
+            AsStruct = asStruct;
         }
 
         public override ITypeSymbol OutputElementSymbol { get; }
@@ -35,11 +37,21 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
-            yield return new MemberInfo(MemberKind.Both, SourceType, VarName("source"));
+            var enumerableType = AsStruct ? TypeName("Enumerable") : SourceType;
+
+            yield return new MemberInfo(MemberKind.Both, enumerableType, VarName("source"));
             yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
         }
 
         public override bool SupportPartition => true;
+
+        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+        {
+            if (AsStruct)
+            {
+                yield return new TypeParameterInfo(TypeName("Enumerable"), SourceType);
+            }
+        }
 
         public override ExpressionSyntax RenderCount()
         {
