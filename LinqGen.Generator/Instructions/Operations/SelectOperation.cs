@@ -38,7 +38,19 @@ namespace Cathei.LinqGen.Generator
         public override ITypeSymbol OutputElementSymbol { get; }
         public override TypeSyntax OutputElementType { get; }
 
-        public override TypeSyntax? DummyParameterType => WithStruct ? OutputElementType : null;
+        public override TypeSyntax? DummyParameterType
+        {
+            get
+            {
+                if (!WithStruct)
+                    return null;
+
+                if (WithIndex)
+                    return TupleType(SeparatedList(new[] { TupleElement(OutputElementType), TupleElement(BoolType) }));
+
+                return OutputElementType;
+            }
+        }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
@@ -54,7 +66,24 @@ namespace Cathei.LinqGen.Generator
                 WithStruct ? TypeName("Selector") : SelectorType, VarName("selector"));
 
             if (WithIndex)
-                yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));
+                yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
+        }
+
+        public override IEnumerable<StatementSyntax> RenderInitialization(
+            bool isLocal, ExpressionSyntax source, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+        {
+            if (WithIndex)
+            {
+                ExpressionSyntax initialIndex = LiteralExpression(-1);
+
+                if (Upstream.SupportPartition && skipVar != null)
+                    initialIndex = SubtractExpression(skipVar, LiteralExpression(1));
+
+                yield return ExpressionStatement(SimpleAssignmentExpression(VarName("index"), initialIndex));
+            }
+
+            foreach (var statement in base.RenderInitialization(isLocal, source, skipVar, takeVar))
+                yield return statement;
         }
 
         public override ExpressionSyntax? RenderCount()

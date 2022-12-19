@@ -7,16 +7,20 @@
     {
         ("Select", "Select", "x => x * 2", "x => x * 2"),
         ("SelectStruct", "Select", "x => x * 2", "new DoubleSelector()"),
+        ("SelectAt", "Select", "(x, i) => x + i", "(x, i) => x + i"),
+        ("SelectAtStruct", "Select", "(x, i) => x + i", "new AddSelector()"),
         ("Where", "Where", "x => x % 2 == 0", "x => x % 2 == 0"),
         ("WhereStruct", "Where", "x => x % 2 == 0", "new EvenPredicate()"),
+        ("WhereAt", "Where", "(x, i) => (x - i) % 2 == 0", "(x, i) => (x - i) % 2 == 0"),
+        ("WhereAtStruct", "Where", "(x, i) => (x - i) % 2 == 0", "new MinusEvenPredicate()"),
     };
 
     var testSources = new string[]
     {
-        "IntArrayEmpty",
+        "IntEmpty",
         "IntArray",
-        "IntListEmpty",
         "IntList",
+        "IntEnumerable",
     };
 #>
 
@@ -64,6 +68,24 @@ public class <#= expression.title #>_Tests
         var array2 = enumerable.ToArray();
 
         CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_<#= source #>(int skip, int take)
+    {
+        var expected = TestData.<#= source #>
+            .<#= expression.op #>(<#= expression.linq #>)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.<#= source #>
+            .Specialize()
+            .<#= expression.op #>(<#= expression.linqgen #>)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 <#
         }

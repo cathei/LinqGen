@@ -28,6 +28,8 @@ namespace Cathei.LinqGen.Generator
             WithStruct = withStruct;
         }
 
+        public override TypeSyntax? DummyParameterType => WithStruct && WithIndex ? BoolType : null;
+
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
             if (WithStruct)

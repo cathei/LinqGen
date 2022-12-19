@@ -23,3 +23,19 @@ public struct DoubleSelector : IStructFunction<int, int>
         return arg * 2;
     }
 }
+
+public struct MinusEvenPredicate : IStructFunction<int, int, bool>
+{
+    public bool Invoke(int arg, int index)
+    {
+        return (arg - index) % 2 == 0;
+    }
+}
+
+public struct AddSelector : IStructFunction<int, int, int>
+{
+    public int Invoke(int arg, int index)
+    {
+        return arg + index;
+    }
+}

@@ -9,16 +9,8 @@ using Cathei.LinqGen;
 namespace Cathei.LinqGen.Tests;
 
 [TestFixture]
-public class CastTests : GenerationTestBase<string>
+public class CastTests
 {
-    public override IEnumerable<string> Build(int count)
-    {
-        return Enumerable.Repeat((object)"AAA", count)
-            .Specialize()
-            .Cast<string>()
-            .AsEnumerable();
-    }
-
     [Test]
     public void TestResult_SameAsLinq()
     {

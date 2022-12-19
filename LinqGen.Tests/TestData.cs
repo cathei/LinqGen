@@ -10,27 +10,38 @@ namespace Cathei.LinqGen.Tests;
 
 public static class TestData
 {
-    public static readonly int[] IntArrayEmpty;
+    public static readonly IEnumerable<int> IntEmpty;
     public static readonly int[] IntArray;
-
-    public static readonly List<int> IntListEmpty;
     public static readonly List<int> IntList;
-
+    public static readonly IEnumerable<int> IntEnumerable;
 
     static TestData()
     {
         Random rand = new Random(42);
 
-        IntArrayEmpty = Array.Empty<int>();
-        IntArray = new int[100];
+        IntEmpty = Enumerable.Empty<int>();
 
+        IntArray = new int[100];
         for (int i = 0; i < 100; ++i)
             IntArray[i] = rand.Next(10);
 
-        IntListEmpty = new List<int>();
         IntList = new List<int>();
-
         for (int i = 0; i < 50; ++i)
-            IntList.Add(rand.Next(50));
+            IntList.Add(rand.Next(-10, 50));
+
+        IntEnumerable = GetEnumerable(rand.Next());
     }
+
+    private static IEnumerable<int> GetEnumerable(int seed)
+    {
+        var rand = new Random(seed);
+
+        for (int i = 0; i < 89; ++i)
+            yield return rand.Next(-20, 20);
+    }
+}
+
+public class ReferenceInt
+{
+
 }
