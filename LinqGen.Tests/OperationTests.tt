@@ -1,0 +1,74 @@
+// LinqGen.Tests, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
+
+<#@template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#
+    var testExpressions = new (string title, string op, string linq, string linqgen)[]
+    {
+        ("Select", "Select", "x => x * 2", "x => x * 2"),
+        ("SelectStruct", "Select", "x => x * 2", "new DoubleSelector()"),
+        ("Where", "Where", "x => x % 2 == 0", "x => x % 2 == 0"),
+        ("WhereStruct", "Where", "x => x % 2 == 0", "new EvenPredicate()"),
+    };
+
+    var testSources = new string[]
+    {
+        "IntArrayEmpty",
+        "IntArray",
+        "IntListEmpty",
+        "IntList",
+    };
+#>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
+using Cathei.LinqGen;
+
+namespace Cathei.LinqGen.Tests;
+
+<#
+    foreach (var expression in testExpressions)
+    {
+#>
+[TestFixture]
+public class <#= expression.title #>_Tests
+{
+<#
+        foreach (var source in testSources)
+        {
+#>
+
+    [Test]
+    public void SameAsLinq_<#= source #>()
+    {
+        var expected = TestData.<#= source #>
+            .<#= expression.op #>(<#= expression.linq #>);
+
+        var actual = TestData.<#= source #>
+            .Specialize()
+            .<#= expression.op #>(<#= expression.linqgen #>);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_<#= source #>()
+    {
+        var enumerable = TestData.<#= source #>
+            .Specialize()
+            .<#= expression.op #>(<#= expression.linqgen #>);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+<#
+        }
+#>
+}
+<#
+    }
+#>

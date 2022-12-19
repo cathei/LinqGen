@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
-
+        <RootNamespace>Cathei.LinqGen.Tests</RootNamespace>
         <IsPackable>false</IsPackable>
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     </PropertyGroup>
@@ -19,5 +19,18 @@
         <ProjectReference Include="..\LinqGen.Generator\LinqGen.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
         <ProjectReference Include="..\LinqGen\LinqGen.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <TextTemplate Include="**\*.tt" />
+        <Generated Include="**\*.Generated.cs" />
+    </ItemGroup>
+
+    <Target Name="TextTemplateTransform" BeforeTargets="BeforeBuild">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="t4 %(TextTemplate.Identity) -o %(TextTemplate.Filename).Generated.cs" />
+    </Target>
+
+    <Target Name="TextTemplateClean" AfterTargets="Clean">
+        <Delete Files="@(Generated)" />
+    </Target>
 
 </Project>
