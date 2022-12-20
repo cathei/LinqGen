@@ -92,9 +92,15 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<T>, DistinctComparer<TUp>> Distinct<T, TUp, TComparer>(
+        public static Stub<IEnumerable<T>, DistinctComparer<TUp>> Distinct<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, IEqualityComparer<T> comparer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<T>, DistinctStruct<TUp>> Distinct<T, TUp, TComparer>(
             this IStub<IEnumerable<T>, TUp> enumerable, TComparer comparer)
-            where TComparer : IEqualityComparer<T>
+            where TComparer : struct, IEqualityComparer<T>
         {
             throw new NotImplementedException();
         }

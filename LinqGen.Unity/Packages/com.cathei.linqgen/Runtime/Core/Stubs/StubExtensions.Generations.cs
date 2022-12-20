@@ -22,7 +22,26 @@ namespace Cathei.LinqGen
         /// <summary>
         /// Only reference type can use covariance support
         /// </summary>
-        public static Stub<T, Specialize<T>> Specialize<T>(this T enumerable) where T : class, IEnumerable
+        public static Stub<T, Specialize<T>> Specialize<T>(this T enumerable)
+            where T : class, IEnumerable
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Struct version of specialize
+        /// </summary>
+        public static Stub<IList<T>, SpecializeList<T>> Specialize<T>(this IList<T> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Struct version of specialize
+        /// </summary>
+        public static Stub<IEnumerable<T>, SpecializeStruct<T, TEnumerator>> Specialize<T, TEnumerator>(
+            this IStructEnumerable<T, TEnumerator> enumerable)
+            where TEnumerator : IEnumerator<T>
         {
             throw new NotImplementedException();
         }

@@ -18,7 +18,7 @@ namespace Cathei.LinqGen.Hidden
         public DynamicArrayNative(int capacity) : this()
         {
             if (capacity > 0)
-                _array = (T*)UnsafeUtils.ArrayAlloc<T>(capacity);
+                _array = UnsafeUtils.ArrayAlloc<T>(capacity);
             _capacity = capacity;
         }
 

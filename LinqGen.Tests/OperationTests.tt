@@ -13,6 +13,8 @@
         ("WhereStruct", "Where", "x => x % 2 == 0", "new EvenPredicate()"),
         ("WhereAt", "Where", "(x, i) => (x - i) % 2 == 0", "(x, i) => (x - i) % 2 == 0"),
         ("WhereAtStruct", "Where", "(x, i) => (x - i) % 2 == 0", "new MinusEvenPredicate()"),
+        ("Distinct", "Distinct", "", ""),
+        ("DistinctStruct", "Distinct", "", "new StructComparer()"),
     };
 
     var testSources = new string[]

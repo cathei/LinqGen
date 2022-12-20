@@ -63,39 +63,30 @@ namespace Cathei.LinqGen.Hidden
 
         private void SetCapacity(int newSize)
         {
-            DynamicArrayNative<int> newBuckets;
+            var localBuckets = _buckets;
             var localSlots = _slots;
-            bool replaceBucket;
 
             // Because ArrayPool might have given us larger arrays than we asked for, see if we can
             // use the existing capacity without actually resizing.
-            if (_buckets.Length >= newSize && _slots.Length >= newSize)
+            if (localBuckets.Length < newSize)
             {
-                _buckets.Clear();
-                newBuckets = _buckets;
-                replaceBucket = false;
+                localBuckets.IncreaseCapacity(newSize);
+                localBuckets.Clear();
+                _buckets = localBuckets;
             }
-            else
-            {
-                newBuckets = new DynamicArrayNative<int>(newSize);
-                newBuckets.Clear();
-                replaceBucket = true;
 
+            if (_slots.Length < newSize)
+            {
                 localSlots.IncreaseCapacity(newSize, _count);
+                _slots = localSlots;
             }
 
             for (int i = 0; i < _count; i++)
             {
                 ref var slot = ref localSlots[i];
                 uint bucket = Reduce(slot.HashCode, newSize);
-                slot.Next = newBuckets[bucket] - 1;
-                newBuckets[bucket] = i + 1;
-            }
-
-            if (replaceBucket)
-            {
-                _buckets.Dispose();
-                _buckets = newBuckets;
+                slot.Next = localBuckets[bucket] - 1;
+                localBuckets[bucket] = i + 1;
             }
 
             _size = newSize;

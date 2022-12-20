@@ -43,17 +43,4 @@ public class DistinctTests : GenerationTestBase<int>
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
-
-    public struct StructComparer : IEqualityComparer<int>
-    {
-        public bool Equals(int x, int y)
-        {
-            return x == y;
-        }
-
-        public int GetHashCode(int obj)
-        {
-            return obj;
-        }
-    }
 }

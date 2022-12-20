@@ -42,7 +42,7 @@ namespace Cathei.LinqGen.Hidden
         public static void ArrayCopy<T>(T* src, T* dst, int size)
             where T : unmanaged
         {
-            Unsafe.CopyBlock(src, dst, (uint)(size * sizeof(T)));
+            Unsafe.CopyBlock(dst, src, (uint)(size * sizeof(T)));
         }
     }
 }

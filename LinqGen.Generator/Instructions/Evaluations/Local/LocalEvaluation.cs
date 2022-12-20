@@ -56,13 +56,12 @@ namespace Cathei.LinqGen.Generator
 
         private BlockSyntax RenderBody()
         {
-            var initialDeclarations = Upstream.GetLocalDeclarations(MemberKind.Enumerator);
-
             var supportPartition = Upstream.SupportPartition;
             var skipVar = supportPartition ? SkipExpression : null;
             var takeVar = supportPartition ? TakeExpression : null;
 
-            var initialAssignments = Upstream.GetLocalAssignments(MemberKind.Both)
+            var initialDeclarations = Upstream.GetLocalDeclarations(MemberKind.Enumerator)
+                .Concat(Upstream.GetLocalAssignments(MemberKind.Both))
                 .Concat(Upstream.RenderInitialization(true, ThisExpression(), skipVar, takeVar))
                 .Concat(RenderInitialization());
 
@@ -73,7 +72,6 @@ namespace Cathei.LinqGen.Generator
             var disposeBlock = Block(Upstream.RenderDispose(true).Concat(RenderDispose()));
 
             var iterationStatements = iterationBlock.Statements;
-            iterationStatements = iterationStatements.InsertRange(0, initialAssignments);
             iterationStatements = iterationStatements.AddRange(RenderReturn());
 
             BlockSyntax body;

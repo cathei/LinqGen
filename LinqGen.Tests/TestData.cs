@@ -30,6 +30,11 @@ public static class TestData
             IntList.Add(rand.Next(-10, 50));
 
         IntEnumerable = GetEnumerable(rand.Next());
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .Distinct(new StructComparer())
+            .ToArray();
     }
 
     private static IEnumerable<int> GetEnumerable(int seed)
@@ -41,7 +46,56 @@ public static class TestData
     }
 }
 
-public class ReferenceInt
+public class ReferenceInt : IEquatable<ReferenceInt>, IComparable<ReferenceInt>
 {
+    private readonly int _value;
 
+    public ReferenceInt(int value)
+    {
+        _value = value;
+    }
+
+    public static ReferenceInt operator +(ReferenceInt x, ReferenceInt y)
+    {
+        return new(x._value + y._value);
+    }
+
+    public static ReferenceInt operator -(ReferenceInt x, ReferenceInt y)
+    {
+        return new(x._value - y._value);
+    }
+
+    public static ReferenceInt operator *(ReferenceInt x, ReferenceInt y)
+    {
+        return new(x._value * y._value);
+    }
+
+    public static ReferenceInt operator /(ReferenceInt x, ReferenceInt y)
+    {
+        return new(x._value / y._value);
+    }
+
+    public static ReferenceInt operator %(ReferenceInt x, ReferenceInt y)
+    {
+        return new(x._value % y._value);
+    }
+
+    public bool Equals(ReferenceInt? other)
+    {
+        if (other == null)
+            return false;
+        return _value == other._value;
+    }
+
+    public int CompareTo(ReferenceInt? other)
+    {
+        if (other == null)
+            return 1;
+        return _value.CompareTo(other._value);
+    }
+
+    public override int GetHashCode()
+    {
+        return _value;
+    }
 }

@@ -44,7 +44,7 @@ namespace Cathei.LinqGen.Hidden
         public static void ArrayCopy<T>(T* src, T* dst, int size)
             where T : unmanaged
         {
-            UnsafeUtility.MemCpy(src, dst, size * sizeof(T));
+            UnsafeUtility.MemCpy(dst, src, size * sizeof(T));
         }
     }
 }

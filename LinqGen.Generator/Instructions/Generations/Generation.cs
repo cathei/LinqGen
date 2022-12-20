@@ -349,10 +349,9 @@ namespace Cathei.LinqGen.Generator
             var visitorType = new TypeParameterInfo(IdentifierName("TVisitor"), visitorInterface);
             var visitorName = IdentifierName("visitor");
 
-            var initialDeclarations = GetLocalDeclarations(MemberKind.Enumerator);
-
-            var initialAssignments = GetLocalAssignments(MemberKind.Both)
-                    .Concat(RenderInitialization(true, ThisExpression(), null, null));
+            var initialDeclarations = GetLocalDeclarations(MemberKind.Enumerator)
+                .Concat(GetLocalAssignments(MemberKind.Both))
+                .Concat(RenderInitialization(true, ThisExpression(), null, null));
 
             StatementSyntax accumulationStatement = IfStatement(LogicalNotExpression(InvocationExpression(
                     MemberAccessExpression(visitorName, VisitMethod), ArgumentList(CurrentPlaceholder))),
@@ -363,7 +362,6 @@ namespace Cathei.LinqGen.Generator
             var disposeStatements = RenderDispose(true);
 
             var iterationStatements = iterationBlock.Statements;
-            iterationStatements = iterationStatements.InsertRange(0, initialAssignments);
 
             StatementSyntax tryStatement = TryStatement(
                 Block(iterationStatements), default, FinallyClause(Block(disposeStatements)));

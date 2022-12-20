@@ -55,25 +55,34 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
+
+            if (ComparerKind == ComparerKind.Struct)
+                yield return new MemberInfo(MemberKind.Enumerable, ComparerType, VarName("comparer"));
+
+            var pooledSetType = PooledSetType(OutputElementType, ComparerType, OutputElementSymbol.IsUnmanagedType);
+            yield return new MemberInfo(MemberKind.Enumerator, pooledSetType, VarName("hashSet"));
+        }
+
+        public override IEnumerable<StatementSyntax> RenderInitialization(
+            bool isLocal, ExpressionSyntax source, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+        {
             ExpressionSyntax comparerExpression;
 
-            if (ComparerKind == ComparerKind.Default)
-            {
-                comparerExpression = EqualityComparerDefault(OutputElementType, OutputElementSymbol);
-            }
-            else
-            {
-                comparerExpression = VarName("comparer");
-                yield return new MemberInfo(MemberKind.Both, ComparerType, VarName("comparer"));
-            }
+            comparerExpression = ComparerKind == ComparerKind.Default
+                ? EqualityComparerDefault(OutputElementType, OutputElementSymbol)
+                : MemberAccessExpression(source, VarName("comparer"));
 
             var countExpression = Upstream.RenderCount() ?? LiteralExpression(0);
 
             var pooledSetType = PooledSetType(OutputElementType, ComparerType, OutputElementSymbol.IsUnmanagedType);
+
             var pooledSetCreation = ObjectCreationExpression(
                 pooledSetType, ArgumentList(countExpression, comparerExpression), null);
 
-            yield return new MemberInfo(MemberKind.Enumerator, pooledSetType, VarName("hashSet"), pooledSetCreation);
+            yield return ExpressionStatement(SimpleAssignmentExpression(VarName("hashSet"), pooledSetCreation));
+
+            foreach (var statement in base.RenderInitialization(isLocal, source, skipVar, takeVar))
+                yield return statement;
         }
 
         public override bool SupportPartition => false;

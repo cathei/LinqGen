@@ -22,6 +22,10 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class Specialize<TEnumerable> : IStubSignature { }
 
+    public abstract class SpecializeList<T> : IStubSignature { }
+
+    public abstract class SpecializeStruct<T, TEnumerator> : IStubSignature { }
+
     public abstract class SpecializeSpan<T> : IStubSignature { }
 
     public abstract class Cast<TUp> : IStubSignature { }
@@ -52,35 +56,5 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class DistinctComparer<TUp> : IStubSignature { }
 
-    public abstract class OrderBy<TUp, TKey> : IStubSignature { }
-
-    public abstract class OrderByStruct<TUp, TKey> : IStubSignature { }
-
-    public abstract class OrderBySelf<TUp> : IStubSignature { }
-
-    public abstract class OrderBySelfStruct<TUp> : IStubSignature { }
-
-    public abstract class ThenBy<TUp, TKey> : IStubSignature { }
-
-    public abstract class ThenByStruct<TUp, TKey> : IStubSignature { }
-
-    public abstract class ThenBySelf<TUp> : IStubSignature { }
-
-    public abstract class ThenBySelfStruct<TUp> : IStubSignature { }
-
-    public abstract class OrderByDesc<TUp, TKey> : IStubSignature { }
-
-    public abstract class OrderByDescStruct<TUp, TKey> : IStubSignature { }
-
-    public abstract class OrderByDescSelf<TUp> : IStubSignature { }
-
-    public abstract class OrderByDescSelfStruct<TUp> : IStubSignature { }
-
-    public abstract class ThenByDesc<TUp, TKey> : IStubSignature { }
-
-    public abstract class ThenByDescStruct<TUp, TKey> : IStubSignature { }
-
-    public abstract class ThenByDescSelf<TUp> : IStubSignature { }
-
-    public abstract class ThenByDescSelfStruct<TUp> : IStubSignature { }
+    public abstract class DistinctStruct<TUp> : IStubSignature { }
 }

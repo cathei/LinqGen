@@ -17,76 +17,102 @@ namespace Cathei.LinqGen
     {
         public static IStub<IEnumerable<IGrouping<TKey, T>>, GroupBy<TUp, TKey>> GroupBy<T, TUp, TKey>(
             this IStub<IEnumerable<T>, TUp> source,
+            Func<T, TKey> keySelector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IStub<IEnumerable<IGrouping<TKey, T>>, GroupByComparer<TUp, TKey>> GroupBy<T, TUp, TKey>(
+            this IStub<IEnumerable<T>, TUp> source,
             Func<T, TKey> keySelector,
-            IEqualityComparer<TKey> comparer = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static IEnumerable<IGrouping<TKey, TSource>> GroupBy<TSource, TKey>(
-            this IEnumerable<TSource> source,
-            Func<TSource, TKey> keySelector,
             IEqualityComparer<TKey> comparer)
         {
             throw new NotImplementedException();
-
         }
 
-        public static IEnumerable<IGrouping<TKey, TElement>> GroupBy<TSource, TKey, TElement>(
-            this IEnumerable<TSource> source,
-            Func<TSource, TKey> keySelector,
-            Func<TSource, TElement> elementSelector)
+        public static IStub<IEnumerable<IGrouping<TKey, T>>, GroupByElement<TUp, TKey, TElement>> GroupBy<T, TUp, TKey, TElement>(
+            this IStub<IEnumerable<T>, TUp> source,
+            Func<T, TKey> keySelector,
+            Func<T, TElement> elementSelector)
         {
             throw new NotImplementedException();
-
         }
 
-        public static IEnumerable<IGrouping<TKey, TElement>> GroupBy<TSource, TKey, TElement>(
-            this IEnumerable<TSource> source,
-            Func<TSource, TKey> keySelector,
-            Func<TSource, TElement> elementSelector,
+        public static IStub<IEnumerable<IGrouping<TKey, T>>, GroupByElementComparer<TUp, TKey, TElement>> GroupBy<T, TUp, TKey, TElement>(
+            this IStub<IEnumerable<T>, TUp> source,
+            Func<T, TKey> keySelector,
+            Func<T, TElement> elementSelector,
             IEqualityComparer<TKey> comparer)
         {
             throw new NotImplementedException();
-
         }
 
-        public static IEnumerable<TResult> GroupBy<TSource, TKey, TResult>(
-            this IEnumerable<TSource> source,
-            Func<TSource, TKey> keySelector,
-            Func<TKey, IEnumerable<TSource>, TResult> resultSelector)
+        public static IStub<IEnumerable<IGrouping<TKey, T>>, GroupByResult<TUp, TKey, TResult>> GroupBy<T, TUp, TKey, TResult>(
+            this IStub<IEnumerable<T>, TUp> source,
+            Func<T, TKey> keySelector,
+            Func<TKey, IEnumerable<T>, TResult> resultSelector)
         {
             throw new NotImplementedException();
         }
 
-        public static IEnumerable<TResult> GroupBy<TSource, TKey, TResult>(
-            this IEnumerable<TSource> source,
-            Func<TSource, TKey> keySelector,
-            Func<TKey, IEnumerable<TSource>, TResult> resultSelector,
+        public static IStub<IEnumerable<IGrouping<TKey, T>>, GroupByResultComparer<TUp, TKey, TResult>> GroupBy<T, TUp, TKey, TResult>(
+            this IStub<IEnumerable<T>, TUp> source,
+            Func<T, TKey> keySelector,
+            Func<TKey, IEnumerable<T>, TResult> resultSelector,
             IEqualityComparer<TKey> comparer)
         {
             throw new NotImplementedException();
-
         }
 
-        public static IEnumerable<TResult> GroupBy<TSource, TKey, TElement, TResult>(
-            this IEnumerable<TSource> source,
-            Func<TSource, TKey> keySelector,
-            Func<TSource, TElement> elementSelector,
-            Func<TKey, IEnumerable<TElement>, TResult> resultSelector)
+        public static IStub<IEnumerable<IGrouping<TKey, T>>, GroupByElementResult<TUp, TKey, TElement, TResult>> GroupBy<T, TUp, TKey, TElement, TResult>(
+            this IStub<IEnumerable<T>, TUp> source,
+            Func<T, TKey> keySelector,
+            Func<T, TElement> elementSelector,
+            Func<TKey, IEnumerable<T>, TResult> resultSelector)
         {
             throw new NotImplementedException();
         }
 
-        public static IEnumerable<TResult> GroupBy<TSource, TKey, TElement, TResult>(
-            this IEnumerable<TSource> source,
-            Func<TSource, TKey> keySelector,
-            Func<TSource, TElement> elementSelector,
-            Func<TKey, IEnumerable<TElement>, TResult> resultSelector,
+        public static IStub<IEnumerable<IGrouping<TKey, T>>, GroupByElementResultComparer<TUp, TKey, TElement, TResult>> GroupBy<T, TUp, TKey, TElement, TResult>(
+            this IStub<IEnumerable<T>, TUp> source,
+            Func<T, TKey> keySelector,
+            Func<T, TElement> elementSelector,
+            Func<TKey, IEnumerable<T>, TResult> resultSelector,
             IEqualityComparer<TKey> comparer)
         {
             throw new NotImplementedException();
+        }
 
+        public static IStub<IEnumerable<IGrouping<TKey, T>>, GroupByStruct<TUp, TKey>> GroupBy<T, TUp, TKey>(
+            this IStub<IEnumerable<T>, TUp> source,
+            IStructFunction<T, TKey> keySelector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IStub<IEnumerable<IGrouping<TKey, T>>, GroupByStructComparer<TUp, TKey>> GroupBy<T, TUp, TKey>(
+            this IStub<IEnumerable<T>, TUp> source,
+            IStructFunction<T, TKey> keySelector,
+            IEqualityComparer<TKey> comparer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IStub<IEnumerable<IGrouping<TKey, T>>, GroupByStructElement<TUp, TKey, TElement>> GroupBy<T, TUp, TKey, TElement>(
+            this IStub<IEnumerable<T>, TUp> source,
+            IStructFunction<T, TKey> keySelector,
+            IStructFunction<T, TElement> elementSelector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IStub<IEnumerable<IGrouping<TKey, T>>, GroupByStructElementComparer<TUp, TKey, TElement>> GroupBy<T, TUp, TKey, TElement>(
+            this IStub<IEnumerable<T>, TUp> source,
+            IStructFunction<T, TKey> keySelector,
+            IStructFunction<T, TElement> elementSelector,
+            IEqualityComparer<TKey> comparer)
+        {
+            throw new NotImplementedException();
         }
     }
 }
