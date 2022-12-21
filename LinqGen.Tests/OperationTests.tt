@@ -3,29 +3,39 @@
 <#@template language="C#" #>
 <#@ assembly name="System.Core" #>
 <#
-    var testExpressions = new (string title, string op, string linq, string linqgen)[]
-    {
-        ("Select", "Select", "x => x * 2", "x => x * 2"),
-        ("SelectStruct", "Select", "x => x * 2", "new DoubleSelector()"),
-        ("SelectAt", "Select", "(x, i) => x + i", "(x, i) => x + i"),
-        ("SelectAtStruct", "Select", "(x, i) => x + i", "new AddSelector()"),
-        ("Where", "Where", "x => x % 2 == 0", "x => x % 2 == 0"),
-        ("WhereStruct", "Where", "x => x % 2 == 0", "new EvenPredicate()"),
-        ("WhereAt", "Where", "(x, i) => (x - i) % 2 == 0", "(x, i) => (x - i) % 2 == 0"),
-        ("WhereAtStruct", "Where", "(x, i) => (x - i) % 2 == 0", "new MinusEvenPredicate()"),
-        ("Distinct", "Distinct", "", ""),
-        ("DistinctInterface", "Distinct", "EqualityComparer<int>.Default", "EqualityComparer<int>.Default"),
-        ("DistinctStruct", "Distinct", "", "new StructEqualityComparer()"),
-        ("Skip", "Skip", "2", "2"),
-        ("Take", "Take", "7", "7"),
-    };
-
-    var testSources = new string[]
+    var intSources = new string[]
     {
         "IntEmpty",
         "IntArray",
         "IntList",
         "IntEnumerable",
+    };
+
+    var castSources = new string[]
+    {
+        "ObjectEmpty",
+        "ObjectStringArray",
+        "ObjectStringList",
+        "ObjectStringEnumerable",
+    };
+
+    var testExpressions = new (string title, string linq, string linqgen, string[] sources)[]
+    {
+        ("Select", "Select(x => x * 2)", "Select(x => x * 2)", intSources),
+        ("SelectStruct", "Select(x => x * 2)", "Select(new DoubleSelector())", intSources),
+        ("SelectAt", "Select((x, i) => x + i)", "Select((x, i) => x + i)", intSources),
+        ("SelectAtStruct", "Select((x, i) => x + i)", "Select(new AddSelector())", intSources),
+        ("Where", "Where(x => x % 2 == 0)", "Where(x => x % 2 == 0)", intSources),
+        ("WhereStruct", "Where(x => x % 2 == 0)", "Where(new EvenPredicate())", intSources),
+        ("WhereAt", "Where((x, i) => (x - i) % 2 == 0)", "Where((x, i) => (x - i) % 2 == 0)", intSources),
+        ("WhereAtStruct", "Where((x, i) => (x - i) % 2 == 0)", "Where(new MinusEvenPredicate())", intSources),
+        ("Distinct", "Distinct()", "Distinct()", intSources),
+        ("DistinctInterface", "Distinct(EqualityComparer<int>.Default)", "Distinct(EqualityComparer<int>.Default)", intSources),
+        ("DistinctStruct", "Distinct()", "Distinct(new StructEqualityComparer())", intSources),
+        ("Skip", "Skip(2)", "Skip(2)", intSources),
+        ("Take", "Take(7)", "Take(7)", intSources),
+        ("Cast", "Cast<string>()", "Cast<string>()", castSources),
+        ("OfType", "OfType<string>()", "OfType<string>()", castSources),
     };
 #>
 
@@ -45,7 +55,7 @@ namespace Cathei.LinqGen.Tests;
 public class <#= expression.title #>_Tests
 {
 <#
-        foreach (var source in testSources)
+        foreach (var source in expression.sources)
         {
 #>
 
@@ -53,11 +63,11 @@ public class <#= expression.title #>_Tests
     public void SameAsLinq_<#= source #>()
     {
         var expected = TestData.<#= source #>
-            .<#= expression.op #>(<#= expression.linq #>);
+            .<#= expression.linq #>;
 
         var actual = TestData.<#= source #>
             .Specialize()
-            .<#= expression.op #>(<#= expression.linqgen #>);
+            .<#= expression.linqgen #>;
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -67,7 +77,7 @@ public class <#= expression.title #>_Tests
     {
         var enumerable = TestData.<#= source #>
             .Specialize()
-            .<#= expression.op #>(<#= expression.linqgen #>);
+            .<#= expression.linqgen #>;
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -82,12 +92,12 @@ public class <#= expression.title #>_Tests
     public void SliceSameAsLinq_<#= source #>(int skip, int take)
     {
         var expected = TestData.<#= source #>
-            .<#= expression.op #>(<#= expression.linq #>)
+            .<#= expression.linq #>
             .Skip(skip).Take(take);
 
         var actual = TestData.<#= source #>
             .Specialize()
-            .<#= expression.op #>(<#= expression.linqgen #>)
+            .<#= expression.linqgen #>
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());

@@ -15,6 +15,11 @@ public static class TestData
     public static readonly List<int> IntList;
     public static readonly IEnumerable<int> IntEnumerable;
 
+    public static readonly IEnumerable<object> ObjectEmpty;
+    public static readonly object?[] ObjectStringArray;
+    public static readonly List<object?> ObjectStringList;
+    public static readonly IEnumerable<object?> ObjectStringEnumerable;
+
     static TestData()
     {
         Random rand = new Random(42);
@@ -29,15 +34,31 @@ public static class TestData
         for (int i = 0; i < 50; ++i)
             IntList.Add(rand.Next(-10, 50));
 
-        IntEnumerable = GetEnumerable(rand.Next());
+        IntEnumerable = GetIntEnumerable(rand.Next());
+
+        ObjectEmpty = Enumerable.Empty<object>();
+        ObjectStringEnumerable = GetObjectStringEnumerable();
+        ObjectStringArray = ObjectStringEnumerable.ToArray();
+        ObjectStringList = ObjectStringArray.ToList();
     }
 
-    private static IEnumerable<int> GetEnumerable(int seed)
+    private static IEnumerable<int> GetIntEnumerable(int seed)
     {
         var rand = new Random(seed);
 
         for (int i = 0; i < 89; ++i)
             yield return rand.Next(-20, 20);
+    }
+
+    private static IEnumerable<object?> GetObjectStringEnumerable()
+    {
+        yield return "AA";
+        yield return "B";
+        yield return null;
+        yield return "Steve Jobs";
+        yield return "Bill Gates";
+        yield return null;
+        yield return "CCC";
     }
 }
 
