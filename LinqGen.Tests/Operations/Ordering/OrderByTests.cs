@@ -28,7 +28,7 @@ public class OrderByTests : GenerationTestBase<int>
             .OrderBy(x => x);
 
         var actual = Gen.Enumerable.Range(start, count)
-            .OrderBy();
+            .Order();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -42,7 +42,7 @@ public class OrderByTests : GenerationTestBase<int>
             .OrderBy(x => x, new Comparer());
 
         var actual = Gen.Enumerable.Range(start, count)
-            .OrderBy(new Comparer());
+            .Order(new Comparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }

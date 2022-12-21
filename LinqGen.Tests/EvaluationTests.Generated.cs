@@ -71,7 +71,6 @@ public class Count_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Count();
-
         }
         catch (Exception e)
         {
@@ -140,7 +139,6 @@ public class Count_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Count();
-
         }
         catch (Exception e)
         {
@@ -209,7 +207,6 @@ public class Count_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Count();
-
         }
         catch (Exception e)
         {
@@ -278,7 +275,6 @@ public class Count_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Count();
-
         }
         catch (Exception e)
         {
@@ -351,7 +347,6 @@ public class CountPred_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Count(x => x % 2 == 0);
-
         }
         catch (Exception e)
         {
@@ -420,7 +415,6 @@ public class CountPred_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Count(x => x % 2 == 0);
-
         }
         catch (Exception e)
         {
@@ -489,7 +483,6 @@ public class CountPred_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Count(x => x % 2 == 0);
-
         }
         catch (Exception e)
         {
@@ -558,7 +551,6 @@ public class CountPred_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Count(x => x % 2 == 0);
-
         }
         catch (Exception e)
         {
@@ -631,7 +623,6 @@ public class CountPredStruct_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Count(new EvenPredicate());
-
         }
         catch (Exception e)
         {
@@ -700,7 +691,6 @@ public class CountPredStruct_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Count(new EvenPredicate());
-
         }
         catch (Exception e)
         {
@@ -769,7 +759,6 @@ public class CountPredStruct_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Count(new EvenPredicate());
-
         }
         catch (Exception e)
         {
@@ -838,7 +827,6 @@ public class CountPredStruct_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Count(new EvenPredicate());
-
         }
         catch (Exception e)
         {
@@ -911,7 +899,6 @@ public class First_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .First();
-
         }
         catch (Exception e)
         {
@@ -980,7 +967,6 @@ public class First_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .First();
-
         }
         catch (Exception e)
         {
@@ -1049,7 +1035,6 @@ public class First_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .First();
-
         }
         catch (Exception e)
         {
@@ -1118,7 +1103,6 @@ public class First_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .First();
-
         }
         catch (Exception e)
         {
@@ -1191,7 +1175,6 @@ public class FirstOrDefault_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .FirstOrDefault();
-
         }
         catch (Exception e)
         {
@@ -1260,7 +1243,6 @@ public class FirstOrDefault_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .FirstOrDefault();
-
         }
         catch (Exception e)
         {
@@ -1329,7 +1311,6 @@ public class FirstOrDefault_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .FirstOrDefault();
-
         }
         catch (Exception e)
         {
@@ -1398,7 +1379,6 @@ public class FirstOrDefault_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .FirstOrDefault();
-
         }
         catch (Exception e)
         {
@@ -1471,7 +1451,6 @@ public class Last_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Last();
-
         }
         catch (Exception e)
         {
@@ -1540,7 +1519,6 @@ public class Last_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Last();
-
         }
         catch (Exception e)
         {
@@ -1609,7 +1587,6 @@ public class Last_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Last();
-
         }
         catch (Exception e)
         {
@@ -1678,7 +1655,6 @@ public class Last_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Last();
-
         }
         catch (Exception e)
         {
@@ -1751,7 +1727,6 @@ public class LastOrDefault_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .LastOrDefault();
-
         }
         catch (Exception e)
         {
@@ -1820,7 +1795,6 @@ public class LastOrDefault_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .LastOrDefault();
-
         }
         catch (Exception e)
         {
@@ -1889,7 +1863,6 @@ public class LastOrDefault_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .LastOrDefault();
-
         }
         catch (Exception e)
         {
@@ -1958,7 +1931,6 @@ public class LastOrDefault_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .LastOrDefault();
-
         }
         catch (Exception e)
         {
@@ -2031,7 +2003,6 @@ public class Min_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Min();
-
         }
         catch (Exception e)
         {
@@ -2100,7 +2071,6 @@ public class Min_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Min();
-
         }
         catch (Exception e)
         {
@@ -2169,7 +2139,6 @@ public class Min_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Min();
-
         }
         catch (Exception e)
         {
@@ -2238,7 +2207,6 @@ public class Min_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Min();
-
         }
         catch (Exception e)
         {
@@ -2311,7 +2279,6 @@ public class MinComp_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Min(new StructComparer());
-
         }
         catch (Exception e)
         {
@@ -2380,7 +2347,6 @@ public class MinComp_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Min(new StructComparer());
-
         }
         catch (Exception e)
         {
@@ -2449,7 +2415,6 @@ public class MinComp_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Min(new StructComparer());
-
         }
         catch (Exception e)
         {
@@ -2518,7 +2483,6 @@ public class MinComp_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Min(new StructComparer());
-
         }
         catch (Exception e)
         {
@@ -2591,7 +2555,6 @@ public class Max_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Max();
-
         }
         catch (Exception e)
         {
@@ -2660,7 +2623,6 @@ public class Max_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Max();
-
         }
         catch (Exception e)
         {
@@ -2729,7 +2691,6 @@ public class Max_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Max();
-
         }
         catch (Exception e)
         {
@@ -2798,7 +2759,6 @@ public class Max_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Max();
-
         }
         catch (Exception e)
         {
@@ -2871,7 +2831,6 @@ public class MaxComp_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Max(new StructComparer());
-
         }
         catch (Exception e)
         {
@@ -2940,7 +2899,6 @@ public class MaxComp_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Max(new StructComparer());
-
         }
         catch (Exception e)
         {
@@ -3009,7 +2967,6 @@ public class MaxComp_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Max(new StructComparer());
-
         }
         catch (Exception e)
         {
@@ -3078,7 +3035,6 @@ public class MaxComp_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Max(new StructComparer());
-
         }
         catch (Exception e)
         {
@@ -3151,7 +3107,6 @@ public class Sum_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Sum();
-
         }
         catch (Exception e)
         {
@@ -3220,7 +3175,6 @@ public class Sum_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Sum();
-
         }
         catch (Exception e)
         {
@@ -3289,7 +3243,6 @@ public class Sum_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Sum();
-
         }
         catch (Exception e)
         {
@@ -3358,7 +3311,6 @@ public class Sum_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Sum();
-
         }
         catch (Exception e)
         {
@@ -3431,7 +3383,6 @@ public class SumSelector_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Sum(new DoubleSelector());
-
         }
         catch (Exception e)
         {
@@ -3500,7 +3451,6 @@ public class SumSelector_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Sum(new DoubleSelector());
-
         }
         catch (Exception e)
         {
@@ -3569,7 +3519,6 @@ public class SumSelector_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Sum(new DoubleSelector());
-
         }
         catch (Exception e)
         {
@@ -3638,7 +3587,6 @@ public class SumSelector_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .Sum(new DoubleSelector());
-
         }
         catch (Exception e)
         {
@@ -3711,7 +3659,6 @@ public class ToArray_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .ToArray();
-
         }
         catch (Exception e)
         {
@@ -3780,7 +3727,6 @@ public class ToArray_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .ToArray();
-
         }
         catch (Exception e)
         {
@@ -3849,7 +3795,6 @@ public class ToArray_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .ToArray();
-
         }
         catch (Exception e)
         {
@@ -3918,7 +3863,6 @@ public class ToArray_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .ToArray();
-
         }
         catch (Exception e)
         {
@@ -3991,7 +3935,6 @@ public class ToList_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .ToList();
-
         }
         catch (Exception e)
         {
@@ -4060,7 +4003,6 @@ public class ToList_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .ToList();
-
         }
         catch (Exception e)
         {
@@ -4129,7 +4071,6 @@ public class ToList_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .ToList();
-
         }
         catch (Exception e)
         {
@@ -4198,7 +4139,6 @@ public class ToList_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .ToList();
-
         }
         catch (Exception e)
         {

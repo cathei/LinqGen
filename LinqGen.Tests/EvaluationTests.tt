@@ -109,7 +109,6 @@ public class <#= expression.title #>_Tests
                 .Specialize()
                 .Skip(skip).Take(take)
                 .<#= expression.linqgen #>;
-
         }
         catch (Exception e)
         {

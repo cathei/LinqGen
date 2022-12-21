@@ -34,6 +34,7 @@
         ("DistinctStruct", "Distinct()", "Distinct(new StructEqualityComparer())", intSources),
         ("Skip", "Skip(2)", "Skip(2)", intSources),
         ("Take", "Take(7)", "Take(7)", intSources),
+        ("Order", "OrderBy(x => x)", "Order()", intSources),
         ("Cast", "Cast<string>()", "Cast<string>()", castSources),
         ("OfType", "OfType<string>()", "OfType<string>()", castSources),
     };

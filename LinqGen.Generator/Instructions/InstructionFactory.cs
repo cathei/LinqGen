@@ -156,13 +156,13 @@ namespace Cathei.LinqGen.Generator
                 case "OrderByStruct":
                     return new OrderByOperation(expression, id, FunctionKind.Struct, ComparerKind.Struct, false);
 
-                case "OrderBySelf":
+                case "Order":
                     return new OrderByOperation(expression, id, FunctionKind.Default, ComparerKind.Default, false);
 
-                case "OrderBySelfComparer":
+                case "OrderComparer":
                     return new OrderByOperation(expression, id, FunctionKind.Default, ComparerKind.Interface, false);
 
-                case "OrderBySelfStruct":
+                case "OrderStruct":
                     return new OrderByOperation(expression, id, FunctionKind.Default, ComparerKind.Struct, false);
 
                 case "ThenBy":
@@ -177,15 +177,6 @@ namespace Cathei.LinqGen.Generator
                 case "ThenByStruct":
                     return new ThenByOperation(expression, id, FunctionKind.Struct, ComparerKind.Struct, false);
 
-                case "ThenBySelf":
-                    return new ThenByOperation(expression, id, FunctionKind.Default, ComparerKind.Default, false);
-
-                case "ThenBySelfComparer":
-                    return new ThenByOperation(expression, id, FunctionKind.Default, ComparerKind.Interface, false);
-
-                case "ThenBySelfStruct":
-                    return new ThenByOperation(expression, id, FunctionKind.Default, ComparerKind.Struct, false);
-
                 case "OrderByDesc":
                     return new OrderByOperation(expression, id, FunctionKind.Delegate, ComparerKind.Default, true);
 
@@ -198,13 +189,13 @@ namespace Cathei.LinqGen.Generator
                 case "OrderByDescStruct":
                     return new OrderByOperation(expression, id, FunctionKind.Struct, ComparerKind.Struct, true);
 
-                case "OrderByDescSelf":
+                case "OrderDesc":
                     return new OrderByOperation(expression, id, FunctionKind.Default, ComparerKind.Default, true);
 
-                case "OrderByDescSelfComparer":
+                case "OrderDescComparer":
                     return new OrderByOperation(expression, id, FunctionKind.Default, ComparerKind.Interface, true);
 
-                case "OrderByDescSelfStruct":
+                case "OrderDescStruct":
                     return new OrderByOperation(expression, id, FunctionKind.Default, ComparerKind.Struct, true);
 
                 case "ThenByDesc":
@@ -218,15 +209,6 @@ namespace Cathei.LinqGen.Generator
 
                 case "ThenByDescStruct":
                     return new ThenByOperation(expression, id, FunctionKind.Struct, ComparerKind.Struct, true);
-
-                case "ThenByDescSelf":
-                    return new ThenByOperation(expression, id, FunctionKind.Default, ComparerKind.Default, true);
-
-                case "ThenByDescSelfComparer":
-                    return new ThenByOperation(expression, id, FunctionKind.Default, ComparerKind.Interface, true);
-
-                case "ThenByDescSelfStruct":
-                    return new ThenByOperation(expression, id, FunctionKind.Default, ComparerKind.Struct, true);
             }
 
             // not yet implemented

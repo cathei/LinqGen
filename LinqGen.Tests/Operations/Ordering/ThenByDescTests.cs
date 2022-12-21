@@ -31,7 +31,7 @@ public class ThenByDescTests : GenerationTestBase<int>
 
         var actual = Gen.Enumerable.Range(start, count)
             .OrderBy(x => x % 2)
-            .ThenByDescending();
+            .ThenByDescending(x => x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -47,7 +47,7 @@ public class ThenByDescTests : GenerationTestBase<int>
 
         var actual = Gen.Enumerable.Range(start, count)
             .OrderBy(x => x % 2)
-            .ThenByDescending(new Comparer());
+            .ThenByDescending(x => x, new Comparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }

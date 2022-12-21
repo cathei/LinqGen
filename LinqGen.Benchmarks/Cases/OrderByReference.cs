@@ -60,7 +60,7 @@ public class OrderByReference
     public double LinqGenDelegate(IntWrapper[] list)
     {
         return list.Specialize()
-            .OrderBy()
+            .Order()
             .Sum(x => x.inner);
     }
 
@@ -69,7 +69,7 @@ public class OrderByReference
     public double LinqGenStruct(IntWrapper[] list)
     {
         return list.Specialize()
-            .OrderBy(new Comparer())
+            .Order(new Comparer())
             .Sum(new Selector());
     }
 
