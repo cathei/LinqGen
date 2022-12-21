@@ -23,7 +23,7 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Both, IntType, VarName("take"));
-            yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));
+            yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
         }
 
         public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
@@ -37,7 +37,19 @@ namespace Cathei.LinqGen.Generator
             if (takeVar != null)
                 newTakeVar = MathMin(newTakeVar, takeVar);
 
-            return base.RenderInitialization(isLocal, source, skipVar, newTakeVar);
+            if (SupportPartition && skipVar != null)
+            {
+                yield return ExpressionStatement(SimpleAssignmentExpression(
+                    VarName("index"), SubtractExpression(skipVar, LiteralExpression(1))));
+            }
+            else
+            {
+                yield return ExpressionStatement(SimpleAssignmentExpression(
+                    VarName("index"), LiteralExpression(-1)));
+            }
+
+            foreach (var statement in base.RenderInitialization(isLocal, source, skipVar, newTakeVar))
+                yield return statement;
         }
 
         public override ExpressionSyntax? RenderCount()
@@ -53,7 +65,8 @@ namespace Cathei.LinqGen.Generator
         protected override StatementSyntax? RenderMoveNext()
         {
             return IfStatement(
-                GreaterOrEqualExpression(PreIncrementExpression(VarName("index")), VarName("take")),
+                GreaterOrEqualExpression(
+                    CastExpression(UIntType, PreIncrementExpression(VarName("index"))), VarName("take")),
                 BreakStatement());
         }
     }

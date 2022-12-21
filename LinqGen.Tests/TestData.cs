@@ -30,11 +30,6 @@ public static class TestData
             IntList.Add(rand.Next(-10, 50));
 
         IntEnumerable = GetEnumerable(rand.Next());
-
-        var actual = TestData.IntEnumerable
-            .Specialize()
-            .Distinct(new StructComparer())
-            .ToArray();
     }
 
     private static IEnumerable<int> GetEnumerable(int seed)

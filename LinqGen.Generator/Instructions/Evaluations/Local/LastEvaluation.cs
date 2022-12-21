@@ -46,9 +46,6 @@ namespace Cathei.LinqGen.Generator
                 yield return ExpressionStatement(SimpleAssignmentExpression(VarName("isSet"), TrueExpression()));
 
             yield return ExpressionStatement(SimpleAssignmentExpression(VarName("result"), CurrentPlaceholder));
-
-
-            yield return ReturnStatement(CurrentPlaceholder);
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()

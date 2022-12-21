@@ -1,0 +1,120 @@
+// LinqGen.Tests, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
+
+<#@template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#
+    var testExpressions = new (string title, string linq, string linqgen)[]
+    {
+        ("Count", "Count()", "Count()"),
+        ("First", "First()", "First()"),
+        ("FirstOrDefault", "FirstOrDefault()", "FirstOrDefault()"),
+        ("Last", "Last()", "Last()"),
+        ("LastOrDefault", "LastOrDefault()", "LastOrDefault()"),
+        ("Min", "Min()", "Min()"),
+        ("Max", "Max()", "Max()"),
+    };
+
+    var testSources = new (string type, string variable)[]
+    {
+        ("int", "IntEmpty"),
+        ("int", "IntArray"),
+        ("int", "IntList"),
+        ("int", "IntEnumerable"),
+    };
+#>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
+using Cathei.LinqGen;
+
+namespace Cathei.LinqGen.Tests;
+
+<#
+    foreach (var expression in testExpressions)
+    {
+#>
+[TestFixture]
+public class <#= expression.title #>_Tests
+{
+<#
+        foreach (var source in testSources)
+        {
+#>
+
+    [Test]
+    public void SameAsLinq_<#= source.variable #>()
+    {
+        Exception ex1 = null, ex2 = null;
+        <#= source.type #> expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.<#= source.variable #>
+                .<#= expression.linq #>;
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.<#= source.variable #>
+                .Specialize()
+                .<#= expression.linqgen #>;
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_<#= source.variable #>(int skip, int take)
+    {
+        Exception ex1 = null, ex2 = null;
+        <#= source.type #> expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.<#= source.variable #>
+                .Skip(skip).Take(take)
+                .<#= expression.linq #>;
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.<#= source.variable #>
+                .Specialize()
+                .Skip(skip).Take(take)
+                .<#= expression.linqgen #>;
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+<#
+        }
+#>
+}
+<#
+    }
+#>
