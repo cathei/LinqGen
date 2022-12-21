@@ -3,24 +3,26 @@
 <#@template language="C#" #>
 <#@ assembly name="System.Core" #>
 <#
-    var testExpressions = new (string title, string linq, string linqgen)[]
+    var testExpressions = new (string title, string result, string linq, string linqgen)[]
     {
-        ("Count", "Count()", "Count()"),
-        ("CountPred", "Count(x => x % 2 == 0)", "Count(x => x % 2 == 0)"),
-        ("CountPredStruct", "Count(x => x % 2 == 0)", "Count(new EvenPredicate())"),
-        ("First", "First()", "First()"),
-        ("FirstOrDefault", "FirstOrDefault()", "FirstOrDefault()"),
-        ("Last", "Last()", "Last()"),
-        ("LastOrDefault", "LastOrDefault()", "LastOrDefault()"),
-        ("Min", "Min()", "Min()"),
-        ("MinComp", "Min()", "Min(new StructComparer())"),
-        ("Max", "Max()", "Max()"),
-        ("MaxComp", "Max()", "Max(new StructComparer())"),
-        ("Sum", "Sum()", "Sum()"),
-        ("SumSelector", "Sum(x => x * 2)", "Sum(new DoubleSelector())"),
+        ("Count", "{0}", "Count()", "Count()"),
+        ("CountPred", "{0}", "Count(x => x % 2 == 0)", "Count(x => x % 2 == 0)"),
+        ("CountPredStruct", "{0}", "Count(x => x % 2 == 0)", "Count(new EvenPredicate())"),
+        ("First", "{0}", "First()", "First()"),
+        ("FirstOrDefault", "{0}", "FirstOrDefault()", "FirstOrDefault()"),
+        ("Last", "{0}", "Last()", "Last()"),
+        ("LastOrDefault", "{0}", "LastOrDefault()", "LastOrDefault()"),
+        ("Min", "{0}", "Min()", "Min()"),
+        ("MinComp", "{0}", "Min()", "Min(new StructComparer())"),
+        ("Max", "{0}", "Max()", "Max()"),
+        ("MaxComp", "{0}", "Max()", "Max(new StructComparer())"),
+        ("Sum", "{0}", "Sum()", "Sum()"),
+        ("SumSelector", "{0}", "Sum(x => x * 2)", "Sum(new DoubleSelector())"),
+        ("ToArray", "{0}[]", "ToArray()", "ToArray()"),
+        ("ToList", "List<{0}>", "ToList()", "ToList()"),
     };
 
-    var testSources = new (string type, string variable)[]
+    var testSources = new (string element, string variable)[]
     {
         ("int", "IntEmpty"),
         ("int", "IntArray"),
@@ -53,7 +55,7 @@ public class <#= expression.title #>_Tests
     public void SameAsLinq_<#= source.variable #>()
     {
         Exception ex1 = null, ex2 = null;
-        <#= source.type #> expected = default, actual = default;
+        <#= string.Format(expression.result, source.element) #> expected = default, actual = default;
 
         try
         {
@@ -88,7 +90,7 @@ public class <#= expression.title #>_Tests
     public void SliceSameAsLinq_<#= source.variable #>(int skip, int take)
     {
         Exception ex1 = null, ex2 = null;
-        <#= source.type #> expected = default, actual = default;
+        <#= string.Format(expression.result, source.element) #> expected = default, actual = default;
 
         try
         {

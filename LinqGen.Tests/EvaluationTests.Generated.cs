@@ -3649,3 +3649,563 @@ public class SumSelector_Tests
         Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
     }
 }
+[TestFixture]
+public class ToArray_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        Exception ex1 = null, ex2 = null;
+        int[] expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntEmpty
+                .ToArray();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntEmpty
+                .Specialize()
+                .ToArray();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        Exception ex1 = null, ex2 = null;
+        int[] expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntEmpty
+                .Skip(skip).Take(take)
+                .ToArray();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntEmpty
+                .Specialize()
+                .Skip(skip).Take(take)
+                .ToArray();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        Exception ex1 = null, ex2 = null;
+        int[] expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntArray
+                .ToArray();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntArray
+                .Specialize()
+                .ToArray();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        Exception ex1 = null, ex2 = null;
+        int[] expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntArray
+                .Skip(skip).Take(take)
+                .ToArray();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntArray
+                .Specialize()
+                .Skip(skip).Take(take)
+                .ToArray();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        Exception ex1 = null, ex2 = null;
+        int[] expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntList
+                .ToArray();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntList
+                .Specialize()
+                .ToArray();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        Exception ex1 = null, ex2 = null;
+        int[] expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntList
+                .Skip(skip).Take(take)
+                .ToArray();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntList
+                .Specialize()
+                .Skip(skip).Take(take)
+                .ToArray();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        Exception ex1 = null, ex2 = null;
+        int[] expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntEnumerable
+                .ToArray();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntEnumerable
+                .Specialize()
+                .ToArray();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        Exception ex1 = null, ex2 = null;
+        int[] expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntEnumerable
+                .Skip(skip).Take(take)
+                .ToArray();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntEnumerable
+                .Specialize()
+                .Skip(skip).Take(take)
+                .ToArray();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+}
+[TestFixture]
+public class ToList_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        Exception ex1 = null, ex2 = null;
+        List<int> expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntEmpty
+                .ToList();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntEmpty
+                .Specialize()
+                .ToList();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        Exception ex1 = null, ex2 = null;
+        List<int> expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntEmpty
+                .Skip(skip).Take(take)
+                .ToList();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntEmpty
+                .Specialize()
+                .Skip(skip).Take(take)
+                .ToList();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        Exception ex1 = null, ex2 = null;
+        List<int> expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntArray
+                .ToList();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntArray
+                .Specialize()
+                .ToList();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        Exception ex1 = null, ex2 = null;
+        List<int> expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntArray
+                .Skip(skip).Take(take)
+                .ToList();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntArray
+                .Specialize()
+                .Skip(skip).Take(take)
+                .ToList();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        Exception ex1 = null, ex2 = null;
+        List<int> expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntList
+                .ToList();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntList
+                .Specialize()
+                .ToList();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        Exception ex1 = null, ex2 = null;
+        List<int> expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntList
+                .Skip(skip).Take(take)
+                .ToList();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntList
+                .Specialize()
+                .Skip(skip).Take(take)
+                .ToList();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        Exception ex1 = null, ex2 = null;
+        List<int> expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntEnumerable
+                .ToList();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntEnumerable
+                .Specialize()
+                .ToList();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        Exception ex1 = null, ex2 = null;
+        List<int> expected = default, actual = default;
+
+        try
+        {
+            expected = TestData.IntEnumerable
+                .Skip(skip).Take(take)
+                .ToList();
+        }
+        catch (Exception e)
+        {
+            ex1 = e;
+        }
+
+        try
+        {
+            actual = TestData.IntEnumerable
+                .Specialize()
+                .Skip(skip).Take(take)
+                .ToList();
+
+        }
+        catch (Exception e)
+        {
+            ex2 = e;
+        }
+
+        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(ex1?.GetType(), ex2?.GetType());
+    }
+}
