@@ -500,6 +500,18 @@ namespace Cathei.LinqGen.Generator
                 TypeArgumentList(elementType, comparerType));
         }
 
+        public static TypeSyntax PooledDictionaryType(TypeSyntax keyType, TypeSyntax elementType, bool isUnmanaged)
+        {
+            return GenericName(Identifier(isUnmanaged ? "PooledDictionaryNative" : "PooledDictionaryManaged"),
+                TypeArgumentList(keyType, elementType));
+        }
+
+        public static TypeSyntax GroupingType(TypeSyntax keyType, TypeSyntax elementType, bool isUnmanaged)
+        {
+            return GenericName(Identifier(isUnmanaged ? "GroupingNative" : "GroupingManaged"),
+                TypeArgumentList(keyType, elementType));
+        }
+
         public static TypeSyntax EnumerableInterfaceType(TypeSyntax elementType)
         {
             return GenericName(Identifier("IEnumerable"), TypeArgumentList(elementType));
