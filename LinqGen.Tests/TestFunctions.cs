@@ -24,6 +24,22 @@ public struct DoubleSelector : IStructFunction<int, int>
     }
 }
 
+public struct Mod3Selector : IStructFunction<int, int>
+{
+    public int Invoke(int arg)
+    {
+        return arg % 3;
+    }
+}
+
+public struct NegateSelector : IStructFunction<int, int>
+{
+    public int Invoke(int arg)
+    {
+        return -arg;
+    }
+}
+
 public struct MinusEvenPredicate : IStructFunction<int, int, bool>
 {
     public bool Invoke(int arg, int index)

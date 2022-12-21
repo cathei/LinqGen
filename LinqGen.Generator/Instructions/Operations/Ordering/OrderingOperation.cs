@@ -99,7 +99,7 @@ namespace Cathei.LinqGen.Generator
             yield return new MemberInfo(MemberKind.Enumerator, IndexListType, VarName("indices"),
                 ObjectCreationExpression(IndexListType, ArgumentList(LiteralExpression(0)), null));
 
-            yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));
+            yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
 
             switch (SelectorKind)
             {
@@ -211,7 +211,10 @@ namespace Cathei.LinqGen.Generator
 
             yield return LocalDeclarationStatement(maxName.Identifier, takeVar == null
                 ? SubtractExpression(elementsCount, LiteralExpression(1))
-                : SubtractExpression(AddExpression(minName, takeVar), LiteralExpression(1)));
+                : SubtractExpression(MathMin(elementsCount, AddExpression(minName, takeVar)), LiteralExpression(1)));
+
+            yield return ExpressionStatement(SimpleAssignmentExpression(
+                VarName("index"), SubtractExpression(minName, LiteralExpression(1))));
 
             var sortBody = new List<StatementSyntax>();
 

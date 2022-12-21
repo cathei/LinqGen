@@ -1637,7 +1637,7 @@ public class DistinctInterface_Tests
     public void SameAsLinq_IntEmpty()
     {
         var expected = TestData.IntEmpty
-            .Distinct(EqualityComparer<int>.Default);
+            .Distinct();
 
         var actual = TestData.IntEmpty
             .Specialize()
@@ -1666,7 +1666,7 @@ public class DistinctInterface_Tests
     public void SliceSameAsLinq_IntEmpty(int skip, int take)
     {
         var expected = TestData.IntEmpty
-            .Distinct(EqualityComparer<int>.Default)
+            .Distinct()
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
@@ -1681,7 +1681,7 @@ public class DistinctInterface_Tests
     public void SameAsLinq_IntArray()
     {
         var expected = TestData.IntArray
-            .Distinct(EqualityComparer<int>.Default);
+            .Distinct();
 
         var actual = TestData.IntArray
             .Specialize()
@@ -1710,7 +1710,7 @@ public class DistinctInterface_Tests
     public void SliceSameAsLinq_IntArray(int skip, int take)
     {
         var expected = TestData.IntArray
-            .Distinct(EqualityComparer<int>.Default)
+            .Distinct()
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
@@ -1725,7 +1725,7 @@ public class DistinctInterface_Tests
     public void SameAsLinq_IntList()
     {
         var expected = TestData.IntList
-            .Distinct(EqualityComparer<int>.Default);
+            .Distinct();
 
         var actual = TestData.IntList
             .Specialize()
@@ -1754,7 +1754,7 @@ public class DistinctInterface_Tests
     public void SliceSameAsLinq_IntList(int skip, int take)
     {
         var expected = TestData.IntList
-            .Distinct(EqualityComparer<int>.Default)
+            .Distinct()
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
@@ -1769,7 +1769,7 @@ public class DistinctInterface_Tests
     public void SameAsLinq_IntEnumerable()
     {
         var expected = TestData.IntEnumerable
-            .Distinct(EqualityComparer<int>.Default);
+            .Distinct();
 
         var actual = TestData.IntEnumerable
             .Specialize()
@@ -1798,7 +1798,7 @@ public class DistinctInterface_Tests
     public void SliceSameAsLinq_IntEnumerable(int skip, int take)
     {
         var expected = TestData.IntEnumerable
-            .Distinct(EqualityComparer<int>.Default)
+            .Distinct()
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
@@ -2524,6 +2524,3786 @@ public class Order_Tests
         var actual = TestData.IntEnumerable
             .Specialize()
             .Order()
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderComparer_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .Order(Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .Order(Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .Order(Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .Order(Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .Order(Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .Order(Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .Order(Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .Order(Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .Order(Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .Order(Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .Order(Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .Order(Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderStruct_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .Order(new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .Order(new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .Order(new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .Order(new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .Order(new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .Order(new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .Order(new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .Order(new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .Order(new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .Order(new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .Order(new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .Order(new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderDesc_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderDescending();
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderDescending();
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderDescending()
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderDescending();
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderDescending();
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderDescending()
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderDescending();
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderDescending();
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderDescending()
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderDescending();
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderDescending();
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderDescending()
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderDescComparer_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderDescending(Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderDescending(Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderDescending(Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderDescending(Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderDescending(Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderDescending(Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderDescending(Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderDescending(Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderDescending(Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderDescending(Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderDescending(Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderDescending(Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderDescStruct_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderDescending(new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderDescending(new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderDescending(new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderDescending(new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderDescending(new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderDescending(new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderDescending(new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderDescending(new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderDescending(new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderDescending(new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderDescending(new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderDescending(new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderBy_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderByKey_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(new Mod3Selector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(new Mod3Selector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(new Mod3Selector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(new Mod3Selector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderBy(new Mod3Selector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(new Mod3Selector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(new Mod3Selector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderBy(new Mod3Selector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(new Mod3Selector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(new Mod3Selector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(new Mod3Selector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(new Mod3Selector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderByComparer_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderByStruct_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(new Mod3Selector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(new Mod3Selector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(new Mod3Selector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(new Mod3Selector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderBy(new Mod3Selector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(new Mod3Selector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(new Mod3Selector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderBy(new Mod3Selector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(new Mod3Selector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(new Mod3Selector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(new Mod3Selector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(new Mod3Selector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderByDesc_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderByDescending(x => x % 3);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderByDescending(x => x % 3);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderByDescending(x => x % 3);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderByDescending(x => x % 3);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderByDescending(x => x % 3);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderByDescending(x => x % 3);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderByDescending(x => x % 3);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderByDescending(x => x % 3);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderByDescKey_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderByDescending(new Mod3Selector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderByDescending(new Mod3Selector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderByDescending(new Mod3Selector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderByDescending(new Mod3Selector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderByDescending(new Mod3Selector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderByDescending(new Mod3Selector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderByDescending(new Mod3Selector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderByDescending(new Mod3Selector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderByDescending(new Mod3Selector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderByDescending(new Mod3Selector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderByDescending(new Mod3Selector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderByDescending(new Mod3Selector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderByDescComparer_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OrderByDescStruct_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderByDescending(new Mod3Selector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderByDescending(new Mod3Selector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderByDescending(new Mod3Selector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderByDescending(new Mod3Selector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderByDescending(new Mod3Selector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderByDescending(new Mod3Selector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderByDescending(new Mod3Selector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderByDescending(new Mod3Selector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderByDescending(new Mod3Selector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x % 3);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderByDescending(new Mod3Selector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderByDescending(new Mod3Selector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x % 3)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderByDescending(new Mod3Selector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class ThenBy_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class ThenByKey_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class ThenByComparer_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class ThenByStruct_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenBy(x => -x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class ThenByDesc_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class ThenByDescKey_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class ThenByDescComparer_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class ThenByDescStruct_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenByDescending(x => -x);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
