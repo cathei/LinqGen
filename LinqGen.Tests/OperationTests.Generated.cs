@@ -1630,6 +1630,186 @@ public class Distinct_Tests
     }
 }
 [TestFixture]
+public class DistinctInterface_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .Distinct(EqualityComparer<int>.Default);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .Distinct(EqualityComparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .Distinct(EqualityComparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Distinct(EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .Distinct(EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .Distinct(EqualityComparer<int>.Default);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .Distinct(EqualityComparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .Distinct(EqualityComparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Distinct(EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .Distinct(EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .Distinct(EqualityComparer<int>.Default);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .Distinct(EqualityComparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .Distinct(EqualityComparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Distinct(EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .Distinct(EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .Distinct(EqualityComparer<int>.Default);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .Distinct(EqualityComparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .Distinct(EqualityComparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Distinct(EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .Distinct(EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
 public class DistinctStruct_Tests
 {
 
@@ -1641,7 +1821,7 @@ public class DistinctStruct_Tests
 
         var actual = TestData.IntEmpty
             .Specialize()
-            .Distinct(new StructComparer());
+            .Distinct(new StructEqualityComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1651,7 +1831,7 @@ public class DistinctStruct_Tests
     {
         var enumerable = TestData.IntEmpty
             .Specialize()
-            .Distinct(new StructComparer());
+            .Distinct(new StructEqualityComparer());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -1671,7 +1851,7 @@ public class DistinctStruct_Tests
 
         var actual = TestData.IntEmpty
             .Specialize()
-            .Distinct(new StructComparer())
+            .Distinct(new StructEqualityComparer())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1685,7 +1865,7 @@ public class DistinctStruct_Tests
 
         var actual = TestData.IntArray
             .Specialize()
-            .Distinct(new StructComparer());
+            .Distinct(new StructEqualityComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1695,7 +1875,7 @@ public class DistinctStruct_Tests
     {
         var enumerable = TestData.IntArray
             .Specialize()
-            .Distinct(new StructComparer());
+            .Distinct(new StructEqualityComparer());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -1715,7 +1895,7 @@ public class DistinctStruct_Tests
 
         var actual = TestData.IntArray
             .Specialize()
-            .Distinct(new StructComparer())
+            .Distinct(new StructEqualityComparer())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1729,7 +1909,7 @@ public class DistinctStruct_Tests
 
         var actual = TestData.IntList
             .Specialize()
-            .Distinct(new StructComparer());
+            .Distinct(new StructEqualityComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1739,7 +1919,7 @@ public class DistinctStruct_Tests
     {
         var enumerable = TestData.IntList
             .Specialize()
-            .Distinct(new StructComparer());
+            .Distinct(new StructEqualityComparer());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -1759,7 +1939,7 @@ public class DistinctStruct_Tests
 
         var actual = TestData.IntList
             .Specialize()
-            .Distinct(new StructComparer())
+            .Distinct(new StructEqualityComparer())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1773,7 +1953,7 @@ public class DistinctStruct_Tests
 
         var actual = TestData.IntEnumerable
             .Specialize()
-            .Distinct(new StructComparer());
+            .Distinct(new StructEqualityComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1783,7 +1963,7 @@ public class DistinctStruct_Tests
     {
         var enumerable = TestData.IntEnumerable
             .Specialize()
-            .Distinct(new StructComparer());
+            .Distinct(new StructEqualityComparer());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -1803,7 +1983,7 @@ public class DistinctStruct_Tests
 
         var actual = TestData.IntEnumerable
             .Specialize()
-            .Distinct(new StructComparer())
+            .Distinct(new StructEqualityComparer())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());

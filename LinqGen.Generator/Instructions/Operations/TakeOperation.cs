@@ -66,7 +66,8 @@ namespace Cathei.LinqGen.Generator
         {
             return IfStatement(
                 GreaterOrEqualExpression(
-                    CastExpression(UIntType, PreIncrementExpression(VarName("index"))), VarName("take")),
+                    CastExpression(UIntType, PreIncrementExpression(VarName("index"))),
+                    CastExpression(UIntType, VarName("take"))),
                 BreakStatement());
         }
     }

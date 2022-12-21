@@ -14,7 +14,8 @@
         ("WhereAt", "Where", "(x, i) => (x - i) % 2 == 0", "(x, i) => (x - i) % 2 == 0"),
         ("WhereAtStruct", "Where", "(x, i) => (x - i) % 2 == 0", "new MinusEvenPredicate()"),
         ("Distinct", "Distinct", "", ""),
-        ("DistinctStruct", "Distinct", "", "new StructComparer()"),
+        ("DistinctInterface", "Distinct", "EqualityComparer<int>.Default", "EqualityComparer<int>.Default"),
+        ("DistinctStruct", "Distinct", "", "new StructEqualityComparer()"),
         ("Skip", "Skip", "2", "2"),
         ("Take", "Take", "7", "7"),
     };

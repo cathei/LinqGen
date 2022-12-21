@@ -6,12 +6,18 @@
     var testExpressions = new (string title, string linq, string linqgen)[]
     {
         ("Count", "Count()", "Count()"),
+        ("CountPred", "Count(x => x % 2 == 0)", "Count(x => x % 2 == 0)"),
+        ("CountPredStruct", "Count(x => x % 2 == 0)", "Count(new EvenPredicate())"),
         ("First", "First()", "First()"),
         ("FirstOrDefault", "FirstOrDefault()", "FirstOrDefault()"),
         ("Last", "Last()", "Last()"),
         ("LastOrDefault", "LastOrDefault()", "LastOrDefault()"),
         ("Min", "Min()", "Min()"),
+        ("MinComp", "Min()", "Min(new StructComparer())"),
         ("Max", "Max()", "Max()"),
+        ("MaxComp", "Max()", "Max(new StructComparer())"),
+        ("Sum", "Sum()", "Sum()"),
+        ("SumSelector", "Sum(x => x * 2)", "Sum(new DoubleSelector())"),
     };
 
     var testSources = new (string type, string variable)[]

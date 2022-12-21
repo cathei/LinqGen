@@ -40,7 +40,7 @@ public struct AddSelector : IStructFunction<int, int, int>
     }
 }
 
-public struct StructComparer : IEqualityComparer<int>
+public struct StructEqualityComparer : IEqualityComparer<int>
 {
     public bool Equals(int x, int y)
     {
@@ -50,5 +50,13 @@ public struct StructComparer : IEqualityComparer<int>
     public int GetHashCode(int obj)
     {
         return obj;
+    }
+}
+
+public struct StructComparer : IComparer<int>
+{
+    public int Compare(int x, int y)
+    {
+        return x - y;
     }
 }

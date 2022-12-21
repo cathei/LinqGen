@@ -55,8 +55,7 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
-
-            if (ComparerKind == ComparerKind.Struct)
+            if (ComparerKind != ComparerKind.Default)
                 yield return new MemberInfo(MemberKind.Enumerable, ComparerType, VarName("comparer"));
 
             var pooledSetType = PooledSetType(OutputElementType, ComparerType, OutputElementSymbol.IsUnmanagedType);
@@ -66,9 +65,7 @@ namespace Cathei.LinqGen.Generator
         public override IEnumerable<StatementSyntax> RenderInitialization(
             bool isLocal, ExpressionSyntax source, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            ExpressionSyntax comparerExpression;
-
-            comparerExpression = ComparerKind == ComparerKind.Default
+            var comparerExpression = ComparerKind == ComparerKind.Default
                 ? EqualityComparerDefault(OutputElementType, OutputElementSymbol)
                 : MemberAccessExpression(source, VarName("comparer"));
 
