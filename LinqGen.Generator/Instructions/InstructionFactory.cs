@@ -17,8 +17,6 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public static Generation? CreateGeneration(StringBuilder logBuilder, in LinqGenExpression expression, int id)
         {
-            INamedTypeSymbol? typeSymbol;
-
             switch (expression.SignatureSymbol!.Name)
             {
                 case "Specialize":
@@ -84,44 +82,28 @@ namespace Cathei.LinqGen.Generator
                     return new EmptyGeneration(expression, id);
 
                 case "Select":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new SelectOperation(expression, id, typeSymbol, false, false);
+                    return new SelectOperation(expression, id, false, false);
 
                 case "SelectStruct":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new SelectOperation(expression, id, typeSymbol, false, true);
+                    return new SelectOperation(expression, id, false, true);
 
                 case "SelectAt":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new SelectOperation(expression, id, typeSymbol, true, false);
+                    return new SelectOperation(expression, id, true, false);
 
                 case "SelectAtStruct":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new SelectOperation(expression, id, typeSymbol, true, true);
+                    return new SelectOperation(expression, id, true, true);
 
                 case "Where":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new WhereOperation(expression, id, typeSymbol, false, false);
+                    return new WhereOperation(expression, id, false, false);
 
                 case "WhereAt":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new WhereOperation(expression, id, typeSymbol, true, false);
+                    return new WhereOperation(expression, id, true, false);
 
                 case "WhereStruct":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new WhereOperation(expression, id, typeSymbol, false, true);
+                    return new WhereOperation(expression, id, false, true);
 
                 case "WhereAtStruct":
-                    if (!expression.TryGetNamedParameterType(0, out typeSymbol))
-                        break;
-                    return new WhereOperation(expression, id, typeSymbol, true, true);
+                    return new WhereOperation(expression, id, true, true);
 
                 case "Cast":
                     return new CastOperation(expression, id, false);

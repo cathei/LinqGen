@@ -101,16 +101,14 @@ namespace Cathei.LinqGen.Generator
         public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));
         public static readonly PredefinedTypeSyntax UIntType = PredefinedType(Token(SyntaxKind.UIntKeyword));
         public static readonly PredefinedTypeSyntax BoolType = PredefinedType(Token(SyntaxKind.BoolKeyword));
-        public static readonly IdentifierNameSyntax EnumeratorType = IdentifierName("Enumerator");
 
         // known method names
         public static readonly IdentifierNameSyntax InvokeMethod = IdentifierName("Invoke");
         public static readonly IdentifierNameSyntax MoveNextMethod = IdentifierName("MoveNext");
         public static readonly IdentifierNameSyntax DisposeMethod = IdentifierName("Dispose");
         public static readonly IdentifierNameSyntax GetEnumeratorMethod = IdentifierName("GetEnumerator");
-        public static readonly IdentifierNameSyntax GetSliceEnumeratorMethod = IdentifierName("GetSliceEnumerator");
         public static readonly IdentifierNameSyntax AddMethod = IdentifierName("Add");
-        public static readonly IdentifierNameSyntax AddRangeMethod = IdentifierName("AddRange");
+        public static readonly IdentifierNameSyntax GetOrDefaultMethod = IdentifierName("GetOrDefault");
         public static readonly IdentifierNameSyntax CompareMethod = IdentifierName("Compare");
         public static readonly IdentifierNameSyntax CompareToMethod = IdentifierName("CompareTo");
         public static readonly IdentifierNameSyntax VisitMethod = IdentifierName("Visit");
@@ -232,6 +230,11 @@ namespace Cathei.LinqGen.Generator
         public static ArgumentListSyntax ArgumentList(params ExpressionSyntax[] expression)
         {
             return SyntaxFactory.ArgumentList(SeparatedList(expression.Select(Argument)));
+        }
+
+        public static ArgumentListSyntax ArgumentList(params ArgumentSyntax[] arguments)
+        {
+            return SyntaxFactory.ArgumentList(SeparatedList(arguments));
         }
 
         public static ArgumentListSyntax ArgumentList(IEnumerable<ArgumentSyntax> arguments)
@@ -500,10 +503,11 @@ namespace Cathei.LinqGen.Generator
                 TypeArgumentList(elementType, comparerType));
         }
 
-        public static TypeSyntax PooledDictionaryType(TypeSyntax keyType, TypeSyntax elementType, bool isUnmanaged)
+        public static TypeSyntax PooledDictionaryType(
+            TypeSyntax keyType, TypeSyntax elementType, TypeSyntax comparerType, bool isUnmanaged)
         {
             return GenericName(Identifier(isUnmanaged ? "PooledDictionaryNative" : "PooledDictionaryManaged"),
-                TypeArgumentList(keyType, elementType));
+                TypeArgumentList(keyType, elementType, comparerType));
         }
 
         public static TypeSyntax GroupingType(TypeSyntax keyType, TypeSyntax elementType, bool isUnmanaged)

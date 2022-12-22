@@ -20,10 +20,12 @@ namespace Cathei.LinqGen.Generator
         private bool WithIndex { get; }
         private bool WithStruct { get; }
 
-        public WhereOperation(in LinqGenExpression expression, int id,
-            ITypeSymbol parameterType, bool withIndex, bool withStruct) : base(expression, id)
+        public WhereOperation(in LinqGenExpression expression, int id, bool withIndex, bool withStruct)
+            : base(expression, id)
         {
+            var parameterType = expression.GetNamedParameterType(0);
             PredicateType = ParseTypeName(parameterType);
+
             WithIndex = withIndex;
             WithStruct = withStruct;
         }

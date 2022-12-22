@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -170,6 +171,13 @@ namespace Cathei.LinqGen.Generator
 
             result = namedTypeSymbol;
             return true;
+        }
+
+        public INamedTypeSymbol GetNamedParameterType(int index)
+        {
+            if (!TryGetNamedParameterType(index, out var result))
+                throw new InvalidOperationException();
+            return result;
         }
 
         public bool IsCompilingGeneration()

@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace Cathei.LinqGen.Hidden
@@ -99,7 +100,7 @@ namespace Cathei.LinqGen.Hidden
             _size = newSize;
         }
 
-        public bool Add(TKey key, TValue value)
+        public ref TValue GetOrCreate(TKey key)
         {
             int hashCode = GetHashCode(key);
             uint bucket = Reduce(hashCode, _size);
@@ -109,8 +110,12 @@ namespace Cathei.LinqGen.Hidden
             for (int i = _buckets[bucket] - 1; i >= 0; )
             {
                 ref var slot = ref localSlots[i];
+
                 if (slot.HashCode == hashCode && _comparer.Equals(slot.Key, key))
-                    return false;
+                {
+                    // found existing slot
+                    return ref slot.Value;
+                }
 
                 if (collisionCount >= _size)
                 {
@@ -134,12 +139,12 @@ namespace Cathei.LinqGen.Hidden
             ref var lastSlot = ref localSlots[index];
             lastSlot.HashCode = hashCode;
             lastSlot.Key = key;
-            lastSlot.Value = value;
+            lastSlot.Value = default!;
             lastSlot.Next = _buckets[bucket] - 1;
 
             _buckets[bucket] = index + 1;
             _count++;
-            return true;
+            return ref lastSlot.Value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -152,48 +157,6 @@ namespace Cathei.LinqGen.Hidden
 
             _size = 0;
             _count = 0;
-        }
-
-        public Enumerator GetEnumerator() => new Enumerator(this);
-
-        /// <summary>
-        /// PooledDictionary has no Remove operation.
-        /// This means insertion order will be preserved and there will be no empty space in _slot.
-        /// </summary>
-        public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>
-        {
-            private PooledDictionaryManaged<TKey, TValue, TComparer> _dictionary;
-            private int _index;
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Enumerator(PooledDictionaryManaged<TKey, TValue, TComparer> dictionary)
-            {
-                _dictionary = dictionary;
-                _index = -1;
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public bool MoveNext()
-            {
-                return ++_index < _dictionary._count;
-            }
-
-            public KeyValuePair<TKey, TValue> Current
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get
-                {
-                    ref var slot = ref _dictionary._slots[_index];
-                    return new KeyValuePair<TKey, TValue>(slot.Key, slot.Value);
-                }
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public void Dispose() { }
-
-            public void Reset() => throw new NotSupportedException();
-
-            object IEnumerator.Current => Current;
         }
     }
 }
