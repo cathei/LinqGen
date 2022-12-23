@@ -21,12 +21,12 @@ namespace Cathei.LinqGen.Generator
     public abstract class Instruction
     {
         public INamedTypeSymbol? UpstreamSignatureSymbol { get; }
-        public int Id { get; }
+        public string Id { get; }
 
         protected Instruction(in LinqGenExpression expression, int id)
         {
             UpstreamSignatureSymbol = expression.UpstreamSignatureSymbol;
-            Id = id;
+            Id = Base62.Encode(id);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         protected IdentifierNameSyntax TypeName(string identifier)
         {
-            return IdentifierName($"T{Id}_{identifier}");
+            return IdentifierName($"T{identifier}_{Id}");
         }
 
         /// <summary>

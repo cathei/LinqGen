@@ -27,7 +27,7 @@ namespace Cathei.LinqGen.Generator
             KeySymbol = keySymbol;
         }
 
-        public int Id => Operation.Id;
+        public string Id => Operation.Id;
         public bool Desc => Operation.Descending;
 
         public IdentifierNameSyntax SelectorName => IdentifierName($"selector_{Id}");

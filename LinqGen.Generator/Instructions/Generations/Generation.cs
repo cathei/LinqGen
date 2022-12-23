@@ -25,7 +25,7 @@ namespace Cathei.LinqGen.Generator
         protected Generation(in LinqGenExpression expression, int id) : base(expression, id)
         {
             MethodName = IdentifierName(expression.MethodSymbol.Name);
-            ClassName = IdentifierName($"{expression.SignatureSymbol!.Name}_{id}");
+            ClassName = IdentifierName($"{expression.SignatureSymbol!.Name}_{Id}");
         }
 
         public abstract ITypeSymbol OutputElementSymbol { get; }
