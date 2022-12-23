@@ -29,13 +29,11 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class GroupByStructElementComparer<TUp, TKey, TElement> : IStubSignature { }
 
-    // TODO result selector struct version is not supported at the time
-    //
-    // public abstract class GroupByStructResult<TUp, TKey, TResult> : IStubSignature { }
-    //
-    // public abstract class GroupByStructResultComparer<TUp, TKey, TResult> : IStubSignature { }
-    //
-    // public abstract class GroupByStructElementResult<TUp, TKey, TElement, TResult> : IStubSignature { }
-    //
-    // public abstract class GroupByStructElementResultComparer<TUp, TKey, TElement, TResult> : IStubSignature { }
+    public abstract class GroupByStructResult<TUp, TKey, TResult> : IStubSignature { }
+
+    public abstract class GroupByStructResultComparer<TUp, TKey, TResult> : IStubSignature { }
+
+    public abstract class GroupByStructElementResult<TUp, TKey, TElement, TResult> : IStubSignature { }
+
+    public abstract class GroupByStructElementResultComparer<TUp, TKey, TElement, TResult> : IStubSignature { }
 }

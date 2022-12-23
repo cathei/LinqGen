@@ -48,7 +48,7 @@ public struct LinqGenSampleJob : IJob
 
         foreach (var item in Input.Specialize()
                      .Select(new Selector())
-                     .OrderBy(new Comparer()))
+                     .Order(new Comparer()))
         {
             Output[index++] = item;
         }
@@ -57,16 +57,10 @@ public struct LinqGenSampleJob : IJob
 
 public struct Selector : IStructFunction<int, int>
 {
-    public int Invoke(int arg)
-    {
-        return arg * 10;
-    }
+    public int Invoke(int arg) => arg * 10;
 }
 
 public struct Comparer : IComparer<int>
 {
-    public int Compare(int x, int y)
-    {
-        return x - y;
-    }
+    public int Compare(int x, int y) => x - y;
 }

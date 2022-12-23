@@ -37,6 +37,12 @@ namespace Cathei.LinqGen.Hidden
             _buckets.Clear();
         }
 
+        public int Count
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _count;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int GetHashCode(TKey item)
         {
@@ -47,6 +53,12 @@ namespace Cathei.LinqGen.Hidden
         private static uint Reduce(int hashCode, int size)
         {
             return (uint)hashCode % (uint)size;
+        }
+
+        public DynamicArrayNative<PooledDictionarySlot<TKey, TValue>> Slots
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _slots;
         }
 
         private void IncreaseCapacity()
@@ -92,7 +104,7 @@ namespace Cathei.LinqGen.Hidden
             _size = newSize;
         }
 
-        public bool Add(TKey key, TValue value)
+        public ref TValue GetOrCreate(TKey key)
         {
             int hashCode = GetHashCode(key);
             uint bucket = Reduce(hashCode, _size);
@@ -102,8 +114,12 @@ namespace Cathei.LinqGen.Hidden
             for (int i = _buckets[bucket] - 1; i >= 0; )
             {
                 ref var slot = ref localSlots[i];
+
                 if (slot.HashCode == hashCode && _comparer.Equals(slot.Key, key))
-                    return false;
+                {
+                    // found existing slot
+                    return ref slot.Value;
+                }
 
                 if (collisionCount >= _size)
                 {
@@ -127,12 +143,12 @@ namespace Cathei.LinqGen.Hidden
             ref var lastSlot = ref localSlots[index];
             lastSlot.HashCode = hashCode;
             lastSlot.Key = key;
-            lastSlot.Value = value;
+            lastSlot.Value = default;
             lastSlot.Next = _buckets[bucket] - 1;
 
             _buckets[bucket] = index + 1;
             _count++;
-            return true;
+            return ref lastSlot.Value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

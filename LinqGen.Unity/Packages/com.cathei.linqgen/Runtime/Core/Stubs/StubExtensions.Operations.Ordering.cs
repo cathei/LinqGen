@@ -44,21 +44,21 @@ namespace Cathei.LinqGen
         }
 
         // OrderBy with self key
-        public static OrderedStub<IEnumerable<T>, OrderBySelf<TUp>> OrderBy<T, TUp>(
+        public static OrderedStub<IEnumerable<T>, Order<TUp>> Order<T, TUp>(
             this IStub<IEnumerable<T>, TUp> enumerable)
         {
             throw new NotImplementedException();
         }
 
         // OrderBy with comparer interface
-        public static OrderedStub<IEnumerable<T>, OrderBySelfComparer<TUp>> OrderBy<T, TUp>(
+        public static OrderedStub<IEnumerable<T>, OrderComparer<TUp>> Order<T, TUp>(
             this IStub<IEnumerable<T>, TUp> enumerable, IComparer<T> comparer)
         {
             throw new NotImplementedException();
         }
 
         // OrderBy with comparer struct function
-        public static OrderedStub<IEnumerable<T>, OrderBySelfStruct<TUp>> OrderBy<T, TUp, TComparer>(
+        public static OrderedStub<IEnumerable<T>, OrderStruct<TUp>> Order<T, TUp, TComparer>(
             this IStub<IEnumerable<T>, TUp> enumerable, TComparer comparer)
             where TComparer : struct, IComparer<T>
         {
@@ -90,19 +90,19 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        public static OrderedStub<IEnumerable<T>, OrderByDescSelf<TUp>> OrderByDescending<T, TUp>(
+        public static OrderedStub<IEnumerable<T>, OrderDesc<TUp>> OrderDescending<T, TUp>(
             this IStub<IEnumerable<T>, TUp> enumerable)
         {
             throw new NotImplementedException();
         }
 
-        public static OrderedStub<IEnumerable<T>, OrderByDescSelfComparer<TUp>> OrderByDescending<T, TUp>(
+        public static OrderedStub<IEnumerable<T>, OrderDescComparer<TUp>> OrderDescending<T, TUp>(
             this IStub<IEnumerable<T>, TUp> enumerable, IComparer<T> comparer)
         {
             throw new NotImplementedException();
         }
 
-        public static OrderedStub<IEnumerable<T>, OrderByDescSelfStruct<TUp>> OrderByDescending<T, TUp, TComparer>(
+        public static OrderedStub<IEnumerable<T>, OrderDescStruct<TUp>> OrderDescending<T, TUp, TComparer>(
             this IStub<IEnumerable<T>, TUp> enumerable, TComparer comparer)
             where TComparer : struct, IComparer<T>
         {
@@ -134,25 +134,6 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        public static OrderedStub<IEnumerable<T>, ThenBySelf<TUp>> ThenBy<T, TUp>(
-            this IOrderedStub<IEnumerable<T>, TUp> enumerable)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static OrderedStub<IEnumerable<T>, ThenBySelfComparer<TUp>> ThenBy<T, TUp>(
-            this IOrderedStub<IEnumerable<T>, TUp> enumerable, IComparer<T> comparer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static OrderedStub<IEnumerable<T>, ThenBySelfStruct<TUp>> ThenBy<T, TUp, TComparer>(
-            this IOrderedStub<IEnumerable<T>, TUp> enumerable, TComparer comparer)
-            where TComparer : struct, IComparer<T>
-        {
-            throw new NotImplementedException();
-        }
-
         public static OrderedStub<IEnumerable<T>, ThenByDesc<TUp, TKey>> ThenByDescending<T, TUp, TKey>(
             this IOrderedStub<IEnumerable<T>, TUp> enumerable, Func<T, TKey> keySelector)
         {
@@ -174,25 +155,6 @@ namespace Cathei.LinqGen
         public static OrderedStub<IEnumerable<T>, ThenByDescStruct<TUp, TKey>> ThenByDescending<T, TUp, TKey, TComparer>(
             this IOrderedStub<IEnumerable<T>, TUp> enumerable, IStructFunction<T, TKey> keySelector, TComparer comparer)
             where TComparer : struct, IComparer<TKey>
-        {
-            throw new NotImplementedException();
-        }
-
-        public static OrderedStub<IEnumerable<T>, ThenByDescSelf<TUp>> ThenByDescending<T, TUp>(
-            this IOrderedStub<IEnumerable<T>, TUp> enumerable)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static OrderedStub<IEnumerable<T>, ThenByDescSelfComparer<TUp>> ThenByDescending<T, TUp>(
-            this IOrderedStub<IEnumerable<T>, TUp> enumerable, IComparer<T> comparer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static OrderedStub<IEnumerable<T>, ThenByDescSelfStruct<TUp>> ThenByDescending<T, TUp, TComparer>(
-            this IOrderedStub<IEnumerable<T>, TUp> enumerable, TComparer comparer)
-            where TComparer : struct, IComparer<T>
         {
             throw new NotImplementedException();
         }
