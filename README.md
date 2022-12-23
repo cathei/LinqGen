@@ -1,5 +1,6 @@
-# LinqGen
+# LinqGen ⚡
 [![Nuget](https://img.shields.io/nuget/v/LinqGen)](https://www.nuget.org/packages?q=LinqGen)
+[![openupm](https://img.shields.io/npm/v/com.cathei.linqgen?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.cathei.linqgen/)
 [![Discord](https://img.shields.io/discord/942240862354702376?color=%235865F2&label=discord&logo=discord&logoColor=%23FFFFFF)](https://discord.gg/kpuRTkpeQC)
 
 ## Linq meets Source Generator
@@ -18,9 +19,13 @@ Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as li
 </ItemGroup>
 ```
 
-For Unity, you can install as Unity package.
+For Unity, you can install as git package from Unity Package Manager.
 ```
 https://github.com/cathei/LinqGen.git?path=LinqGen.Unity/Packages/com.cathei.linqgen#v0.1.0
+```
+Or install via OpenUPM.
+```
+openupm add com.cathei.linqgen
 ```
 
 ### Any questions?
