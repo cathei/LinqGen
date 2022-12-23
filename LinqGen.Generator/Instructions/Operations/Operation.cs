@@ -21,9 +21,11 @@ namespace Cathei.LinqGen.Generator
     {
         protected Operation(in LinqGenExpression expression, int id) : base(expression, id) { }
 
-        public override void SetUpstream(Generation upstream)
+        public override void AddUpstream(Generation upstream)
         {
-            base.Upstream = upstream;
+            base.Upstreams ??= new List<Generation>();
+            base.Upstreams.Add(upstream);
+
             upstream.AddDownstream(this);
         }
 
@@ -31,6 +33,11 @@ namespace Cathei.LinqGen.Generator
         /// Upstream must be assigned for Operations
         /// </summary>
         public new Generation Upstream => base.Upstream!;
+
+        /// <summary>
+        /// Upstreams must be assigned for Operations
+        /// </summary>
+        public new List<Generation> Upstreams => base.Upstreams!;
 
         public override ITypeSymbol OutputElementSymbol => Upstream.OutputElementSymbol;
         public override TypeSyntax OutputElementType => Upstream.OutputElementType;

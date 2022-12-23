@@ -59,7 +59,7 @@ namespace Cathei.LinqGen.Generator
         public List<Operation>? Downstream { get; private set; }
         public List<Evaluation>? Evaluations { get; private set; }
 
-        public virtual void SetUpstream(Generation upstream)
+        public virtual void AddUpstream(Generation upstream)
         {
             // only operation can have upstream
             throw new NotSupportedException();

@@ -20,12 +20,12 @@ namespace Cathei.LinqGen.Generator
     /// </summary>
     public abstract class Instruction
     {
-        public INamedTypeSymbol? UpstreamSignatureSymbol { get; }
+        public INamedTypeSymbol[]? UpstreamSignatureSymbols { get; }
         public string Id { get; }
 
         protected Instruction(in LinqGenExpression expression, int id)
         {
-            UpstreamSignatureSymbol = expression.UpstreamSignatureSymbol;
+            UpstreamSignatureSymbols = expression.UpstreamSignatureSymbols;
             Id = Base62.Encode(id);
         }
 
@@ -39,7 +39,9 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public abstract MethodKind MethodKind { get; }
 
-        public Generation? Upstream { get; protected set; }
+        public Generation? Upstream => Upstreams?[0];
+
+        public List<Generation>? Upstreams { get; protected set; }
 
         private NameSyntax? _upstreamResolvedClassName;
 

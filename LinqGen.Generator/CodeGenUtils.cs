@@ -92,6 +92,39 @@ namespace Cathei.LinqGen.Generator
             return true;
         }
 
+        public static bool TryParseStubMethod(IMethodSymbol methodSymbol,
+            out ITypeSymbol inputElementSymbol, out INamedTypeSymbol[] signatureSymbols)
+        {
+            if (methodSymbol.ReceiverType is not INamedTypeSymbol receiverTypeSymbol ||
+                !TryParseStubInterface(receiverTypeSymbol, out inputElementSymbol, out var receiverSignatureSymbol))
+            {
+                inputElementSymbol = default!;
+                signatureSymbols = default!;
+                return false;
+            }
+
+            var signatureSymbolsList = new List<INamedTypeSymbol> { receiverSignatureSymbol };
+
+            foreach (var param in methodSymbol.Parameters)
+            {
+                if (param.Type is not INamedTypeSymbol stubSymbol || !IsInputStubEnumerable(stubSymbol))
+                    continue;
+
+                // stub enumerable must not contain generic signature type
+                if (!TryParseStubInterface(stubSymbol, out _, out var paramSignatureSymbol))
+                {
+                    inputElementSymbol = default!;
+                    signatureSymbols = default!;
+                    return false;
+                }
+
+                signatureSymbolsList.Add(paramSignatureSymbol);
+            }
+
+            signatureSymbols = signatureSymbolsList.ToArray();
+            return true;
+        }
+
         // known type names
         public static readonly PredefinedTypeSyntax VoidType = PredefinedType(Token(SyntaxKind.VoidKeyword));
         public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));

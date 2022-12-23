@@ -57,4 +57,6 @@ namespace Cathei.LinqGen.Hidden
     public abstract class DistinctComparer<TUp> : IStubSignature { }
 
     public abstract class DistinctStruct<TUp> : IStubSignature { }
+
+    public abstract class Concat<TUp1, TUp2> : IStubSignature { }
 }

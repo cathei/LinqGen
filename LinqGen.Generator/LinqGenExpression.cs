@@ -19,15 +19,15 @@ namespace Cathei.LinqGen.Generator
         public IMethodSymbol MethodSymbol { get; }
         public INamedTypeSymbol? SignatureSymbol { get; }
         public ITypeSymbol? InputElementSymbol { get; }
-        public INamedTypeSymbol? UpstreamSignatureSymbol { get; }
+        public INamedTypeSymbol[]? UpstreamSignatureSymbols { get; }
 
         private LinqGenExpression(IMethodSymbol methodSymbol, INamedTypeSymbol? signatureSymbol,
-            ITypeSymbol? inputElementSymbol, INamedTypeSymbol? upstreamSignatureSymbol)
+            ITypeSymbol? inputElementSymbol, INamedTypeSymbol[]? upstreamSignatureSymbols)
         {
             MethodSymbol = methodSymbol;
             SignatureSymbol = signatureSymbol;
             InputElementSymbol = inputElementSymbol;
-            UpstreamSignatureSymbol = upstreamSignatureSymbol;
+            UpstreamSignatureSymbols = upstreamSignatureSymbols;
         }
 
         public static bool TryParse(SemanticModel semanticModel,
@@ -66,16 +66,15 @@ namespace Cathei.LinqGen.Generator
             }
 
             ITypeSymbol? inputElementSymbol = null;
-            INamedTypeSymbol? upstreamSignatureSymbol = null;
+            INamedTypeSymbol[]? upstreamSignatureSymbols = null;
 
             // this means it takes LinqGen enumerable as input, and upstream type is required
             if (methodSymbol.ReceiverType is INamedTypeSymbol receiverTypeSymbol &&
                 IsInputStubEnumerable(receiverTypeSymbol))
             {
-                if (!TryParseStubInterface(receiverTypeSymbol, out inputElementSymbol, out upstreamSignatureSymbol))
+                if (!TryParseStubMethod(methodSymbol, out inputElementSymbol, out upstreamSignatureSymbols))
                 {
-                    // How did this happen?
-                    // TODO: Can we allow generic constrained upstream type?
+                    // How did this happen? Was signature generic?
                     return false;
                 }
             }
@@ -89,11 +88,11 @@ namespace Cathei.LinqGen.Generator
             if (signatureSymbol != null)
                 signatureSymbol = NormalizeSignature(signatureSymbol);
 
-            if (upstreamSignatureSymbol != null)
-                upstreamSignatureSymbol = NormalizeSignature(upstreamSignatureSymbol);
+            if (upstreamSignatureSymbols != null)
+                upstreamSignatureSymbols = upstreamSignatureSymbols.Select(NormalizeSignature).ToArray();
 
             result = new LinqGenExpression(
-                methodSymbol, signatureSymbol, inputElementSymbol, upstreamSignatureSymbol);
+                methodSymbol, signatureSymbol, inputElementSymbol, upstreamSignatureSymbols);
 
             return true;
         }
@@ -132,13 +131,15 @@ namespace Cathei.LinqGen.Generator
                 }
             }
 
-            if (inputElementSymbol == null)
+            if (inputElementSymbol == null || upstreamSignatureSymbol == null)
             {
                 // evaluations must have known input element symbol
                 return false;
             }
 
-            result = new LinqGenExpression(methodSymbol, null, inputElementSymbol, upstreamSignatureSymbol);
+            result = new LinqGenExpression(
+                methodSymbol, null, inputElementSymbol, new[] { NormalizeSignature(upstreamSignatureSymbol) });
+
             return true;
         }
 

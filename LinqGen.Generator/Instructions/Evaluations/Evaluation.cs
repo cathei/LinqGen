@@ -41,9 +41,11 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// Evaluation should not rendered individually. Instead it will be rendered with upstream.
         /// </summary>
-        public void SetUpstream(Generation upstream)
+        public void AddUpstream(Generation upstream)
         {
-            base.Upstream = upstream;
+            base.Upstreams ??= new List<Generation>();
+            base.Upstreams.Add(upstream);
+
             Upstream.AddEvaluation(this);
         }
 
@@ -51,6 +53,11 @@ namespace Cathei.LinqGen.Generator
         /// Upstream must be assigned for Evaluations
         /// </summary>
         public new Generation Upstream => base.Upstream!;
+
+        /// <summary>
+        /// Upstreams must be assigned for Evaluations
+        /// </summary>
+        public new List<Generation> Upstreams => base.Upstreams!;
 
         public virtual IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
         {
