@@ -6310,6 +6310,1446 @@ public class ThenByDescStruct_Tests
     }
 }
 [TestFixture]
+public class GroupBy_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3).Select(x => x.Sum());
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3).Select(x => x.Sum());
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3).Select(x => x.Sum());
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3).Select(x => x.Sum());
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class GroupByComparer_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class GroupByElement_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class GroupByElementComparer_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class GroupByResult_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, (k, v) => v.Sum());
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, (k, v) => v.Sum());
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, (k, v) => v.Sum());
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, (k, v) => v.Sum());
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class GroupByResultComparer_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class GroupByElementResult_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class GroupByElementResultComparer_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
 public class Cast_Tests
 {
 

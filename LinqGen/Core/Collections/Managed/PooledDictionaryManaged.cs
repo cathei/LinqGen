@@ -42,6 +42,12 @@ namespace Cathei.LinqGen.Hidden
             _buckets.Clear();
         }
 
+        public int Count
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _count;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int GetHashCode(TKey item)
         {

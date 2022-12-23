@@ -6,7 +6,7 @@ namespace Cathei.LinqGen.Hidden
     {
         internal int HashCode;
         internal int Next; // index of next entry, -1 if last
-        internal TKey Key;
-        internal TValue Value;
+        public TKey Key;
+        public TValue Value;
     }
 }

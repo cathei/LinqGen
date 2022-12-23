@@ -7,7 +7,8 @@ using System.Runtime.CompilerServices;
 
 namespace Cathei.LinqGen.Hidden
 {
-    public struct GroupingManaged<TKey, TValue> : IGrouping<TKey, TValue>
+    public struct GroupingManaged<TKey, TValue>
+        : IGrouping<TKey, TValue>, IStructEnumerable<TValue, GroupingManaged<TKey, TValue>.Enumerator>
     {
         private TKey _key;
         private TValue[] _values;
@@ -58,7 +59,9 @@ namespace Cathei.LinqGen.Hidden
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public void Dispose() { }
+            public void Dispose()
+            {
+            }
 
             public void Reset() => throw new NotSupportedException();
 

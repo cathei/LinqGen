@@ -7,7 +7,8 @@ using System.Runtime.CompilerServices;
 
 namespace Cathei.LinqGen.Hidden
 {
-    public struct GroupingNative<TKey, TValue> : IGrouping<TKey, TValue>
+    public struct GroupingNative<TKey, TValue>
+        : IGrouping<TKey, TValue>, IStructEnumerable<TValue, GroupingNative<TKey, TValue>.Enumerator>
         where TKey : unmanaged
         where TValue : unmanaged
     {

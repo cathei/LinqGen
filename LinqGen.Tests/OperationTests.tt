@@ -65,9 +65,66 @@
             "OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)", intSources),
         ("ThenByDescStruct", "OrderBy(x => x % 3).ThenByDescending(x => -x)",
             "OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())", intSources),
+        ("GroupBy",
+            "GroupBy(x => x % 3).Select(x => x.Sum())",
+            "GroupBy(x => x % 3).Select(x => x.Sum())", intSources),
+        ("GroupByComparer",
+            "GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())",
+            "GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())", intSources),
+        ("GroupByElement",
+            "GroupBy(x => x % 3, x => x).Select(x => x.Sum())",
+            "GroupBy(x => x % 3, x => x).Select(x => x.Sum())", intSources),
+        ("GroupByElementComparer",
+            "GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())",
+            "GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())", intSources),
+        ("GroupByResult",
+            "GroupBy(x => x % 3, (k, v) => v.Sum())",
+            "GroupBy(x => x % 3, (k, v) => v.Sum())", intSources),
+        ("GroupByResultComparer",
+            "GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)",
+            "GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)", intSources),
+        ("GroupByElementResult",
+            "GroupBy(x => x % 3, x => x, (k, v) => v.Sum())",
+            "GroupBy(x => x % 3, x => x, (k, v) => v.Sum())", intSources),
+        ("GroupByElementResultComparer",
+            "GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)",
+            "GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)", intSources),
         ("Cast", "Cast<string>()", "Cast<string>()", castSources),
         ("OfType", "OfType<string>()", "OfType<string>()", castSources),
     };
+    /*
+    public abstract class GroupBy<TUp, TKey> : IStubSignature { }
+
+    public abstract class GroupByComparer<TUp, TKey> : IStubSignature { }
+
+    public abstract class GroupByElement<TUp, TKey, TElement> : IStubSignature { }
+
+    public abstract class GroupByElementComparer<TUp, TKey, TElement> : IStubSignature { }
+
+    public abstract class GroupByResult<TUp, TKey, TResult> : IStubSignature { }
+
+    public abstract class GroupByResultComparer<TUp, TKey, TResult> : IStubSignature { }
+
+    public abstract class GroupByElementResult<TUp, TKey, TElement, TResult> : IStubSignature { }
+
+    public abstract class GroupByElementResultComparer<TUp, TKey, TElement, TResult> : IStubSignature { }
+
+    public abstract class GroupByStruct<TUp, TKey> : IStubSignature { }
+
+    public abstract class GroupByStructComparer<TUp, TKey> : IStubSignature { }
+
+    public abstract class GroupByStructElement<TUp, TKey, TElement> : IStubSignature { }
+
+    public abstract class GroupByStructElementComparer<TUp, TKey, TElement> : IStubSignature { }
+
+    public abstract class GroupByStructResult<TUp, TKey, TResult> : IStubSignature { }
+
+    public abstract class GroupByStructResultComparer<TUp, TKey, TResult> : IStubSignature { }
+
+    public abstract class GroupByStructElementResult<TUp, TKey, TElement, TResult> : IStubSignature { }
+
+    public abstract class GroupByStructElementResultComparer<TUp, TKey, TElement, TResult> : IStubSignature { }
+     */
 #>
 
 using System;

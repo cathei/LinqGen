@@ -17,7 +17,6 @@ namespace Cathei.LinqGen.Generator
     {
         private const string LinqGenAssemblyName = "LinqGen";
         private const string LinqGenStubExtensionsTypeName = "StubExtensions";
-        private const string LinqGenStubNativeExtensionsTypeName = "StubNativeExtensions";
 
         private const string LinqGenStubEnumerableTypeName = "Stub`2";
         private const string LinqGenStubInterfaceTypeName = "IStub`2";
@@ -38,7 +37,7 @@ namespace Cathei.LinqGen.Generator
         {
             // is it member of extension class or member of stub enumerable?
             return symbol.ContainingAssembly.Name == LinqGenAssemblyName && symbol.ContainingType.MetadataName is
-                LinqGenStubExtensionsTypeName or LinqGenStubEnumerableTypeName or LinqGenStubNativeExtensionsTypeName;
+                LinqGenStubExtensionsTypeName or LinqGenStubEnumerableTypeName;
         }
 
         public static bool IsOutputStubEnumerable(INamedTypeSymbol symbol)
@@ -106,7 +105,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax GetEnumeratorMethod = IdentifierName("GetEnumerator");
         public static readonly IdentifierNameSyntax AddMethod = IdentifierName("Add");
         public static readonly IdentifierNameSyntax CountMethod = IdentifierName("Count");
-        public static readonly IdentifierNameSyntax GetOrDefaultMethod = IdentifierName("GetOrDefault");
+        public static readonly IdentifierNameSyntax GetOrCreateMethod = IdentifierName("GetOrCreate");
         public static readonly IdentifierNameSyntax CompareMethod = IdentifierName("Compare");
         public static readonly IdentifierNameSyntax CompareToMethod = IdentifierName("CompareTo");
         public static readonly IdentifierNameSyntax VisitMethod = IdentifierName("Visit");
@@ -115,7 +114,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax CurrentProperty = IdentifierName("Current");
         public static readonly IdentifierNameSyntax CountProperty = IdentifierName("Count");
         public static readonly IdentifierNameSyntax LengthProperty = IdentifierName("Length");
-        public static readonly IdentifierNameSyntax HasValueProperty = IdentifierName("HasValue");
+        public static readonly IdentifierNameSyntax KeyProperty = IdentifierName("Key");
         public static readonly IdentifierNameSyntax ValueProperty = IdentifierName("Value");
 
         // custom variable names
@@ -529,14 +528,14 @@ namespace Cathei.LinqGen.Generator
             return GenericName(Identifier("IEnumerator"), TypeArgumentList(elementType));
         }
 
-        public static TypeSyntax FuncDelegateType(TypeSyntax inputType, TypeSyntax resultType)
+        public static TypeSyntax FuncDelegateType(params TypeSyntax[] typeArguments)
         {
-            return GenericName(Identifier("Func"), TypeArgumentList(inputType, resultType));
+            return GenericName(Identifier("Func"), TypeArgumentList(typeArguments));
         }
 
-        public static TypeSyntax StructFunctionInterfaceType(TypeSyntax inputType, TypeSyntax resultType)
+        public static TypeSyntax StructFunctionInterfaceType(params TypeSyntax[] typeArguments)
         {
-            return GenericName(Identifier("IStructFunction"), TypeArgumentList(inputType, resultType));
+            return GenericName(Identifier("IStructFunction"), TypeArgumentList(typeArguments));
         }
 
         private static bool CompareNamespace(ITypeSymbol symbol, string name)

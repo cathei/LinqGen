@@ -24,12 +24,17 @@ namespace Cathei.LinqGen.Generator
 
         protected Generation(in LinqGenExpression expression, int id) : base(expression, id)
         {
+            // File name has to use integer id
+            FileName = $"LinqGen_{expression.SignatureSymbol!.Name}_{id}.g.cs";
+
             MethodName = IdentifierName(expression.MethodSymbol.Name);
             ClassName = IdentifierName($"{expression.SignatureSymbol!.Name}_{Id}");
         }
 
         public abstract ITypeSymbol OutputElementSymbol { get; }
         public abstract TypeSyntax OutputElementType { get; }
+
+        public string FileName { get; }
 
         /// <summary>
         /// The qualified class name cached for rendering
@@ -83,7 +88,7 @@ namespace Cathei.LinqGen.Generator
 
             if (countExpression != null)
             {
-                yield return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), default,
+                yield return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList,
                     IntType, null, CountMethod.Identifier, null, EmptyParameterList, default, null,
                     ArrowExpressionClause(countExpression), SemicolonToken);
             }

@@ -56,8 +56,8 @@ namespace Cathei.LinqGen.Generator
             if (ResultSelectorKind != FunctionKind.Default)
             {
                 var param = expression.GetNamedParameterType(++paramIndex);
-                // Func<TIn, TOut> or IStructFunction<TIn, TOut>
-                _explicitResultSymbol = param.TypeArguments[1];
+                // Func<TKey, TGroup, TOut> or IStructFunction<TKey, TGroup, TOut>
+                _explicitResultSymbol = param.TypeArguments[2];
                 _explicitResultType = ParseTypeName(_explicitResultSymbol);
             }
 
@@ -115,7 +115,7 @@ namespace Cathei.LinqGen.Generator
         };
 
         private TypeSyntax DictionaryType => PooledDictionaryType(
-            KeyType, Upstream.OutputElementType, ComparerType, IsUnmanaged);
+            KeyType, PooledListType, ComparerType, IsUnmanaged);
 
         private TypeSyntax PooledListType => PooledListType(ValueType, IsUnmanaged);
 
@@ -130,6 +130,8 @@ namespace Cathei.LinqGen.Generator
             FunctionKind.Struct => ResultType,
             _ => throw new ArgumentOutOfRangeException()
         };
+
+        protected override bool ClearsUpstreamEnumerator => true;
 
         public override bool SupportPartition => true;
 
@@ -164,7 +166,7 @@ namespace Cathei.LinqGen.Generator
             if (ResultSelectorKind == FunctionKind.Delegate)
             {
                 yield return new MemberInfo(MemberKind.Both,
-                    FuncDelegateType(GroupingType, ResultType), VarName("keySelector"));
+                    FuncDelegateType(KeyType, GroupingType, ResultType), VarName("resultSelector"));
             }
             else if (ResultSelectorKind == FunctionKind.Struct)
             {
@@ -194,7 +196,7 @@ namespace Cathei.LinqGen.Generator
             if (ResultSelectorKind == FunctionKind.Struct)
             {
                 yield return new TypeParameterInfo(TypeName("ResultSelector"),
-                    StructFunctionInterfaceType(GroupingType, ResultType));
+                    StructFunctionInterfaceType(KeyType, GroupingType, ResultType));
             }
 
             if (ComparerKind == ComparerKind.Struct)
@@ -223,11 +225,10 @@ namespace Cathei.LinqGen.Generator
             foreach (var statement in Upstream.RenderInitialization(true, source, null, null))
                 yield return statement;
 
-            if (ComparerKind == ComparerKind.Default)
-            {
-                yield return LocalDeclarationStatement(ComparerType, VarName("comparer").Identifier,
-                    ComparerDefault(KeyType, KeySymbol));
-            }
+            yield return LocalDeclarationStatement(ComparerType, VarName("comparer").Identifier,
+                ComparerKind == ComparerKind.Default
+                    ? ComparerDefault(KeyType, KeySymbol)
+                    : MemberAccessExpression(sourceName, VarName("comparer")));
 
             yield return ExpressionStatement(SimpleAssignmentExpression(dictName,
                 ObjectCreationExpression(DictionaryType, ArgumentList(
@@ -236,12 +237,12 @@ namespace Cathei.LinqGen.Generator
             ExpressionSyntax keySelectExpression = KeySelectorKind == FunctionKind.Default
                 ? CurrentPlaceholder
                 : InvocationExpression(MemberAccessExpression(
-                    VarName("keySelector"), InvokeMethod), ArgumentList(CurrentPlaceholder));
+                    sourceName, VarName("keySelector"), InvokeMethod), ArgumentList(CurrentPlaceholder));
 
-            ExpressionSyntax valueSelectExpression = KeySelectorKind == FunctionKind.Default
+            ExpressionSyntax valueSelectExpression = ValueSelectorKind == FunctionKind.Default
                 ? CurrentPlaceholder
                 : InvocationExpression(MemberAccessExpression(
-                    VarName("valueSelector"), InvokeMethod), ArgumentList(CurrentPlaceholder));
+                    sourceName, VarName("valueSelector"), InvokeMethod), ArgumentList(CurrentPlaceholder));
 
             var addStatements = new StatementSyntax[]
             {
@@ -249,7 +250,8 @@ namespace Cathei.LinqGen.Generator
                 LocalDeclarationStatement(keyName.Identifier, keySelectExpression),
                 // get or create list from dict
                 LocalDeclarationStatement(default, RefTokenList, VariableDeclaration(listName.Identifier,
-                    InvocationExpression(MemberAccessExpression(dictName, GetOrDefaultMethod), ArgumentList(keyName)))),
+                    RefExpression(InvocationExpression(
+                        MemberAccessExpression(dictName, GetOrCreateMethod), ArgumentList(keyName))))),
                 // if count is 0 here it means that the list is not initialized
                 IfStatement(
                     GreaterOrEqualExpression(LiteralExpression(0), MemberAccessExpression(listName, CountProperty)),
@@ -267,6 +269,10 @@ namespace Cathei.LinqGen.Generator
 
             yield return ExpressionStatement(SimpleAssignmentExpression(VarName("index"),
                 skipVar != null ? SubtractExpression(skipVar, LiteralExpression(1)) : LiteralExpression(-1)));
+
+            // TODO try block
+            foreach (var statement in Upstream.RenderDispose(true))
+                yield return statement;
         }
 
         public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
@@ -293,7 +299,8 @@ namespace Cathei.LinqGen.Generator
                 ResultSelectorKind == FunctionKind.Default
                     ? LocalDeclarationStatement(currentName.Identifier, groupingName)
                     : LocalDeclarationStatement(currentName.Identifier,
-                        InvocationExpression(VarName("resultSelector"), ArgumentList(groupingName)))
+                        InvocationExpression(VarName("resultSelector"),
+                            ArgumentList(MemberAccessExpression(groupingName, KeyProperty), groupingName)))
             };
 
             statements = statements.InsertRange(0, currentGetStatements);
@@ -304,6 +311,17 @@ namespace Cathei.LinqGen.Generator
                 Block(statements));
 
             return Block(result);
+        }
+
+        public override IEnumerable<StatementSyntax> RenderDispose(bool isLocal)
+        {
+            yield return ForStatement(VarName("i"), LiteralExpression(0),
+                MemberAccessExpression(VarName("dict"), CountProperty),
+                ExpressionStatement(InvocationExpression(ElementAccessExpression(
+                        MemberAccessExpression(VarName("dict"), IdentifierName("Slots")), VarName("i")),
+                    ValueProperty, DisposeMethod)));
+
+            yield return ExpressionStatement(InvocationExpression(VarName("dict"), DisposeMethod));
         }
     }
 }
