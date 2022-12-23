@@ -12,13 +12,15 @@ It aims to make allocation-free, specialized Linq queries per your type.
 Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as library and [LinqGen.Generator](https://www.nuget.org/packages/LinqGen.Generator) as source generator.
 
 ```xml
-    <PackageReference Include="LinqGen" Version="0.0.4-preview" />
-    <PackageReference Include="LinqGen.Generator" Version="0.0.4-preview" />
+<ItemGroup>
+    <PackageReference Include="LinqGen" Version="0.1.0" />
+    <PackageReference Include="LinqGen.Generator" Version="0.1.0" />
+</ItemGroup>
 ```
 
 For Unity, you can install as Unity package.
 ```
-https://github.com/cathei/LinqGen.git?path=LinqGen.Unity/Packages/com.cathei.linqgen#v0.0.4-preview
+https://github.com/cathei/LinqGen.git?path=LinqGen.Unity/Packages/com.cathei.linqgen#v0.1.0
 ```
 
 ### Any questions?
@@ -79,7 +81,7 @@ The `LinqGen` assembly contains a stub method and types, which helps you autocom
 After you write a Linq query with stub methods, then `LinqGen.Generator` runs and replace the stub methods with generated methods.
 
 How is it possible, while modifying user code is not allowed with source generators?
-It's because everything `LinqGen.Generator` generates designed to be precede over stub methods on [overload resolution](https://learn.microsoft.com/en-us/dotnet/visual-basic/reference/language-specification/overload-resolution).
+It's because everything `LinqGen.Generator` generates designed to be precede over stub methods on [overload resolution](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#11782-method-invocations).
 
 ## Does LinqGen works with Unity Burst compiler?
 
@@ -100,8 +102,8 @@ public struct LinqGenSampleJob : IJob
         int index = 0;
 
         foreach (var item in Input.Specialize()
-                                  .Select(new Selector())
-                                  .OrderBy(new Comparer()))
+                     .Select(new Selector())
+                     .Order(new Comparer()))
         {
             Output[index++] = item;
         }
@@ -119,9 +121,6 @@ public struct Comparer : IComparer<int>
 }
 ```
 
-### Current limitation with Burst (to-be-fixed)
-* Only `NativeArray<T>` and `NativeSlice<T>` is supported for struct enumeration. 
-
 ## Supported methods (working-in-progress)
 ### Generations
 * Empty
@@ -131,24 +130,21 @@ public struct Comparer : IComparer<int>
 ### Operations
 * Select
 * Where
-* Cast
-* OfType
-* Skip
-* Take
+* Cast, OfType
+* Skip, Take
 * Distinct
-* OrderBy, OrderByDescending
+* Order, OrderBy, OrderByDescending
 * ThenBy, ThenByDescending
+* GroupBy
 
 ### Evaluations
-* First
-* FirstOrDefault
-* Last
-* LastOrDefault
+* ToArray, ToList
+* First, FirstOrDefault
+* Last, LastOrDefault
 * Count
 * Sum
   * Supports duck typing with `+` operator overload
-* Min
-* Max
+* Min, Max
 
 ### Etc
 * Specialize
@@ -158,6 +154,7 @@ public struct Comparer : IComparer<int>
 
 ## Limitations
 * Element or key types that used with LinqGen must have at least `internal` accessibility.
+* Struct enumerable should implement `IStructEnumerable<,>` interface.
 * LinqGen queries should be treated as anonymous type, it cannot be used as return value or instance member. If you have these needs, use `AsEnumerable()` to convert.
 * LinqGen may not work well when `[InternalsVisibleTo]` is used while both assemblies are using LinqGen. It can be solved when [this language feature](https://github.com/dotnet/csharplang/issues/6794) is implemented.
 
