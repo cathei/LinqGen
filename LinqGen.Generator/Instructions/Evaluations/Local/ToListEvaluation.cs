@@ -28,7 +28,7 @@ namespace Cathei.LinqGen.Generator
             if (Upstream.SupportCount)
             {
                 yield return LocalDeclarationStatement(VarName("list").Identifier, ObjectCreationExpression(
-                    ReturnType, ArgumentList(CountProperty), null));
+                    ReturnType, ArgumentList(InvocationExpression(CountMethod)), null));
             }
             else
             {

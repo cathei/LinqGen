@@ -59,7 +59,7 @@ namespace Cathei.LinqGen.Generator
             if (upstreamCount == null)
                 return null;
 
-            return MathMin(upstreamCount, VarName("take"));
+            return MathMin(ParenthesizedExpression(upstreamCount), VarName("take"));
         }
 
         protected override StatementSyntax? RenderMoveNext()

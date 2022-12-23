@@ -126,6 +126,8 @@ namespace Cathei.LinqGen.Generator
                 case "DistinctStruct":
                     return new DistinctOperation(expression, id, ComparerKind.Struct);
 
+                #region OrderBy
+
                 case "OrderBy":
                     return new OrderByOperation(expression, id, FunctionKind.Delegate, ComparerKind.Default, false);
 
@@ -191,6 +193,76 @@ namespace Cathei.LinqGen.Generator
 
                 case "ThenByDescStruct":
                     return new ThenByOperation(expression, id, FunctionKind.Struct, ComparerKind.Struct, true);
+
+                #endregion OrderBy
+
+                #region GroupBy
+
+                case "GroupBy":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Delegate, FunctionKind.Default, FunctionKind.Default, ComparerKind.Default);
+
+                case "GroupByComparer":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Delegate, FunctionKind.Default, FunctionKind.Default, ComparerKind.Interface);
+
+                case "GroupByElement":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Delegate, FunctionKind.Delegate, FunctionKind.Default, ComparerKind.Default);
+
+                case "GroupByElementComparer":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Delegate, FunctionKind.Delegate, FunctionKind.Default, ComparerKind.Interface);
+
+                case "GroupByResult":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Delegate, FunctionKind.Default, FunctionKind.Delegate, ComparerKind.Default);
+
+                case "GroupByResultComparer":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Delegate, FunctionKind.Default, FunctionKind.Delegate, ComparerKind.Interface);
+
+                case "GroupByElementResult":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Delegate, FunctionKind.Delegate, FunctionKind.Delegate, ComparerKind.Default);
+
+                case "GroupByElementResultComparer":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Delegate, FunctionKind.Delegate, FunctionKind.Delegate, ComparerKind.Interface);
+
+                case "GroupByStruct":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Struct, FunctionKind.Default, FunctionKind.Default, ComparerKind.Default);
+
+                case "GroupByStructComparer":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Struct, FunctionKind.Default, FunctionKind.Default, ComparerKind.Struct);
+
+                case "GroupByStructElement":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Struct, FunctionKind.Struct, FunctionKind.Default, ComparerKind.Default);
+
+                case "GroupByStructElementComparer":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Struct, FunctionKind.Struct, FunctionKind.Default, ComparerKind.Struct);
+
+                case "GroupByStructResult":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Struct, FunctionKind.Default, FunctionKind.Struct, ComparerKind.Default);
+
+                case "GroupByStructResultComparer":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Struct, FunctionKind.Default, FunctionKind.Struct, ComparerKind.Struct);
+
+                case "GroupByStructElementResult":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Struct, FunctionKind.Struct, FunctionKind.Struct, ComparerKind.Default);
+
+                case "GroupByStructElementResultComparer":
+                    return new GroupByOperation(expression, id,
+                        FunctionKind.Struct, FunctionKind.Struct, FunctionKind.Struct, ComparerKind.Struct);
+
+                #endregion GroupBy
             }
 
             // not yet implemented

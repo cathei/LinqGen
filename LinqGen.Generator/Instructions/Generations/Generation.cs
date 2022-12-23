@@ -83,13 +83,9 @@ namespace Cathei.LinqGen.Generator
 
             if (countExpression != null)
             {
-                var getAccessor = AccessorDeclaration(SyntaxKind.GetAccessorDeclaration,
-                    SingletonList(AggressiveInliningAttributeList), default, GetKeywordToken,
+                yield return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), default,
+                    IntType, null, CountMethod.Identifier, null, EmptyParameterList, default, null,
                     ArrowExpressionClause(countExpression), SemicolonToken);
-
-                yield return PropertyDeclaration(IntType, CountProperty.Identifier)
-                    .WithModifiers(PublicTokenList)
-                    .WithAccessorList(AccessorList(SingletonList(getAccessor)));
             }
 
             if (Downstream != null)

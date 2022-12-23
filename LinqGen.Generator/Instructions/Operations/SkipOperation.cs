@@ -48,7 +48,8 @@ namespace Cathei.LinqGen.Generator
             if (upstreamCount == null)
                 return null;
 
-            return MathMax(SubtractExpression(upstreamCount, VarName("skip")), LiteralExpression(0));
+            return MathMax(SubtractExpression(
+                ParenthesizedExpression(upstreamCount), VarName("skip")), LiteralExpression(0));
         }
 
         protected override StatementSyntax? RenderMoveNext()

@@ -17,7 +17,7 @@ namespace Cathei.LinqGen.Generator
     {
         private const string LinqGenAssemblyName = "LinqGen";
         private const string LinqGenStubExtensionsTypeName = "StubExtensions";
-        private const string LinqGenGenEnumerableTypeName = "GenEnumerable";
+        private const string LinqGenStubNativeExtensionsTypeName = "StubNativeExtensions";
 
         private const string LinqGenStubEnumerableTypeName = "Stub`2";
         private const string LinqGenStubInterfaceTypeName = "IStub`2";
@@ -37,25 +37,22 @@ namespace Cathei.LinqGen.Generator
         public static bool IsStubMethod(IMethodSymbol symbol)
         {
             // is it member of extension class or member of stub enumerable?
-            return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.ContainingType.MetadataName is
-                       LinqGenStubExtensionsTypeName or LinqGenStubEnumerableTypeName;
+            return symbol.ContainingAssembly.Name == LinqGenAssemblyName && symbol.ContainingType.MetadataName is
+                LinqGenStubExtensionsTypeName or LinqGenStubEnumerableTypeName or LinqGenStubNativeExtensionsTypeName;
         }
 
         public static bool IsOutputStubEnumerable(INamedTypeSymbol symbol)
         {
             // is return type defined for method is stub enumerable or boxed IEnumerable?
-            return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.MetadataName is
-                       LinqGenStubEnumerableTypeName or LinqGenOrderedStubEnumerableTypeName;
+            return symbol.ContainingAssembly.Name == LinqGenAssemblyName && symbol.MetadataName is
+                LinqGenStubEnumerableTypeName or LinqGenOrderedStubEnumerableTypeName;
         }
 
         public static bool IsInputStubEnumerable(INamedTypeSymbol symbol)
         {
             // is input parameter defined for method is stub interface or stub enumerable?
-            return symbol.ContainingAssembly.Name == LinqGenAssemblyName &&
-                   symbol.MetadataName is LinqGenStubInterfaceTypeName or
-                       LinqGenStubEnumerableTypeName or LinqGenOrderedStubInterfaceTypeName;
+            return symbol.ContainingAssembly.Name == LinqGenAssemblyName && symbol.MetadataName is
+                LinqGenStubInterfaceTypeName or LinqGenStubEnumerableTypeName or LinqGenOrderedStubInterfaceTypeName;
         }
 
         public static bool IsStructFunction(ITypeSymbol symbol)
@@ -108,6 +105,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax DisposeMethod = IdentifierName("Dispose");
         public static readonly IdentifierNameSyntax GetEnumeratorMethod = IdentifierName("GetEnumerator");
         public static readonly IdentifierNameSyntax AddMethod = IdentifierName("Add");
+        public static readonly IdentifierNameSyntax CountMethod = IdentifierName("Count");
         public static readonly IdentifierNameSyntax GetOrDefaultMethod = IdentifierName("GetOrDefault");
         public static readonly IdentifierNameSyntax CompareMethod = IdentifierName("Compare");
         public static readonly IdentifierNameSyntax CompareToMethod = IdentifierName("CompareTo");
@@ -310,8 +308,7 @@ namespace Cathei.LinqGen.Generator
             TypeSyntax type, SyntaxToken identifier, ExpressionSyntax initialValue)
         {
             return SyntaxFactory.LocalDeclarationStatement(
-                SyntaxFactory.VariableDeclaration(type, SingletonSeparatedList(
-                    VariableDeclarator(identifier, null, EqualsValueClause(initialValue)))));
+                VariableDeclaration(type, identifier, initialValue));
         }
 
         public static LocalDeclarationStatementSyntax LocalDeclarationStatement(
@@ -324,7 +321,13 @@ namespace Cathei.LinqGen.Generator
         public static VariableDeclarationSyntax VariableDeclaration(
             SyntaxToken identifier, ExpressionSyntax initialValue)
         {
-            return SyntaxFactory.VariableDeclaration(VarType, SingletonSeparatedList(
+            return VariableDeclaration(VarType, identifier, initialValue);
+        }
+
+        public static VariableDeclarationSyntax VariableDeclaration(
+            TypeSyntax type, SyntaxToken identifier, ExpressionSyntax initialValue)
+        {
+            return SyntaxFactory.VariableDeclaration(type, SingletonSeparatedList(
                 VariableDeclarator(identifier, default, EqualsValueClause(initialValue))));
         }
 
@@ -524,6 +527,11 @@ namespace Cathei.LinqGen.Generator
         public static TypeSyntax EnumeratorInterfaceType(TypeSyntax elementType)
         {
             return GenericName(Identifier("IEnumerator"), TypeArgumentList(elementType));
+        }
+
+        public static TypeSyntax FuncDelegateType(TypeSyntax inputType, TypeSyntax resultType)
+        {
+            return GenericName(Identifier("Func"), TypeArgumentList(inputType, resultType));
         }
 
         public static TypeSyntax StructFunctionInterfaceType(TypeSyntax inputType, TypeSyntax resultType)

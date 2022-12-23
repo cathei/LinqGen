@@ -54,6 +54,12 @@ namespace Cathei.LinqGen.Hidden
             return (uint)hashCode % (uint)size;
         }
 
+        public PooledDictionarySlot<TKey, TValue>[] Slots
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _slots;
+        }
+
         private void IncreaseCapacity()
         {
             int newSize = HashHelpers.ExpandPrime(_count);

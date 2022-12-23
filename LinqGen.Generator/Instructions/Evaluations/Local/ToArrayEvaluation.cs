@@ -29,7 +29,8 @@ namespace Cathei.LinqGen.Generator
             {
                 yield return LocalDeclarationStatement(VarName("array").Identifier,
                     ObjectCreationExpression(ArrayType(Upstream.OutputElementType,
-                        SingletonList(ArrayRankSpecifier(SingletonSeparatedList((ExpressionSyntax)CountProperty))))));
+                        SingletonList(ArrayRankSpecifier(SingletonSeparatedList(
+                            (ExpressionSyntax)InvocationExpression(CountMethod)))))));
 
                 yield return LocalDeclarationStatement(VarName("index").Identifier, LiteralExpression(-1));
             }

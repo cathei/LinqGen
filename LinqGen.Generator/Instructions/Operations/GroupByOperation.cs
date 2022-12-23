@@ -29,9 +29,6 @@ namespace Cathei.LinqGen.Generator
             FunctionKind keySelectorKind, FunctionKind valueSelectorKind, FunctionKind resultSelectorKind,
             ComparerKind comparerKind) : base(expression, id)
         {
-            KeySymbol = expression.SignatureSymbol!.TypeArguments[1];
-            KeyType = ParseTypeName(KeySymbol);
-
             KeySelectorKind = keySelectorKind;
             ValueSelectorKind = valueSelectorKind;
             ResultSelectorKind = resultSelectorKind;
@@ -39,50 +36,81 @@ namespace Cathei.LinqGen.Generator
 
             int paramIndex = -1;
 
-            if (KeySelectorKind != FunctionKind.Default)
+            // NOTE: key selector should always exist
+            if (true) // KeySelectorKind != FunctionKind.Default)
             {
                 var param = expression.GetNamedParameterType(++paramIndex);
                 // Func<TIn, TOut> or IStructFunction<TIn, TOut>
-                param.TypeArguments[1];
-
+                KeySymbol = param.TypeArguments[1];
+                KeyType = ParseTypeName(KeySymbol);
             }
 
             if (ValueSelectorKind != FunctionKind.Default)
             {
                 var param = expression.GetNamedParameterType(++paramIndex);
-
+                // Func<TIn, TOut> or IStructFunction<TIn, TOut>
+                _explicitValueSymbol = param.TypeArguments[1];
+                _explicitValueType = ParseTypeName(_explicitValueSymbol);
             }
 
             if (ResultSelectorKind != FunctionKind.Default)
             {
                 var param = expression.GetNamedParameterType(++paramIndex);
-
+                // Func<TIn, TOut> or IStructFunction<TIn, TOut>
+                _explicitResultSymbol = param.TypeArguments[1];
+                _explicitResultType = ParseTypeName(_explicitResultSymbol);
             }
+
+            // IStub<IEnumerable<Element>, ...>
+            var returnType = (INamedTypeSymbol)expression.MethodSymbol.ReturnType;
+            var enumerableType = (INamedTypeSymbol)returnType.TypeArguments[0];
+            OutputElementSymbol = enumerableType.TypeArguments[0];
         }
 
         private bool IsUnmanaged => KeySymbol.IsUnmanagedType && ValueSymbol.IsUnmanagedType;
 
         private TypeSyntax ComparerType => ComparerKind switch
         {
-            ComparerKind.Default => ComparerDefaultType(KeyType, KeySymbol),
-            ComparerKind.Interface => ComparerInterfaceType(KeyType),
+            ComparerKind.Default => EqualityComparerDefaultType(KeyType, KeySymbol),
+            ComparerKind.Interface => EqualityComparerInterfaceType(KeyType),
             ComparerKind.Struct => TypeName("Comparer"),
             _ => throw new ArgumentOutOfRangeException()
         };
 
+
+        private readonly ITypeSymbol? _explicitValueSymbol;
         private ITypeSymbol ValueSymbol => ValueSelectorKind switch
         {
             FunctionKind.Default => Upstream.OutputElementSymbol,
-            FunctionKind.Delegate => expr,
-            FunctionKind.Struct => expr,
+            FunctionKind.Delegate => _explicitValueSymbol!,
+            FunctionKind.Struct => _explicitValueSymbol!,
             _ => throw new ArgumentOutOfRangeException()
         };
 
+        private readonly TypeSyntax? _explicitValueType;
         private TypeSyntax ValueType => ValueSelectorKind switch
         {
             FunctionKind.Default => Upstream.OutputElementType,
-            FunctionKind.Delegate => expr,
-            FunctionKind.Struct => expr,
+            FunctionKind.Delegate => _explicitValueType!,
+            FunctionKind.Struct => _explicitValueType!,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private readonly ITypeSymbol? _explicitResultSymbol;
+        private ITypeSymbol ResultSymbol => ResultSelectorKind switch
+        {
+            FunctionKind.Default => Upstream.OutputElementSymbol,
+            FunctionKind.Delegate => _explicitResultSymbol!,
+            FunctionKind.Struct => _explicitResultSymbol!,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private readonly TypeSyntax? _explicitResultType;
+        private TypeSyntax ResultType => ResultSelectorKind switch
+        {
+            FunctionKind.Default => Upstream.OutputElementType,
+            FunctionKind.Delegate => _explicitResultType!,
+            FunctionKind.Struct => _explicitResultType!,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -93,23 +121,87 @@ namespace Cathei.LinqGen.Generator
 
         private TypeSyntax GroupingType => GroupingType(KeyType, ValueType, IsUnmanaged);
 
-        // public override ITypeSymbol OutputElementSymbol => // ...
-        public override TypeSyntax OutputElementType => GroupingType;
+        public override ITypeSymbol OutputElementSymbol { get; }
+
+        public override TypeSyntax OutputElementType => ResultSelectorKind switch
+        {
+            FunctionKind.Default => GroupingType,
+            FunctionKind.Delegate => ResultType,
+            FunctionKind.Struct => ResultType,
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
         public override bool SupportPartition => true;
 
-        public override ExpressionSyntax RenderCount()
-        {
-            return MemberAccessExpression(VarName("dict"), CountProperty);
-        }
+        // cannot decide count unless enumerated
+        public override ExpressionSyntax? RenderCount() => null;
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Enumerator, DictionaryType, VarName("dict"));
             yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
 
-            if (KeySelectorKind != FunctionKind.Default)
-                yield return new MemberInfo(MemberKind.Enumerable, , VarName("index"));
+            if (KeySelectorKind == FunctionKind.Delegate)
+            {
+                yield return new MemberInfo(MemberKind.Enumerable,
+                    FuncDelegateType(Upstream.OutputElementType, KeyType), VarName("keySelector"));
+            }
+            else if (KeySelectorKind == FunctionKind.Struct)
+            {
+                yield return new MemberInfo(MemberKind.Enumerable, TypeName("KeySelector"), VarName("keySelector"));
+            }
+
+            if (ValueSelectorKind == FunctionKind.Delegate)
+            {
+                yield return new MemberInfo(MemberKind.Enumerable,
+                    FuncDelegateType(Upstream.OutputElementType, ValueType), VarName("valueSelector"));
+            }
+            else if (ValueSelectorKind == FunctionKind.Struct)
+            {
+                yield return new MemberInfo(MemberKind.Enumerable, TypeName("ValueSelector"), VarName("valueSelector"));
+            }
+
+            if (ResultSelectorKind == FunctionKind.Delegate)
+            {
+                yield return new MemberInfo(MemberKind.Both,
+                    FuncDelegateType(GroupingType, ResultType), VarName("keySelector"));
+            }
+            else if (ResultSelectorKind == FunctionKind.Struct)
+            {
+                yield return new MemberInfo(MemberKind.Both, TypeName("ResultSelector"), VarName("resultSelector"));
+            }
+
+            if (ComparerKind != ComparerKind.Default)
+            {
+                yield return new MemberInfo(MemberKind.Enumerable, ComparerType, VarName("comparer"));
+            }
+        }
+
+        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+        {
+            if (KeySelectorKind == FunctionKind.Struct)
+            {
+                yield return new TypeParameterInfo(TypeName("KeySelector"),
+                    StructFunctionInterfaceType(Upstream.OutputElementType, KeyType));
+            }
+
+            if (ValueSelectorKind == FunctionKind.Struct)
+            {
+                yield return new TypeParameterInfo(TypeName("ValueSelector"),
+                    StructFunctionInterfaceType(Upstream.OutputElementType, ValueType));
+            }
+
+            if (ResultSelectorKind == FunctionKind.Struct)
+            {
+                yield return new TypeParameterInfo(TypeName("ResultSelector"),
+                    StructFunctionInterfaceType(GroupingType, ResultType));
+            }
+
+            if (ComparerKind == ComparerKind.Struct)
+            {
+                yield return new TypeParameterInfo(TypeName("Comparer"),
+                    EqualityComparerInterfaceType(KeyType));
+            }
         }
 
         public override IEnumerable<StatementSyntax> RenderInitialization(
@@ -130,6 +222,12 @@ namespace Cathei.LinqGen.Generator
 
             foreach (var statement in Upstream.RenderInitialization(true, source, null, null))
                 yield return statement;
+
+            if (ComparerKind == ComparerKind.Default)
+            {
+                yield return LocalDeclarationStatement(ComparerType, VarName("comparer").Identifier,
+                    ComparerDefault(KeyType, KeySymbol));
+            }
 
             yield return ExpressionStatement(SimpleAssignmentExpression(dictName,
                 ObjectCreationExpression(DictionaryType, ArgumentList(
@@ -169,6 +267,43 @@ namespace Cathei.LinqGen.Generator
 
             yield return ExpressionStatement(SimpleAssignmentExpression(VarName("index"),
                 skipVar != null ? SubtractExpression(skipVar, LiteralExpression(1)) : LiteralExpression(-1)));
+        }
+
+        public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
+        {
+            var slotName = VarName("slot");
+            var groupingName = VarName("grouping");
+            var currentName = VarName("current");
+            var currentRewriter = new PlaceholderRewriter(currentName);
+
+            // replace current variables of downstream
+            statements = currentRewriter.VisitStatementSyntaxList(statements);
+
+            // should this be ref?
+            var currentGetStatements = new StatementSyntax[]
+            {
+                LocalDeclarationStatement(
+                    slotName.Identifier, ElementAccessExpression(
+                        MemberAccessExpression(VarName("dict"), IdentifierName("Slots")), VarName("index"))),
+                LocalDeclarationStatement(
+                    groupingName.Identifier, ObjectCreationExpression(
+                        GroupingType, ArgumentList(
+                            MemberAccessExpression(slotName, IdentifierName("Key")),
+                            MemberAccessExpression(slotName, IdentifierName("Value"))), default)),
+                ResultSelectorKind == FunctionKind.Default
+                    ? LocalDeclarationStatement(currentName.Identifier, groupingName)
+                    : LocalDeclarationStatement(currentName.Identifier,
+                        InvocationExpression(VarName("resultSelector"), ArgumentList(groupingName)))
+            };
+
+            statements = statements.InsertRange(0, currentGetStatements);
+
+            var result = WhileStatement(LessThanExpression(
+                    CastExpression(UIntType, PreIncrementExpression(VarName("index"))),
+                    CastExpression(UIntType, MemberAccessExpression(VarName("dict"), CountProperty))),
+                Block(statements));
+
+            return Block(result);
         }
     }
 }

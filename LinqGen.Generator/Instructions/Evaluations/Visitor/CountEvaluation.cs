@@ -56,20 +56,12 @@ namespace Cathei.LinqGen.Generator
 
         public override IEnumerable<MemberDeclarationSyntax> RenderExtensionMembers()
         {
+            // Count method is already there
             if (PredicateType == null && Upstream.SupportCount)
-            {
-                yield return MethodDeclaration(
-                    SingletonList(AggressiveInliningAttributeList), PublicStaticTokenList,
-                    ReturnType, null, MethodName.Identifier, GetTypeParameters(Arity), GetParameters(true),
-                    GetGenericConstraints(Arity), default,
-                    ArrowExpressionClause(MemberAccessExpression(IdentifierName("source"), CountProperty)),
-                    SemicolonToken);
-            }
-            else
-            {
-                foreach (var member in base.RenderExtensionMembers())
-                    yield return member;
-            }
+                yield break;
+
+            foreach (var member in base.RenderExtensionMembers())
+                yield return member;
         }
 
         protected override IEnumerable<MemberDeclarationSyntax> RenderVisitorFields()

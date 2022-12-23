@@ -24,7 +24,9 @@ namespace Cathei.LinqGen.Generator
         }
 
         protected override ExpressionSyntax? SkipExpression
-            => Upstream.SupportCount ? SubtractExpression(CountProperty, LiteralExpression(1)) : null;
+            => Upstream.SupportCount
+                ? SubtractExpression(InvocationExpression(CountMethod), LiteralExpression(1))
+                : null;
 
         protected override ExpressionSyntax? TakeExpression
             => Upstream.SupportCount ? LiteralExpression(1) : null;
