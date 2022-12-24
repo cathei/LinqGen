@@ -26,7 +26,6 @@ namespace Cathei.LinqGen.Generator
         protected Generation(in LinqGenExpression expression, int id) : base(expression, id)
         {
             // File name has to use integer id
-            DirectoryName = expression.MethodSymbol.Name;
             FileName = $"{expression.MethodSymbol.Name}_{id}.g.cs";
 
             MethodName = IdentifierName(expression.MethodSymbol.Name);
@@ -36,28 +35,7 @@ namespace Cathei.LinqGen.Generator
         public abstract ITypeSymbol OutputElementSymbol { get; }
         public abstract TypeSyntax OutputElementType { get; }
 
-        public string DirectoryName { get; }
         public string FileName { get; }
-
-        public string FilePath
-        {
-            get
-            {
-                var path = new List<string>();
-
-                var upstream = Upstream;
-
-                while (upstream != null)
-                {
-                    path.Insert(0, upstream.DirectoryName);
-                    upstream = upstream.Upstream;
-                }
-
-                path.Add(FileName);
-
-                return string.Join("_", path);
-            }
-        }
 
         /// <summary>
         /// The qualified class name cached for rendering
@@ -100,7 +78,7 @@ namespace Cathei.LinqGen.Generator
             Evaluations.Add(downstream);
         }
 
-        public SourceText Render()
+        public IEnumerable<MemberDeclarationSyntax> Render()
         {
             return GenerationTemplate.Render(this);
         }

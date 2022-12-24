@@ -1,6 +1,8 @@
 ﻿// LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -33,7 +35,10 @@ namespace Cathei.LinqGen.Generator
                 syntaxReceiver.ResolveHierarchy();
 
                 foreach (var node in syntaxReceiver.Roots)
-                    RenderNodeRecursive(node, context);
+                {
+                    var members = RenderNodeRecursive(node);
+                    context.AddSource(node.FileName, FileTemplate.Render(members));
+                }
             }
             catch (Exception ex)
             {
@@ -50,15 +55,18 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        private void RenderNodeRecursive(Generation generation, GeneratorExecutionContext context)
+        private IEnumerable<MemberDeclarationSyntax> RenderNodeRecursive(Generation generation)
         {
-            var sourceText = generation.Render();
-            context.AddSource(generation.FilePath, sourceText);
+            foreach (var member in generation.Render())
+                yield return member;
 
             if (generation.Downstream != null)
             {
                 foreach (var downstream in generation.Downstream)
-                    RenderNodeRecursive(downstream, context);
+                {
+                    foreach (var member in RenderNodeRecursive(downstream))
+                        yield return member;
+                }
             }
         }
     }
