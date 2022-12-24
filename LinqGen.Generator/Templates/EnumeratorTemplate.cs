@@ -20,7 +20,13 @@ namespace Cathei.LinqGen.Generator
         public struct Enumerator : IEnumerator<_Element_>
         {
             [EditorBrowsable(EditorBrowsableState.Never)]
+            private int state;
+            [EditorBrowsable(EditorBrowsableState.Never)]
             private _Element_ current;
+
+            private void InitState()
+            {
+            }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool MoveNext()
@@ -82,6 +88,10 @@ namespace Cathei.LinqGen.Generator
             {
                 switch (node.Identifier.ValueText)
                 {
+                    case "InitState":
+                        node = RewriteEnumeratorInitState(node);
+                        break;
+
                     case "MoveNext":
                         node = RewriteEnumeratorMoveNext(node);
                         break;
@@ -111,8 +121,18 @@ namespace Cathei.LinqGen.Generator
             //     return node.WithBody(Block(statements));
             // }
 
+            private MethodDeclarationSyntax RewriteEnumeratorInitState(MethodDeclarationSyntax node)
+            {
+                return node.WithBody(Block(
+                    _instruction.RenderInitialization(false, ThisExpression(), null, null)));
+            }
+
             private MethodDeclarationSyntax RewriteEnumeratorMoveNext(MethodDeclarationSyntax node)
             {
+                var initStatement = IfStatement(LessThanExpression(IdentifierName("state"), LiteralExpression(1)),
+                    Block(ExpressionStatement(InvocationExpression(IdentifierName("InitState"))),
+                        ExpressionStatement(PreIncrementExpression(IdentifierName("state")))));
+
                 var successStatements = new StatementSyntax[]
                 {
                     ExpressionStatement(SimpleAssignmentExpression(
@@ -122,7 +142,8 @@ namespace Cathei.LinqGen.Generator
 
                 var failStatement = ReturnStatement(FalseExpression());
 
-                var body = _instruction.RenderIteration(false, new(successStatements))
+                var body = Block(initStatement)
+                    .AddStatements(_instruction.RenderIteration(false, new(successStatements)).Statements.ToArray())
                     .AddStatements(failStatement);
 
                 return node.WithBody(body);

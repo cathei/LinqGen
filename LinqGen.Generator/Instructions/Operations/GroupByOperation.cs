@@ -214,12 +214,10 @@ namespace Cathei.LinqGen.Generator
             var valueName = VarName("value");
             var listName = VarName("list");
 
-            ExpressionSyntax sourceName = isLocal ? ThisExpression() : IdentifierName("source");
-
             foreach (var statement in Upstream.GetLocalDeclarations(MemberKind.Enumerator))
                 yield return statement;
 
-            foreach (var statement in Upstream.GetLocalAssignments(MemberKind.Both, sourceName))
+            foreach (var statement in Upstream.GetLocalAssignments(MemberKind.Both, source))
                 yield return statement;
 
             foreach (var statement in Upstream.RenderInitialization(true, source, null, null))
@@ -228,7 +226,7 @@ namespace Cathei.LinqGen.Generator
             yield return LocalDeclarationStatement(ComparerType, VarName("comparer").Identifier,
                 ComparerKind == ComparerKind.Default
                     ? ComparerDefault(KeyType, KeySymbol)
-                    : MemberAccessExpression(sourceName, VarName("comparer")));
+                    : MemberAccessExpression(source, VarName("comparer")));
 
             yield return ExpressionStatement(SimpleAssignmentExpression(dictName,
                 ObjectCreationExpression(DictionaryType, ArgumentList(
@@ -237,12 +235,12 @@ namespace Cathei.LinqGen.Generator
             ExpressionSyntax keySelectExpression = KeySelectorKind == FunctionKind.Default
                 ? CurrentPlaceholder
                 : InvocationExpression(MemberAccessExpression(
-                    sourceName, VarName("keySelector"), InvokeMethod), ArgumentList(CurrentPlaceholder));
+                    source, VarName("keySelector"), InvokeMethod), ArgumentList(CurrentPlaceholder));
 
             ExpressionSyntax valueSelectExpression = ValueSelectorKind == FunctionKind.Default
                 ? CurrentPlaceholder
                 : InvocationExpression(MemberAccessExpression(
-                    sourceName, VarName("valueSelector"), InvokeMethod), ArgumentList(CurrentPlaceholder));
+                    source, VarName("valueSelector"), InvokeMethod), ArgumentList(CurrentPlaceholder));
 
             var addStatements = new StatementSyntax[]
             {

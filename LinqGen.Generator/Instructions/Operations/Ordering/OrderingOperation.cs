@@ -173,12 +173,11 @@ namespace Cathei.LinqGen.Generator
             ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             var rootUpstream = RootOrder.Upstream;
-            ExpressionSyntax sourceName = isLocal ? ThisExpression() : IdentifierName("source");
 
             foreach (var statement in rootUpstream.GetLocalDeclarations(MemberKind.Enumerator))
                 yield return statement;
 
-            foreach (var statement in rootUpstream.GetLocalAssignments(MemberKind.Both, sourceName))
+            foreach (var statement in rootUpstream.GetLocalAssignments(MemberKind.Both, source))
                 yield return statement;
 
             foreach (var statement in rootUpstream.RenderInitialization(true, source, null, null))
@@ -230,7 +229,7 @@ namespace Cathei.LinqGen.Generator
 
             sortBody.Add(LocalDeclarationStatement(sorterName.Identifier,
                 ObjectCreationExpression(QualifiedName(ResolvedClassName, IdentifierName("Sorter")),
-                    ArgumentList(GetOrderArguments(sourceName).Prepend(Argument(elementsName))), null)));
+                    ArgumentList(GetOrderArguments(source).Prepend(Argument(elementsName))), null)));
 
             sortBody.Add(ExpressionStatement(InvocationExpression(
                 MemberAccessExpression(sorterName, IdentifierName("PartialQuickSort")),
