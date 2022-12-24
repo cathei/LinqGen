@@ -21,6 +21,7 @@ namespace Cathei.LinqGen.Generator
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Cathei.LinqGen;
 using Cathei.LinqGen.Hidden;
@@ -92,6 +93,14 @@ namespace Cathei.LinqGen
                 return node == null ? null : base.VisitConstructorDeclaration(node);
             }
 
+            public override SyntaxNode? VisitBaseList(BaseListSyntax node)
+            {
+                if (node.Types[0].Type is IdentifierNameSyntax { Identifier: { ValueText: "_Interface_" } })
+                    node = BaseList(SeparatedList(_instruction.InterfaceTypes));
+
+                return base.VisitBaseList(node);
+            }
+
             public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
             {
                 switch (node.Identifier.ValueText)
@@ -101,9 +110,6 @@ namespace Cathei.LinqGen
 
                     case "_Enumerable_":
                         return _instruction.ResolvedClassName;
-
-                    case "_Interface_":
-                        return _instruction.EnumerableInterfaceType;
                 }
 
                 return base.VisitIdentifierName(node);
@@ -123,23 +129,42 @@ namespace Cathei.LinqGen
 
             private StructDeclarationSyntax RewriteEnumerableStruct(StructDeclarationSyntax node)
             {
-                return node.WithIdentifier(_instruction.ClassName.Identifier)
+                node = node.WithIdentifier(_instruction.ClassName.Identifier)
                     .WithTypeParameterList(_instruction.GetTypeParameters())
                     .WithConstraintClauses(_instruction.GetGenericConstraints())
                     .AddMembers(_instruction.RenderEnumerableMembers().ToArray())
-                    .AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerable).ToArray());
+                    .AddMembers(_instruction.GetFieldDeclarations(_instruction.IsEnumerator).ToArray());
+
+                return node;
             }
 
             private ConstructorDeclarationSyntax? RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
             {
-                var parameters = ParameterList(_instruction.GetParameters(MemberKind.Enumerable, true));
+                var parameters = _instruction.GetParameters(MemberKind.Enumerable, false);
+                var assignments = _instruction.GetFieldAssignments(MemberKind.Enumerable, false);
 
-                if (parameters.Parameters.Count == 0)
+                if (_instruction.Upstream != null)
+                {
+                    var sourceName = IdentifierName("source");
+
+                    parameters = parameters.Prepend(Parameter(default, InTokenList,
+                        _instruction.UpstreamResolvedClassName, sourceName.Identifier, null));
+
+                    assignments = _instruction.Upstream.GetFieldAssignments(MemberKind.Enumerable, true, sourceName)
+                        .Concat(assignments);
+                }
+
+                var parameterList = ParameterList(parameters);
+
+                if (parameterList.Parameters.Count == 0)
                     return null;
 
+                if (_instruction.IsEnumerator)
+                    assignments = assignments.Concat(_instruction.GetFieldDefaultAssignments(MemberKind.Enumerator));
+
                 return node.WithIdentifier(_instruction.ClassName.Identifier)
-                    .WithParameterList(parameters)
-                    .WithBody(Block(_instruction.GetFieldAssignments(MemberKind.Enumerable)));
+                    .WithParameterList(parameterList)
+                    .WithBody(Block(assignments));
             }
         }
 

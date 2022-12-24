@@ -182,9 +182,14 @@ namespace Cathei.LinqGen.Generator
         public static readonly SyntaxTokenList PublicTokenList = TokenList(Token(SyntaxKind.PublicKeyword));
         public static readonly SyntaxTokenList InternalTokenList = TokenList(Token(SyntaxKind.InternalKeyword));
         public static readonly SyntaxTokenList RefTokenList = TokenList(Token(SyntaxKind.RefKeyword));
+        public static readonly SyntaxTokenList InTokenList = TokenList(Token(SyntaxKind.InKeyword));
+
+        public static readonly SyntaxTokenList ThisInTokenList =
+            TokenList(Token(SyntaxKind.ThisKeyword), Token(SyntaxKind.InKeyword));
 
         public static readonly SyntaxTokenList PrivateReadOnlyTokenList =
             TokenList(Token(SyntaxKind.PrivateKeyword), Token(SyntaxKind.ReadOnlyKeyword));
+
         public static readonly SyntaxTokenList PublicStaticTokenList =
             TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword));
 
@@ -203,6 +208,13 @@ namespace Cathei.LinqGen.Generator
                     AttributeArgumentList(SingletonSeparatedList(AttributeArgument(
                         MemberAccessExpression(IdentifierName("MethodImplOptions"),
                             IdentifierName("AggressiveInlining"))))))));
+
+        public static readonly AttributeListSyntax EditorBrowsableNeverAttributeList =
+            AttributeList(SingletonSeparatedList(
+                Attribute(IdentifierName("EditorBrowsable"),
+                    AttributeArgumentList(SingletonSeparatedList(AttributeArgument(
+                        MemberAccessExpression(IdentifierName("EditorBrowsableState"),
+                            IdentifierName("Never"))))))));
 
         public static TypeSyntax ParseTypeName(ITypeSymbol typeSymbol)
         {
@@ -318,6 +330,13 @@ namespace Cathei.LinqGen.Generator
             SyntaxTokenList modifiers, TypeSyntax type, SyntaxToken identifier)
         {
             return SyntaxFactory.FieldDeclaration(default, modifiers,
+                SyntaxFactory.VariableDeclaration(type, SingletonSeparatedList(VariableDeclarator(identifier))));
+        }
+
+        public static FieldDeclarationSyntax FieldDeclaration(SyntaxList<AttributeListSyntax> attributes,
+            SyntaxTokenList modifiers, TypeSyntax type, SyntaxToken identifier)
+        {
+            return SyntaxFactory.FieldDeclaration(attributes, modifiers,
                 SyntaxFactory.VariableDeclaration(type, SingletonSeparatedList(VariableDeclarator(identifier))));
         }
 

@@ -20,13 +20,10 @@ namespace Cathei.LinqGen.Generator
         {
         }
 
-        public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
+        public override void AddUpstream(Generation upstream)
         {
-            if (!Upstream.HasGetEnumerator)
-            {
-                foreach (var member in Upstream.RenderGetEnumerator())
-                    yield return member;
-            }
+            upstream.IsEnumerator = true;
+            base.AddUpstream(upstream);
         }
     }
 }

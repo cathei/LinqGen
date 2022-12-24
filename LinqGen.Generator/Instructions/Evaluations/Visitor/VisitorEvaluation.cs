@@ -180,7 +180,7 @@ namespace Cathei.LinqGen.Generator
                 Parameter(UpstreamResolvedClassName, Identifier("source"));
 
             if (extensionMethod)
-                sourceParameter = sourceParameter.WithModifiers(ThisTokenList);
+                sourceParameter = sourceParameter.WithModifiers(ThisInTokenList);
 
             return ParameterList(parameters.Prepend(sourceParameter));
         }

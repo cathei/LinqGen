@@ -22,15 +22,15 @@
 
     <ItemGroup>
         <TextTemplate Include="**\*.tt" />
-        <Generated Include="**\*.Generated.cs" />
+<!--        <Generated Include="**\*.Generated.cs" />-->
     </ItemGroup>
 
     <Target Name="TextTemplateTransform" BeforeTargets="BeforeBuild">
         <Exec WorkingDirectory="$(ProjectDir)" Command="t4 %(TextTemplate.Identity) -o %(TextTemplate.Filename).Generated.cs" />
     </Target>
 
-    <Target Name="TextTemplateClean" AfterTargets="Clean">
-        <Delete Files="@(Generated)" />
-    </Target>
+<!--    <Target Name="TextTemplateClean" AfterTargets="Clean">-->
+<!--        <Delete Files="@(Generated)" />-->
+<!--    </Target>-->
 
 </Project>

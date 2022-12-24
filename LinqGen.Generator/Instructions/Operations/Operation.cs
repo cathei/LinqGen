@@ -123,8 +123,8 @@ namespace Cathei.LinqGen.Generator
                     ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(arityDiff),
                     ParameterList(parameters),
                     GetGenericConstraints(arityDiff), null,
-                    ArrowExpressionClause(ObjectCreationExpression(
-                        ResolvedClassName, ArgumentList(GetArguments(MemberKind.Enumerable, true)), null)),
+                    ArrowExpressionClause(ObjectCreationExpression(ResolvedClassName, ArgumentList(
+                        GetArguments(MemberKind.Enumerable, false).Prepend(Argument(ThisExpression()))), null)),
                     SemicolonToken);
             }
         }

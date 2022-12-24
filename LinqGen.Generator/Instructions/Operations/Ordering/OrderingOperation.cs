@@ -218,7 +218,7 @@ namespace Cathei.LinqGen.Generator
 
             var sortBody = new List<StatementSyntax>();
 
-            var sorterName = IdentifierName("sorter");
+            var sorterName = VarName("sorter");
 
             sortBody.Add(ExpressionStatement(SimpleAssignmentExpression(indicesName,
                 ObjectCreationExpression(IndexListType, ArgumentList(elementsCount), null))));

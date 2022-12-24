@@ -41,7 +41,7 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// Evaluation should not rendered individually. Instead it will be rendered with upstream.
         /// </summary>
-        public void AddUpstream(Generation upstream)
+        public virtual void AddUpstream(Generation upstream)
         {
             base.Upstreams ??= new List<Generation>();
             base.Upstreams.Add(upstream);

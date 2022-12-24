@@ -61,14 +61,14 @@ namespace Cathei.LinqGen.Generator
             _rewriter = new(this);
         }
 
+        public override void AddUpstream(Generation upstream)
+        {
+            upstream.IsEnumerator = true;
+            base.AddUpstream(upstream);
+        }
+
         public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
         {
-            if (!Upstream.HasGetEnumerator)
-            {
-                foreach (var member in Upstream.RenderGetEnumerator())
-                    yield return member;
-            }
-
             var classSyntax = TemplateSyntaxTree.GetRoot()
                 .DescendantNodesAndSelf()
                 .OfType<ClassDeclarationSyntax>()
