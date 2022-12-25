@@ -14,7 +14,7 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public sealed class CountEvaluation : VisitorEvaluation
+    public sealed class CountEvaluation : ExtensionEvaluation
     {
         private TypeSyntax? PredicateType { get; }
         private bool WithStruct { get; }
@@ -64,9 +64,9 @@ namespace Cathei.LinqGen.Generator
                 yield return member;
         }
 
-        protected override IEnumerable<MemberDeclarationSyntax> RenderVisitorFields()
+        protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
-            yield return FieldDeclaration(PrivateTokenList, IntType, VarName("result").Identifier);
+            yield return LocalDeclarationStatement(IntType, VarName("result").Identifier, DefaultLiteral);
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()
@@ -77,12 +77,10 @@ namespace Cathei.LinqGen.Generator
             }
             else
             {
-                yield return IfStatement(InvocationExpression(
-                        MemberAccessExpression(IdentifierName("predicate"), InvokeMethod), ArgumentList(ElementVar)),
+                yield return IfStatement(InvocationExpression(MemberAccessExpression(
+                        IdentifierName("predicate"), InvokeMethod), ArgumentList(CurrentPlaceholder)),
                     ExpressionStatement(PreIncrementExpression(VarName("result"))));
             }
-
-            yield return ReturnStatement(TrueExpression());
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()

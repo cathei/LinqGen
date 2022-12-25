@@ -360,43 +360,5 @@ namespace Cathei.LinqGen.Generator
                 ResolvedClassName, null, GetEnumeratorMethod.Identifier, null, ParameterList(),
                 default, null, ArrowExpressionClause(ThisExpression()), SemicolonToken);
         }
-
-        /// <summary>
-        /// Used for local evaluation
-        /// </summary>
-        public bool HasLocalVisitMethod { get; private set; }
-
-        public MethodDeclarationSyntax RenderLocalVisitMethod()
-        {
-            HasLocalVisitMethod = true;
-
-            var visitorInterface = GenericName(Identifier("IVisitor"), TypeArgumentList(OutputElementType));
-            var visitorType = new TypeParameterInfo(IdentifierName("TVisitor"), visitorInterface);
-            var visitorName = IdentifierName("visitor");
-
-            var initialDeclarations = GetLocalDeclarations(MemberKind.Enumerator)
-                .Concat(GetLocalAssignments(MemberKind.Both))
-                .Concat(RenderInitialization(true, ThisExpression(), null, null));
-
-            StatementSyntax accumulationStatement = IfStatement(LogicalNotExpression(InvocationExpression(
-                    MemberAccessExpression(visitorName, VisitMethod), ArgumentList(CurrentPlaceholder))),
-                ReturnStatement());
-
-            var iterationBlock = RenderIteration(true, SingletonList(accumulationStatement));
-
-            var disposeStatements = RenderDispose(true);
-
-            var iterationStatements = iterationBlock.Statements;
-
-            StatementSyntax tryStatement = TryStatement(
-                Block(iterationStatements), default, FinallyClause(Block(disposeStatements)));
-
-            var body = Block(initialDeclarations.Append(tryStatement));
-
-            return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList, VoidType, null,
-                VisitMethod.Identifier, TypeParameterList(SingletonSeparatedList(visitorType.AsTypeParameter())),
-                ParameterList(Parameter(visitorType.Name, visitorName.Identifier).WithModifiers(RefTokenList)),
-                SingletonList(visitorType.AsGenericConstraint()!), body, null);
-        }
     }
 }

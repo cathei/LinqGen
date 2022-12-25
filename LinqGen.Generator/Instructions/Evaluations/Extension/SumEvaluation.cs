@@ -14,7 +14,7 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public sealed class SumEvaluation : VisitorEvaluation
+    public sealed class SumEvaluation : ExtensionEvaluation
     {
         private TypeSyntax? SelectorType { get; }
         private bool WithStruct { get; }
@@ -56,24 +56,23 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        protected override IEnumerable<MemberDeclarationSyntax> RenderVisitorFields()
+        protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
-            yield return FieldDeclaration(PrivateTokenList, ReturnType, VarName("result").Identifier);
+            yield return LocalDeclarationStatement(ReturnType, VarName("result").Identifier, DefaultLiteral);
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()
         {
-            ExpressionSyntax value = ElementVar;
+            ExpressionSyntax value = CurrentPlaceholder;
 
             if (SelectorType != null)
             {
                 value = InvocationExpression(
                     MemberAccessExpression(IdentifierName("selector"), InvokeMethod),
-                    ArgumentList(ElementVar));
+                    ArgumentList(CurrentPlaceholder));
             }
 
             yield return ExpressionStatement(AddAssignmentExpression(VarName("result"), value));
-            yield return ReturnStatement(TrueExpression());
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()
