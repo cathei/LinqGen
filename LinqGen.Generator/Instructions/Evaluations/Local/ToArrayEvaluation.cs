@@ -27,16 +27,16 @@ namespace Cathei.LinqGen.Generator
         {
             if (Upstream.SupportCount)
             {
-                yield return LocalDeclarationStatement(VarName("array").Identifier,
+                yield return LocalDeclarationStatement(LocalName("array").Identifier,
                     ObjectCreationExpression(ArrayType(Upstream.OutputElementType,
                         SingletonList(ArrayRankSpecifier(SingletonSeparatedList(
                             (ExpressionSyntax)InvocationExpression(CountMethod)))))));
 
-                yield return LocalDeclarationStatement(VarName("index").Identifier, LiteralExpression(-1));
+                yield return LocalDeclarationStatement(LocalName("index").Identifier, LiteralExpression(-1));
             }
             else
             {
-                yield return UsingLocalDeclarationStatement(VarName("list").Identifier, ObjectCreationExpression(
+                yield return UsingLocalDeclarationStatement(LocalName("list").Identifier, ObjectCreationExpression(
                     PooledListType(Upstream.OutputElementType, Upstream.OutputElementSymbol.IsUnmanagedType),
                     ArgumentList(LiteralExpression(0)), null));
             }
@@ -47,13 +47,13 @@ namespace Cathei.LinqGen.Generator
             if (Upstream.SupportCount)
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
-                    ElementAccessExpression(VarName("array"), PreIncrementExpression(VarName("index"))),
+                    ElementAccessExpression(LocalName("array"), PreIncrementExpression(LocalName("index"))),
                     CurrentPlaceholder));
             }
             else
             {
                 yield return ExpressionStatement(InvocationExpression(
-                    MemberAccessExpression(VarName("list"), AddMethod), ArgumentList(CurrentPlaceholder)));
+                    MemberAccessExpression(LocalName("list"), AddMethod), ArgumentList(CurrentPlaceholder)));
             }
         }
 
@@ -61,11 +61,11 @@ namespace Cathei.LinqGen.Generator
         {
             if (Upstream.SupportCount)
             {
-                yield return ReturnStatement(VarName("array"));
+                yield return ReturnStatement(LocalName("array"));
             }
             else
             {
-                yield return ReturnStatement(InvocationExpression(VarName("list"), IdentifierName("ToArray")));
+                yield return ReturnStatement(InvocationExpression(LocalName("list"), IdentifierName("ToArray")));
             }
         }
     }

@@ -65,14 +65,14 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Both,
-                WithStruct ? TypeName("Selector") : SelectorType, VarName("selector"));
+                WithStruct ? TypeName("Selector") : SelectorType, LocalName("selector"));
 
             if (WithIndex)
-                yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
+                yield return new MemberInfo(MemberKind.Enumerator, IntType, LocalName("index"));
         }
 
         public override IEnumerable<StatementSyntax> RenderInitialization(
-            bool isLocal, ExpressionSyntax source, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             if (WithIndex)
             {
@@ -81,10 +81,10 @@ namespace Cathei.LinqGen.Generator
                 if (Upstream.SupportPartition && skipVar != null)
                     initialIndex = SubtractExpression(skipVar, LiteralExpression(1));
 
-                yield return ExpressionStatement(SimpleAssignmentExpression(VarName("index"), initialIndex));
+                yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("index"), initialIndex));
             }
 
-            foreach (var statement in base.RenderInitialization(isLocal, source, skipVar, takeVar))
+            foreach (var statement in base.RenderInitialization(isLocal, skipVar, takeVar))
                 yield return statement;
         }
 
@@ -96,9 +96,9 @@ namespace Cathei.LinqGen.Generator
         protected override ExpressionSyntax RenderCurrent()
         {
             return InvocationExpression(
-                MemberAccessExpression(VarName("selector"), InvokeMethod),
+                MemberAccessExpression(MemberName("selector"), InvokeMethod),
                 ArgumentList(WithIndex
-                    ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(VarName("index")) }
+                    ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(LocalName("index")) }
                     : new ExpressionSyntax[] { CurrentPlaceholder }));
         }
     }

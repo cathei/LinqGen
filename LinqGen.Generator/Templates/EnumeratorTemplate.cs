@@ -17,12 +17,16 @@ namespace Cathei.LinqGen.Generator
     public static class EnumeratorTemplate
     {
         private static readonly SyntaxTree TemplateSyntaxTree = CSharpSyntaxTree.ParseText(@"
-        public struct Enumerator : IEnumerator<_Element_>
+        internal struct Enumerator : IEnumerator<_Element_>
         {
-            [EditorBrowsable(EditorBrowsableState.Never)]
+            private _Enumerable_ parent;
             private int state;
-            [EditorBrowsable(EditorBrowsableState.Never)]
             private _Element_ current;
+
+            internal Enumerator(in _Enumerable_ parent) : this()
+            {
+                this.parent = parent;
+            }
 
             private void InitState()
             {
@@ -51,38 +55,50 @@ namespace Cathei.LinqGen.Generator
         }
 ");
 
-        private class Rewriter : CSharpSyntaxRewriter
+        private class Rewriter : ThisPlaceholderRewriter
         {
             private readonly Generation _instruction;
 
-            public Rewriter(Generation instruction)
+            public Rewriter(Generation instruction) : base(IdentifierName("parent"))
             {
                 _instruction = instruction;
             }
 
-            // public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
-            // {
-            //     switch (node.Identifier.ValueText)
-            //     {
-            //         case "Enumerator":
-            //             node = RewriteEnumeratorStruct(node);
-            //             break;
-            //     }
-            //
-            //     return base.VisitStructDeclaration(node);
-            // }
+            public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
+            {
+                switch (node.Identifier.ValueText)
+                {
+                    case "Enumerator":
+                        node = RewriteEnumeratorStruct(node);
+                        break;
+                }
 
-            // public override SyntaxNode? VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
-            // {
-            //     switch (node.Identifier.ValueText)
-            //     {
-            //         case "Enumerator":
-            //             node = RewriteEnumeratorConstructor(node);
-            //             break;
-            //     }
-            //
-            //     return base.VisitConstructorDeclaration(node);
-            // }
+                return base.VisitStructDeclaration(node);
+            }
+
+            private StructDeclarationSyntax RewriteEnumeratorStruct(StructDeclarationSyntax node)
+            {
+                var fields = _instruction.GetFieldDeclarations(MemberKind.Enumerator);
+                return node.AddMembers(fields.ToArray());
+            }
+
+            public override SyntaxNode? VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
+            {
+                switch (node.Identifier.ValueText)
+                {
+                    case "Enumerator":
+                        node = RewriteEnumeratorConstructor(node);
+                        break;
+                }
+
+                return base.VisitConstructorDeclaration(node);
+            }
+
+            private ConstructorDeclarationSyntax RewriteEnumeratorConstructor(ConstructorDeclarationSyntax node)
+            {
+                return node.AddBodyStatements(
+                    _instruction.GetFieldDefaultAssignments(MemberKind.Enumerator).ToArray());
+            }
 
             public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
             {
@@ -104,27 +120,21 @@ namespace Cathei.LinqGen.Generator
                 return base.VisitMethodDeclaration(node);
             }
 
-            // private StructDeclarationSyntax RewriteEnumeratorStruct(StructDeclarationSyntax node)
-            // {
-            //     var fields = _instruction.GetFieldDeclarations(MemberKind.Enumerator);
-            //     return node.AddMembers(fields.ToArray());
-            // }
+            public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+            {
+                switch (node.Identifier.ValueText)
+                {
+                    case "_Enumerable_":
+                        return _instruction.ResolvedClassName;
+                }
 
-            // private ConstructorDeclarationSyntax RewriteEnumeratorConstructor(ConstructorDeclarationSyntax node)
-            // {
-            //     IEnumerable<StatementSyntax> statements;
-            //
-            //     statements = _instruction.GetFieldAssignments(MemberKind.Any, IdentifierName("source"))
-            //         .Concat(_instruction.GetFieldDefaultAssignments(MemberKind.Enumerator))
-            //         .Concat(_instruction.RenderInitialization(false, IdentifierName("source"), null, null));
-            //
-            //     return node.WithBody(Block(statements));
-            // }
+                return base.VisitIdentifierName(node);
+            }
 
             private MethodDeclarationSyntax RewriteEnumeratorInitState(MethodDeclarationSyntax node)
             {
                 return node.WithBody(Block(
-                    _instruction.RenderInitialization(false, ThisExpression(), null, null)));
+                    _instruction.RenderInitialization(false, null, null)));
             }
 
             private MethodDeclarationSyntax RewriteEnumeratorMoveNext(MethodDeclarationSyntax node)
@@ -156,7 +166,7 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public static IEnumerable<MemberDeclarationSyntax> Render(Generation instruction)
+        public static MemberDeclarationSyntax Render(Generation instruction)
         {
             var structSyntax = TemplateSyntaxTree.GetRoot()
                 .DescendantNodesAndSelf()
@@ -164,9 +174,7 @@ namespace Cathei.LinqGen.Generator
                 .First();
 
             var rewriter = new Rewriter(instruction);
-            structSyntax = (StructDeclarationSyntax)rewriter.Visit(structSyntax);
-
-            return structSyntax.DescendantNodes().OfType<MemberDeclarationSyntax>();
+            return (StructDeclarationSyntax)rewriter.Visit(structSyntax);
         }
     }
 }

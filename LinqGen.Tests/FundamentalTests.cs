@@ -36,7 +36,6 @@ public class FundamentalTests
         Assert.AreEqual(c1, count);
     }
 
-
     // [TestCase(1, 2, 3, 4)]
     // [TestCase(8, 6, 4, 2)]
     // [TestCase(2, 0, 4, 2)]

@@ -9,6 +9,6 @@ namespace Cathei.LinqGen.Generator
     {
         Enumerable = 1,
         Enumerator = 2,
-        Both = Enumerable | Enumerator
+        Both = Enumerable// | Enumerator
     }
 }

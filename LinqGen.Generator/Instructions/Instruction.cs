@@ -76,17 +76,27 @@ namespace Cathei.LinqGen.Generator
         }
 
         /// <summary>
-        /// Creating unique variable name for this instruction
+        /// Creating unique local variable name for this instruction
         /// </summary>
-        protected IdentifierNameSyntax VarName(string identifier)
+        protected IdentifierNameSyntax LocalName(string identifier)
         {
             return IdentifierName($"{identifier}_{Id}");
+        }
+
+        /// <summary>
+        /// Creating unique variable name for this instruction
+        /// </summary>
+        protected ExpressionSyntax MemberName(string identifier)
+        {
+            return MemberAccessExpression(ThisPlaceholder, LocalName(identifier));
         }
 
         /// <summary>
         /// Context variable, affected by upstream
         /// </summary>
         public static readonly IdentifierNameSyntax CurrentPlaceholder = IdentifierName("_current_");
+
+        public static readonly IdentifierNameSyntax ThisPlaceholder = IdentifierName("_this_");
 
         protected virtual IEnumerable<TypeParameterInfo> GetTypeParameterInfos() => Array.Empty<TypeParameterInfo>();
 

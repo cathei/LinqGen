@@ -58,7 +58,7 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
-            yield return LocalDeclarationStatement(ReturnType, VarName("result").Identifier, DefaultLiteral);
+            yield return LocalDeclarationStatement(ReturnType, LocalName("result").Identifier, DefaultLiteral);
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()
@@ -72,12 +72,12 @@ namespace Cathei.LinqGen.Generator
                     ArgumentList(CurrentPlaceholder));
             }
 
-            yield return ExpressionStatement(AddAssignmentExpression(VarName("result"), value));
+            yield return ExpressionStatement(AddAssignmentExpression(LocalName("result"), value));
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()
         {
-            yield return ReturnStatement(VarName("result"));
+            yield return ReturnStatement(LocalName("result"));
         }
     }
 }

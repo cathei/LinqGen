@@ -39,7 +39,7 @@ namespace Cathei.LinqGen.Generator
             return LiteralExpression(0);
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
             ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             yield break;

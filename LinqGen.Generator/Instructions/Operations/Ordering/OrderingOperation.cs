@@ -93,33 +93,33 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
-            yield return new MemberInfo(MemberKind.Enumerator, ElementListType, VarName("elements"),
+            yield return new MemberInfo(MemberKind.Enumerator, ElementListType, LocalName("elements"),
                 ObjectCreationExpression(ElementListType, ArgumentList(LiteralExpression(0)), null));
 
-            yield return new MemberInfo(MemberKind.Enumerator, IndexListType, VarName("indices"),
+            yield return new MemberInfo(MemberKind.Enumerator, IndexListType, LocalName("indices"),
                 ObjectCreationExpression(IndexListType, ArgumentList(LiteralExpression(0)), null));
 
-            yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
+            yield return new MemberInfo(MemberKind.Enumerator, IntType, LocalName("index"));
 
             switch (SelectorKind)
             {
                 case FunctionKind.Delegate:
-                    yield return new MemberInfo(MemberKind.Enumerable, SelectorInterfaceType!, VarName("selector"));
+                    yield return new MemberInfo(MemberKind.Enumerable, SelectorInterfaceType!, LocalName("selector"));
                     break;
 
                 case FunctionKind.Struct:
-                    yield return new MemberInfo(MemberKind.Enumerable, TypeName("Selector"), VarName("selector"));
+                    yield return new MemberInfo(MemberKind.Enumerable, TypeName("Selector"), LocalName("selector"));
                     break;
             }
 
             switch (ComparerKind)
             {
                 case ComparerKind.Interface:
-                    yield return new MemberInfo(MemberKind.Enumerable, ComparerInterfaceType, VarName("comparer"));
+                    yield return new MemberInfo(MemberKind.Enumerable, ComparerInterfaceType, LocalName("comparer"));
                     break;
 
                 case ComparerKind.Struct:
-                    yield return new MemberInfo(MemberKind.Enumerable, TypeName("Comparer"), VarName("comparer"));
+                    yield return new MemberInfo(MemberKind.Enumerable, TypeName("Comparer"), LocalName("comparer"));
                     break;
             }
         }
@@ -150,14 +150,14 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public IEnumerable<ArgumentSyntax> GetOrderArguments(ExpressionSyntax sourceName)
+        public IEnumerable<ArgumentSyntax> GetOrderArguments()
         {
             foreach (var member in GetOrderMemberInfos())
             {
                 if (member.SelectorType != null)
-                    yield return Argument(MemberAccessExpression(sourceName, member.SelectorName));
+                    yield return Argument(MemberAccessExpression(ThisPlaceholder, member.SelectorName));
                 if (member.ComparerType != null)
-                    yield return Argument(MemberAccessExpression(sourceName, member.ComparerName));
+                    yield return Argument(MemberAccessExpression(ThisPlaceholder, member.ComparerName));
             }
         }
 
@@ -169,23 +169,23 @@ namespace Cathei.LinqGen.Generator
             yield return SorterTemplate.Render(this);
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
             ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             var rootUpstream = RootOrder.Upstream;
 
-            foreach (var statement in rootUpstream.GetLocalDeclarations(MemberKind.Enumerator))
+            foreach (var statement in rootUpstream.GetLocalDeclarations())
                 yield return statement;
-
-            foreach (var statement in rootUpstream.GetLocalAssignments(MemberKind.Both, source))
-                yield return statement;
-
-            foreach (var statement in rootUpstream.RenderInitialization(true, source, null, null))
+            //
+            // foreach (var statement in rootUpstream.GetLocalAssignments(MemberKind.Both, source))
+            //     yield return statement;
+            //
+            foreach (var statement in rootUpstream.RenderInitialization(true, null, null))
                 yield return statement;
 
             ExpressionSyntax countExpression = rootUpstream.RenderCount() ?? LiteralExpression(0);
 
-            var elementsName = VarName("elements");
+            var elementsName = LocalName("elements");
             var elementsCount = MemberAccessExpression(elementsName, CountProperty);
 
             yield return ExpressionStatement(SimpleAssignmentExpression(elementsName,
@@ -193,7 +193,7 @@ namespace Cathei.LinqGen.Generator
 
             var addElementStatements = SingletonList<StatementSyntax>(
                 ExpressionStatement(InvocationExpression(
-                    MemberAccessExpression(VarName("elements"), AddMethod), ArgumentList(CurrentPlaceholder))));
+                    MemberAccessExpression(LocalName("elements"), AddMethod), ArgumentList(CurrentPlaceholder))));
 
             yield return rootUpstream.RenderIteration(true, addElementStatements);
 
@@ -201,7 +201,7 @@ namespace Cathei.LinqGen.Generator
             foreach (var statement in rootUpstream.RenderDispose(true))
                 yield return statement;
 
-            var indicesName = VarName("indices");
+            var indicesName = LocalName("indices");
 
             var minName = IdentifierName("min");
             var maxName = IdentifierName("max");
@@ -213,11 +213,11 @@ namespace Cathei.LinqGen.Generator
                 : SubtractExpression(MathMin(elementsCount, AddExpression(minName, takeVar)), LiteralExpression(1)));
 
             yield return ExpressionStatement(SimpleAssignmentExpression(
-                VarName("index"), SubtractExpression(minName, LiteralExpression(1))));
+                LocalName("index"), SubtractExpression(minName, LiteralExpression(1))));
 
             var sortBody = new List<StatementSyntax>();
 
-            var sorterName = VarName("sorter");
+            var sorterName = LocalName("sorter");
 
             sortBody.Add(ExpressionStatement(SimpleAssignmentExpression(indicesName,
                 ObjectCreationExpression(IndexListType, ArgumentList(elementsCount), null))));
@@ -229,7 +229,7 @@ namespace Cathei.LinqGen.Generator
 
             sortBody.Add(LocalDeclarationStatement(sorterName.Identifier,
                 ObjectCreationExpression(QualifiedName(ResolvedClassName, IdentifierName("Sorter")),
-                    ArgumentList(GetOrderArguments(source).Prepend(Argument(elementsName))), null)));
+                    ArgumentList(GetOrderArguments().Prepend(Argument(elementsName))), null)));
 
             sortBody.Add(ExpressionStatement(InvocationExpression(
                 MemberAccessExpression(sorterName, IdentifierName("PartialQuickSort")),
@@ -248,8 +248,8 @@ namespace Cathei.LinqGen.Generator
 
         public override IEnumerable<StatementSyntax> RenderDispose(bool isLocal)
         {
-            yield return ExpressionStatement(InvocationExpression(VarName("elements"), DisposeMethod));
-            yield return ExpressionStatement(InvocationExpression(VarName("indices"), DisposeMethod));
+            yield return ExpressionStatement(InvocationExpression(LocalName("elements"), DisposeMethod));
+            yield return ExpressionStatement(InvocationExpression(LocalName("indices"), DisposeMethod));
         }
 
         public IEnumerable<OrderMemberInfo> GetOrderMemberInfos()
@@ -304,19 +304,19 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
         {
-            var currentName = VarName("current");
-            var currentRewriter = new PlaceholderRewriter(currentName);
+            var currentName = LocalName("current");
+            var currentRewriter = new CurrentPlaceholderRewriter(currentName);
 
             // replace current variables of downstream
             statements = currentRewriter.VisitStatementSyntaxList(statements);
 
             statements = statements.Insert(0, LocalDeclarationStatement(
-                currentName.Identifier, ElementAccessExpression(VarName("elements"),
-                    ElementAccessExpression(VarName("indices"), VarName("index")))));
+                currentName.Identifier, ElementAccessExpression(LocalName("elements"),
+                    ElementAccessExpression(LocalName("indices"), LocalName("index")))));
 
             var result = WhileStatement(LessThanExpression(
-                    CastExpression(UIntType, PreIncrementExpression(VarName("index"))),
-                    CastExpression(UIntType, MemberAccessExpression(VarName("elements"), CountProperty))),
+                    CastExpression(UIntType, PreIncrementExpression(LocalName("index"))),
+                    CastExpression(UIntType, MemberAccessExpression(LocalName("elements"), CountProperty))),
                 Block(statements));
 
             return Block(result);

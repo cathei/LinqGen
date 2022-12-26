@@ -60,8 +60,8 @@ namespace Cathei.LinqGen.Generator
                     IdentifierName("comparer").Identifier, ComparerDefault(InputElementType, InputElementSymbol));
             }
 
-            yield return LocalDeclarationStatement(BoolType, VarName("isSet").Identifier, DefaultLiteral);
-            yield return LocalDeclarationStatement(ReturnType, VarName("result").Identifier, DefaultLiteral);
+            yield return LocalDeclarationStatement(BoolType, LocalName("isSet").Identifier, DefaultLiteral);
+            yield return LocalDeclarationStatement(ReturnType, LocalName("result").Identifier, DefaultLiteral);
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()
@@ -71,18 +71,18 @@ namespace Cathei.LinqGen.Generator
             var comparison = BinaryExpression(expressionKind,
                 LiteralExpression(0),
                 InvocationExpression(MemberAccessExpression(IdentifierName("comparer"), CompareMethod),
-                    ArgumentList(VarName("result"), CurrentPlaceholder)));
+                    ArgumentList(LocalName("result"), CurrentPlaceholder)));
 
             yield return IfStatement(
-                LogicalOrExpression(LogicalNotExpression(VarName("isSet")), comparison), Block(
-                    ExpressionStatement(SimpleAssignmentExpression(VarName("isSet"), TrueExpression())),
-                    ExpressionStatement(SimpleAssignmentExpression(VarName("result"), CurrentPlaceholder))));
+                LogicalOrExpression(LogicalNotExpression(LocalName("isSet")), comparison), Block(
+                    ExpressionStatement(SimpleAssignmentExpression(LocalName("isSet"), TrueExpression())),
+                    ExpressionStatement(SimpleAssignmentExpression(LocalName("result"), CurrentPlaceholder))));
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()
         {
-            yield return IfStatement(LogicalNotExpression(VarName("isSet")), ThrowInvalidOperationStatement());
-            yield return ReturnStatement(VarName("result"));
+            yield return IfStatement(LogicalNotExpression(LocalName("isSet")), ThrowInvalidOperationStatement());
+            yield return ReturnStatement(LocalName("result"));
         }
     }
 }

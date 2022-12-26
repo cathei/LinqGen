@@ -26,42 +26,41 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
-            yield return new MemberInfo(MemberKind.Both, IntType, VarName("start"));
-            yield return new MemberInfo(MemberKind.Both, IntType, VarName("count"));
+            yield return new MemberInfo(MemberKind.Both, IntType, LocalName("start"));
+            yield return new MemberInfo(MemberKind.Both, IntType, LocalName("count"));
 
-            yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
+            yield return new MemberInfo(MemberKind.Enumerator, IntType, LocalName("index"));
         }
 
         public override ExpressionSyntax RenderCount()
         {
-            return VarName("count");
+            return MemberName("count");
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
-            ExpressionSyntax source, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             ExpressionSyntax initialValue = LiteralExpression(-1);
 
             if (skipVar != null)
                 initialValue = SubtractExpression(skipVar, LiteralExpression(1));
 
-            yield return ExpressionStatement(SimpleAssignmentExpression(VarName("index"), initialValue));
+            yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("index"), initialValue));
         }
 
         public override BlockSyntax RenderIteration(bool isLocal,
             SyntaxList<StatementSyntax> statements)
         {
-            var currentName = VarName("current");
-            var currentRewriter = new PlaceholderRewriter(currentName);
+            var currentName = LocalName("current");
+            var currentRewriter = new CurrentPlaceholderRewriter(currentName);
 
             // replace current variables of downstream
             statements = currentRewriter.VisitStatementSyntaxList(statements);
 
             statements = statements.Insert(0, LocalDeclarationStatement(
-                currentName.Identifier, AddExpression(VarName("start"), VarName("index"))));
+                currentName.Identifier, AddExpression(MemberName("start"), LocalName("index"))));
 
             return Block(WhileStatement(
-                LessThanExpression(PreIncrementExpression(VarName("index")), VarName("count")),
+                LessThanExpression(PreIncrementExpression(LocalName("index")), MemberName("count")),
                 Block(statements)));
         }
     }

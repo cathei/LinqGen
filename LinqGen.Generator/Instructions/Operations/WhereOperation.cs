@@ -43,10 +43,10 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Both,
-                WithStruct ? TypeName("Predicate") : PredicateType, VarName("predicate"));
+                WithStruct ? TypeName("Predicate") : PredicateType, LocalName("predicate"));
 
             if (WithIndex)
-                yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));
+                yield return new MemberInfo(MemberKind.Enumerator, IntType, LocalName("index"), LiteralExpression(-1));
         }
 
         public override bool SupportPartition => false;
@@ -60,9 +60,9 @@ namespace Cathei.LinqGen.Generator
         {
             return IfStatement(
                 LogicalNotExpression(InvocationExpression(
-                    MemberAccessExpression(VarName("predicate"), InvokeMethod),
+                    MemberAccessExpression(MemberName("predicate"), InvokeMethod),
                     ArgumentList(WithIndex
-                        ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(VarName("index")) }
+                        ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(LocalName("index")) }
                         : new ExpressionSyntax[] { CurrentPlaceholder }))),
                 ContinueStatement());
         }

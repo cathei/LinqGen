@@ -52,16 +52,12 @@ namespace Cathei.LinqGen.Generator
                 Parameter(UpstreamResolvedClassName, Identifier("source"));
 
             if (extensionMethod)
-                sourceParameter = sourceParameter.WithModifiers(ThisInTokenList);
+            {
+                // here we intentionally value copy for locality
+                sourceParameter = sourceParameter.WithModifiers(ThisTokenList);
+            }
 
             return ParameterList(parameters.Prepend(sourceParameter));
-        }
-
-        private ArgumentListSyntax GetArguments()
-        {
-            var arguments = GetParameterInfos().Select(x => x.AsArgument());
-
-            return ArgumentList(arguments.Prepend(Argument(IdentifierName("source"))));
         }
 
         public override IEnumerable<MemberDeclarationSyntax> RenderExtensionMembers()
@@ -74,10 +70,11 @@ namespace Cathei.LinqGen.Generator
 
         private BlockSyntax RenderBody()
         {
-            var initialDeclarations = Upstream.GetLocalDeclarations(MemberKind.Enumerator)
-                .Concat(Upstream.GetLocalAssignments(MemberKind.Both, IdentifierName("source")))
-                .Concat(Upstream.RenderInitialization(true, IdentifierName("source"), null, null))
-                .Concat(RenderInitialization());
+            var sourceRewriter = new ThisPlaceholderRewriter(IdentifierName("source"));
+
+            var initialDeclarations = Upstream.GetLocalDeclarations()
+                    .Concat(Upstream.RenderInitialization(true, null, null))
+                    .Concat(RenderInitialization());
 
             var accumulationStatements = RenderAccumulation();
 
@@ -102,7 +99,7 @@ namespace Cathei.LinqGen.Generator
                 body = Block(initialDeclarations.Append(tryStatement));
             }
 
-            return body;
+            return (BlockSyntax)sourceRewriter.Visit(body);
         }
     }
 }

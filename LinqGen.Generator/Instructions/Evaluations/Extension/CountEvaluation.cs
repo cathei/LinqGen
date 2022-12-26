@@ -66,26 +66,26 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
-            yield return LocalDeclarationStatement(IntType, VarName("result").Identifier, DefaultLiteral);
+            yield return LocalDeclarationStatement(IntType, LocalName("result").Identifier, DefaultLiteral);
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()
         {
             if (PredicateType == null)
             {
-                yield return ExpressionStatement(PreIncrementExpression(VarName("result")));
+                yield return ExpressionStatement(PreIncrementExpression(LocalName("result")));
             }
             else
             {
                 yield return IfStatement(InvocationExpression(MemberAccessExpression(
                         IdentifierName("predicate"), InvokeMethod), ArgumentList(CurrentPlaceholder)),
-                    ExpressionStatement(PreIncrementExpression(VarName("result"))));
+                    ExpressionStatement(PreIncrementExpression(LocalName("result"))));
             }
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()
         {
-            yield return ReturnStatement(VarName("result"));
+            yield return ReturnStatement(LocalName("result"));
         }
     }
 }

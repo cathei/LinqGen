@@ -124,14 +124,14 @@ namespace Cathei.LinqGen
                     .WithTypeParameterList(_instruction.GetTypeParameters())
                     .WithConstraintClauses(_instruction.GetGenericConstraints())
                     .AddMembers(_instruction.RenderEnumerableMembers().ToArray())
-                    .AddMembers(_instruction.GetFieldDeclarations(_instruction.IsEnumerator).ToArray());
+                    .AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerable).ToArray());
 
                 return node;
             }
 
             private ConstructorDeclarationSyntax? RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
             {
-                var parameters = _instruction.GetParameters(MemberKind.Enumerable, false);
+                var parameters = _instruction.GetParameters();
                 var assignments = _instruction.GetFieldAssignments(MemberKind.Enumerable, false);
 
                 if (_instruction.Upstream != null)
@@ -149,9 +149,6 @@ namespace Cathei.LinqGen
 
                 if (parameterList.Parameters.Count == 0)
                     return null;
-
-                if (_instruction.IsEnumerator)
-                    assignments = assignments.Concat(_instruction.GetFieldDefaultAssignments(MemberKind.Enumerator));
 
                 return node.WithIdentifier(_instruction.ClassName.Identifier)
                     .WithParameterList(parameterList)

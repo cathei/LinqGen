@@ -39,8 +39,8 @@ namespace Cathei.LinqGen.Generator
         {
             var enumerableType = AsStruct ? TypeName("Enumerable") : SourceType;
 
-            yield return new MemberInfo(MemberKind.Both, enumerableType, VarName("source"));
-            yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
+            yield return new MemberInfo(MemberKind.Both, enumerableType, LocalName("source"));
+            yield return new MemberInfo(MemberKind.Enumerator, IntType, LocalName("index"));
         }
 
         public override bool SupportPartition => true;
@@ -55,38 +55,38 @@ namespace Cathei.LinqGen.Generator
 
         public override ExpressionSyntax RenderCount()
         {
-            return MemberAccessExpression(VarName("source"), ListCountProperty);
+            return MemberAccessExpression(MemberName("source"), ListCountProperty);
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
             ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             if (skipVar != null)
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
-                    VarName("index"), SubtractExpression(skipVar, LiteralExpression(1))));
+                    LocalName("index"), SubtractExpression(skipVar, LiteralExpression(1))));
             }
             else
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
-                    VarName("index"), LiteralExpression(-1)));
+                    LocalName("index"), LiteralExpression(-1)));
             }
         }
 
         public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
         {
-            var currentName = VarName("current");
-            var currentRewriter = new PlaceholderRewriter(currentName);
+            var currentName = LocalName("current");
+            var currentRewriter = new CurrentPlaceholderRewriter(currentName);
 
             // replace current variables of downstream
             statements = currentRewriter.VisitStatementSyntaxList(statements);
 
             statements = statements.Insert(0, LocalDeclarationStatement(
-                currentName.Identifier, ElementAccessExpression(VarName("source"), VarName("index"))));
+                currentName.Identifier, ElementAccessExpression(MemberName("source"), LocalName("index"))));
 
             var result = WhileStatement(LessThanExpression(
-                    CastExpression(UIntType, PreIncrementExpression(VarName("index"))),
-                    CastExpression(UIntType, MemberAccessExpression(VarName("source"), ListCountProperty))),
+                    CastExpression(UIntType, PreIncrementExpression(LocalName("index"))),
+                    CastExpression(UIntType, MemberAccessExpression(MemberName("source"), ListCountProperty))),
                 Block(statements));
 
             return Block(result);

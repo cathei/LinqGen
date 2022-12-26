@@ -56,18 +56,18 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             if (ComparerKind != ComparerKind.Default)
-                yield return new MemberInfo(MemberKind.Enumerable, ComparerType, VarName("comparer"));
+                yield return new MemberInfo(MemberKind.Enumerable, ComparerType, LocalName("comparer"));
 
             var pooledSetType = PooledSetType(OutputElementType, ComparerType, OutputElementSymbol.IsUnmanagedType);
-            yield return new MemberInfo(MemberKind.Enumerator, pooledSetType, VarName("hashSet"));
+            yield return new MemberInfo(MemberKind.Enumerator, pooledSetType, LocalName("hashSet"));
         }
 
         public override IEnumerable<StatementSyntax> RenderInitialization(
-            bool isLocal, ExpressionSyntax source, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             var comparerExpression = ComparerKind == ComparerKind.Default
                 ? EqualityComparerDefault(OutputElementType, OutputElementSymbol)
-                : MemberAccessExpression(source, VarName("comparer"));
+                : MemberName("comparer");
 
             var countExpression = Upstream.RenderCount() ?? LiteralExpression(0);
 
@@ -76,9 +76,9 @@ namespace Cathei.LinqGen.Generator
             var pooledSetCreation = ObjectCreationExpression(
                 pooledSetType, ArgumentList(countExpression, comparerExpression), null);
 
-            yield return ExpressionStatement(SimpleAssignmentExpression(VarName("hashSet"), pooledSetCreation));
+            yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("hashSet"), pooledSetCreation));
 
-            foreach (var statement in base.RenderInitialization(isLocal, source, skipVar, takeVar))
+            foreach (var statement in base.RenderInitialization(isLocal, skipVar, takeVar))
                 yield return statement;
         }
 
@@ -90,7 +90,7 @@ namespace Cathei.LinqGen.Generator
         {
             return IfStatement(
                 LogicalNotExpression(InvocationExpression(
-                    MemberAccessExpression(VarName("hashSet"), AddMethod), ArgumentList(CurrentPlaceholder))),
+                    MemberAccessExpression(LocalName("hashSet"), AddMethod), ArgumentList(CurrentPlaceholder))),
                 ContinueStatement());
         }
 
@@ -99,7 +99,7 @@ namespace Cathei.LinqGen.Generator
             foreach (var statement in base.RenderDispose(isLocal))
                 yield return statement;
 
-            yield return ExpressionStatement(InvocationExpression(VarName("hashSet"), DisposeMethod));
+            yield return ExpressionStatement(InvocationExpression(LocalName("hashSet"), DisposeMethod));
         }
     }
 }

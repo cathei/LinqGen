@@ -11,11 +11,11 @@ namespace Cathei.LinqGen.Generator
     using static SyntaxFactory;
     using static CodeGenUtils;
 
-    public class PlaceholderRewriter : CSharpSyntaxRewriter
+    public class CurrentPlaceholderRewriter : CSharpSyntaxRewriter
     {
         private readonly ExpressionSyntax _current;
 
-        public PlaceholderRewriter(ExpressionSyntax current)
+        public CurrentPlaceholderRewriter(ExpressionSyntax current)
         {
             _current = current;
         }

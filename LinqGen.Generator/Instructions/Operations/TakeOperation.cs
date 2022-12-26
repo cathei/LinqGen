@@ -22,14 +22,14 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
-            yield return new MemberInfo(MemberKind.Both, IntType, VarName("take"));
-            yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"));
+            yield return new MemberInfo(MemberKind.Both, IntType, LocalName("take"));
+            yield return new MemberInfo(MemberKind.Enumerator, IntType, LocalName("index"));
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
             ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            ExpressionSyntax newTakeVar = VarName("take");
+            ExpressionSyntax newTakeVar = MemberName("take");
 
             if (skipVar != null)
                 newTakeVar = SubtractExpression(newTakeVar, skipVar);
@@ -40,15 +40,15 @@ namespace Cathei.LinqGen.Generator
             if (SupportPartition && skipVar != null)
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
-                    VarName("index"), SubtractExpression(skipVar, LiteralExpression(1))));
+                    LocalName("index"), SubtractExpression(skipVar, LiteralExpression(1))));
             }
             else
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
-                    VarName("index"), LiteralExpression(-1)));
+                    LocalName("index"), LiteralExpression(-1)));
             }
 
-            foreach (var statement in base.RenderInitialization(isLocal, source, skipVar, newTakeVar))
+            foreach (var statement in base.RenderInitialization(isLocal, skipVar, newTakeVar))
                 yield return statement;
         }
 
@@ -59,15 +59,15 @@ namespace Cathei.LinqGen.Generator
             if (upstreamCount == null)
                 return null;
 
-            return MathMin(ParenthesizedExpression(upstreamCount), VarName("take"));
+            return MathMin(ParenthesizedExpression(upstreamCount), MemberName("take"));
         }
 
         protected override StatementSyntax? RenderMoveNext()
         {
             return IfStatement(
                 GreaterOrEqualExpression(
-                    CastExpression(UIntType, PreIncrementExpression(VarName("index"))),
-                    CastExpression(UIntType, VarName("take"))),
+                    CastExpression(UIntType, PreIncrementExpression(LocalName("index"))),
+                    CastExpression(UIntType, MemberName("take"))),
                 BreakStatement());
         }
     }

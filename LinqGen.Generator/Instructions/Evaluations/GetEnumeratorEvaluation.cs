@@ -22,7 +22,7 @@ namespace Cathei.LinqGen.Generator
 
         public override void AddUpstream(Generation upstream)
         {
-            upstream.IsEnumerator = true;
+            upstream.HasEnumerator = true;
             base.AddUpstream(upstream);
         }
     }

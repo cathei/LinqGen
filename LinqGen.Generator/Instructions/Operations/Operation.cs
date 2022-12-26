@@ -49,7 +49,7 @@ namespace Cathei.LinqGen.Generator
 
         public override bool SupportPartition => Upstream.SupportPartition;
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
             ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             if (!Upstream.SupportPartition)
@@ -58,7 +58,7 @@ namespace Cathei.LinqGen.Generator
                 takeVar = null;
             }
 
-            return Upstream.RenderInitialization(isLocal, source, skipVar, takeVar);
+            return Upstream.RenderInitialization(isLocal, skipVar, takeVar);
         }
 
         protected virtual StatementSyntax? RenderMoveNext()
@@ -83,8 +83,8 @@ namespace Cathei.LinqGen.Generator
 
             if (getCurrent != null)
             {
-                var currentName = VarName("current");
-                var currentRewriter = new PlaceholderRewriter(currentName);
+                var currentName = LocalName("current");
+                var currentRewriter = new CurrentPlaceholderRewriter(currentName);
 
                 // replace current variables of downstream
                 statements = currentRewriter.VisitStatementSyntaxList(statements);
@@ -114,7 +114,7 @@ namespace Cathei.LinqGen.Generator
             {
                 int arityDiff = Arity - Upstream.Arity;
 
-                var parameters = GetParameters(MemberKind.Enumerable, false, true);
+                var parameters = GetParameters(true);
 
                 if (DummyParameterType != null)
                     parameters = parameters.Append(Parameter(DummyParameterType, Identifier("unused"), DefaultLiteral));
@@ -124,7 +124,7 @@ namespace Cathei.LinqGen.Generator
                     ParameterList(parameters),
                     GetGenericConstraints(arityDiff), null,
                     ArrowExpressionClause(ObjectCreationExpression(ResolvedClassName, ArgumentList(
-                        GetArguments(MemberKind.Enumerable, false).Prepend(Argument(ThisExpression()))), null)),
+                        GetArguments().Prepend(Argument(ThisExpression()))), null)),
                     SemicolonToken);
             }
         }

@@ -89,12 +89,15 @@ namespace Cathei.LinqGen.Generator
 
             if (countExpression != null)
             {
+                var thisRewriter = new ThisPlaceholderRewriter(ThisExpression());
+                countExpression = (ExpressionSyntax)thisRewriter.Visit(countExpression);
+
                 yield return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList,
                     IntType, null, CountMethod.Identifier, null, EmptyParameterList, default, null,
                     ArrowExpressionClause(countExpression), SemicolonToken);
             }
 
-            if (IsEnumerator)
+            if (HasEnumerator)
             {
                 foreach (var member in RenderGetEnumerator())
                     yield return member;
@@ -121,7 +124,7 @@ namespace Cathei.LinqGen.Generator
 
         protected virtual ParameterListSyntax GetExtensionMethodParameters()
         {
-            var parameters = GetParameters(MemberKind.Enumerable, false, true).ToList();
+            var parameters = GetParameters(true).ToList();
 
             parameters[0] = parameters[0].WithModifiers(Upstream != null ? ThisInTokenList : ThisTokenList);
 
@@ -132,8 +135,7 @@ namespace Cathei.LinqGen.Generator
         {
             if (MethodKind == MethodKind.Extension)
             {
-                var expression = ObjectCreationExpression(ResolvedClassName,
-                    ArgumentList(GetArguments(MemberKind.Enumerable, false)), null);
+                var expression = ObjectCreationExpression(ResolvedClassName, ArgumentList(GetArguments()), null);
 
                 yield return MethodDeclaration(new(AggressiveInliningAttributeList), PublicStaticTokenList,
                     ResolvedClassName, null, MethodName.Identifier, GetTypeParameters(), GetExtensionMethodParameters(),
@@ -155,16 +157,7 @@ namespace Cathei.LinqGen.Generator
 
         public IEnumerable<BaseTypeSyntax> InterfaceTypes
         {
-            get
-            {
-                yield return SimpleBaseType(EnumerableInterfaceType);
-
-                if (IsEnumerator)
-                {
-                    yield return SimpleBaseType(
-                        GenericName(Identifier("IEnumerator"), TypeArgumentList(OutputElementType)));
-                }
-            }
+            get { yield return SimpleBaseType(EnumerableInterfaceType); }
         }
 
         protected abstract IEnumerable<MemberInfo> GetMemberInfos(bool isLocal);
@@ -194,8 +187,8 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// Additional initialization statements.
         /// </summary>
-        public virtual IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
-            ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+        public virtual IEnumerable<StatementSyntax> RenderInitialization(
+            bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
             yield break;
         }
@@ -213,54 +206,39 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public abstract BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements);
 
-        public IEnumerable<ParameterSyntax> GetParameters(
-            MemberKind kind, bool includeUpstream, bool defaultValue = false)
+        public IEnumerable<ParameterSyntax> GetParameters(bool defaultValue = false)
         {
-            if (includeUpstream && Upstream != null && !ShouldIgnoreUpstream(kind))
-            {
-                foreach (var param in Upstream.GetParameters(kind, includeUpstream))
-                    yield return param;
-            }
-
             foreach (var member in GetMemberInfos(false))
             {
-                if ((member.Kind & kind) != kind)
+                if ((member.Kind & MemberKind.Enumerable) == 0)
                     continue;
 
                 yield return member.AsParameter(defaultValue);
             }
         }
 
-        public IEnumerable<ArgumentSyntax> GetArguments(MemberKind kind, bool includeUpstream)
+        protected IEnumerable<ArgumentSyntax> GetArguments()
         {
-            if (includeUpstream && Upstream != null && !ShouldIgnoreUpstream(kind))
-            {
-                foreach (var arg in Upstream.GetArguments(kind, includeUpstream))
-                    yield return arg;
-            }
-
             foreach (var member in GetMemberInfos(false))
             {
-                if ((member.Kind & kind) != kind)
+                if ((member.Kind & MemberKind.Enumerable) == 0)
                     continue;
 
                 yield return member.AsArgument();
             }
         }
 
-        public IEnumerable<MemberDeclarationSyntax> GetFieldDeclarations(bool includeEnumerator)
+        public IEnumerable<MemberDeclarationSyntax> GetFieldDeclarations(MemberKind kind)
         {
-            if (Upstream != null)
+            if (Upstream != null && !ShouldIgnoreUpstream(kind))
             {
-                bool upstreamEnumerator = includeEnumerator && !ClearsUpstreamEnumerator;
-
-                foreach (var field in Upstream.GetFieldDeclarations(upstreamEnumerator))
-                    yield return field;
+                foreach (var assignment in Upstream.GetFieldDeclarations(kind))
+                    yield return assignment;
             }
 
             foreach (var member in GetMemberInfos(false))
             {
-                if (!includeEnumerator && (member.Kind & ~MemberKind.Enumerator) == 0)
+                if ((member.Kind & kind) != kind)
                     continue;
 
                 yield return FieldDeclaration(SingletonList(EditorBrowsableNeverAttributeList),
@@ -309,17 +287,17 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public IEnumerable<LocalDeclarationStatementSyntax> GetLocalDeclarations(MemberKind kind)
+        public IEnumerable<LocalDeclarationStatementSyntax> GetLocalDeclarations()
         {
-            if (Upstream != null && !ShouldIgnoreUpstream(kind))
+            if (Upstream != null && !ClearsUpstreamEnumerator)
             {
-                foreach (var local in Upstream.GetLocalDeclarations(kind))
+                foreach (var local in Upstream.GetLocalDeclarations())
                     yield return local;
             }
 
             foreach (var member in GetMemberInfos(true))
             {
-                if ((member.Kind & kind) != kind)
+                if ((member.Kind & MemberKind.Enumerator) == 0)
                     continue;
 
                 yield return LocalDeclarationStatement(default, VariableDeclaration(
@@ -328,37 +306,16 @@ namespace Cathei.LinqGen.Generator
                         member.DefaultValue != null ? EqualsValueClause(member.DefaultValue) : null))));
             }
         }
-
-        public IEnumerable<StatementSyntax> GetLocalAssignments(MemberKind kind, ExpressionSyntax? source = null)
-        {
-            source ??= ThisExpression();
-
-            if (Upstream != null && !ShouldIgnoreUpstream(kind))
-            {
-                foreach (var assignment in Upstream.GetLocalAssignments(kind, source))
-                    yield return assignment;
-            }
-
-            foreach (var member in GetMemberInfos(true))
-            {
-                if ((member.Kind & kind) != kind)
-                    continue;
-
-                yield return ExpressionStatement(SimpleAssignmentExpression(
-                    member.Name, MemberAccessExpression(source, member.Name)));
-            }
-        }
-
-        public bool IsEnumerator { get; set; }
+        public bool HasEnumerator { get; set; }
 
         private IEnumerable<MemberDeclarationSyntax> RenderGetEnumerator()
         {
-            foreach (var member in EnumeratorTemplate.Render(this))
-                yield return member;
+            yield return EnumeratorTemplate.Render(this);
 
             yield return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList,
-                ResolvedClassName, null, GetEnumeratorMethod.Identifier, null, ParameterList(),
-                default, null, ArrowExpressionClause(ThisExpression()), SemicolonToken);
+                IdentifierName("Enumerator"), null, GetEnumeratorMethod.Identifier, null, ParameterList(),
+                default, null, ArrowExpressionClause(ObjectCreationExpression(
+                    IdentifierName("Enumerator"), ArgumentList(ThisExpression()), null)), SemicolonToken);
         }
     }
 }

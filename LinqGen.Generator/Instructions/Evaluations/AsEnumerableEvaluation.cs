@@ -18,7 +18,7 @@ namespace Cathei.LinqGen.Generator
     {
         private static readonly SyntaxTree TemplateSyntaxTree = CSharpSyntaxTree.ParseText(@"
         // result of AsEnumerable, doesn't need to be public
-        private class BoxedEnumerable : IEnumerable<_Element_>
+        public class BoxedEnumerable : IEnumerable<_Element_>
         {
             private _Upstream_ source;
 
@@ -27,8 +27,9 @@ namespace Cathei.LinqGen.Generator
                 this.source = source;
             }
 
-            public IEnumerator<_Element_> GetEnumerator() => source.GetEnumerator();
+            public Enumerator GetEnumerator() => source.GetEnumerator();
 
+            IEnumerator<_Element_> IEnumerable<_Element_>.GetEnumerator() => GetEnumerator();
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 ");
@@ -63,7 +64,7 @@ namespace Cathei.LinqGen.Generator
 
         public override void AddUpstream(Generation upstream)
         {
-            upstream.IsEnumerator = true;
+            upstream.HasEnumerator = true;
             base.AddUpstream(upstream);
         }
 
@@ -77,8 +78,7 @@ namespace Cathei.LinqGen.Generator
             yield return (MemberDeclarationSyntax)_rewriter.Visit(classSyntax);
 
             yield return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList,
-                EnumerableInterfaceType(Upstream.OutputElementType), null,
-                MethodName.Identifier, null, ParameterList(), default, null,
+                IdentifierName("BoxedEnumerable"), null, MethodName.Identifier, null, ParameterList(), default, null,
                 ArrowExpressionClause(ObjectCreationExpression(
                     IdentifierName("BoxedEnumerable"), ArgumentList(ThisExpression()), null)), SemicolonToken);
         }

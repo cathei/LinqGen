@@ -61,8 +61,8 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
-            yield return new MemberInfo(MemberKind.Enumerable, SourceEnumerableType, VarName("source"));
-            yield return new MemberInfo(MemberKind.Enumerator, SourceEnumeratorType, VarName("iter"));
+            yield return new MemberInfo(MemberKind.Enumerable, SourceEnumerableType, LocalName("source"));
+            yield return new MemberInfo(MemberKind.Enumerator, SourceEnumeratorType, LocalName("iter"));
         }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
@@ -73,29 +73,29 @@ namespace Cathei.LinqGen.Generator
 
         public override ExpressionSyntax? RenderCount()
         {
-            return IsCollection ? MemberAccessExpression(VarName("source"), CountProperty) : null;
+            return IsCollection ? MemberAccessExpression(MemberName("source"), CountProperty) : null;
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
             ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            yield return ExpressionStatement(SimpleAssignmentExpression(VarName("iter"),
-                InvocationExpression(source, VarName("source"), GetEnumeratorMethod)));
+            yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("iter"),
+                InvocationExpression(MemberName("source"), GetEnumeratorMethod)));
         }
 
         public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
         {
-            var currentName = VarName("current");
-            var currentRewriter = new PlaceholderRewriter(currentName);
+            var currentName = LocalName("current");
+            var currentRewriter = new CurrentPlaceholderRewriter(currentName);
 
             // replace current variables of downstream
             statements = currentRewriter.VisitStatementSyntaxList(statements);
 
             statements = statements.Insert(0, LocalDeclarationStatement(
-                currentName.Identifier, MemberAccessExpression(VarName("iter"), CurrentProperty)));
+                currentName.Identifier, MemberAccessExpression(LocalName("iter"), CurrentProperty)));
 
             var result = WhileStatement(
-                InvocationExpression(VarName("iter"), MoveNextMethod),
+                InvocationExpression(LocalName("iter"), MoveNextMethod),
                 Block(statements));
 
             return Block(result);

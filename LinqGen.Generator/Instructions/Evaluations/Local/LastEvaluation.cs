@@ -36,26 +36,26 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
             if (!OrDefault)
-                yield return LocalDeclarationStatement(BoolType, VarName("isSet").Identifier, FalseExpression());
+                yield return LocalDeclarationStatement(BoolType, LocalName("isSet").Identifier, FalseExpression());
 
             yield return LocalDeclarationStatement(
-                Upstream.OutputElementType, VarName("result").Identifier, DefaultLiteral);
+                Upstream.OutputElementType, LocalName("result").Identifier, DefaultLiteral);
         }
 
         protected override IEnumerable<StatementSyntax> RenderAccumulation()
         {
             if (!OrDefault)
-                yield return ExpressionStatement(SimpleAssignmentExpression(VarName("isSet"), TrueExpression()));
+                yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("isSet"), TrueExpression()));
 
-            yield return ExpressionStatement(SimpleAssignmentExpression(VarName("result"), CurrentPlaceholder));
+            yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("result"), CurrentPlaceholder));
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()
         {
             if (!OrDefault)
-                yield return IfStatement(LogicalNotExpression(VarName("isSet")), ThrowInvalidOperationStatement());
+                yield return IfStatement(LogicalNotExpression(LocalName("isSet")), ThrowInvalidOperationStatement());
 
-            yield return ReturnStatement(VarName("result"));
+            yield return ReturnStatement(LocalName("result"));
         }
     }
 }

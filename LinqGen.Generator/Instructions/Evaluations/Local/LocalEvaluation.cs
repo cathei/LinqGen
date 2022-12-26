@@ -60,10 +60,17 @@ namespace Cathei.LinqGen.Generator
             var skipVar = supportPartition ? SkipExpression : null;
             var takeVar = supportPartition ? TakeExpression : null;
 
-            var initialDeclarations = Upstream.GetLocalDeclarations(MemberKind.Enumerator)
-                .Concat(Upstream.GetLocalAssignments(MemberKind.Both))
-                .Concat(Upstream.RenderInitialization(true, ThisExpression(), skipVar, takeVar))
-                .Concat(RenderInitialization());
+            var copyName = LocalName("copy");
+            var copyRewriter = new ThisPlaceholderRewriter(copyName);
+
+            var initialDeclarations = new List<StatementSyntax>
+            {
+                LocalDeclarationStatement(copyName.Identifier, ThisExpression())
+            };
+
+            initialDeclarations.AddRange(Upstream.GetLocalDeclarations());
+            initialDeclarations.AddRange(Upstream.RenderInitialization(true, skipVar, takeVar));
+            initialDeclarations.AddRange(RenderInitialization());
 
             var accumulationStatements = RenderAccumulation();
 
@@ -88,7 +95,7 @@ namespace Cathei.LinqGen.Generator
                 body = Block(initialDeclarations.Append(tryStatement));
             }
 
-            return body;
+            return (BlockSyntax)copyRewriter.Visit(body);
         }
     }
 }

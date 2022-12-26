@@ -22,23 +22,23 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
-            yield return new MemberInfo(MemberKind.Both, IntType, VarName("skip"));
+            yield return new MemberInfo(MemberKind.Both, IntType, LocalName("skip"));
 
             if (!Upstream.SupportPartition)
             {
-                yield return new MemberInfo(MemberKind.Enumerator, IntType, VarName("index"), LiteralExpression(-1));
+                yield return new MemberInfo(MemberKind.Enumerator, IntType, LocalName("index"), LiteralExpression(-1));
             }
         }
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax source,
+        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
             ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            ExpressionSyntax newSkipVar = VarName("skip");
+            ExpressionSyntax newSkipVar = MemberName("skip");
 
             if (skipVar != null)
                 newSkipVar = AddExpression(newSkipVar, skipVar);
 
-            return base.RenderInitialization(isLocal, source, newSkipVar, takeVar);
+            return base.RenderInitialization(isLocal, newSkipVar, takeVar);
         }
 
         public override ExpressionSyntax? RenderCount()
@@ -49,7 +49,7 @@ namespace Cathei.LinqGen.Generator
                 return null;
 
             return MathMax(SubtractExpression(
-                ParenthesizedExpression(upstreamCount), VarName("skip")), LiteralExpression(0));
+                ParenthesizedExpression(upstreamCount), MemberName("skip")), LiteralExpression(0));
         }
 
         protected override StatementSyntax? RenderMoveNext()
@@ -58,7 +58,7 @@ namespace Cathei.LinqGen.Generator
                 return null;
 
             return IfStatement(
-                LessThanExpression(PreIncrementExpression(VarName("index")), VarName("skip")),
+                LessThanExpression(PreIncrementExpression(LocalName("index")), MemberName("skip")),
                 ContinueStatement());
         }
     }

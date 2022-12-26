@@ -24,7 +24,7 @@ namespace Cathei.LinqGen.Generator
 
         protected override ParameterListSyntax GetExtensionMethodParameters()
         {
-            var parameters = GetParameters(MemberKind.Enumerable, false, true);
+            var parameters = GetParameters(true);
 
             parameters = parameters.Prepend(
                 Parameter(IdentifierName("GenerationStub"), Identifier("stub")).WithModifiers(ThisTokenList));
