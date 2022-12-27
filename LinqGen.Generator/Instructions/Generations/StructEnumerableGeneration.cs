@@ -82,8 +82,8 @@ namespace Cathei.LinqGen.Generator
         public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
             ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("iter"),
-                InvocationExpression(MemberName("source"), GetEnumeratorMethod)));
+            yield return ExpressionStatement(SimpleAssignmentExpression(Iterator("iter"),
+                InvocationExpression(Member("source"), GetEnumeratorMethod)));
         }
 
         public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
@@ -95,10 +95,10 @@ namespace Cathei.LinqGen.Generator
             statements = currentRewriter.VisitStatementSyntaxList(statements);
 
             statements = statements.Insert(0, LocalDeclarationStatement(
-                currentName.Identifier, MemberAccessExpression(LocalName("iter"), CurrentProperty)));
+                currentName.Identifier, MemberAccessExpression(Iterator("iter"), CurrentProperty)));
 
             var result = WhileStatement(
-                InvocationExpression(LocalName("iter"), MoveNextMethod),
+                InvocationExpression(Iterator("iter"), MoveNextMethod),
                 Block(statements));
 
             return Block(result);

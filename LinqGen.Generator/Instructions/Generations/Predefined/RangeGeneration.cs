@@ -34,7 +34,7 @@ namespace Cathei.LinqGen.Generator
 
         public override ExpressionSyntax RenderCount()
         {
-            return MemberName("count");
+            return Member("count");
         }
 
         public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
@@ -44,7 +44,7 @@ namespace Cathei.LinqGen.Generator
             if (skipVar != null)
                 initialValue = SubtractExpression(skipVar, LiteralExpression(1));
 
-            yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("index"), initialValue));
+            yield return ExpressionStatement(SimpleAssignmentExpression(Iterator("index"), initialValue));
         }
 
         public override BlockSyntax RenderIteration(bool isLocal,
@@ -57,10 +57,10 @@ namespace Cathei.LinqGen.Generator
             statements = currentRewriter.VisitStatementSyntaxList(statements);
 
             statements = statements.Insert(0, LocalDeclarationStatement(
-                currentName.Identifier, AddExpression(MemberName("start"), LocalName("index"))));
+                currentName.Identifier, AddExpression(Member("start"), Iterator("index"))));
 
             return Block(WhileStatement(
-                LessThanExpression(PreIncrementExpression(LocalName("index")), MemberName("count")),
+                LessThanExpression(PreIncrementExpression(Iterator("index")), Member("count")),
                 Block(statements)));
         }
     }

@@ -20,7 +20,7 @@ namespace Cathei.LinqGen.Generator
         internal struct Enumerator : IEnumerator<_Element_>
         {
             private _Enumerable_ parent;
-            private int state;
+            private bool state;
             private _Element_ current;
 
             internal Enumerator(in _Enumerable_ parent) : this()
@@ -139,9 +139,9 @@ namespace Cathei.LinqGen.Generator
 
             private MethodDeclarationSyntax RewriteEnumeratorMoveNext(MethodDeclarationSyntax node)
             {
-                var initStatement = IfStatement(LessThanExpression(IdentifierName("state"), LiteralExpression(1)),
+                var initStatement = IfStatement(LogicalNotExpression(IdentifierName("state")),
                     Block(ExpressionStatement(InvocationExpression(IdentifierName("InitState"))),
-                        ExpressionStatement(PreIncrementExpression(IdentifierName("state")))));
+                        ExpressionStatement(SimpleAssignmentExpression(IdentifierName("state"), TrueExpression()))));
 
                 var successStatements = new StatementSyntax[]
                 {

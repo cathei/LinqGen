@@ -81,7 +81,7 @@ namespace Cathei.LinqGen.Generator
                 if (Upstream.SupportPartition && skipVar != null)
                     initialIndex = SubtractExpression(skipVar, LiteralExpression(1));
 
-                yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("index"), initialIndex));
+                yield return ExpressionStatement(SimpleAssignmentExpression(Iterator("index"), initialIndex));
             }
 
             foreach (var statement in base.RenderInitialization(isLocal, skipVar, takeVar))
@@ -96,9 +96,9 @@ namespace Cathei.LinqGen.Generator
         protected override ExpressionSyntax RenderCurrent()
         {
             return InvocationExpression(
-                MemberAccessExpression(MemberName("selector"), InvokeMethod),
+                MemberAccessExpression(Member("selector"), InvokeMethod),
                 ArgumentList(WithIndex
-                    ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(LocalName("index")) }
+                    ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(Iterator("index")) }
                     : new ExpressionSyntax[] { CurrentPlaceholder }));
         }
     }

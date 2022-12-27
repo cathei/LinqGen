@@ -209,7 +209,7 @@ namespace Cathei.LinqGen.Generator
         public override IEnumerable<StatementSyntax> RenderInitialization(
             bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            var dictName = LocalName("dict");
+            var dictName = Iterator("dict");
             var keyName = LocalName("key");
             var valueName = LocalName("value");
             var listName = LocalName("list");
@@ -217,12 +217,12 @@ namespace Cathei.LinqGen.Generator
             ExpressionSyntax keySelectExpression = KeySelectorKind == FunctionKind.Default
                 ? CurrentPlaceholder
                 : InvocationExpression(MemberAccessExpression(
-                    MemberName("keySelector"), InvokeMethod), ArgumentList(CurrentPlaceholder));
+                    Member("keySelector"), InvokeMethod), ArgumentList(CurrentPlaceholder));
 
             ExpressionSyntax valueSelectExpression = ValueSelectorKind == FunctionKind.Default
                 ? CurrentPlaceholder
                 : InvocationExpression(MemberAccessExpression(
-                    MemberName("valueSelector"), InvokeMethod), ArgumentList(CurrentPlaceholder));
+                    Member("valueSelector"), InvokeMethod), ArgumentList(CurrentPlaceholder));
 
             var addStatements = new StatementSyntax[]
             {
@@ -247,7 +247,7 @@ namespace Cathei.LinqGen.Generator
 
             var comparerExpression = ComparerKind == ComparerKind.Default
                 ? ComparerDefault(KeyType, KeySymbol)
-                : MemberName("comparer");
+                : Member("comparer");
 
             // declare enumerator variables
             foreach (var statement in Upstream.GetLocalDeclarations())
@@ -265,7 +265,7 @@ namespace Cathei.LinqGen.Generator
             yield return Upstream.RenderIteration(isLocal, List(addStatements));
 
             // initialize index
-            yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("index"),
+            yield return ExpressionStatement(SimpleAssignmentExpression(Iterator("index"),
                 skipVar != null ? SubtractExpression(skipVar, LiteralExpression(1)) : LiteralExpression(-1)));
 
             // TODO try block
@@ -289,7 +289,7 @@ namespace Cathei.LinqGen.Generator
             {
                 LocalDeclarationStatement(
                     slotName.Identifier, ElementAccessExpression(
-                        MemberAccessExpression(LocalName("dict"), IdentifierName("Slots")), LocalName("index"))),
+                        MemberAccessExpression(Iterator("dict"), IdentifierName("Slots")), Iterator("index"))),
                 LocalDeclarationStatement(
                     groupingName.Identifier, ObjectCreationExpression(
                         GroupingType, ArgumentList(
@@ -298,15 +298,15 @@ namespace Cathei.LinqGen.Generator
                 ResultSelectorKind == FunctionKind.Default
                     ? LocalDeclarationStatement(currentName.Identifier, groupingName)
                     : LocalDeclarationStatement(currentName.Identifier,
-                        InvocationExpression(MemberName("resultSelector"),
+                        InvocationExpression(Member("resultSelector"),
                             ArgumentList(MemberAccessExpression(groupingName, KeyProperty), groupingName)))
             };
 
             statements = statements.InsertRange(0, currentGetStatements);
 
             var result = WhileStatement(LessThanExpression(
-                    CastExpression(UIntType, PreIncrementExpression(LocalName("index"))),
-                    CastExpression(UIntType, MemberAccessExpression(LocalName("dict"), CountProperty))),
+                    CastExpression(UIntType, PreIncrementExpression(Iterator("index"))),
+                    CastExpression(UIntType, MemberAccessExpression(Iterator("dict"), CountProperty))),
                 Block(statements));
 
             return Block(result);
@@ -315,12 +315,12 @@ namespace Cathei.LinqGen.Generator
         public override IEnumerable<StatementSyntax> RenderDispose(bool isLocal)
         {
             yield return ForStatement(LocalName("i"), LiteralExpression(0),
-                MemberAccessExpression(LocalName("dict"), CountProperty),
+                MemberAccessExpression(Iterator("dict"), CountProperty),
                 ExpressionStatement(InvocationExpression(ElementAccessExpression(
-                        MemberAccessExpression(LocalName("dict"), IdentifierName("Slots")), LocalName("i")),
+                        MemberAccessExpression(Iterator("dict"), IdentifierName("Slots")), LocalName("i")),
                     ValueProperty, DisposeMethod)));
 
-            yield return ExpressionStatement(InvocationExpression(LocalName("dict"), DisposeMethod));
+            yield return ExpressionStatement(InvocationExpression(Iterator("dict"), DisposeMethod));
         }
     }
 }

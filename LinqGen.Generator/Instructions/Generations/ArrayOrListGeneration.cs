@@ -55,7 +55,7 @@ namespace Cathei.LinqGen.Generator
 
         public override ExpressionSyntax RenderCount()
         {
-            return MemberAccessExpression(MemberName("source"), ListCountProperty);
+            return MemberAccessExpression(Member("source"), ListCountProperty);
         }
 
         public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
@@ -64,12 +64,12 @@ namespace Cathei.LinqGen.Generator
             if (skipVar != null)
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
-                    LocalName("index"), SubtractExpression(skipVar, LiteralExpression(1))));
+                    Iterator("index"), SubtractExpression(skipVar, LiteralExpression(1))));
             }
             else
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
-                    LocalName("index"), LiteralExpression(-1)));
+                    Iterator("index"), LiteralExpression(-1)));
             }
         }
 
@@ -82,11 +82,11 @@ namespace Cathei.LinqGen.Generator
             statements = currentRewriter.VisitStatementSyntaxList(statements);
 
             statements = statements.Insert(0, LocalDeclarationStatement(
-                currentName.Identifier, ElementAccessExpression(MemberName("source"), LocalName("index"))));
+                currentName.Identifier, ElementAccessExpression(Member("source"), Iterator("index"))));
 
             var result = WhileStatement(LessThanExpression(
-                    CastExpression(UIntType, PreIncrementExpression(LocalName("index"))),
-                    CastExpression(UIntType, MemberAccessExpression(MemberName("source"), ListCountProperty))),
+                    CastExpression(UIntType, PreIncrementExpression(Iterator("index"))),
+                    CastExpression(UIntType, MemberAccessExpression(Member("source"), ListCountProperty))),
                 Block(statements));
 
             return Block(result);

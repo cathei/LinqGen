@@ -8,5 +8,10 @@ copy:
 
 benchmark:
 	dotnet clean -c Release
-	dotnet run --project LinqGen.Benchmarks -c Release -f net6.0
+	dotnet run --project LinqGen.Benchmarks -c Release -f net7.0
+
+benchmark-mono:
+	dotnet clean -c Release
+	dotnet run --project LinqGen.Benchmarks -c Release -f net472
+
 

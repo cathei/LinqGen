@@ -36,6 +36,39 @@ public class FundamentalTests
         Assert.AreEqual(c1, count);
     }
 
+    [Test]
+    public void TestSameConcat()
+    {
+        int[] array = new int[10];
+
+        var concat = array.Specialize().Concat(array.Specialize());
+
+        int count = 0;
+
+        foreach (var i in concat)
+            count++;
+
+        Assert.AreEqual(20, concat.Count());
+        Assert.AreEqual(20, count);
+    }
+
+    [Test]
+    public void TestDifferentConcat()
+    {
+        int[] array = new int[10];
+
+        var concat = array.Specialize().Concat(array.Specialize().Select(x => x * 2));
+
+        int count = 0;
+
+        foreach (var i in concat)
+            count++;
+
+        Assert.AreEqual(20, concat.Count());
+        Assert.AreEqual(20, count);
+
+    }
+
     // [TestCase(1, 2, 3, 4)]
     // [TestCase(8, 6, 4, 2)]
     // [TestCase(2, 0, 4, 2)]

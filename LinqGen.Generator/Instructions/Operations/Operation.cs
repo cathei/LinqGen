@@ -26,7 +26,9 @@ namespace Cathei.LinqGen.Generator
             base.Upstreams ??= new List<Generation>();
             base.Upstreams.Add(upstream);
 
-            upstream.AddDownstream(this);
+            // only first upstream
+            if (base.Upstreams.Count == 1)
+                upstream.AddDownstream(this);
         }
 
         /// <summary>

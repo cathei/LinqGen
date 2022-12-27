@@ -67,7 +67,7 @@ namespace Cathei.LinqGen.Generator
         {
             var comparerExpression = ComparerKind == ComparerKind.Default
                 ? EqualityComparerDefault(OutputElementType, OutputElementSymbol)
-                : MemberName("comparer");
+                : Member("comparer");
 
             var countExpression = Upstream.RenderCount() ?? LiteralExpression(0);
 
@@ -76,7 +76,7 @@ namespace Cathei.LinqGen.Generator
             var pooledSetCreation = ObjectCreationExpression(
                 pooledSetType, ArgumentList(countExpression, comparerExpression), null);
 
-            yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("hashSet"), pooledSetCreation));
+            yield return ExpressionStatement(SimpleAssignmentExpression(Iterator("hashSet"), pooledSetCreation));
 
             foreach (var statement in base.RenderInitialization(isLocal, skipVar, takeVar))
                 yield return statement;
@@ -90,7 +90,7 @@ namespace Cathei.LinqGen.Generator
         {
             return IfStatement(
                 LogicalNotExpression(InvocationExpression(
-                    MemberAccessExpression(LocalName("hashSet"), AddMethod), ArgumentList(CurrentPlaceholder))),
+                    MemberAccessExpression(Iterator("hashSet"), AddMethod), ArgumentList(CurrentPlaceholder))),
                 ContinueStatement());
         }
 
@@ -99,7 +99,7 @@ namespace Cathei.LinqGen.Generator
             foreach (var statement in base.RenderDispose(isLocal))
                 yield return statement;
 
-            yield return ExpressionStatement(InvocationExpression(LocalName("hashSet"), DisposeMethod));
+            yield return ExpressionStatement(InvocationExpression(Iterator("hashSet"), DisposeMethod));
         }
     }
 }

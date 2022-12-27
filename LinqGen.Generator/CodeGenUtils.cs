@@ -130,6 +130,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));
         public static readonly PredefinedTypeSyntax UIntType = PredefinedType(Token(SyntaxKind.UIntKeyword));
         public static readonly PredefinedTypeSyntax BoolType = PredefinedType(Token(SyntaxKind.BoolKeyword));
+        public static readonly PredefinedTypeSyntax ByteType = PredefinedType(Token(SyntaxKind.ByteKeyword));
 
         // known method names
         public static readonly IdentifierNameSyntax InvokeMethod = IdentifierName("Invoke");

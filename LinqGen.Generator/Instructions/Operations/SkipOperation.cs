@@ -33,7 +33,7 @@ namespace Cathei.LinqGen.Generator
         public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
             ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            ExpressionSyntax newSkipVar = MemberName("skip");
+            ExpressionSyntax newSkipVar = Member("skip");
 
             if (skipVar != null)
                 newSkipVar = AddExpression(newSkipVar, skipVar);
@@ -49,7 +49,7 @@ namespace Cathei.LinqGen.Generator
                 return null;
 
             return MathMax(SubtractExpression(
-                ParenthesizedExpression(upstreamCount), MemberName("skip")), LiteralExpression(0));
+                ParenthesizedExpression(upstreamCount), Member("skip")), LiteralExpression(0));
         }
 
         protected override StatementSyntax? RenderMoveNext()
@@ -58,7 +58,7 @@ namespace Cathei.LinqGen.Generator
                 return null;
 
             return IfStatement(
-                LessThanExpression(PreIncrementExpression(LocalName("index")), MemberName("skip")),
+                LessThanExpression(PreIncrementExpression(Iterator("index")), Member("skip")),
                 ContinueStatement());
         }
     }

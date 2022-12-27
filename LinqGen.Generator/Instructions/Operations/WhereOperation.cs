@@ -60,9 +60,9 @@ namespace Cathei.LinqGen.Generator
         {
             return IfStatement(
                 LogicalNotExpression(InvocationExpression(
-                    MemberAccessExpression(MemberName("predicate"), InvokeMethod),
+                    MemberAccessExpression(Member("predicate"), InvokeMethod),
                     ArgumentList(WithIndex
-                        ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(LocalName("index")) }
+                        ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(Iterator("index")) }
                         : new ExpressionSyntax[] { CurrentPlaceholder }))),
                 ContinueStatement());
         }

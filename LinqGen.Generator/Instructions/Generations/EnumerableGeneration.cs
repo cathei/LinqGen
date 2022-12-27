@@ -62,7 +62,7 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Enumerable, SourceEnumerableType, LocalName("source"));
-            yield return new MemberInfo(MemberKind.Enumerator, SourceEnumeratorType, LocalName("iter"));
+            yield return new MemberInfo(MemberKind.Enumerator, SourceEnumeratorType, LocalName("enumerator"));
         }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
@@ -73,14 +73,14 @@ namespace Cathei.LinqGen.Generator
 
         public override ExpressionSyntax? RenderCount()
         {
-            return IsCollection ? MemberAccessExpression(MemberName("source"), CountProperty) : null;
+            return IsCollection ? MemberAccessExpression(Member("source"), CountProperty) : null;
         }
 
         public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
             ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("iter"),
-                InvocationExpression(MemberName("source"), GetEnumeratorMethod)));
+            yield return ExpressionStatement(SimpleAssignmentExpression(Iterator("enumerator"),
+                InvocationExpression(Member("source"), GetEnumeratorMethod)));
         }
 
         public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
@@ -92,10 +92,10 @@ namespace Cathei.LinqGen.Generator
             statements = currentRewriter.VisitStatementSyntaxList(statements);
 
             statements = statements.Insert(0, LocalDeclarationStatement(
-                currentName.Identifier, MemberAccessExpression(LocalName("iter"), CurrentProperty)));
+                currentName.Identifier, MemberAccessExpression(Iterator("enumerator"), CurrentProperty)));
 
             var result = WhileStatement(
-                InvocationExpression(LocalName("iter"), MoveNextMethod),
+                InvocationExpression(Iterator("enumerator"), MoveNextMethod),
                 Block(statements));
 
             return Block(result);

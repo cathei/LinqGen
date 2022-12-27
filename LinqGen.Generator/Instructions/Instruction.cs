@@ -86,9 +86,17 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// Creating unique variable name for this instruction
         /// </summary>
-        protected ExpressionSyntax MemberName(string identifier)
+        protected ExpressionSyntax Member(string identifier)
         {
             return MemberAccessExpression(ThisPlaceholder, LocalName(identifier));
+        }
+
+        /// <summary>
+        /// Creating unique variable name for this instruction
+        /// </summary>
+        protected ExpressionSyntax Iterator(string identifier)
+        {
+            return MemberAccessExpression(IterPlaceholder, LocalName(identifier));
         }
 
         /// <summary>
@@ -97,6 +105,7 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax CurrentPlaceholder = IdentifierName("_current_");
 
         public static readonly IdentifierNameSyntax ThisPlaceholder = IdentifierName("_this_");
+        public static readonly IdentifierNameSyntax IterPlaceholder = IdentifierName("_iter_");
 
         protected virtual IEnumerable<TypeParameterInfo> GetTypeParameterInfos() => Array.Empty<TypeParameterInfo>();
 
@@ -105,7 +114,7 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// Note the current instruction's parameters come first
         /// </summary>
-        private IReadOnlyList<TypeParameterInfo> TypeParameters
+        public IReadOnlyList<TypeParameterInfo> TypeParameters
             => _typeParameters ??= CreateTypeParameters();
 
         public int Arity => TypeParameters.Count;

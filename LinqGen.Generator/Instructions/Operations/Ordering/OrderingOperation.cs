@@ -185,7 +185,7 @@ namespace Cathei.LinqGen.Generator
 
             ExpressionSyntax countExpression = rootUpstream.RenderCount() ?? LiteralExpression(0);
 
-            var elementsName = LocalName("elements");
+            var elementsName = Iterator("elements");
             var elementsCount = MemberAccessExpression(elementsName, CountProperty);
 
             yield return ExpressionStatement(SimpleAssignmentExpression(elementsName,
@@ -193,7 +193,7 @@ namespace Cathei.LinqGen.Generator
 
             var addElementStatements = SingletonList<StatementSyntax>(
                 ExpressionStatement(InvocationExpression(
-                    MemberAccessExpression(LocalName("elements"), AddMethod), ArgumentList(CurrentPlaceholder))));
+                    MemberAccessExpression(Iterator("elements"), AddMethod), ArgumentList(CurrentPlaceholder))));
 
             yield return rootUpstream.RenderIteration(true, addElementStatements);
 
@@ -201,7 +201,7 @@ namespace Cathei.LinqGen.Generator
             foreach (var statement in rootUpstream.RenderDispose(true))
                 yield return statement;
 
-            var indicesName = LocalName("indices");
+            var indicesName = Iterator("indices");
 
             var minName = IdentifierName("min");
             var maxName = IdentifierName("max");
@@ -213,7 +213,7 @@ namespace Cathei.LinqGen.Generator
                 : SubtractExpression(MathMin(elementsCount, AddExpression(minName, takeVar)), LiteralExpression(1)));
 
             yield return ExpressionStatement(SimpleAssignmentExpression(
-                LocalName("index"), SubtractExpression(minName, LiteralExpression(1))));
+                Iterator("index"), SubtractExpression(minName, LiteralExpression(1))));
 
             var sortBody = new List<StatementSyntax>();
 
@@ -248,8 +248,8 @@ namespace Cathei.LinqGen.Generator
 
         public override IEnumerable<StatementSyntax> RenderDispose(bool isLocal)
         {
-            yield return ExpressionStatement(InvocationExpression(LocalName("elements"), DisposeMethod));
-            yield return ExpressionStatement(InvocationExpression(LocalName("indices"), DisposeMethod));
+            yield return ExpressionStatement(InvocationExpression(Iterator("elements"), DisposeMethod));
+            yield return ExpressionStatement(InvocationExpression(Iterator("indices"), DisposeMethod));
         }
 
         public IEnumerable<OrderMemberInfo> GetOrderMemberInfos()
@@ -311,12 +311,12 @@ namespace Cathei.LinqGen.Generator
             statements = currentRewriter.VisitStatementSyntaxList(statements);
 
             statements = statements.Insert(0, LocalDeclarationStatement(
-                currentName.Identifier, ElementAccessExpression(LocalName("elements"),
-                    ElementAccessExpression(LocalName("indices"), LocalName("index")))));
+                currentName.Identifier, ElementAccessExpression(Iterator("elements"),
+                    ElementAccessExpression(Iterator("indices"), Iterator("index")))));
 
             var result = WhileStatement(LessThanExpression(
-                    CastExpression(UIntType, PreIncrementExpression(LocalName("index"))),
-                    CastExpression(UIntType, MemberAccessExpression(LocalName("elements"), CountProperty))),
+                    CastExpression(UIntType, PreIncrementExpression(Iterator("index"))),
+                    CastExpression(UIntType, MemberAccessExpression(Iterator("elements"), CountProperty))),
                 Block(statements));
 
             return Block(result);

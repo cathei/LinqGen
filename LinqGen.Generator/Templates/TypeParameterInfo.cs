@@ -27,10 +27,12 @@ namespace Cathei.LinqGen.Generator
                 SingletonSeparatedList<TypeParameterConstraintSyntax>(TypeConstraint(constraintType)));
         }
 
-        public TypeParameterInfo(IdentifierNameSyntax name, params TypeParameterConstraintSyntax[] constraints)
+        public TypeParameterInfo(IdentifierNameSyntax name, params TypeParameterConstraintSyntax[]? constraints)
         {
             Name = name;
-            GenericConstraint = TypeParameterConstraintClause(name, SeparatedList(constraints));
+            GenericConstraint = constraints != null
+                ? TypeParameterConstraintClause(name, SeparatedList(constraints))
+                : null;
         }
 
         public TypeParameterSyntax AsTypeParameter()

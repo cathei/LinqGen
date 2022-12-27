@@ -126,6 +126,9 @@ namespace Cathei.LinqGen.Generator
                 case "DistinctStruct":
                     return new DistinctOperation(expression, id, ComparerKind.Struct);
 
+                case "Concat":
+                    return new ConcatOperation(expression, id);
+
                 #region OrderBy
 
                 case "OrderBy":

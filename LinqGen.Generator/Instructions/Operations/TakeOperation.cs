@@ -29,7 +29,7 @@ namespace Cathei.LinqGen.Generator
         public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
             ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            ExpressionSyntax newTakeVar = MemberName("take");
+            ExpressionSyntax newTakeVar = Member("take");
 
             if (skipVar != null)
                 newTakeVar = SubtractExpression(newTakeVar, skipVar);
@@ -40,12 +40,12 @@ namespace Cathei.LinqGen.Generator
             if (SupportPartition && skipVar != null)
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
-                    LocalName("index"), SubtractExpression(skipVar, LiteralExpression(1))));
+                    Iterator("index"), SubtractExpression(skipVar, LiteralExpression(1))));
             }
             else
             {
                 yield return ExpressionStatement(SimpleAssignmentExpression(
-                    LocalName("index"), LiteralExpression(-1)));
+                    Iterator("index"), LiteralExpression(-1)));
             }
 
             foreach (var statement in base.RenderInitialization(isLocal, skipVar, newTakeVar))
@@ -59,15 +59,15 @@ namespace Cathei.LinqGen.Generator
             if (upstreamCount == null)
                 return null;
 
-            return MathMin(ParenthesizedExpression(upstreamCount), MemberName("take"));
+            return MathMin(ParenthesizedExpression(upstreamCount), Member("take"));
         }
 
         protected override StatementSyntax? RenderMoveNext()
         {
             return IfStatement(
                 GreaterOrEqualExpression(
-                    CastExpression(UIntType, PreIncrementExpression(LocalName("index"))),
-                    CastExpression(UIntType, MemberName("take"))),
+                    CastExpression(UIntType, PreIncrementExpression(Iterator("index"))),
+                    CastExpression(UIntType, Member("take"))),
                 BreakStatement());
         }
     }
