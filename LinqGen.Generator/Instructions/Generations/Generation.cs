@@ -89,7 +89,8 @@ namespace Cathei.LinqGen.Generator
 
             if (countExpression != null)
             {
-                var thisRewriter = new ThisPlaceholderRewriter(ThisExpression());
+                // count expression cannot use enumerator members
+                var thisRewriter = new ThisPlaceholderRewriter(ThisExpression(), IterPlaceholder);
                 countExpression = (ExpressionSyntax)thisRewriter.Visit(countExpression);
 
                 yield return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList,
@@ -287,26 +288,8 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        public IEnumerable<LocalDeclarationStatementSyntax> GetLocalDeclarations()
-        {
-            if (Upstream != null && !ClearsUpstreamEnumerator)
-            {
-                foreach (var local in Upstream.GetLocalDeclarations())
-                    yield return local;
-            }
-
-            foreach (var member in GetMemberInfos(true))
-            {
-                if ((member.Kind & MemberKind.Enumerator) == 0)
-                    continue;
-
-                yield return LocalDeclarationStatement(default, VariableDeclaration(
-                    member.Type, SingletonSeparatedList(VariableDeclarator(
-                        member.Name.Identifier, null,
-                        member.DefaultValue != null ? EqualsValueClause(member.DefaultValue) : null))));
-            }
-        }
         public bool HasEnumerator { get; set; }
+        public bool HasContext { get; set; }
 
         private IEnumerable<MemberDeclarationSyntax> RenderGetEnumerator()
         {

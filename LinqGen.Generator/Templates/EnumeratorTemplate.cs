@@ -20,12 +20,14 @@ namespace Cathei.LinqGen.Generator
         internal struct Enumerator : IEnumerator<_Element_>
         {
             private _Enumerable_ parent;
+            private Context context;
             private bool state;
             private _Element_ current;
 
             internal Enumerator(in _Enumerable_ parent) : this()
             {
                 this.parent = parent;
+                this.context = new Context(default);
             }
 
             private void InitState()
@@ -59,45 +61,9 @@ namespace Cathei.LinqGen.Generator
         {
             private readonly Generation _instruction;
 
-            public Rewriter(Generation instruction) : base(IdentifierName("parent"))
+            public Rewriter(Generation instruction) : base(IdentifierName("parent"), IdentifierName("context"))
             {
                 _instruction = instruction;
-            }
-
-            public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
-            {
-                switch (node.Identifier.ValueText)
-                {
-                    case "Enumerator":
-                        node = RewriteEnumeratorStruct(node);
-                        break;
-                }
-
-                return base.VisitStructDeclaration(node);
-            }
-
-            private StructDeclarationSyntax RewriteEnumeratorStruct(StructDeclarationSyntax node)
-            {
-                var fields = _instruction.GetFieldDeclarations(MemberKind.Enumerator);
-                return node.AddMembers(fields.ToArray());
-            }
-
-            public override SyntaxNode? VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
-            {
-                switch (node.Identifier.ValueText)
-                {
-                    case "Enumerator":
-                        node = RewriteEnumeratorConstructor(node);
-                        break;
-                }
-
-                return base.VisitConstructorDeclaration(node);
-            }
-
-            private ConstructorDeclarationSyntax RewriteEnumeratorConstructor(ConstructorDeclarationSyntax node)
-            {
-                return node.AddBodyStatements(
-                    _instruction.GetFieldDefaultAssignments(MemberKind.Enumerator).ToArray());
             }
 
             public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)

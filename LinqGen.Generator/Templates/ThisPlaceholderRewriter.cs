@@ -14,16 +14,23 @@ namespace Cathei.LinqGen.Generator
     public class ThisPlaceholderRewriter : CSharpSyntaxRewriter
     {
         private readonly ExpressionSyntax _this;
+        private readonly ExpressionSyntax _context;
 
-        public ThisPlaceholderRewriter(ExpressionSyntax @this)
+        public ThisPlaceholderRewriter(ExpressionSyntax @this, ExpressionSyntax context)
         {
             _this = @this;
+            _context = context;
         }
 
         public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
         {
+            // should not recursively solve
             if (node.IsEquivalentTo(Instruction.ThisPlaceholder))
                 return _this;
+
+            // should not recursively solve
+            if (node.IsEquivalentTo(Instruction.IterPlaceholder))
+                return _context;
 
             return base.VisitIdentifierName(node);
         }

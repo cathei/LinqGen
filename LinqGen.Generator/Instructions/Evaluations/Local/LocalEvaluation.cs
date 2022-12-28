@@ -60,15 +60,17 @@ namespace Cathei.LinqGen.Generator
             var skipVar = supportPartition ? SkipExpression : null;
             var takeVar = supportPartition ? TakeExpression : null;
 
-            var copyName = LocalName("copy");
-            var copyRewriter = new ThisPlaceholderRewriter(copyName);
+            var copyName = IdentifierName("copy");
+            var contextName = IdentifierName("context");
+            var copyRewriter = new ThisPlaceholderRewriter(copyName, contextName);
 
             var initialDeclarations = new List<StatementSyntax>
             {
-                LocalDeclarationStatement(copyName.Identifier, ThisExpression())
+                LocalDeclarationStatement(copyName.Identifier, ThisExpression()),
+                LocalDeclarationStatement(contextName.Identifier,
+                    ObjectCreationExpression(IdentifierName("Context"), ArgumentList(DefaultLiteral), null))
             };
 
-            initialDeclarations.AddRange(Upstream.GetLocalDeclarations());
             initialDeclarations.AddRange(Upstream.RenderInitialization(true, skipVar, takeVar));
             initialDeclarations.AddRange(RenderInitialization());
 

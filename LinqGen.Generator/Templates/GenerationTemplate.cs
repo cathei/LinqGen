@@ -27,6 +27,13 @@ namespace Cathei.LinqGen.Hidden
         {
 
         }
+
+        internal struct Context
+        {
+            internal Context(bool unused) : this()
+            {
+            }
+        }
     }
 }
 
@@ -60,16 +67,20 @@ namespace Cathei.LinqGen
                 return node == null ? null : base.VisitClassDeclaration(node);
             }
 
-            public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
+            public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax? node)
             {
-                switch (node.Identifier.ValueText)
+                switch (node?.Identifier.ValueText)
                 {
                     case "_Enumerable_":
                         node = RewriteEnumerableStruct(node);
                         break;
+
+                    case "Context":
+                        node = RewriteContextStruct(node);
+                        break;
                 }
 
-                return base.VisitStructDeclaration(node);
+                return node == null ? null : base.VisitStructDeclaration(node);
             }
 
             public override SyntaxNode? VisitConstructorDeclaration(ConstructorDeclarationSyntax? node)
@@ -78,6 +89,10 @@ namespace Cathei.LinqGen
                 {
                     case "_Enumerable_":
                         node = RewriteEnumerableConstructor(node);
+                        break;
+
+                    case "Context":
+                        node = RewriteContextConstructor(node);
                         break;
                 }
 
@@ -153,6 +168,19 @@ namespace Cathei.LinqGen
                 return node.WithIdentifier(_instruction.ClassName.Identifier)
                     .WithParameterList(parameterList)
                     .WithBody(Block(assignments));
+            }
+
+            private StructDeclarationSyntax? RewriteContextStruct(StructDeclarationSyntax node)
+            {
+                if (!_instruction.HasContext)
+                    return null;
+
+                return node.AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerator).ToArray());
+            }
+
+            private ConstructorDeclarationSyntax RewriteContextConstructor(ConstructorDeclarationSyntax node)
+            {
+                return node.AddBodyStatements(_instruction.GetFieldDefaultAssignments(MemberKind.Enumerator).ToArray());
             }
         }
 

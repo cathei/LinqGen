@@ -48,7 +48,10 @@ namespace Cathei.LinqGen.Generator
 
             // only first upstream
             if (base.Upstreams.Count == 1)
+            {
+                Upstream.HasContext = true;
                 Upstream.AddEvaluation(this);
+            }
         }
 
         /// <summary>

@@ -16,17 +16,25 @@ namespace Cathei.LinqGen.Generator
 
     public class ConcatOperation : Operation
     {
-        private readonly ThisPlaceholderRewriter SecondRewriter;
+        private ThisPlaceholderRewriter SecondRewriter { get; }
 
         public ConcatOperation(in LinqGenExpression expression, int id) : base(expression, id)
         {
-            SecondRewriter = new ThisPlaceholderRewriter(Member("second"));
+            SecondRewriter = new ThisPlaceholderRewriter(Member("second"), Iterator("context"));
+        }
+
+        public override void AddUpstream(Generation upstream)
+        {
+            base.AddUpstream(upstream);
+
+            if (Upstreams.Count >= 2)
+                Second.HasContext = true;
         }
 
         public Generation Second => Upstreams[1];
 
         private NameSyntax? _secondResolvedName;
-        public TypeSyntax SecondResolvedName
+        public NameSyntax SecondResolvedName
         {
             get
             {
@@ -37,6 +45,8 @@ namespace Cathei.LinqGen.Generator
                 return _secondResolvedName;
             }
         }
+
+        public NameSyntax SecondContextType => QualifiedName(SecondResolvedName, IdentifierName("Context"));
 
         public TypeArgumentListSyntax? GetSecondTypeArguments()
         {
@@ -57,6 +67,10 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Enumerable, SecondResolvedName, LocalName("second"));
+
+            yield return new MemberInfo(MemberKind.Enumerator, SecondContextType, LocalName("context"),
+                ObjectCreationExpression(SecondContextType, ArgumentList(DefaultLiteral), null));
+
             yield return new MemberInfo(MemberKind.Enumerator, ByteType, LocalName("state"));
         }
 
@@ -100,18 +114,18 @@ namespace Cathei.LinqGen.Generator
             var second = Second.RenderIteration(isLocal, statements);
 
             first = first.AddStatements(
-                ExpressionStatement(SimpleAssignmentExpression(LocalName("state"), LiteralExpression(1))),
+                ExpressionStatement(SimpleAssignmentExpression(Iterator("state"), LiteralExpression(1))),
                 GotoStatement(SyntaxKind.GotoCaseStatement, Token(SyntaxKind.CaseKeyword), LiteralExpression(1)));
 
-            secondInit = secondInit.AddStatements(
-                ExpressionStatement(SimpleAssignmentExpression(LocalName("state"), LiteralExpression(2))),
-                GotoStatement(SyntaxKind.GotoCaseStatement, Token(SyntaxKind.CaseKeyword), LiteralExpression(2)));
             secondInit = (BlockSyntax)SecondRewriter.Visit(secondInit);
+            secondInit = secondInit.AddStatements(
+                ExpressionStatement(SimpleAssignmentExpression(Iterator("state"), LiteralExpression(2))),
+                GotoStatement(SyntaxKind.GotoCaseStatement, Token(SyntaxKind.CaseKeyword), LiteralExpression(2)));
 
-            second = second.AddStatements(BreakStatement());
             second = (BlockSyntax)SecondRewriter.Visit(second);
+            second = second.AddStatements(BreakStatement());
 
-            return Block(SwitchStatement(LocalName("state"), List(new[]
+            return Block(SwitchStatement(Iterator("state"), List(new[]
             {
                 SwitchSection(
                     SingletonList<SwitchLabelSyntax>(CaseSwitchLabel(LiteralExpression(0))),

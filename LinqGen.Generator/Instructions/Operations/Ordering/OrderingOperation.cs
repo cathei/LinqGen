@@ -174,50 +174,54 @@ namespace Cathei.LinqGen.Generator
         {
             var rootUpstream = RootOrder.Upstream;
 
-            foreach (var statement in rootUpstream.GetLocalDeclarations())
-                yield return statement;
-            //
-            // foreach (var statement in rootUpstream.GetLocalAssignments(MemberKind.Both, source))
-            //     yield return statement;
-            //
-            foreach (var statement in rootUpstream.RenderInitialization(true, null, null))
-                yield return statement;
+            var contextName = LocalName("context");
+
+            var initStatements = new List<StatementSyntax>
+            {
+                // declare enumerator variables
+                LocalDeclarationStatement(contextName.Identifier, ObjectCreationExpression(QualifiedName(
+                        RootOrder.UpstreamResolvedClassName, IdentifierName("Context")),
+                    ArgumentList(DefaultLiteral), null)),
+            };
+
+            initStatements.AddRange(rootUpstream.RenderInitialization(true, null, null));
+
+            var elementsName = LocalName("elements");
 
             ExpressionSyntax countExpression = rootUpstream.RenderCount() ?? LiteralExpression(0);
-
-            var elementsName = Iterator("elements");
             var elementsCount = MemberAccessExpression(elementsName, CountProperty);
 
-            yield return ExpressionStatement(SimpleAssignmentExpression(elementsName,
+            // create dictionary
+            initStatements.Add(LocalDeclarationStatement(elementsName.Identifier,
                 ObjectCreationExpression(ElementListType, ArgumentList(countExpression), null)));
 
             var addElementStatements = SingletonList<StatementSyntax>(
                 ExpressionStatement(InvocationExpression(
-                    MemberAccessExpression(Iterator("elements"), AddMethod), ArgumentList(CurrentPlaceholder))));
+                    MemberAccessExpression(elementsName, AddMethod), ArgumentList(CurrentPlaceholder))));
 
-            yield return rootUpstream.RenderIteration(true, addElementStatements);
+            initStatements.AddRange(rootUpstream.RenderIteration(true, addElementStatements).Statements);
 
             // TODO try block
-            foreach (var statement in rootUpstream.RenderDispose(true))
-                yield return statement;
+            initStatements.AddRange(rootUpstream.RenderDispose(true));
 
-            var indicesName = Iterator("indices");
+            var minName = LocalName("min");
+            var maxName = LocalName("max");
 
-            var minName = IdentifierName("min");
-            var maxName = IdentifierName("max");
+            initStatements.Add(LocalDeclarationStatement(minName.Identifier, skipVar ?? LiteralExpression(0)));
 
-            yield return LocalDeclarationStatement(minName.Identifier, skipVar ?? LiteralExpression(0));
-
-            yield return LocalDeclarationStatement(maxName.Identifier, takeVar == null
+            initStatements.Add(LocalDeclarationStatement(maxName.Identifier, takeVar == null
                 ? SubtractExpression(elementsCount, LiteralExpression(1))
-                : SubtractExpression(MathMin(elementsCount, AddExpression(minName, takeVar)), LiteralExpression(1)));
+                : SubtractExpression(MathMin(elementsCount, AddExpression(minName, takeVar)), LiteralExpression(1))));
 
-            yield return ExpressionStatement(SimpleAssignmentExpression(
-                Iterator("index"), SubtractExpression(minName, LiteralExpression(1))));
+            // keep this placeholder but replace context
+            var thisRewriter = new ThisPlaceholderRewriter(ThisPlaceholder, contextName);
+            for (int i = 0; i < initStatements.Count; ++i)
+                initStatements[i] = (StatementSyntax)thisRewriter.Visit(initStatements[i]);
 
             var sortBody = new List<StatementSyntax>();
 
             var sorterName = LocalName("sorter");
+            var indicesName = Iterator("indices");
 
             sortBody.Add(ExpressionStatement(SimpleAssignmentExpression(indicesName,
                 ObjectCreationExpression(IndexListType, ArgumentList(elementsCount), null))));
@@ -242,8 +246,19 @@ namespace Cathei.LinqGen.Generator
 
             elseBody.Add(ExpressionStatement(InvocationExpression(elementsName, DisposeMethod)));
 
-            yield return IfStatement(GreaterOrEqualExpression(maxName, minName),
-                Block(sortBody), ElseClause(Block(elseBody)));
+            initStatements.Add(IfStatement(GreaterOrEqualExpression(maxName, minName),
+                Block(sortBody), ElseClause(Block(elseBody))));
+
+            // lastly access to iterator
+            // initialize elements
+            initStatements.Add(ExpressionStatement(SimpleAssignmentExpression(
+                Iterator("elements"), elementsName)));
+
+            // initialize index
+            initStatements.Add(ExpressionStatement(SimpleAssignmentExpression(
+                Iterator("index"), SubtractExpression(minName, LiteralExpression(1)))));
+
+            return initStatements;
         }
 
         public override IEnumerable<StatementSyntax> RenderDispose(bool isLocal)
@@ -316,7 +331,7 @@ namespace Cathei.LinqGen.Generator
 
             var result = WhileStatement(LessThanExpression(
                     CastExpression(UIntType, PreIncrementExpression(Iterator("index"))),
-                    CastExpression(UIntType, MemberAccessExpression(Iterator("elements"), CountProperty))),
+                    CastExpression(UIntType, MemberAccessExpression(Iterator("indices"), CountProperty))),
                 Block(statements));
 
             return Block(result);

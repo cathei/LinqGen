@@ -209,7 +209,7 @@ namespace Cathei.LinqGen.Generator
         public override IEnumerable<StatementSyntax> RenderInitialization(
             bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            var dictName = Iterator("dict");
+            var dictName = LocalName("dict");
             var keyName = LocalName("key");
             var valueName = LocalName("value");
             var listName = LocalName("list");
@@ -249,29 +249,42 @@ namespace Cathei.LinqGen.Generator
                 ? ComparerDefault(KeyType, KeySymbol)
                 : Member("comparer");
 
-            // declare enumerator variables
-            foreach (var statement in Upstream.GetLocalDeclarations())
-                yield return statement;
+            var contextName = LocalName("context");
+
+            var initStatements = new List<StatementSyntax>
+            {
+                // declare enumerator variables
+                LocalDeclarationStatement(contextName.Identifier, ObjectCreationExpression(
+                    QualifiedName(UpstreamResolvedClassName, IdentifierName("Context")),
+                    ArgumentList(DefaultLiteral), null)),
+                // create dictionary
+                LocalDeclarationStatement(dictName.Identifier, ObjectCreationExpression(
+                    DictionaryType, ArgumentList(LiteralExpression(0), comparerExpression), null))
+            };
 
             // initialization
-            foreach (var statement in Upstream.RenderInitialization(true, null, null))
-                yield return statement;
-
-            // create dictionary
-            yield return ExpressionStatement(SimpleAssignmentExpression(dictName, ObjectCreationExpression(
-                DictionaryType, ArgumentList(LiteralExpression(0), comparerExpression), null)));
+            initStatements.AddRange(Upstream.RenderInitialization(true, null, null));
 
             // iteration
-            yield return Upstream.RenderIteration(isLocal, List(addStatements));
-
-            // initialize index
-            yield return ExpressionStatement(SimpleAssignmentExpression(Iterator("index"),
-                skipVar != null ? SubtractExpression(skipVar, LiteralExpression(1)) : LiteralExpression(-1)));
+            initStatements.AddRange(Upstream.RenderIteration(isLocal, List(addStatements)).Statements);
 
             // TODO try block
             // dispose used resources
-            foreach (var statement in Upstream.RenderDispose(true))
-                yield return statement;
+            initStatements.AddRange(Upstream.RenderDispose(true));
+
+            // keep this placeholder but replace context
+            var thisRewriter = new ThisPlaceholderRewriter(ThisPlaceholder, contextName);
+            for (int i = 0; i < initStatements.Count; ++i)
+                initStatements[i] = (StatementSyntax)thisRewriter.Visit(initStatements[i]);
+
+            // initialize index
+            initStatements.Add(ExpressionStatement(SimpleAssignmentExpression(Iterator("index"),
+                skipVar != null ? SubtractExpression(skipVar, LiteralExpression(1)) : LiteralExpression(-1))));
+
+            // initialize dictionary
+            initStatements.Add(ExpressionStatement(SimpleAssignmentExpression(Iterator("dict"), dictName)));
+
+            return initStatements;
         }
 
         public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)

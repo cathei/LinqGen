@@ -37,23 +37,24 @@ public class FundamentalTests
     }
 
     [Test]
-    public void TestSameConcat()
+    public void Test_ConcatFromSameGeneration()
     {
-        int[] array = new int[10];
+        int[] array1 = new int[10];
+        int[] array2 = new int[5];
 
-        var concat = array.Specialize().Concat(array.Specialize());
+        var concat = array1.Specialize().Concat(array2.Specialize());
 
         int count = 0;
 
         foreach (var i in concat)
             count++;
 
-        Assert.AreEqual(20, concat.Count());
-        Assert.AreEqual(20, count);
+        Assert.AreEqual(15, concat.Count());
+        Assert.AreEqual(15, count);
     }
 
     [Test]
-    public void TestDifferentConcat()
+    public void Test_ConcatFromSameSource()
     {
         int[] array = new int[10];
 
@@ -66,7 +67,6 @@ public class FundamentalTests
 
         Assert.AreEqual(20, concat.Count());
         Assert.AreEqual(20, count);
-
     }
 
     // [TestCase(1, 2, 3, 4)]
