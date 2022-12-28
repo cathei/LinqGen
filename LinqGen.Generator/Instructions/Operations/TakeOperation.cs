@@ -65,9 +65,7 @@ namespace Cathei.LinqGen.Generator
         protected override StatementSyntax? RenderMoveNext()
         {
             return IfStatement(
-                GreaterOrEqualExpression(
-                    CastExpression(UIntType, PreIncrementExpression(Iterator("index"))),
-                    CastExpression(UIntType, Member("take"))),
+                GreaterOrEqualExpression(PreIncrementExpression(Iterator("index")), Member("take")),
                 BreakStatement());
         }
     }

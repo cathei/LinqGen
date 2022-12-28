@@ -85,8 +85,8 @@ namespace Cathei.LinqGen.Generator
                 currentName.Identifier, ElementAccessExpression(Member("source"), Iterator("index"))));
 
             var result = WhileStatement(LessThanExpression(
-                    CastExpression(UIntType, PreIncrementExpression(Iterator("index"))),
-                    CastExpression(UIntType, MemberAccessExpression(Member("source"), ListCountProperty))),
+                    PreIncrementExpression(Iterator("index")),
+                    MemberAccessExpression(Member("source"), ListCountProperty)),
                 Block(statements));
 
             return Block(result);

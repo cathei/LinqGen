@@ -330,8 +330,8 @@ namespace Cathei.LinqGen.Generator
                     ElementAccessExpression(Iterator("indices"), Iterator("index")))));
 
             var result = WhileStatement(LessThanExpression(
-                    CastExpression(UIntType, PreIncrementExpression(Iterator("index"))),
-                    CastExpression(UIntType, MemberAccessExpression(Iterator("indices"), CountProperty))),
+                    PreIncrementExpression(Iterator("index")),
+                    MemberAccessExpression(Iterator("indices"), CountProperty)),
                 Block(statements));
 
             return Block(result);

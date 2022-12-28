@@ -318,8 +318,8 @@ namespace Cathei.LinqGen.Generator
             statements = statements.InsertRange(0, currentGetStatements);
 
             var result = WhileStatement(LessThanExpression(
-                    CastExpression(UIntType, PreIncrementExpression(Iterator("index"))),
-                    CastExpression(UIntType, MemberAccessExpression(Iterator("dict"), CountProperty))),
+                    PreIncrementExpression(Iterator("index")),
+                    MemberAccessExpression(Iterator("dict"), CountProperty)),
                 Block(statements));
 
             return Block(result);
