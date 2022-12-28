@@ -207,6 +207,29 @@ namespace Cathei.LinqGen.Generator
         /// </summary>
         public abstract BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements);
 
+        public IEnumerable<MemberInfo> GetMemberInfos(MemberKind kind, bool isLocal)
+        {
+            foreach (var member in GetMemberInfos(isLocal))
+            {
+                if ((member.Kind & kind) != kind)
+                    continue;
+
+                yield return member;
+            }
+        }
+
+        public IEnumerable<MemberInfo> GetAllMemberInfos(MemberKind kind, bool isLocal)
+        {
+            if (Upstream != null && !ShouldIgnoreUpstream(kind))
+            {
+                foreach (var member in Upstream.GetAllMemberInfos(kind, isLocal))
+                    yield return member;
+            }
+
+            foreach (var member in GetMemberInfos(kind, isLocal))
+                yield return member;
+        }
+
         public IEnumerable<ParameterSyntax> GetParameters(bool defaultValue = false)
         {
             foreach (var member in GetMemberInfos(false))
@@ -229,19 +252,20 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
+        public IEnumerable<StatementSyntax> GetLocalDeclarations(MemberKind kind)
+        {
+            foreach (var member in GetAllMemberInfos(kind, true))
+            {
+                yield return LocalDeclarationStatement(member.Type,
+                    Identifier($"{IterPlaceholder}{member.Name.Identifier.ValueText}"),
+                    member.DefaultValue ?? DefaultLiteral);
+            }
+        }
+
         public IEnumerable<MemberDeclarationSyntax> GetFieldDeclarations(MemberKind kind)
         {
-            if (Upstream != null && !ShouldIgnoreUpstream(kind))
+            foreach (var member in GetAllMemberInfos(kind, false))
             {
-                foreach (var assignment in Upstream.GetFieldDeclarations(kind))
-                    yield return assignment;
-            }
-
-            foreach (var member in GetMemberInfos(false))
-            {
-                if ((member.Kind & kind) != kind)
-                    continue;
-
                 yield return FieldDeclaration(SingletonList(EditorBrowsableNeverAttributeList),
                     InternalTokenList, member.Type, member.Name.Identifier);
             }
@@ -250,17 +274,12 @@ namespace Cathei.LinqGen.Generator
         public IEnumerable<StatementSyntax> GetFieldAssignments(
             MemberKind kind, bool includeUpstream, IdentifierNameSyntax? source = null)
         {
-            if (includeUpstream && Upstream != null && !ShouldIgnoreUpstream(kind))
-            {
-                foreach (var assignment in Upstream.GetFieldAssignments(kind, includeUpstream, source))
-                    yield return assignment;
-            }
+            var memberInfos = includeUpstream
+                ? GetAllMemberInfos(kind, false)
+                : GetMemberInfos(kind, false);
 
-            foreach (var member in GetMemberInfos(false))
+            foreach (var member in memberInfos)
             {
-                if ((member.Kind & kind) != kind)
-                    continue;
-
                 yield return ExpressionStatement(SimpleAssignmentExpression(
                     MemberAccessExpression(ThisExpression(), member.Name),
                     source == null ? member.Name : MemberAccessExpression(source, member.Name)));
@@ -269,17 +288,8 @@ namespace Cathei.LinqGen.Generator
 
         public IEnumerable<StatementSyntax> GetFieldDefaultAssignments(MemberKind kind)
         {
-            if (Upstream != null && !ShouldIgnoreUpstream(kind))
+            foreach (var member in GetAllMemberInfos(kind, false))
             {
-                foreach (var assignment in Upstream.GetFieldDefaultAssignments(kind))
-                    yield return assignment;
-            }
-
-            foreach (var member in GetMemberInfos(false))
-            {
-                if ((member.Kind & kind) != kind)
-                    continue;
-
                 if (member.DefaultValue == null)
                     continue;
 
@@ -289,7 +299,6 @@ namespace Cathei.LinqGen.Generator
         }
 
         public bool HasEnumerator { get; set; }
-        public bool HasContext { get; set; }
 
         private IEnumerable<MemberDeclarationSyntax> RenderGetEnumerator()
         {

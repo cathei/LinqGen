@@ -209,7 +209,7 @@ namespace Cathei.LinqGen.Generator
         public override IEnumerable<StatementSyntax> RenderInitialization(
             bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
         {
-            var dictName = LocalName("dict");
+            var dictName = LocalName("localDict");
             var keyName = LocalName("key");
             var valueName = LocalName("value");
             var listName = LocalName("list");
@@ -249,18 +249,17 @@ namespace Cathei.LinqGen.Generator
                 ? ComparerDefault(KeyType, KeySymbol)
                 : Member("comparer");
 
-            var contextName = LocalName("context");
+            var contextName = $"{IterPlaceholder}c{Id}_";
 
             var initStatements = new List<StatementSyntax>
             {
-                // declare enumerator variables
-                LocalDeclarationStatement(contextName.Identifier, ObjectCreationExpression(
-                    QualifiedName(UpstreamResolvedClassName, IdentifierName("Context")),
-                    ArgumentList(DefaultLiteral), null)),
                 // create dictionary
                 LocalDeclarationStatement(dictName.Identifier, ObjectCreationExpression(
                     DictionaryType, ArgumentList(LiteralExpression(0), comparerExpression), null))
             };
+
+            // local declaration
+            initStatements.AddRange(Upstream.GetLocalDeclarations(MemberKind.Enumerator));
 
             // initialization
             initStatements.AddRange(Upstream.RenderInitialization(true, null, null));

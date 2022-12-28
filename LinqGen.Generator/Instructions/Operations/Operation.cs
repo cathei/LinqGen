@@ -28,11 +28,7 @@ namespace Cathei.LinqGen.Generator
 
             // only first upstream
             if (base.Upstreams.Count == 1)
-            {
-                if (ClearsUpstreamEnumerator)
-                    upstream.HasContext = true;
                 upstream.AddDownstream(this);
-            }
         }
 
         /// <summary>

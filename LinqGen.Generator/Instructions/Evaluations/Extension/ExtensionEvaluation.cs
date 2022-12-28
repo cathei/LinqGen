@@ -70,15 +70,11 @@ namespace Cathei.LinqGen.Generator
 
         private BlockSyntax RenderBody()
         {
-            var sourceRewriter = new ThisPlaceholderRewriter(IdentifierName("source"), IdentifierName("context"));
+            var sourceRewriter = new ThisPlaceholderRewriter(IdentifierName("source"), string.Empty);
 
-            var contextDeclaration = LocalDeclarationStatement(Identifier("context"), ObjectCreationExpression(
-                QualifiedName(UpstreamResolvedClassName, IdentifierName("Context")),
-                ArgumentList(DefaultLiteral), null));
-
-            var initialDeclarations = Upstream.RenderInitialization(true, null, null)
-                .Concat(RenderInitialization())
-                .Prepend(contextDeclaration);
+            var initialDeclarations = Upstream.GetLocalDeclarations(MemberKind.Enumerator)
+                .Concat(Upstream.RenderInitialization(true, null, null))
+                .Concat(RenderInitialization());
 
             var accumulationStatements = RenderAccumulation();
 

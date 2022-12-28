@@ -94,9 +94,9 @@ namespace Cathei.LinqGen.Generator
         /// <summary>
         /// Creating unique variable name for this instruction
         /// </summary>
-        protected ExpressionSyntax Iterator(string identifier)
+        protected IdentifierNameSyntax Iterator(string identifier)
         {
-            return MemberAccessExpression(IterPlaceholder, LocalName(identifier));
+            return IdentifierName($"{IterPlaceholder}{identifier}_{Id}");
         }
 
         /// <summary>
@@ -105,7 +105,8 @@ namespace Cathei.LinqGen.Generator
         public static readonly IdentifierNameSyntax CurrentPlaceholder = IdentifierName("_current_");
 
         public static readonly IdentifierNameSyntax ThisPlaceholder = IdentifierName("_this_");
-        public static readonly IdentifierNameSyntax IterPlaceholder = IdentifierName("_iter_");
+
+        public const string IterPlaceholder = "_iter_";
 
         protected virtual IEnumerable<TypeParameterInfo> GetTypeParameterInfos() => Array.Empty<TypeParameterInfo>();
 

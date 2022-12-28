@@ -174,19 +174,14 @@ namespace Cathei.LinqGen.Generator
         {
             var rootUpstream = RootOrder.Upstream;
 
-            var contextName = LocalName("context");
+            var contextName = $"{IterPlaceholder}c{Id}_";
 
-            var initStatements = new List<StatementSyntax>
-            {
-                // declare enumerator variables
-                LocalDeclarationStatement(contextName.Identifier, ObjectCreationExpression(QualifiedName(
-                        RootOrder.UpstreamResolvedClassName, IdentifierName("Context")),
-                    ArgumentList(DefaultLiteral), null)),
-            };
+            var initStatements = new List<StatementSyntax>();
 
+            initStatements.AddRange(rootUpstream.GetLocalDeclarations(MemberKind.Enumerator));
             initStatements.AddRange(rootUpstream.RenderInitialization(true, null, null));
 
-            var elementsName = LocalName("elements");
+            var elementsName = LocalName("localElements");
 
             ExpressionSyntax countExpression = rootUpstream.RenderCount() ?? LiteralExpression(0);
             var elementsCount = MemberAccessExpression(elementsName, CountProperty);

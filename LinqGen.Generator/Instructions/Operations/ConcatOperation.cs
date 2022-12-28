@@ -20,15 +20,7 @@ namespace Cathei.LinqGen.Generator
 
         public ConcatOperation(in LinqGenExpression expression, int id) : base(expression, id)
         {
-            SecondRewriter = new ThisPlaceholderRewriter(Member("second"), Iterator("context"));
-        }
-
-        public override void AddUpstream(Generation upstream)
-        {
-            base.AddUpstream(upstream);
-
-            if (Upstreams.Count >= 2)
-                Second.HasContext = true;
+            SecondRewriter = new ThisPlaceholderRewriter(Member("second"), $"{IterPlaceholder}s{Id}_");
         }
 
         public Generation Second => Upstreams[1];
@@ -45,8 +37,6 @@ namespace Cathei.LinqGen.Generator
                 return _secondResolvedName;
             }
         }
-
-        public NameSyntax SecondContextType => QualifiedName(SecondResolvedName, IdentifierName("Context"));
 
         public TypeArgumentListSyntax? GetSecondTypeArguments()
         {
@@ -67,11 +57,13 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Enumerable, SecondResolvedName, LocalName("second"));
-
-            yield return new MemberInfo(MemberKind.Enumerator, SecondContextType, LocalName("context"),
-                ObjectCreationExpression(SecondContextType, ArgumentList(DefaultLiteral), null));
-
             yield return new MemberInfo(MemberKind.Enumerator, ByteType, LocalName("state"));
+
+            foreach (var member in Second.GetAllMemberInfos(MemberKind.Enumerator, isLocal))
+            {
+                var overridenName = IdentifierName($"s{Id}_{member.Name.Identifier.ValueText}");
+                yield return new(member.Kind, member.Type, overridenName, member.DefaultValue);
+            }
         }
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
@@ -84,11 +76,6 @@ namespace Cathei.LinqGen.Generator
                 yield return new TypeParameterInfo(type.Name, type.GenericConstraint?.Constraints.ToArray());
             }
         }
-
-        // public override IEnumerable<StatementSyntax> RenderInitialization(
-        //     bool isLocal, ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
-        // {
-        // }
 
         public override ExpressionSyntax? RenderCount()
         {
@@ -108,8 +95,7 @@ namespace Cathei.LinqGen.Generator
             // TODO: partition optimization (skip, take)
             var first = Upstream.RenderIteration(isLocal, statements);
 
-            var secondInit = Block(Second.GetFieldDefaultAssignments(MemberKind.Enumerator)
-                .Concat(Second.RenderInitialization(isLocal, null, null)));
+            var secondInit = Block(Second.RenderInitialization(isLocal, null, null));
 
             var second = Second.RenderIteration(isLocal, statements);
 
