@@ -56,13 +56,13 @@ int result = array.Specialize()
 
 This is benchmark result for above code. You can see full benchmark results [here](./docs/BenchmarksResults).
 
-|          Method |   Count |     Mean |     Error |    StdDev | Ratio | Allocated | Alloc Ratio |
-|---------------- |-------- |---------:|----------:|----------:|------:|----------:|------------:|
-|         ForLoop | 1000000 | 4.831 ms | 0.0952 ms | 0.1019 ms |  0.53 |       5 B |        0.04 |
-|     ForEachLoop | 1000000 | 4.674 ms | 0.0218 ms | 0.0204 ms |  0.51 |       5 B |        0.04 |
-|            Linq | 1000000 | 9.209 ms | 0.0424 ms | 0.0397 ms |  1.00 |     115 B |        1.00 |
-| LinqGenDelegate | 1000000 | 6.139 ms | 0.0597 ms | 0.0558 ms |  0.67 |       5 B |        0.04 |
-|   LinqGenStruct | 1000000 | 4.757 ms | 0.0219 ms | 0.0195 ms |  0.52 |       5 B |        0.04 |
+|             Method |  Count |     Mean |   Error |  StdDev | Ratio | Allocated | Alloc Ratio |
+|------------------- |------- |---------:|--------:|--------:|------:|----------:|------------:|
+|            ForLoop | 100000 | 449.8 us | 4.56 us | 4.27 us |  0.50 |         - |       0.000 |
+|        ForEachLoop | 100000 | 444.3 us | 1.48 us | 1.39 us |  0.49 |         - |       0.000 |
+|               Linq | 100000 | 899.8 us | 5.65 us | 5.01 us |  1.00 |     105 B |       1.000 |
+|    LinqGenDelegate | 100000 | 576.2 us | 4.43 us | 4.14 us |  0.64 |       1 B |       0.010 |
+|      LinqGenStruct | 100000 | 449.8 us | 4.06 us | 3.60 us |  0.50 |         - |       0.000 |
 
 ## Why not just use struct Linq implementations?
 
