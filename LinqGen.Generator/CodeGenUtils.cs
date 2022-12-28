@@ -128,6 +128,7 @@ namespace Cathei.LinqGen.Generator
         // known type names
         public static readonly PredefinedTypeSyntax VoidType = PredefinedType(Token(SyntaxKind.VoidKeyword));
         public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));
+        public static readonly PredefinedTypeSyntax UIntType = PredefinedType(Token(SyntaxKind.UIntKeyword));
         public static readonly PredefinedTypeSyntax BoolType = PredefinedType(Token(SyntaxKind.BoolKeyword));
         public static readonly PredefinedTypeSyntax ByteType = PredefinedType(Token(SyntaxKind.ByteKeyword));
 

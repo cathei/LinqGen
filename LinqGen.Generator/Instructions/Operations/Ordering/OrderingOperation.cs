@@ -320,14 +320,20 @@ namespace Cathei.LinqGen.Generator
             // replace current variables of downstream
             statements = currentRewriter.VisitStatementSyntaxList(statements);
 
-            statements = statements.Insert(0, LocalDeclarationStatement(
-                currentName.Identifier, ElementAccessExpression(Iterator("elements"),
-                    ElementAccessExpression(Iterator("indices"), Iterator("index")))));
+            statements = statements.InsertRange(0, new StatementSyntax[]
+            {
+                // for optimal JIT compile it needs to be inside of while, not the condition
+                IfStatement(GreaterOrEqualExpression(
+                        CastExpression(UIntType, PreIncrementExpression(Iterator("index"))),
+                        CastExpression(UIntType, MemberAccessExpression(Iterator("indices"), CountProperty))),
+                    BreakStatement()),
+                // set current
+                LocalDeclarationStatement(
+                    currentName.Identifier, ElementAccessExpression(Iterator("elements"),
+                        ElementAccessExpression(Iterator("indices"), Iterator("index"))))
+            });
 
-            var result = WhileStatement(LessThanExpression(
-                    PreIncrementExpression(Iterator("index")),
-                    MemberAccessExpression(Iterator("indices"), CountProperty)),
-                Block(statements));
+            var result = WhileStatement(TrueExpression(), Block(statements));
 
             return Block(result);
         }

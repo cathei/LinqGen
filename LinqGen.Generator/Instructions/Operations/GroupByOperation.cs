@@ -299,6 +299,12 @@ namespace Cathei.LinqGen.Generator
             // should this be ref?
             var currentGetStatements = new StatementSyntax[]
             {
+                // for optimal JIT compile it needs to be inside of while, not the condition
+                IfStatement(GreaterOrEqualExpression(
+                        CastExpression(UIntType, PreIncrementExpression(Iterator("index"))),
+                        CastExpression(UIntType, MemberAccessExpression(Iterator("dict"), CountProperty))),
+                    BreakStatement()),
+                // set current
                 LocalDeclarationStatement(
                     slotName.Identifier, ElementAccessExpression(
                         MemberAccessExpression(Iterator("dict"), IdentifierName("Slots")), Iterator("index"))),
@@ -316,10 +322,7 @@ namespace Cathei.LinqGen.Generator
 
             statements = statements.InsertRange(0, currentGetStatements);
 
-            var result = WhileStatement(LessThanExpression(
-                    PreIncrementExpression(Iterator("index")),
-                    MemberAccessExpression(Iterator("dict"), CountProperty)),
-                Block(statements));
+            var result = WhileStatement(TrueExpression(), Block(statements));
 
             return Block(result);
         }
