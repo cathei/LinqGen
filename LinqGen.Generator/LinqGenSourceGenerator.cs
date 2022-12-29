@@ -52,7 +52,8 @@ namespace Cathei.LinqGen.Generator
                 }
 
                 // last batch
-                context.AddSource($"LinqGen.{batch}.cs", FileTemplate.Render(buffer));
+                if (buffer.Count > 0)
+                    context.AddSource($"LinqGen.{batch}.cs", FileTemplate.Render(buffer));
             }
             catch (Exception ex)
             {

@@ -14,8 +14,8 @@ Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as li
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="LinqGen" Version="0.1.0" />
-    <PackageReference Include="LinqGen.Generator" Version="0.1.0" />
+    <PackageReference Include="LinqGen" Version="0.1.1" />
+    <PackageReference Include="LinqGen.Generator" Version="0.1.1" />
 </ItemGroup>
 ```
 
@@ -141,6 +141,7 @@ public struct Comparer : IComparer<int>
 * Order, OrderBy, OrderByDescending
 * ThenBy, ThenByDescending
 * GroupBy
+* Concat
 
 ### Evaluations
 * ToArray, ToList
