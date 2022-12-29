@@ -142,5 +142,14 @@ namespace Cathei.LinqGen.Generator
         //
         //
         // }
+
+        public override IEnumerable<StatementSyntax> RenderDispose(bool isLocal)
+        {
+            foreach (var statement in base.RenderDispose(isLocal))
+                yield return statement;
+
+            foreach (var statement in Second.RenderDispose(isLocal))
+                yield return (StatementSyntax)SecondRewriter.Visit(statement);
+        }
     }
 }
