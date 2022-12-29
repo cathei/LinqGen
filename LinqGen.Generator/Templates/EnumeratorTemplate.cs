@@ -20,8 +20,8 @@ namespace Cathei.LinqGen.Generator
         internal struct Enumerator : IEnumerator<_Element_>
         {
             private _Enumerable_ parent;
-            private bool state;
             private _Element_ current;
+            private bool state;
 
             internal Enumerator(in _Enumerable_ parent) : this()
             {

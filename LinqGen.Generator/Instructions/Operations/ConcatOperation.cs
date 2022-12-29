@@ -66,7 +66,9 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Enumerable, SecondResolvedName, LocalName("second"));
-            yield return new MemberInfo(MemberKind.Enumerator, ByteType, LocalName("state"), LiteralExpression(0));
+
+            if (!isLocal)
+                yield return new MemberInfo(MemberKind.Enumerator, BoolType, LocalName("firstDone"));
 
             foreach (var member in Second.GetAllMemberInfos(MemberKind.Enumerator, isLocal))
             {
@@ -101,41 +103,47 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
         {
+            // var currentRewriter = new CurrentPlaceholderRewriter(IdentifierName("current"));
+            //
+            // statements = currentRewriter.VisitList(statements);
+            //
+            // var localFunctionStatement = LocalFunctionStatement(
+            //     default, default, VoidType, LocalName("local").Identifier, null,
+            //     ParameterList(Parameter(OutputElementType, Identifier("current"))), default,
+            //     Block(statements), null);
+            //
+            // statements = SingletonList<StatementSyntax>(ExpressionStatement(InvocationExpression(
+            //     LocalName("local"), ArgumentList(CurrentPlaceholder))));
+
             statements = TempRewriter.VisitList(statements);
 
             // TODO: partition optimization (skip, take)
             var first = Upstream.RenderIteration(isLocal, statements);
 
             var secondInit = Block(Second.RenderInitialization(isLocal, null, null));
+            secondInit = (BlockSyntax)SecondRewriter.Visit(secondInit);
+
+            first = first.AddStatements(secondInit.Statements);
 
             var second = Second.RenderIteration(isLocal, statements);
-
-            first = first.AddStatements(
-                ExpressionStatement(SimpleAssignmentExpression(Iterator("state"), LiteralExpression(1))),
-                GotoStatement(SyntaxKind.GotoCaseStatement, Token(SyntaxKind.CaseKeyword), LiteralExpression(1)));
-
-            secondInit = (BlockSyntax)SecondRewriter.Visit(secondInit);
-            secondInit = secondInit.AddStatements(
-                ExpressionStatement(SimpleAssignmentExpression(Iterator("state"), LiteralExpression(2))),
-                GotoStatement(SyntaxKind.GotoCaseStatement, Token(SyntaxKind.CaseKeyword), LiteralExpression(2)));
-
             second = (BlockSyntax)SecondRewriter.Visit(second);
-            second = second.AddStatements(BreakStatement());
 
-            var result = Block(SwitchStatement(Iterator("state"), List(new[]
+            BlockSyntax block;
+
+            if (isLocal)
             {
-                SwitchSection(
-                    SingletonList<SwitchLabelSyntax>(CaseSwitchLabel(LiteralExpression(0))),
-                    SingletonList<StatementSyntax>(first)),
-                SwitchSection(
-                    SingletonList<SwitchLabelSyntax>(CaseSwitchLabel(LiteralExpression(1))),
-                    SingletonList<StatementSyntax>(secondInit)),
-                SwitchSection(
-                    SingletonList<SwitchLabelSyntax>(CaseSwitchLabel(LiteralExpression(2))),
-                    SingletonList<StatementSyntax>(second)),
-            })));
+                block = first.AddStatements(second.Statements);
+            }
+            else
+            {
+                block = Block(IfStatement(LogicalNotExpression(Iterator("firstDone")),
+                    first.AddStatements(ExpressionStatement(
+                        SimpleAssignmentExpression(Iterator("firstDone"), TrueExpression())))));
 
-            return (BlockSyntax)TempRevertRewriter.Visit(result);
+                block = block.AddStatements(second.Statements);
+            }
+
+            return (BlockSyntax)TempRevertRewriter.Visit(block);
         }
 
         // protected override StatementSyntax? RenderMoveNext()

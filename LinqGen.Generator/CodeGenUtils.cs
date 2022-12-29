@@ -698,5 +698,10 @@ namespace Cathei.LinqGen.Generator
 
             return signature.ConstructedFrom.Construct(newTypeArgs);
         }
+
+        public static BlockSyntax AddStatements(this BlockSyntax block, SyntaxList<StatementSyntax> statements)
+        {
+            return block.WithStatements(block.Statements.AddRange(statements));
+        }
     }
 }
