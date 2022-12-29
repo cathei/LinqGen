@@ -17,15 +17,24 @@ namespace Cathei.LinqGen.Generator
     public class ConcatOperation : Operation
     {
         private ThisPlaceholderRewriter SecondRewriter { get; }
+        private ThisPlaceholderRewriter TempRewriter { get; }
+        private ThisPlaceholderRewriter TempRevertRewriter { get; }
 
         public ConcatOperation(in LinqGenExpression expression, int id) : base(expression, id)
         {
             SecondRewriter = new ThisPlaceholderRewriter(Member("second"), $"{IterPlaceholder}s{Id}_");
+
+            var tempThisPlaceholder = IdentifierName($"_concat_this_{Id}_");
+            var tempIterPlaceholder = $"_concat_iter_{Id}_";
+
+            TempRewriter = new(tempThisPlaceholder, tempIterPlaceholder);
+            TempRevertRewriter = new(tempThisPlaceholder, ThisPlaceholder, tempIterPlaceholder, IterPlaceholder);
         }
 
         public Generation Second => Upstreams[1];
 
         private NameSyntax? _secondResolvedName;
+
         public NameSyntax SecondResolvedName
         {
             get
@@ -57,7 +66,7 @@ namespace Cathei.LinqGen.Generator
         protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
         {
             yield return new MemberInfo(MemberKind.Enumerable, SecondResolvedName, LocalName("second"));
-            yield return new MemberInfo(MemberKind.Enumerator, ByteType, LocalName("state"));
+            yield return new MemberInfo(MemberKind.Enumerator, ByteType, LocalName("state"), LiteralExpression(0));
 
             foreach (var member in Second.GetAllMemberInfos(MemberKind.Enumerator, isLocal))
             {
@@ -92,6 +101,8 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
         {
+            statements = TempRewriter.VisitList(statements);
+
             // TODO: partition optimization (skip, take)
             var first = Upstream.RenderIteration(isLocal, statements);
 
@@ -111,7 +122,7 @@ namespace Cathei.LinqGen.Generator
             second = (BlockSyntax)SecondRewriter.Visit(second);
             second = second.AddStatements(BreakStatement());
 
-            return Block(SwitchStatement(Iterator("state"), List(new[]
+            var result = Block(SwitchStatement(Iterator("state"), List(new[]
             {
                 SwitchSection(
                     SingletonList<SwitchLabelSyntax>(CaseSwitchLabel(LiteralExpression(0))),
@@ -123,6 +134,8 @@ namespace Cathei.LinqGen.Generator
                     SingletonList<SwitchLabelSyntax>(CaseSwitchLabel(LiteralExpression(2))),
                     SingletonList<StatementSyntax>(second)),
             })));
+
+            return (BlockSyntax)TempRevertRewriter.Visit(result);
         }
 
         // protected override StatementSyntax? RenderMoveNext()

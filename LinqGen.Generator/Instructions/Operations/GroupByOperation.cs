@@ -294,7 +294,7 @@ namespace Cathei.LinqGen.Generator
             var currentRewriter = new CurrentPlaceholderRewriter(currentName);
 
             // replace current variables of downstream
-            statements = currentRewriter.VisitStatementSyntaxList(statements);
+            statements = currentRewriter.VisitList(statements);
 
             // should this be ref?
             var currentGetStatements = new StatementSyntax[]

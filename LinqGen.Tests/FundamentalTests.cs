@@ -39,8 +39,8 @@ public class FundamentalTests
     [Test]
     public void Test_ConcatFromSameGeneration()
     {
-        int[] array1 = new int[10];
-        int[] array2 = new int[5];
+        double[] array1 = new double[10];
+        double[] array2 = new double[5];
 
         var concat = array1.Specialize().Concat(array2.Specialize());
 
@@ -56,7 +56,7 @@ public class FundamentalTests
     [Test]
     public void Test_ConcatFromSameSource()
     {
-        int[] array = new int[10];
+        double[] array = new double[10];
 
         var concat = array.Specialize().Concat(array.Specialize().Select(x => x * 2));
 

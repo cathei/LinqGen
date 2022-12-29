@@ -34,11 +34,25 @@ namespace Cathei.LinqGen.Generator
 
                 syntaxReceiver.ResolveHierarchy();
 
-                foreach (var node in syntaxReceiver.Roots)
+                var buffer = new List<MemberDeclarationSyntax>();
+                int batch = 1;
+                int count = 0;
+
+                foreach (var result in syntaxReceiver.Roots.SelectMany(RenderNodeRecursive))
                 {
-                    var members = RenderNodeRecursive(node);
-                    context.AddSource(node.FileName, FileTemplate.Render(members));
+                    buffer.AddRange(result);
+
+                    if (count++ > 10)
+                    {
+                        context.AddSource($"LinqGen.{batch}.cs", FileTemplate.Render(buffer));
+                        batch++;
+                        count = 0;
+                        buffer.Clear();
+                    }
                 }
+
+                // last batch
+                context.AddSource($"LinqGen.{batch}.cs", FileTemplate.Render(buffer));
             }
             catch (Exception ex)
             {
@@ -55,17 +69,16 @@ namespace Cathei.LinqGen.Generator
             }
         }
 
-        private IEnumerable<MemberDeclarationSyntax> RenderNodeRecursive(Generation generation)
+        private IEnumerable<IEnumerable<MemberDeclarationSyntax>> RenderNodeRecursive(Generation generation)
         {
-            foreach (var member in generation.Render())
-                yield return member;
+            yield return generation.Render();
 
             if (generation.Downstream != null)
             {
                 foreach (var downstream in generation.Downstream)
                 {
-                    foreach (var member in RenderNodeRecursive(downstream))
-                        yield return member;
+                    foreach (var result in RenderNodeRecursive(downstream))
+                        yield return result;
                 }
             }
         }

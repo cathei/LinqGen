@@ -27,10 +27,5 @@ namespace Cathei.LinqGen.Generator
 
             return base.VisitIdentifierName(node);
         }
-
-        public SyntaxList<StatementSyntax> VisitStatementSyntaxList(SyntaxList<StatementSyntax> nodes)
-        {
-            return List(nodes.Select(node => (StatementSyntax)Visit(node)));
-        }
     }
 }

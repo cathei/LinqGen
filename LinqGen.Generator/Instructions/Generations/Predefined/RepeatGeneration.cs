@@ -59,7 +59,7 @@ namespace Cathei.LinqGen.Generator
             var currentRewriter = new CurrentPlaceholderRewriter(currentName);
 
             // replace current variables of downstream
-            statements = currentRewriter.VisitStatementSyntaxList(statements);
+            statements = currentRewriter.VisitList(statements);
 
             return Block(WhileStatement(
                 LessThanExpression(PreIncrementExpression(Iterator("index")), Member("count")),

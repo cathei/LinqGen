@@ -91,6 +91,18 @@
             "GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)", intSources),
         ("Cast", "Cast<string>()", "Cast<string>()", castSources),
         ("OfType", "OfType<string>()", "OfType<string>()", castSources),
+        ("Concat", "Concat(TestData.IntArray)", "Concat(TestData.IntArray.Specialize())", intSources),
+        ("ConcatComplex",
+            "Concat(TestData.IntArray.Where(x => x % 2 == 0))",
+            "Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0))", intSources),
+        ("ConcatTwoOne",
+            "Concat(TestData.IntArray.Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.OrderBy(x => x))",
+            "Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order())",
+            intSources),
+        ("ConcatOneTwo",
+            "Concat(TestData.IntArray.Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.OrderBy(x => x)))",
+            "Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()))",
+            intSources),
     };
 #>
 

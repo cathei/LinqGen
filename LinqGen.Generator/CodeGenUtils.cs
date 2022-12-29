@@ -357,30 +357,29 @@ namespace Cathei.LinqGen.Generator
         }
 
         public static LocalDeclarationStatementSyntax LocalDeclarationStatement(
-            TypeSyntax type, SyntaxToken identifier, ExpressionSyntax initialValue)
+            TypeSyntax type, SyntaxToken identifier, ExpressionSyntax? initialValue)
         {
-            return SyntaxFactory.LocalDeclarationStatement(
-                VariableDeclaration(type, identifier, initialValue));
+            return SyntaxFactory.LocalDeclarationStatement(VariableDeclaration(type, identifier, initialValue));
         }
 
         public static LocalDeclarationStatementSyntax LocalDeclarationStatement(
-            SyntaxToken identifier, ExpressionSyntax initialValue)
+            SyntaxToken identifier, ExpressionSyntax? initialValue)
         {
-            return SyntaxFactory.LocalDeclarationStatement(
-                VariableDeclaration(identifier, initialValue));
+            return SyntaxFactory.LocalDeclarationStatement(VariableDeclaration(identifier, initialValue));
         }
 
         public static VariableDeclarationSyntax VariableDeclaration(
-            SyntaxToken identifier, ExpressionSyntax initialValue)
+            SyntaxToken identifier, ExpressionSyntax? initialValue)
         {
             return VariableDeclaration(VarType, identifier, initialValue);
         }
 
         public static VariableDeclarationSyntax VariableDeclaration(
-            TypeSyntax type, SyntaxToken identifier, ExpressionSyntax initialValue)
+            TypeSyntax type, SyntaxToken identifier, ExpressionSyntax? initialValue)
         {
             return SyntaxFactory.VariableDeclaration(type, SingletonSeparatedList(
-                VariableDeclarator(identifier, default, EqualsValueClause(initialValue))));
+                VariableDeclarator(identifier, default,
+                    initialValue != null ? EqualsValueClause(initialValue) : null)));
         }
 
         public static ReturnStatementSyntax ReturnDefaultStatement()
