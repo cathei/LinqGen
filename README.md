@@ -127,6 +127,8 @@ public struct Comparer : IComparer<int>
 ```
 
 ## Supported methods (working-in-progress)
+[List of Linq Operations](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/standard-query-operators-overview)
+
 ### Generations
 * Empty
 * Range
