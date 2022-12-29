@@ -110,5 +110,17 @@ namespace Cathei.LinqGen
         {
             throw new NotImplementedException();
         }
+
+        public static Stub<IEnumerable<T>, Prepend<TUp>> Prepend<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, T element)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<T>, Append<TUp>> Append<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, T element)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

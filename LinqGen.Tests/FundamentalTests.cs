@@ -69,6 +69,40 @@ public class FundamentalTests
         Assert.AreEqual(20, count);
     }
 
+    [Test]
+    public void Test_ConcatPrepend()
+    {
+        double[] array = new double[10];
+
+        var enumerable = array.Specialize()
+            .Concat(array.Specialize().Select(x => x * 2)).Prepend(24.12);
+
+        int count = 0;
+
+        foreach (var i in enumerable)
+            count++;
+
+        Assert.AreEqual(21, enumerable.Count());
+        Assert.AreEqual(21, count);
+    }
+
+    [Test]
+    public void Test_ConcatAppend()
+    {
+        double[] array = new double[10];
+
+        var enumerable = array.Specialize()
+            .Concat(array.Specialize().Select(x => x * 2)).Append(43.21);
+
+        int count = 0;
+
+        foreach (var i in enumerable)
+            count++;
+
+        Assert.AreEqual(21, enumerable.Count());
+        Assert.AreEqual(21, count);
+    }
+
     // [TestCase(1, 2, 3, 4)]
     // [TestCase(8, 6, 4, 2)]
     // [TestCase(2, 0, 4, 2)]

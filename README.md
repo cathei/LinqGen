@@ -142,6 +142,7 @@ public struct Comparer : IComparer<int>
 * ThenBy, ThenByDescending
 * GroupBy
 * Concat
+* Prepend, Append
 
 ### Evaluations
 * ToArray, ToList

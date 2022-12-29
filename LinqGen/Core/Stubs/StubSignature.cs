@@ -59,4 +59,8 @@ namespace Cathei.LinqGen.Hidden
     public abstract class DistinctStruct<TUp> : IStubSignature { }
 
     public abstract class Concat<TUp1, TUp2> : IStubSignature { }
+
+    public abstract class Prepend<TUp> : IStubSignature { }
+
+    public abstract class Append<TUp> : IStubSignature { }
 }

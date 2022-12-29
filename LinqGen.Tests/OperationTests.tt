@@ -97,12 +97,14 @@
             "Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0))", intSources),
         ("ConcatTwoOne",
             "Concat(TestData.IntArray.Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.OrderBy(x => x))",
-            "Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order())",
+            "Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order())",
             intSources),
         ("ConcatOneTwo",
             "Concat(TestData.IntArray.Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.OrderBy(x => x)))",
-            "Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()))",
+            "Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()))",
             intSources),
+        ("Prepend", "Prepend(77)", "Prepend(77)", intSources),
+        ("Append", "Append(42)", "Append(42)", intSources),
     };
 #>
 

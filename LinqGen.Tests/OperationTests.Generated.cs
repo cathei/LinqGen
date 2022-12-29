@@ -8481,7 +8481,7 @@ public class ConcatTwoOne_Tests
 
         var actual = TestData.IntEmpty
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8491,7 +8491,7 @@ public class ConcatTwoOne_Tests
     {
         var enumerable = TestData.IntEmpty
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8511,7 +8511,7 @@ public class ConcatTwoOne_Tests
 
         var actual = TestData.IntEmpty
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order())
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8525,7 +8525,7 @@ public class ConcatTwoOne_Tests
 
         var actual = TestData.IntArray
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8535,7 +8535,7 @@ public class ConcatTwoOne_Tests
     {
         var enumerable = TestData.IntArray
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8555,7 +8555,7 @@ public class ConcatTwoOne_Tests
 
         var actual = TestData.IntArray
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order())
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8569,7 +8569,7 @@ public class ConcatTwoOne_Tests
 
         var actual = TestData.IntList
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8579,7 +8579,7 @@ public class ConcatTwoOne_Tests
     {
         var enumerable = TestData.IntList
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8599,7 +8599,7 @@ public class ConcatTwoOne_Tests
 
         var actual = TestData.IntList
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order())
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8613,7 +8613,7 @@ public class ConcatTwoOne_Tests
 
         var actual = TestData.IntEnumerable
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8623,7 +8623,7 @@ public class ConcatTwoOne_Tests
     {
         var enumerable = TestData.IntEnumerable
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8643,7 +8643,7 @@ public class ConcatTwoOne_Tests
 
         var actual = TestData.IntEnumerable
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.Specialize().Order())
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8661,7 +8661,7 @@ public class ConcatOneTwo_Tests
 
         var actual = TestData.IntEmpty
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8671,7 +8671,7 @@ public class ConcatOneTwo_Tests
     {
         var enumerable = TestData.IntEmpty
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8691,7 +8691,7 @@ public class ConcatOneTwo_Tests
 
         var actual = TestData.IntEmpty
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()))
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()))
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8705,7 +8705,7 @@ public class ConcatOneTwo_Tests
 
         var actual = TestData.IntArray
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8715,7 +8715,7 @@ public class ConcatOneTwo_Tests
     {
         var enumerable = TestData.IntArray
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8735,7 +8735,7 @@ public class ConcatOneTwo_Tests
 
         var actual = TestData.IntArray
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()))
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()))
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8749,7 +8749,7 @@ public class ConcatOneTwo_Tests
 
         var actual = TestData.IntList
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8759,7 +8759,7 @@ public class ConcatOneTwo_Tests
     {
         var enumerable = TestData.IntList
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8779,7 +8779,7 @@ public class ConcatOneTwo_Tests
 
         var actual = TestData.IntList
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()))
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()))
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8793,7 +8793,7 @@ public class ConcatOneTwo_Tests
 
         var actual = TestData.IntEnumerable
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8803,7 +8803,7 @@ public class ConcatOneTwo_Tests
     {
         var enumerable = TestData.IntEnumerable
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8823,7 +8823,367 @@ public class ConcatOneTwo_Tests
 
         var actual = TestData.IntEnumerable
             .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.Specialize().Order()))
+            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class Prepend_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .Prepend(77);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .Prepend(77);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .Prepend(77);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Prepend(77)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .Prepend(77)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .Prepend(77);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .Prepend(77);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .Prepend(77);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Prepend(77)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .Prepend(77)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .Prepend(77);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .Prepend(77);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .Prepend(77);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Prepend(77)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .Prepend(77)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .Prepend(77);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .Prepend(77);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .Prepend(77);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Prepend(77)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .Prepend(77)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class Append_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .Append(42);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .Append(42);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Specialize()
+            .Append(42);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Append(42)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Specialize()
+            .Append(42)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .Append(42);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .Append(42);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Specialize()
+            .Append(42);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Append(42)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Specialize()
+            .Append(42)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .Append(42);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .Append(42);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Specialize()
+            .Append(42);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Append(42)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Specialize()
+            .Append(42)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .Append(42);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .Append(42);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Specialize()
+            .Append(42);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Append(42)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Specialize()
+            .Append(42)
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());

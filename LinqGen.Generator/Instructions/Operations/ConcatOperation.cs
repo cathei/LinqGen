@@ -35,6 +35,9 @@ namespace Cathei.LinqGen.Generator
 
         private NameSyntax? _secondResolvedName;
 
+        // TODO
+        public override bool SupportPartition => false;
+
         public NameSyntax SecondResolvedName
         {
             get
@@ -103,18 +106,6 @@ namespace Cathei.LinqGen.Generator
 
         public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
         {
-            // var currentRewriter = new CurrentPlaceholderRewriter(IdentifierName("current"));
-            //
-            // statements = currentRewriter.VisitList(statements);
-            //
-            // var localFunctionStatement = LocalFunctionStatement(
-            //     default, default, VoidType, LocalName("local").Identifier, null,
-            //     ParameterList(Parameter(OutputElementType, Identifier("current"))), default,
-            //     Block(statements), null);
-            //
-            // statements = SingletonList<StatementSyntax>(ExpressionStatement(InvocationExpression(
-            //     LocalName("local"), ArgumentList(CurrentPlaceholder))));
-
             statements = TempRewriter.VisitList(statements);
 
             // TODO: partition optimization (skip, take)

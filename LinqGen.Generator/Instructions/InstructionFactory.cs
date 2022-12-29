@@ -129,6 +129,12 @@ namespace Cathei.LinqGen.Generator
                 case "Concat":
                     return new ConcatOperation(expression, id);
 
+                case "Prepend":
+                    return new PrependAppendOperation(expression, id, false);
+
+                case "Append":
+                    return new PrependAppendOperation(expression, id, true);
+
                 #region OrderBy
 
                 case "OrderBy":
