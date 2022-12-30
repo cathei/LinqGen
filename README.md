@@ -160,6 +160,7 @@ public struct Comparer : IComparer<int>
     * Converts IEnumerable to LinqGen enumerable
 * AsEnumerable
     * Converts LinqGen enumerable to IEnumerable
+* RemoveAll
 
 ## Limitations
 * Element or key types that used with LinqGen must have at least `internal` accessibility.
