@@ -59,7 +59,7 @@ public class OrderByReference
     [ArgumentsSource(nameof(Lists))]
     public double LinqGenDelegate(IntWrapper[] list)
     {
-        return list.Specialize()
+        return list.Gen()
             .Order()
             .Sum(x => x.inner);
     }
@@ -68,7 +68,7 @@ public class OrderByReference
     [ArgumentsSource(nameof(Lists))]
     public double LinqGenStruct(IntWrapper[] list)
     {
-        return list.Specialize()
+        return list.Gen()
             .Order(new Comparer())
             .Sum(new Selector());
     }

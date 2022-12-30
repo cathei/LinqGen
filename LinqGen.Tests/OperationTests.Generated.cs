@@ -20,7 +20,7 @@ public class Select_Tests
             .Select(x => x * 2);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Select(x => x * 2);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -30,7 +30,7 @@ public class Select_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Select(x => x * 2);
 
         var array1 = enumerable.ToArray();
@@ -50,7 +50,7 @@ public class Select_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Select(x => x * 2)
             .Skip(skip).Take(take);
 
@@ -64,7 +64,7 @@ public class Select_Tests
             .Select(x => x * 2);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Select(x => x * 2);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -74,7 +74,7 @@ public class Select_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Select(x => x * 2);
 
         var array1 = enumerable.ToArray();
@@ -94,7 +94,7 @@ public class Select_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Select(x => x * 2)
             .Skip(skip).Take(take);
 
@@ -108,7 +108,7 @@ public class Select_Tests
             .Select(x => x * 2);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Select(x => x * 2);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -118,7 +118,7 @@ public class Select_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Select(x => x * 2);
 
         var array1 = enumerable.ToArray();
@@ -138,7 +138,7 @@ public class Select_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Select(x => x * 2)
             .Skip(skip).Take(take);
 
@@ -152,7 +152,7 @@ public class Select_Tests
             .Select(x => x * 2);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Select(x => x * 2);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -162,7 +162,7 @@ public class Select_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Select(x => x * 2);
 
         var array1 = enumerable.ToArray();
@@ -182,7 +182,7 @@ public class Select_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Select(x => x * 2)
             .Skip(skip).Take(take);
 
@@ -200,7 +200,7 @@ public class SelectStruct_Tests
             .Select(x => x * 2);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Select(new DoubleSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -210,7 +210,7 @@ public class SelectStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Select(new DoubleSelector());
 
         var array1 = enumerable.ToArray();
@@ -230,7 +230,7 @@ public class SelectStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Select(new DoubleSelector())
             .Skip(skip).Take(take);
 
@@ -244,7 +244,7 @@ public class SelectStruct_Tests
             .Select(x => x * 2);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Select(new DoubleSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -254,7 +254,7 @@ public class SelectStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Select(new DoubleSelector());
 
         var array1 = enumerable.ToArray();
@@ -274,7 +274,7 @@ public class SelectStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Select(new DoubleSelector())
             .Skip(skip).Take(take);
 
@@ -288,7 +288,7 @@ public class SelectStruct_Tests
             .Select(x => x * 2);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Select(new DoubleSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -298,7 +298,7 @@ public class SelectStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Select(new DoubleSelector());
 
         var array1 = enumerable.ToArray();
@@ -318,7 +318,7 @@ public class SelectStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Select(new DoubleSelector())
             .Skip(skip).Take(take);
 
@@ -332,7 +332,7 @@ public class SelectStruct_Tests
             .Select(x => x * 2);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Select(new DoubleSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -342,7 +342,7 @@ public class SelectStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Select(new DoubleSelector());
 
         var array1 = enumerable.ToArray();
@@ -362,7 +362,7 @@ public class SelectStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Select(new DoubleSelector())
             .Skip(skip).Take(take);
 
@@ -380,7 +380,7 @@ public class SelectAt_Tests
             .Select((x, i) => x + i);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Select((x, i) => x + i);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -390,7 +390,7 @@ public class SelectAt_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Select((x, i) => x + i);
 
         var array1 = enumerable.ToArray();
@@ -410,7 +410,7 @@ public class SelectAt_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Select((x, i) => x + i)
             .Skip(skip).Take(take);
 
@@ -424,7 +424,7 @@ public class SelectAt_Tests
             .Select((x, i) => x + i);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Select((x, i) => x + i);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -434,7 +434,7 @@ public class SelectAt_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Select((x, i) => x + i);
 
         var array1 = enumerable.ToArray();
@@ -454,7 +454,7 @@ public class SelectAt_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Select((x, i) => x + i)
             .Skip(skip).Take(take);
 
@@ -468,7 +468,7 @@ public class SelectAt_Tests
             .Select((x, i) => x + i);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Select((x, i) => x + i);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -478,7 +478,7 @@ public class SelectAt_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Select((x, i) => x + i);
 
         var array1 = enumerable.ToArray();
@@ -498,7 +498,7 @@ public class SelectAt_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Select((x, i) => x + i)
             .Skip(skip).Take(take);
 
@@ -512,7 +512,7 @@ public class SelectAt_Tests
             .Select((x, i) => x + i);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Select((x, i) => x + i);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -522,7 +522,7 @@ public class SelectAt_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Select((x, i) => x + i);
 
         var array1 = enumerable.ToArray();
@@ -542,7 +542,7 @@ public class SelectAt_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Select((x, i) => x + i)
             .Skip(skip).Take(take);
 
@@ -560,7 +560,7 @@ public class SelectAtStruct_Tests
             .Select((x, i) => x + i);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Select(new AddSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -570,7 +570,7 @@ public class SelectAtStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Select(new AddSelector());
 
         var array1 = enumerable.ToArray();
@@ -590,7 +590,7 @@ public class SelectAtStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Select(new AddSelector())
             .Skip(skip).Take(take);
 
@@ -604,7 +604,7 @@ public class SelectAtStruct_Tests
             .Select((x, i) => x + i);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Select(new AddSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -614,7 +614,7 @@ public class SelectAtStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Select(new AddSelector());
 
         var array1 = enumerable.ToArray();
@@ -634,7 +634,7 @@ public class SelectAtStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Select(new AddSelector())
             .Skip(skip).Take(take);
 
@@ -648,7 +648,7 @@ public class SelectAtStruct_Tests
             .Select((x, i) => x + i);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Select(new AddSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -658,7 +658,7 @@ public class SelectAtStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Select(new AddSelector());
 
         var array1 = enumerable.ToArray();
@@ -678,7 +678,7 @@ public class SelectAtStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Select(new AddSelector())
             .Skip(skip).Take(take);
 
@@ -692,7 +692,7 @@ public class SelectAtStruct_Tests
             .Select((x, i) => x + i);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Select(new AddSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -702,7 +702,7 @@ public class SelectAtStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Select(new AddSelector());
 
         var array1 = enumerable.ToArray();
@@ -722,7 +722,7 @@ public class SelectAtStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Select(new AddSelector())
             .Skip(skip).Take(take);
 
@@ -740,7 +740,7 @@ public class Where_Tests
             .Where(x => x % 2 == 0);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -750,7 +750,7 @@ public class Where_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0);
 
         var array1 = enumerable.ToArray();
@@ -770,7 +770,7 @@ public class Where_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0)
             .Skip(skip).Take(take);
 
@@ -784,7 +784,7 @@ public class Where_Tests
             .Where(x => x % 2 == 0);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -794,7 +794,7 @@ public class Where_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0);
 
         var array1 = enumerable.ToArray();
@@ -814,7 +814,7 @@ public class Where_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0)
             .Skip(skip).Take(take);
 
@@ -828,7 +828,7 @@ public class Where_Tests
             .Where(x => x % 2 == 0);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -838,7 +838,7 @@ public class Where_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0);
 
         var array1 = enumerable.ToArray();
@@ -858,7 +858,7 @@ public class Where_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0)
             .Skip(skip).Take(take);
 
@@ -872,7 +872,7 @@ public class Where_Tests
             .Where(x => x % 2 == 0);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -882,7 +882,7 @@ public class Where_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0);
 
         var array1 = enumerable.ToArray();
@@ -902,7 +902,7 @@ public class Where_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0)
             .Skip(skip).Take(take);
 
@@ -920,7 +920,7 @@ public class WhereStruct_Tests
             .Where(x => x % 2 == 0);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Where(new EvenPredicate());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -930,7 +930,7 @@ public class WhereStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Where(new EvenPredicate());
 
         var array1 = enumerable.ToArray();
@@ -950,7 +950,7 @@ public class WhereStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Where(new EvenPredicate())
             .Skip(skip).Take(take);
 
@@ -964,7 +964,7 @@ public class WhereStruct_Tests
             .Where(x => x % 2 == 0);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Where(new EvenPredicate());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -974,7 +974,7 @@ public class WhereStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Where(new EvenPredicate());
 
         var array1 = enumerable.ToArray();
@@ -994,7 +994,7 @@ public class WhereStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Where(new EvenPredicate())
             .Skip(skip).Take(take);
 
@@ -1008,7 +1008,7 @@ public class WhereStruct_Tests
             .Where(x => x % 2 == 0);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Where(new EvenPredicate());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1018,7 +1018,7 @@ public class WhereStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Where(new EvenPredicate());
 
         var array1 = enumerable.ToArray();
@@ -1038,7 +1038,7 @@ public class WhereStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Where(new EvenPredicate())
             .Skip(skip).Take(take);
 
@@ -1052,7 +1052,7 @@ public class WhereStruct_Tests
             .Where(x => x % 2 == 0);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Where(new EvenPredicate());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1062,7 +1062,7 @@ public class WhereStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Where(new EvenPredicate());
 
         var array1 = enumerable.ToArray();
@@ -1082,7 +1082,7 @@ public class WhereStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Where(new EvenPredicate())
             .Skip(skip).Take(take);
 
@@ -1100,7 +1100,7 @@ public class WhereAt_Tests
             .Where((x, i) => (x - i) % 2 == 0);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Where((x, i) => (x - i) % 2 == 0);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1110,7 +1110,7 @@ public class WhereAt_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Where((x, i) => (x - i) % 2 == 0);
 
         var array1 = enumerable.ToArray();
@@ -1130,7 +1130,7 @@ public class WhereAt_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Where((x, i) => (x - i) % 2 == 0)
             .Skip(skip).Take(take);
 
@@ -1144,7 +1144,7 @@ public class WhereAt_Tests
             .Where((x, i) => (x - i) % 2 == 0);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Where((x, i) => (x - i) % 2 == 0);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1154,7 +1154,7 @@ public class WhereAt_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Where((x, i) => (x - i) % 2 == 0);
 
         var array1 = enumerable.ToArray();
@@ -1174,7 +1174,7 @@ public class WhereAt_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Where((x, i) => (x - i) % 2 == 0)
             .Skip(skip).Take(take);
 
@@ -1188,7 +1188,7 @@ public class WhereAt_Tests
             .Where((x, i) => (x - i) % 2 == 0);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Where((x, i) => (x - i) % 2 == 0);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1198,7 +1198,7 @@ public class WhereAt_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Where((x, i) => (x - i) % 2 == 0);
 
         var array1 = enumerable.ToArray();
@@ -1218,7 +1218,7 @@ public class WhereAt_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Where((x, i) => (x - i) % 2 == 0)
             .Skip(skip).Take(take);
 
@@ -1232,7 +1232,7 @@ public class WhereAt_Tests
             .Where((x, i) => (x - i) % 2 == 0);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Where((x, i) => (x - i) % 2 == 0);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1242,7 +1242,7 @@ public class WhereAt_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Where((x, i) => (x - i) % 2 == 0);
 
         var array1 = enumerable.ToArray();
@@ -1262,7 +1262,7 @@ public class WhereAt_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Where((x, i) => (x - i) % 2 == 0)
             .Skip(skip).Take(take);
 
@@ -1280,7 +1280,7 @@ public class WhereAtStruct_Tests
             .Where((x, i) => (x - i) % 2 == 0);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Where(new MinusEvenPredicate());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1290,7 +1290,7 @@ public class WhereAtStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Where(new MinusEvenPredicate());
 
         var array1 = enumerable.ToArray();
@@ -1310,7 +1310,7 @@ public class WhereAtStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Where(new MinusEvenPredicate())
             .Skip(skip).Take(take);
 
@@ -1324,7 +1324,7 @@ public class WhereAtStruct_Tests
             .Where((x, i) => (x - i) % 2 == 0);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Where(new MinusEvenPredicate());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1334,7 +1334,7 @@ public class WhereAtStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Where(new MinusEvenPredicate());
 
         var array1 = enumerable.ToArray();
@@ -1354,7 +1354,7 @@ public class WhereAtStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Where(new MinusEvenPredicate())
             .Skip(skip).Take(take);
 
@@ -1368,7 +1368,7 @@ public class WhereAtStruct_Tests
             .Where((x, i) => (x - i) % 2 == 0);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Where(new MinusEvenPredicate());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1378,7 +1378,7 @@ public class WhereAtStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Where(new MinusEvenPredicate());
 
         var array1 = enumerable.ToArray();
@@ -1398,7 +1398,7 @@ public class WhereAtStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Where(new MinusEvenPredicate())
             .Skip(skip).Take(take);
 
@@ -1412,7 +1412,7 @@ public class WhereAtStruct_Tests
             .Where((x, i) => (x - i) % 2 == 0);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Where(new MinusEvenPredicate());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1422,7 +1422,7 @@ public class WhereAtStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Where(new MinusEvenPredicate());
 
         var array1 = enumerable.ToArray();
@@ -1442,7 +1442,7 @@ public class WhereAtStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Where(new MinusEvenPredicate())
             .Skip(skip).Take(take);
 
@@ -1460,7 +1460,7 @@ public class Distinct_Tests
             .Distinct();
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Distinct();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1470,7 +1470,7 @@ public class Distinct_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Distinct();
 
         var array1 = enumerable.ToArray();
@@ -1490,7 +1490,7 @@ public class Distinct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Distinct()
             .Skip(skip).Take(take);
 
@@ -1504,7 +1504,7 @@ public class Distinct_Tests
             .Distinct();
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Distinct();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1514,7 +1514,7 @@ public class Distinct_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Distinct();
 
         var array1 = enumerable.ToArray();
@@ -1534,7 +1534,7 @@ public class Distinct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Distinct()
             .Skip(skip).Take(take);
 
@@ -1548,7 +1548,7 @@ public class Distinct_Tests
             .Distinct();
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Distinct();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1558,7 +1558,7 @@ public class Distinct_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Distinct();
 
         var array1 = enumerable.ToArray();
@@ -1578,7 +1578,7 @@ public class Distinct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Distinct()
             .Skip(skip).Take(take);
 
@@ -1592,7 +1592,7 @@ public class Distinct_Tests
             .Distinct();
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Distinct();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1602,7 +1602,7 @@ public class Distinct_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Distinct();
 
         var array1 = enumerable.ToArray();
@@ -1622,7 +1622,7 @@ public class Distinct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Distinct()
             .Skip(skip).Take(take);
 
@@ -1640,7 +1640,7 @@ public class DistinctInterface_Tests
             .Distinct();
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Distinct(EqualityComparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1650,7 +1650,7 @@ public class DistinctInterface_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Distinct(EqualityComparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -1670,7 +1670,7 @@ public class DistinctInterface_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Distinct(EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -1684,7 +1684,7 @@ public class DistinctInterface_Tests
             .Distinct();
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Distinct(EqualityComparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1694,7 +1694,7 @@ public class DistinctInterface_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Distinct(EqualityComparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -1714,7 +1714,7 @@ public class DistinctInterface_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Distinct(EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -1728,7 +1728,7 @@ public class DistinctInterface_Tests
             .Distinct();
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Distinct(EqualityComparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1738,7 +1738,7 @@ public class DistinctInterface_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Distinct(EqualityComparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -1758,7 +1758,7 @@ public class DistinctInterface_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Distinct(EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -1772,7 +1772,7 @@ public class DistinctInterface_Tests
             .Distinct();
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Distinct(EqualityComparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1782,7 +1782,7 @@ public class DistinctInterface_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Distinct(EqualityComparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -1802,7 +1802,7 @@ public class DistinctInterface_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Distinct(EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -1820,7 +1820,7 @@ public class DistinctStruct_Tests
             .Distinct();
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Distinct(new StructEqualityComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1830,7 +1830,7 @@ public class DistinctStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Distinct(new StructEqualityComparer());
 
         var array1 = enumerable.ToArray();
@@ -1850,7 +1850,7 @@ public class DistinctStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Distinct(new StructEqualityComparer())
             .Skip(skip).Take(take);
 
@@ -1864,7 +1864,7 @@ public class DistinctStruct_Tests
             .Distinct();
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Distinct(new StructEqualityComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1874,7 +1874,7 @@ public class DistinctStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Distinct(new StructEqualityComparer());
 
         var array1 = enumerable.ToArray();
@@ -1894,7 +1894,7 @@ public class DistinctStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Distinct(new StructEqualityComparer())
             .Skip(skip).Take(take);
 
@@ -1908,7 +1908,7 @@ public class DistinctStruct_Tests
             .Distinct();
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Distinct(new StructEqualityComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1918,7 +1918,7 @@ public class DistinctStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Distinct(new StructEqualityComparer());
 
         var array1 = enumerable.ToArray();
@@ -1938,7 +1938,7 @@ public class DistinctStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Distinct(new StructEqualityComparer())
             .Skip(skip).Take(take);
 
@@ -1952,7 +1952,7 @@ public class DistinctStruct_Tests
             .Distinct();
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Distinct(new StructEqualityComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -1962,7 +1962,7 @@ public class DistinctStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Distinct(new StructEqualityComparer());
 
         var array1 = enumerable.ToArray();
@@ -1982,7 +1982,7 @@ public class DistinctStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Distinct(new StructEqualityComparer())
             .Skip(skip).Take(take);
 
@@ -2000,7 +2000,7 @@ public class Skip_Tests
             .Skip(2);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Skip(2);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2010,7 +2010,7 @@ public class Skip_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Skip(2);
 
         var array1 = enumerable.ToArray();
@@ -2030,7 +2030,7 @@ public class Skip_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Skip(2)
             .Skip(skip).Take(take);
 
@@ -2044,7 +2044,7 @@ public class Skip_Tests
             .Skip(2);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Skip(2);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2054,7 +2054,7 @@ public class Skip_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Skip(2);
 
         var array1 = enumerable.ToArray();
@@ -2074,7 +2074,7 @@ public class Skip_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Skip(2)
             .Skip(skip).Take(take);
 
@@ -2088,7 +2088,7 @@ public class Skip_Tests
             .Skip(2);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Skip(2);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2098,7 +2098,7 @@ public class Skip_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Skip(2);
 
         var array1 = enumerable.ToArray();
@@ -2118,7 +2118,7 @@ public class Skip_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Skip(2)
             .Skip(skip).Take(take);
 
@@ -2132,7 +2132,7 @@ public class Skip_Tests
             .Skip(2);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Skip(2);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2142,7 +2142,7 @@ public class Skip_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Skip(2);
 
         var array1 = enumerable.ToArray();
@@ -2162,7 +2162,7 @@ public class Skip_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Skip(2)
             .Skip(skip).Take(take);
 
@@ -2180,7 +2180,7 @@ public class Take_Tests
             .Take(7);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Take(7);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2190,7 +2190,7 @@ public class Take_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Take(7);
 
         var array1 = enumerable.ToArray();
@@ -2210,7 +2210,7 @@ public class Take_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Take(7)
             .Skip(skip).Take(take);
 
@@ -2224,7 +2224,7 @@ public class Take_Tests
             .Take(7);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Take(7);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2234,7 +2234,7 @@ public class Take_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Take(7);
 
         var array1 = enumerable.ToArray();
@@ -2254,7 +2254,7 @@ public class Take_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Take(7)
             .Skip(skip).Take(take);
 
@@ -2268,7 +2268,7 @@ public class Take_Tests
             .Take(7);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Take(7);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2278,7 +2278,7 @@ public class Take_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Take(7);
 
         var array1 = enumerable.ToArray();
@@ -2298,7 +2298,7 @@ public class Take_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Take(7)
             .Skip(skip).Take(take);
 
@@ -2312,7 +2312,7 @@ public class Take_Tests
             .Take(7);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Take(7);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2322,7 +2322,7 @@ public class Take_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Take(7);
 
         var array1 = enumerable.ToArray();
@@ -2342,7 +2342,7 @@ public class Take_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Take(7)
             .Skip(skip).Take(take);
 
@@ -2360,7 +2360,7 @@ public class Order_Tests
             .OrderBy(x => x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Order();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2370,7 +2370,7 @@ public class Order_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Order();
 
         var array1 = enumerable.ToArray();
@@ -2390,7 +2390,7 @@ public class Order_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Order()
             .Skip(skip).Take(take);
 
@@ -2404,7 +2404,7 @@ public class Order_Tests
             .OrderBy(x => x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Order();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2414,7 +2414,7 @@ public class Order_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Order();
 
         var array1 = enumerable.ToArray();
@@ -2434,7 +2434,7 @@ public class Order_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Order()
             .Skip(skip).Take(take);
 
@@ -2448,7 +2448,7 @@ public class Order_Tests
             .OrderBy(x => x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Order();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2458,7 +2458,7 @@ public class Order_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Order();
 
         var array1 = enumerable.ToArray();
@@ -2478,7 +2478,7 @@ public class Order_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Order()
             .Skip(skip).Take(take);
 
@@ -2492,7 +2492,7 @@ public class Order_Tests
             .OrderBy(x => x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Order();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2502,7 +2502,7 @@ public class Order_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Order();
 
         var array1 = enumerable.ToArray();
@@ -2522,7 +2522,7 @@ public class Order_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Order()
             .Skip(skip).Take(take);
 
@@ -2540,7 +2540,7 @@ public class OrderComparer_Tests
             .OrderBy(x => x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Order(Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2550,7 +2550,7 @@ public class OrderComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Order(Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -2570,7 +2570,7 @@ public class OrderComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Order(Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -2584,7 +2584,7 @@ public class OrderComparer_Tests
             .OrderBy(x => x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Order(Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2594,7 +2594,7 @@ public class OrderComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Order(Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -2614,7 +2614,7 @@ public class OrderComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Order(Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -2628,7 +2628,7 @@ public class OrderComparer_Tests
             .OrderBy(x => x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Order(Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2638,7 +2638,7 @@ public class OrderComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Order(Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -2658,7 +2658,7 @@ public class OrderComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Order(Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -2672,7 +2672,7 @@ public class OrderComparer_Tests
             .OrderBy(x => x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Order(Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2682,7 +2682,7 @@ public class OrderComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Order(Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -2702,7 +2702,7 @@ public class OrderComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Order(Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -2720,7 +2720,7 @@ public class OrderStruct_Tests
             .OrderBy(x => x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Order(new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2730,7 +2730,7 @@ public class OrderStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Order(new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -2750,7 +2750,7 @@ public class OrderStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Order(new StructComparer())
             .Skip(skip).Take(take);
 
@@ -2764,7 +2764,7 @@ public class OrderStruct_Tests
             .OrderBy(x => x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Order(new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2774,7 +2774,7 @@ public class OrderStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Order(new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -2794,7 +2794,7 @@ public class OrderStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Order(new StructComparer())
             .Skip(skip).Take(take);
 
@@ -2808,7 +2808,7 @@ public class OrderStruct_Tests
             .OrderBy(x => x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Order(new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2818,7 +2818,7 @@ public class OrderStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Order(new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -2838,7 +2838,7 @@ public class OrderStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Order(new StructComparer())
             .Skip(skip).Take(take);
 
@@ -2852,7 +2852,7 @@ public class OrderStruct_Tests
             .OrderBy(x => x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Order(new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2862,7 +2862,7 @@ public class OrderStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Order(new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -2882,7 +2882,7 @@ public class OrderStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Order(new StructComparer())
             .Skip(skip).Take(take);
 
@@ -2900,7 +2900,7 @@ public class OrderDesc_Tests
             .OrderByDescending(x => x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderDescending();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2910,7 +2910,7 @@ public class OrderDesc_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderDescending();
 
         var array1 = enumerable.ToArray();
@@ -2930,7 +2930,7 @@ public class OrderDesc_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderDescending()
             .Skip(skip).Take(take);
 
@@ -2944,7 +2944,7 @@ public class OrderDesc_Tests
             .OrderByDescending(x => x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderDescending();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2954,7 +2954,7 @@ public class OrderDesc_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderDescending();
 
         var array1 = enumerable.ToArray();
@@ -2974,7 +2974,7 @@ public class OrderDesc_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderDescending()
             .Skip(skip).Take(take);
 
@@ -2988,7 +2988,7 @@ public class OrderDesc_Tests
             .OrderByDescending(x => x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderDescending();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -2998,7 +2998,7 @@ public class OrderDesc_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderDescending();
 
         var array1 = enumerable.ToArray();
@@ -3018,7 +3018,7 @@ public class OrderDesc_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderDescending()
             .Skip(skip).Take(take);
 
@@ -3032,7 +3032,7 @@ public class OrderDesc_Tests
             .OrderByDescending(x => x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderDescending();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3042,7 +3042,7 @@ public class OrderDesc_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderDescending();
 
         var array1 = enumerable.ToArray();
@@ -3062,7 +3062,7 @@ public class OrderDesc_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderDescending()
             .Skip(skip).Take(take);
 
@@ -3080,7 +3080,7 @@ public class OrderDescComparer_Tests
             .OrderByDescending(x => x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderDescending(Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3090,7 +3090,7 @@ public class OrderDescComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderDescending(Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -3110,7 +3110,7 @@ public class OrderDescComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderDescending(Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -3124,7 +3124,7 @@ public class OrderDescComparer_Tests
             .OrderByDescending(x => x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderDescending(Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3134,7 +3134,7 @@ public class OrderDescComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderDescending(Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -3154,7 +3154,7 @@ public class OrderDescComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderDescending(Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -3168,7 +3168,7 @@ public class OrderDescComparer_Tests
             .OrderByDescending(x => x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderDescending(Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3178,7 +3178,7 @@ public class OrderDescComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderDescending(Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -3198,7 +3198,7 @@ public class OrderDescComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderDescending(Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -3212,7 +3212,7 @@ public class OrderDescComparer_Tests
             .OrderByDescending(x => x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderDescending(Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3222,7 +3222,7 @@ public class OrderDescComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderDescending(Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -3242,7 +3242,7 @@ public class OrderDescComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderDescending(Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -3260,7 +3260,7 @@ public class OrderDescStruct_Tests
             .OrderByDescending(x => x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderDescending(new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3270,7 +3270,7 @@ public class OrderDescStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderDescending(new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -3290,7 +3290,7 @@ public class OrderDescStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderDescending(new StructComparer())
             .Skip(skip).Take(take);
 
@@ -3304,7 +3304,7 @@ public class OrderDescStruct_Tests
             .OrderByDescending(x => x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderDescending(new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3314,7 +3314,7 @@ public class OrderDescStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderDescending(new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -3334,7 +3334,7 @@ public class OrderDescStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderDescending(new StructComparer())
             .Skip(skip).Take(take);
 
@@ -3348,7 +3348,7 @@ public class OrderDescStruct_Tests
             .OrderByDescending(x => x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderDescending(new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3358,7 +3358,7 @@ public class OrderDescStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderDescending(new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -3378,7 +3378,7 @@ public class OrderDescStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderDescending(new StructComparer())
             .Skip(skip).Take(take);
 
@@ -3392,7 +3392,7 @@ public class OrderDescStruct_Tests
             .OrderByDescending(x => x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderDescending(new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3402,7 +3402,7 @@ public class OrderDescStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderDescending(new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -3422,7 +3422,7 @@ public class OrderDescStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderDescending(new StructComparer())
             .Skip(skip).Take(take);
 
@@ -3440,7 +3440,7 @@ public class OrderBy_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3450,7 +3450,7 @@ public class OrderBy_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3);
 
         var array1 = enumerable.ToArray();
@@ -3470,7 +3470,7 @@ public class OrderBy_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3)
             .Skip(skip).Take(take);
 
@@ -3484,7 +3484,7 @@ public class OrderBy_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3494,7 +3494,7 @@ public class OrderBy_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3);
 
         var array1 = enumerable.ToArray();
@@ -3514,7 +3514,7 @@ public class OrderBy_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3)
             .Skip(skip).Take(take);
 
@@ -3528,7 +3528,7 @@ public class OrderBy_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3538,7 +3538,7 @@ public class OrderBy_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3);
 
         var array1 = enumerable.ToArray();
@@ -3558,7 +3558,7 @@ public class OrderBy_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3)
             .Skip(skip).Take(take);
 
@@ -3572,7 +3572,7 @@ public class OrderBy_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3582,7 +3582,7 @@ public class OrderBy_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3);
 
         var array1 = enumerable.ToArray();
@@ -3602,7 +3602,7 @@ public class OrderBy_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3)
             .Skip(skip).Take(take);
 
@@ -3620,7 +3620,7 @@ public class OrderByKey_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3630,7 +3630,7 @@ public class OrderByKey_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector());
 
         var array1 = enumerable.ToArray();
@@ -3650,7 +3650,7 @@ public class OrderByKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector())
             .Skip(skip).Take(take);
 
@@ -3664,7 +3664,7 @@ public class OrderByKey_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3674,7 +3674,7 @@ public class OrderByKey_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector());
 
         var array1 = enumerable.ToArray();
@@ -3694,7 +3694,7 @@ public class OrderByKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector())
             .Skip(skip).Take(take);
 
@@ -3708,7 +3708,7 @@ public class OrderByKey_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3718,7 +3718,7 @@ public class OrderByKey_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector());
 
         var array1 = enumerable.ToArray();
@@ -3738,7 +3738,7 @@ public class OrderByKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector())
             .Skip(skip).Take(take);
 
@@ -3752,7 +3752,7 @@ public class OrderByKey_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3762,7 +3762,7 @@ public class OrderByKey_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector());
 
         var array1 = enumerable.ToArray();
@@ -3782,7 +3782,7 @@ public class OrderByKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector())
             .Skip(skip).Take(take);
 
@@ -3800,7 +3800,7 @@ public class OrderByComparer_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3810,7 +3810,7 @@ public class OrderByComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -3830,7 +3830,7 @@ public class OrderByComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -3844,7 +3844,7 @@ public class OrderByComparer_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3854,7 +3854,7 @@ public class OrderByComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -3874,7 +3874,7 @@ public class OrderByComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -3888,7 +3888,7 @@ public class OrderByComparer_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3898,7 +3898,7 @@ public class OrderByComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -3918,7 +3918,7 @@ public class OrderByComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -3932,7 +3932,7 @@ public class OrderByComparer_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3942,7 +3942,7 @@ public class OrderByComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -3962,7 +3962,7 @@ public class OrderByComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -3980,7 +3980,7 @@ public class OrderByStruct_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -3990,7 +3990,7 @@ public class OrderByStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -4010,7 +4010,7 @@ public class OrderByStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -4024,7 +4024,7 @@ public class OrderByStruct_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4034,7 +4034,7 @@ public class OrderByStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -4054,7 +4054,7 @@ public class OrderByStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -4068,7 +4068,7 @@ public class OrderByStruct_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4078,7 +4078,7 @@ public class OrderByStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -4098,7 +4098,7 @@ public class OrderByStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -4112,7 +4112,7 @@ public class OrderByStruct_Tests
             .OrderBy(x => x % 3);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4122,7 +4122,7 @@ public class OrderByStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -4142,7 +4142,7 @@ public class OrderByStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -4160,7 +4160,7 @@ public class OrderByDesc_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4170,7 +4170,7 @@ public class OrderByDesc_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3);
 
         var array1 = enumerable.ToArray();
@@ -4190,7 +4190,7 @@ public class OrderByDesc_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3)
             .Skip(skip).Take(take);
 
@@ -4204,7 +4204,7 @@ public class OrderByDesc_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4214,7 +4214,7 @@ public class OrderByDesc_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3);
 
         var array1 = enumerable.ToArray();
@@ -4234,7 +4234,7 @@ public class OrderByDesc_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3)
             .Skip(skip).Take(take);
 
@@ -4248,7 +4248,7 @@ public class OrderByDesc_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4258,7 +4258,7 @@ public class OrderByDesc_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3);
 
         var array1 = enumerable.ToArray();
@@ -4278,7 +4278,7 @@ public class OrderByDesc_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3)
             .Skip(skip).Take(take);
 
@@ -4292,7 +4292,7 @@ public class OrderByDesc_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4302,7 +4302,7 @@ public class OrderByDesc_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3);
 
         var array1 = enumerable.ToArray();
@@ -4322,7 +4322,7 @@ public class OrderByDesc_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3)
             .Skip(skip).Take(take);
 
@@ -4340,7 +4340,7 @@ public class OrderByDescKey_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4350,7 +4350,7 @@ public class OrderByDescKey_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector());
 
         var array1 = enumerable.ToArray();
@@ -4370,7 +4370,7 @@ public class OrderByDescKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector())
             .Skip(skip).Take(take);
 
@@ -4384,7 +4384,7 @@ public class OrderByDescKey_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4394,7 +4394,7 @@ public class OrderByDescKey_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector());
 
         var array1 = enumerable.ToArray();
@@ -4414,7 +4414,7 @@ public class OrderByDescKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector())
             .Skip(skip).Take(take);
 
@@ -4428,7 +4428,7 @@ public class OrderByDescKey_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4438,7 +4438,7 @@ public class OrderByDescKey_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector());
 
         var array1 = enumerable.ToArray();
@@ -4458,7 +4458,7 @@ public class OrderByDescKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector())
             .Skip(skip).Take(take);
 
@@ -4472,7 +4472,7 @@ public class OrderByDescKey_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4482,7 +4482,7 @@ public class OrderByDescKey_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector());
 
         var array1 = enumerable.ToArray();
@@ -4502,7 +4502,7 @@ public class OrderByDescKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector())
             .Skip(skip).Take(take);
 
@@ -4520,7 +4520,7 @@ public class OrderByDescComparer_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4530,7 +4530,7 @@ public class OrderByDescComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -4550,7 +4550,7 @@ public class OrderByDescComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -4564,7 +4564,7 @@ public class OrderByDescComparer_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4574,7 +4574,7 @@ public class OrderByDescComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -4594,7 +4594,7 @@ public class OrderByDescComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -4608,7 +4608,7 @@ public class OrderByDescComparer_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4618,7 +4618,7 @@ public class OrderByDescComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -4638,7 +4638,7 @@ public class OrderByDescComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -4652,7 +4652,7 @@ public class OrderByDescComparer_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4662,7 +4662,7 @@ public class OrderByDescComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -4682,7 +4682,7 @@ public class OrderByDescComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -4700,7 +4700,7 @@ public class OrderByDescStruct_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4710,7 +4710,7 @@ public class OrderByDescStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -4730,7 +4730,7 @@ public class OrderByDescStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -4744,7 +4744,7 @@ public class OrderByDescStruct_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4754,7 +4754,7 @@ public class OrderByDescStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -4774,7 +4774,7 @@ public class OrderByDescStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -4788,7 +4788,7 @@ public class OrderByDescStruct_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4798,7 +4798,7 @@ public class OrderByDescStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -4818,7 +4818,7 @@ public class OrderByDescStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -4832,7 +4832,7 @@ public class OrderByDescStruct_Tests
             .OrderByDescending(x => x % 3);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4842,7 +4842,7 @@ public class OrderByDescStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -4862,7 +4862,7 @@ public class OrderByDescStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -4880,7 +4880,7 @@ public class ThenBy_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4890,7 +4890,7 @@ public class ThenBy_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var array1 = enumerable.ToArray();
@@ -4910,7 +4910,7 @@ public class ThenBy_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x)
             .Skip(skip).Take(take);
 
@@ -4924,7 +4924,7 @@ public class ThenBy_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4934,7 +4934,7 @@ public class ThenBy_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var array1 = enumerable.ToArray();
@@ -4954,7 +4954,7 @@ public class ThenBy_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x)
             .Skip(skip).Take(take);
 
@@ -4968,7 +4968,7 @@ public class ThenBy_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -4978,7 +4978,7 @@ public class ThenBy_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var array1 = enumerable.ToArray();
@@ -4998,7 +4998,7 @@ public class ThenBy_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x)
             .Skip(skip).Take(take);
 
@@ -5012,7 +5012,7 @@ public class ThenBy_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5022,7 +5022,7 @@ public class ThenBy_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var array1 = enumerable.ToArray();
@@ -5042,7 +5042,7 @@ public class ThenBy_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x)
             .Skip(skip).Take(take);
 
@@ -5060,7 +5060,7 @@ public class ThenByKey_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5070,7 +5070,7 @@ public class ThenByKey_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector());
 
         var array1 = enumerable.ToArray();
@@ -5090,7 +5090,7 @@ public class ThenByKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector())
             .Skip(skip).Take(take);
 
@@ -5104,7 +5104,7 @@ public class ThenByKey_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5114,7 +5114,7 @@ public class ThenByKey_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector());
 
         var array1 = enumerable.ToArray();
@@ -5134,7 +5134,7 @@ public class ThenByKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector())
             .Skip(skip).Take(take);
 
@@ -5148,7 +5148,7 @@ public class ThenByKey_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5158,7 +5158,7 @@ public class ThenByKey_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector());
 
         var array1 = enumerable.ToArray();
@@ -5178,7 +5178,7 @@ public class ThenByKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector())
             .Skip(skip).Take(take);
 
@@ -5192,7 +5192,7 @@ public class ThenByKey_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5202,7 +5202,7 @@ public class ThenByKey_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector());
 
         var array1 = enumerable.ToArray();
@@ -5222,7 +5222,7 @@ public class ThenByKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector())
             .Skip(skip).Take(take);
 
@@ -5240,7 +5240,7 @@ public class ThenByComparer_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5250,7 +5250,7 @@ public class ThenByComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -5270,7 +5270,7 @@ public class ThenByComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -5284,7 +5284,7 @@ public class ThenByComparer_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5294,7 +5294,7 @@ public class ThenByComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -5314,7 +5314,7 @@ public class ThenByComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -5328,7 +5328,7 @@ public class ThenByComparer_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5338,7 +5338,7 @@ public class ThenByComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -5358,7 +5358,7 @@ public class ThenByComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -5372,7 +5372,7 @@ public class ThenByComparer_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5382,7 +5382,7 @@ public class ThenByComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -5402,7 +5402,7 @@ public class ThenByComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -5420,7 +5420,7 @@ public class ThenByStruct_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5430,7 +5430,7 @@ public class ThenByStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -5450,7 +5450,7 @@ public class ThenByStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -5464,7 +5464,7 @@ public class ThenByStruct_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5474,7 +5474,7 @@ public class ThenByStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -5494,7 +5494,7 @@ public class ThenByStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -5508,7 +5508,7 @@ public class ThenByStruct_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5518,7 +5518,7 @@ public class ThenByStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -5538,7 +5538,7 @@ public class ThenByStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -5552,7 +5552,7 @@ public class ThenByStruct_Tests
             .OrderBy(x => x % 3).ThenBy(x => -x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5562,7 +5562,7 @@ public class ThenByStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -5582,7 +5582,7 @@ public class ThenByStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -5600,7 +5600,7 @@ public class ThenByDesc_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5610,7 +5610,7 @@ public class ThenByDesc_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var array1 = enumerable.ToArray();
@@ -5630,7 +5630,7 @@ public class ThenByDesc_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x)
             .Skip(skip).Take(take);
 
@@ -5644,7 +5644,7 @@ public class ThenByDesc_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5654,7 +5654,7 @@ public class ThenByDesc_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var array1 = enumerable.ToArray();
@@ -5674,7 +5674,7 @@ public class ThenByDesc_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x)
             .Skip(skip).Take(take);
 
@@ -5688,7 +5688,7 @@ public class ThenByDesc_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5698,7 +5698,7 @@ public class ThenByDesc_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var array1 = enumerable.ToArray();
@@ -5718,7 +5718,7 @@ public class ThenByDesc_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x)
             .Skip(skip).Take(take);
 
@@ -5732,7 +5732,7 @@ public class ThenByDesc_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5742,7 +5742,7 @@ public class ThenByDesc_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var array1 = enumerable.ToArray();
@@ -5762,7 +5762,7 @@ public class ThenByDesc_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x)
             .Skip(skip).Take(take);
 
@@ -5780,7 +5780,7 @@ public class ThenByDescKey_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5790,7 +5790,7 @@ public class ThenByDescKey_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
 
         var array1 = enumerable.ToArray();
@@ -5810,7 +5810,7 @@ public class ThenByDescKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
             .Skip(skip).Take(take);
 
@@ -5824,7 +5824,7 @@ public class ThenByDescKey_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5834,7 +5834,7 @@ public class ThenByDescKey_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
 
         var array1 = enumerable.ToArray();
@@ -5854,7 +5854,7 @@ public class ThenByDescKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
             .Skip(skip).Take(take);
 
@@ -5868,7 +5868,7 @@ public class ThenByDescKey_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5878,7 +5878,7 @@ public class ThenByDescKey_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
 
         var array1 = enumerable.ToArray();
@@ -5898,7 +5898,7 @@ public class ThenByDescKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
             .Skip(skip).Take(take);
 
@@ -5912,7 +5912,7 @@ public class ThenByDescKey_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5922,7 +5922,7 @@ public class ThenByDescKey_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector());
 
         var array1 = enumerable.ToArray();
@@ -5942,7 +5942,7 @@ public class ThenByDescKey_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
             .Skip(skip).Take(take);
 
@@ -5960,7 +5960,7 @@ public class ThenByDescComparer_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -5970,7 +5970,7 @@ public class ThenByDescComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -5990,7 +5990,7 @@ public class ThenByDescComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -6004,7 +6004,7 @@ public class ThenByDescComparer_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6014,7 +6014,7 @@ public class ThenByDescComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -6034,7 +6034,7 @@ public class ThenByDescComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -6048,7 +6048,7 @@ public class ThenByDescComparer_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6058,7 +6058,7 @@ public class ThenByDescComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -6078,7 +6078,7 @@ public class ThenByDescComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -6092,7 +6092,7 @@ public class ThenByDescComparer_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6102,7 +6102,7 @@ public class ThenByDescComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -6122,7 +6122,7 @@ public class ThenByDescComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -6140,7 +6140,7 @@ public class ThenByDescStruct_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6150,7 +6150,7 @@ public class ThenByDescStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -6170,7 +6170,7 @@ public class ThenByDescStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -6184,7 +6184,7 @@ public class ThenByDescStruct_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6194,7 +6194,7 @@ public class ThenByDescStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -6214,7 +6214,7 @@ public class ThenByDescStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -6228,7 +6228,7 @@ public class ThenByDescStruct_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6238,7 +6238,7 @@ public class ThenByDescStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -6258,7 +6258,7 @@ public class ThenByDescStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -6272,7 +6272,7 @@ public class ThenByDescStruct_Tests
             .OrderBy(x => x % 3).ThenByDescending(x => -x);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6282,7 +6282,7 @@ public class ThenByDescStruct_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer());
 
         var array1 = enumerable.ToArray();
@@ -6302,7 +6302,7 @@ public class ThenByDescStruct_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
             .Skip(skip).Take(take);
 
@@ -6320,7 +6320,7 @@ public class GroupBy_Tests
             .GroupBy(x => x % 3).Select(x => x.Sum());
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6330,7 +6330,7 @@ public class GroupBy_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6350,7 +6350,7 @@ public class GroupBy_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6364,7 +6364,7 @@ public class GroupBy_Tests
             .GroupBy(x => x % 3).Select(x => x.Sum());
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6374,7 +6374,7 @@ public class GroupBy_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6394,7 +6394,7 @@ public class GroupBy_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6408,7 +6408,7 @@ public class GroupBy_Tests
             .GroupBy(x => x % 3).Select(x => x.Sum());
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6418,7 +6418,7 @@ public class GroupBy_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6438,7 +6438,7 @@ public class GroupBy_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6452,7 +6452,7 @@ public class GroupBy_Tests
             .GroupBy(x => x % 3).Select(x => x.Sum());
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6462,7 +6462,7 @@ public class GroupBy_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6482,7 +6482,7 @@ public class GroupBy_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6500,7 +6500,7 @@ public class GroupByComparer_Tests
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6510,7 +6510,7 @@ public class GroupByComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6530,7 +6530,7 @@ public class GroupByComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6544,7 +6544,7 @@ public class GroupByComparer_Tests
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6554,7 +6554,7 @@ public class GroupByComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6574,7 +6574,7 @@ public class GroupByComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6588,7 +6588,7 @@ public class GroupByComparer_Tests
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6598,7 +6598,7 @@ public class GroupByComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6618,7 +6618,7 @@ public class GroupByComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6632,7 +6632,7 @@ public class GroupByComparer_Tests
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6642,7 +6642,7 @@ public class GroupByComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6662,7 +6662,7 @@ public class GroupByComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6680,7 +6680,7 @@ public class GroupByElement_Tests
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6690,7 +6690,7 @@ public class GroupByElement_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6710,7 +6710,7 @@ public class GroupByElement_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6724,7 +6724,7 @@ public class GroupByElement_Tests
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6734,7 +6734,7 @@ public class GroupByElement_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6754,7 +6754,7 @@ public class GroupByElement_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6768,7 +6768,7 @@ public class GroupByElement_Tests
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6778,7 +6778,7 @@ public class GroupByElement_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6798,7 +6798,7 @@ public class GroupByElement_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6812,7 +6812,7 @@ public class GroupByElement_Tests
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6822,7 +6822,7 @@ public class GroupByElement_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6842,7 +6842,7 @@ public class GroupByElement_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6860,7 +6860,7 @@ public class GroupByElementComparer_Tests
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6870,7 +6870,7 @@ public class GroupByElementComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6890,7 +6890,7 @@ public class GroupByElementComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6904,7 +6904,7 @@ public class GroupByElementComparer_Tests
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6914,7 +6914,7 @@ public class GroupByElementComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6934,7 +6934,7 @@ public class GroupByElementComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6948,7 +6948,7 @@ public class GroupByElementComparer_Tests
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -6958,7 +6958,7 @@ public class GroupByElementComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -6978,7 +6978,7 @@ public class GroupByElementComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -6992,7 +6992,7 @@ public class GroupByElementComparer_Tests
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7002,7 +7002,7 @@ public class GroupByElementComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum());
 
         var array1 = enumerable.ToArray();
@@ -7022,7 +7022,7 @@ public class GroupByElementComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
             .Skip(skip).Take(take);
 
@@ -7040,7 +7040,7 @@ public class GroupByResult_Tests
             .GroupBy(x => x % 3, (k, v) => v.Sum());
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7050,7 +7050,7 @@ public class GroupByResult_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum());
 
         var array1 = enumerable.ToArray();
@@ -7070,7 +7070,7 @@ public class GroupByResult_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum())
             .Skip(skip).Take(take);
 
@@ -7084,7 +7084,7 @@ public class GroupByResult_Tests
             .GroupBy(x => x % 3, (k, v) => v.Sum());
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7094,7 +7094,7 @@ public class GroupByResult_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum());
 
         var array1 = enumerable.ToArray();
@@ -7114,7 +7114,7 @@ public class GroupByResult_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum())
             .Skip(skip).Take(take);
 
@@ -7128,7 +7128,7 @@ public class GroupByResult_Tests
             .GroupBy(x => x % 3, (k, v) => v.Sum());
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7138,7 +7138,7 @@ public class GroupByResult_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum());
 
         var array1 = enumerable.ToArray();
@@ -7158,7 +7158,7 @@ public class GroupByResult_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum())
             .Skip(skip).Take(take);
 
@@ -7172,7 +7172,7 @@ public class GroupByResult_Tests
             .GroupBy(x => x % 3, (k, v) => v.Sum());
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7182,7 +7182,7 @@ public class GroupByResult_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum());
 
         var array1 = enumerable.ToArray();
@@ -7202,7 +7202,7 @@ public class GroupByResult_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum())
             .Skip(skip).Take(take);
 
@@ -7220,7 +7220,7 @@ public class GroupByResultComparer_Tests
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7230,7 +7230,7 @@ public class GroupByResultComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -7250,7 +7250,7 @@ public class GroupByResultComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -7264,7 +7264,7 @@ public class GroupByResultComparer_Tests
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7274,7 +7274,7 @@ public class GroupByResultComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -7294,7 +7294,7 @@ public class GroupByResultComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -7308,7 +7308,7 @@ public class GroupByResultComparer_Tests
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7318,7 +7318,7 @@ public class GroupByResultComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -7338,7 +7338,7 @@ public class GroupByResultComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -7352,7 +7352,7 @@ public class GroupByResultComparer_Tests
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7362,7 +7362,7 @@ public class GroupByResultComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -7382,7 +7382,7 @@ public class GroupByResultComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -7400,7 +7400,7 @@ public class GroupByElementResult_Tests
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7410,7 +7410,7 @@ public class GroupByElementResult_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
 
         var array1 = enumerable.ToArray();
@@ -7430,7 +7430,7 @@ public class GroupByElementResult_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
             .Skip(skip).Take(take);
 
@@ -7444,7 +7444,7 @@ public class GroupByElementResult_Tests
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7454,7 +7454,7 @@ public class GroupByElementResult_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
 
         var array1 = enumerable.ToArray();
@@ -7474,7 +7474,7 @@ public class GroupByElementResult_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
             .Skip(skip).Take(take);
 
@@ -7488,7 +7488,7 @@ public class GroupByElementResult_Tests
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7498,7 +7498,7 @@ public class GroupByElementResult_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
 
         var array1 = enumerable.ToArray();
@@ -7518,7 +7518,7 @@ public class GroupByElementResult_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
             .Skip(skip).Take(take);
 
@@ -7532,7 +7532,7 @@ public class GroupByElementResult_Tests
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7542,7 +7542,7 @@ public class GroupByElementResult_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum());
 
         var array1 = enumerable.ToArray();
@@ -7562,7 +7562,7 @@ public class GroupByElementResult_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
             .Skip(skip).Take(take);
 
@@ -7580,7 +7580,7 @@ public class GroupByElementResultComparer_Tests
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7590,7 +7590,7 @@ public class GroupByElementResultComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -7610,7 +7610,7 @@ public class GroupByElementResultComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -7624,7 +7624,7 @@ public class GroupByElementResultComparer_Tests
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7634,7 +7634,7 @@ public class GroupByElementResultComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -7654,7 +7654,7 @@ public class GroupByElementResultComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -7668,7 +7668,7 @@ public class GroupByElementResultComparer_Tests
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7678,7 +7678,7 @@ public class GroupByElementResultComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -7698,7 +7698,7 @@ public class GroupByElementResultComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -7712,7 +7712,7 @@ public class GroupByElementResultComparer_Tests
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7722,7 +7722,7 @@ public class GroupByElementResultComparer_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default);
 
         var array1 = enumerable.ToArray();
@@ -7742,7 +7742,7 @@ public class GroupByElementResultComparer_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
 
@@ -7760,7 +7760,7 @@ public class Cast_Tests
             .Cast<string>();
 
         var actual = TestData.ObjectEmpty
-            .Specialize()
+            .Gen()
             .Cast<string>();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7770,7 +7770,7 @@ public class Cast_Tests
     public void MultipleEnumeration_MustBeSame_ObjectEmpty()
     {
         var enumerable = TestData.ObjectEmpty
-            .Specialize()
+            .Gen()
             .Cast<string>();
 
         var array1 = enumerable.ToArray();
@@ -7790,7 +7790,7 @@ public class Cast_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.ObjectEmpty
-            .Specialize()
+            .Gen()
             .Cast<string>()
             .Skip(skip).Take(take);
 
@@ -7804,7 +7804,7 @@ public class Cast_Tests
             .Cast<string>();
 
         var actual = TestData.ObjectStringArray
-            .Specialize()
+            .Gen()
             .Cast<string>();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7814,7 +7814,7 @@ public class Cast_Tests
     public void MultipleEnumeration_MustBeSame_ObjectStringArray()
     {
         var enumerable = TestData.ObjectStringArray
-            .Specialize()
+            .Gen()
             .Cast<string>();
 
         var array1 = enumerable.ToArray();
@@ -7834,7 +7834,7 @@ public class Cast_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.ObjectStringArray
-            .Specialize()
+            .Gen()
             .Cast<string>()
             .Skip(skip).Take(take);
 
@@ -7848,7 +7848,7 @@ public class Cast_Tests
             .Cast<string>();
 
         var actual = TestData.ObjectStringList
-            .Specialize()
+            .Gen()
             .Cast<string>();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7858,7 +7858,7 @@ public class Cast_Tests
     public void MultipleEnumeration_MustBeSame_ObjectStringList()
     {
         var enumerable = TestData.ObjectStringList
-            .Specialize()
+            .Gen()
             .Cast<string>();
 
         var array1 = enumerable.ToArray();
@@ -7878,7 +7878,7 @@ public class Cast_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.ObjectStringList
-            .Specialize()
+            .Gen()
             .Cast<string>()
             .Skip(skip).Take(take);
 
@@ -7892,7 +7892,7 @@ public class Cast_Tests
             .Cast<string>();
 
         var actual = TestData.ObjectStringEnumerable
-            .Specialize()
+            .Gen()
             .Cast<string>();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7902,7 +7902,7 @@ public class Cast_Tests
     public void MultipleEnumeration_MustBeSame_ObjectStringEnumerable()
     {
         var enumerable = TestData.ObjectStringEnumerable
-            .Specialize()
+            .Gen()
             .Cast<string>();
 
         var array1 = enumerable.ToArray();
@@ -7922,7 +7922,7 @@ public class Cast_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.ObjectStringEnumerable
-            .Specialize()
+            .Gen()
             .Cast<string>()
             .Skip(skip).Take(take);
 
@@ -7940,7 +7940,7 @@ public class OfType_Tests
             .OfType<string>();
 
         var actual = TestData.ObjectEmpty
-            .Specialize()
+            .Gen()
             .OfType<string>();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7950,7 +7950,7 @@ public class OfType_Tests
     public void MultipleEnumeration_MustBeSame_ObjectEmpty()
     {
         var enumerable = TestData.ObjectEmpty
-            .Specialize()
+            .Gen()
             .OfType<string>();
 
         var array1 = enumerable.ToArray();
@@ -7970,7 +7970,7 @@ public class OfType_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.ObjectEmpty
-            .Specialize()
+            .Gen()
             .OfType<string>()
             .Skip(skip).Take(take);
 
@@ -7984,7 +7984,7 @@ public class OfType_Tests
             .OfType<string>();
 
         var actual = TestData.ObjectStringArray
-            .Specialize()
+            .Gen()
             .OfType<string>();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -7994,7 +7994,7 @@ public class OfType_Tests
     public void MultipleEnumeration_MustBeSame_ObjectStringArray()
     {
         var enumerable = TestData.ObjectStringArray
-            .Specialize()
+            .Gen()
             .OfType<string>();
 
         var array1 = enumerable.ToArray();
@@ -8014,7 +8014,7 @@ public class OfType_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.ObjectStringArray
-            .Specialize()
+            .Gen()
             .OfType<string>()
             .Skip(skip).Take(take);
 
@@ -8028,7 +8028,7 @@ public class OfType_Tests
             .OfType<string>();
 
         var actual = TestData.ObjectStringList
-            .Specialize()
+            .Gen()
             .OfType<string>();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8038,7 +8038,7 @@ public class OfType_Tests
     public void MultipleEnumeration_MustBeSame_ObjectStringList()
     {
         var enumerable = TestData.ObjectStringList
-            .Specialize()
+            .Gen()
             .OfType<string>();
 
         var array1 = enumerable.ToArray();
@@ -8058,7 +8058,7 @@ public class OfType_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.ObjectStringList
-            .Specialize()
+            .Gen()
             .OfType<string>()
             .Skip(skip).Take(take);
 
@@ -8072,7 +8072,7 @@ public class OfType_Tests
             .OfType<string>();
 
         var actual = TestData.ObjectStringEnumerable
-            .Specialize()
+            .Gen()
             .OfType<string>();
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8082,7 +8082,7 @@ public class OfType_Tests
     public void MultipleEnumeration_MustBeSame_ObjectStringEnumerable()
     {
         var enumerable = TestData.ObjectStringEnumerable
-            .Specialize()
+            .Gen()
             .OfType<string>();
 
         var array1 = enumerable.ToArray();
@@ -8102,7 +8102,7 @@ public class OfType_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.ObjectStringEnumerable
-            .Specialize()
+            .Gen()
             .OfType<string>()
             .Skip(skip).Take(take);
 
@@ -8120,8 +8120,8 @@ public class Concat_Tests
             .Concat(TestData.IntArray);
 
         var actual = TestData.IntEmpty
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize());
+            .Gen()
+            .Concat(TestData.IntArray.Gen());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8130,8 +8130,8 @@ public class Concat_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize());
+            .Gen()
+            .Concat(TestData.IntArray.Gen());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8150,8 +8150,8 @@ public class Concat_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize())
+            .Gen()
+            .Concat(TestData.IntArray.Gen())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8164,8 +8164,8 @@ public class Concat_Tests
             .Concat(TestData.IntArray);
 
         var actual = TestData.IntArray
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize());
+            .Gen()
+            .Concat(TestData.IntArray.Gen());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8174,8 +8174,8 @@ public class Concat_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize());
+            .Gen()
+            .Concat(TestData.IntArray.Gen());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8194,8 +8194,8 @@ public class Concat_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize())
+            .Gen()
+            .Concat(TestData.IntArray.Gen())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8208,8 +8208,8 @@ public class Concat_Tests
             .Concat(TestData.IntArray);
 
         var actual = TestData.IntList
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize());
+            .Gen()
+            .Concat(TestData.IntArray.Gen());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8218,8 +8218,8 @@ public class Concat_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize());
+            .Gen()
+            .Concat(TestData.IntArray.Gen());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8238,8 +8238,8 @@ public class Concat_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize())
+            .Gen()
+            .Concat(TestData.IntArray.Gen())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8252,8 +8252,8 @@ public class Concat_Tests
             .Concat(TestData.IntArray);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize());
+            .Gen()
+            .Concat(TestData.IntArray.Gen());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8262,8 +8262,8 @@ public class Concat_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize());
+            .Gen()
+            .Concat(TestData.IntArray.Gen());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8282,8 +8282,8 @@ public class Concat_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize())
+            .Gen()
+            .Concat(TestData.IntArray.Gen())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8300,8 +8300,8 @@ public class ConcatComplex_Tests
             .Concat(TestData.IntArray.Where(x => x % 2 == 0));
 
         var actual = TestData.IntEmpty
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0));
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8310,8 +8310,8 @@ public class ConcatComplex_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0));
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8330,8 +8330,8 @@ public class ConcatComplex_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0))
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0))
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8344,8 +8344,8 @@ public class ConcatComplex_Tests
             .Concat(TestData.IntArray.Where(x => x % 2 == 0));
 
         var actual = TestData.IntArray
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0));
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8354,8 +8354,8 @@ public class ConcatComplex_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0));
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8374,8 +8374,8 @@ public class ConcatComplex_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0))
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0))
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8388,8 +8388,8 @@ public class ConcatComplex_Tests
             .Concat(TestData.IntArray.Where(x => x % 2 == 0));
 
         var actual = TestData.IntList
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0));
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8398,8 +8398,8 @@ public class ConcatComplex_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0));
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8418,8 +8418,8 @@ public class ConcatComplex_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0))
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0))
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8432,8 +8432,8 @@ public class ConcatComplex_Tests
             .Concat(TestData.IntArray.Where(x => x % 2 == 0));
 
         var actual = TestData.IntEnumerable
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0));
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8442,8 +8442,8 @@ public class ConcatComplex_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0));
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8462,8 +8462,8 @@ public class ConcatComplex_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0))
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0))
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8480,8 +8480,8 @@ public class ConcatTwoOne_Tests
             .Concat(TestData.IntArray.Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.OrderBy(x => x));
 
         var actual = TestData.IntEmpty
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8490,8 +8490,8 @@ public class ConcatTwoOne_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8510,8 +8510,8 @@ public class ConcatTwoOne_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order())
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8524,8 +8524,8 @@ public class ConcatTwoOne_Tests
             .Concat(TestData.IntArray.Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.OrderBy(x => x));
 
         var actual = TestData.IntArray
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8534,8 +8534,8 @@ public class ConcatTwoOne_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8554,8 +8554,8 @@ public class ConcatTwoOne_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order())
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8568,8 +8568,8 @@ public class ConcatTwoOne_Tests
             .Concat(TestData.IntArray.Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.OrderBy(x => x));
 
         var actual = TestData.IntList
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8578,8 +8578,8 @@ public class ConcatTwoOne_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8598,8 +8598,8 @@ public class ConcatTwoOne_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order())
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8612,8 +8612,8 @@ public class ConcatTwoOne_Tests
             .Concat(TestData.IntArray.Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.OrderBy(x => x));
 
         var actual = TestData.IntEnumerable
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8622,8 +8622,8 @@ public class ConcatTwoOne_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order());
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8642,8 +8642,8 @@ public class ConcatTwoOne_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order())
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8660,8 +8660,8 @@ public class ConcatOneTwo_Tests
             .Concat(TestData.IntArray.Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.OrderBy(x => x)));
 
         var actual = TestData.IntEmpty
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()));
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8670,8 +8670,8 @@ public class ConcatOneTwo_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()));
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8690,8 +8690,8 @@ public class ConcatOneTwo_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()))
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()))
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8704,8 +8704,8 @@ public class ConcatOneTwo_Tests
             .Concat(TestData.IntArray.Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.OrderBy(x => x)));
 
         var actual = TestData.IntArray
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()));
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8714,8 +8714,8 @@ public class ConcatOneTwo_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()));
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8734,8 +8734,8 @@ public class ConcatOneTwo_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()))
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()))
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8748,8 +8748,8 @@ public class ConcatOneTwo_Tests
             .Concat(TestData.IntArray.Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.OrderBy(x => x)));
 
         var actual = TestData.IntList
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()));
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8758,8 +8758,8 @@ public class ConcatOneTwo_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()));
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8778,8 +8778,8 @@ public class ConcatOneTwo_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()))
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()))
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8792,8 +8792,8 @@ public class ConcatOneTwo_Tests
             .Concat(TestData.IntArray.Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.OrderBy(x => x)));
 
         var actual = TestData.IntEnumerable
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()));
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8802,8 +8802,8 @@ public class ConcatOneTwo_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()));
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()));
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -8822,8 +8822,8 @@ public class ConcatOneTwo_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
-            .Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()))
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()))
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8840,7 +8840,7 @@ public class Prepend_Tests
             .Prepend(77);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Prepend(77);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8850,7 +8850,7 @@ public class Prepend_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Prepend(77);
 
         var array1 = enumerable.ToArray();
@@ -8870,7 +8870,7 @@ public class Prepend_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Prepend(77)
             .Skip(skip).Take(take);
 
@@ -8884,7 +8884,7 @@ public class Prepend_Tests
             .Prepend(77);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Prepend(77);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8894,7 +8894,7 @@ public class Prepend_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Prepend(77);
 
         var array1 = enumerable.ToArray();
@@ -8914,7 +8914,7 @@ public class Prepend_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Prepend(77)
             .Skip(skip).Take(take);
 
@@ -8928,7 +8928,7 @@ public class Prepend_Tests
             .Prepend(77);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Prepend(77);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8938,7 +8938,7 @@ public class Prepend_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Prepend(77);
 
         var array1 = enumerable.ToArray();
@@ -8958,7 +8958,7 @@ public class Prepend_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Prepend(77)
             .Skip(skip).Take(take);
 
@@ -8972,7 +8972,7 @@ public class Prepend_Tests
             .Prepend(77);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Prepend(77);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -8982,7 +8982,7 @@ public class Prepend_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Prepend(77);
 
         var array1 = enumerable.ToArray();
@@ -9002,7 +9002,7 @@ public class Prepend_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Prepend(77)
             .Skip(skip).Take(take);
 
@@ -9020,7 +9020,7 @@ public class Append_Tests
             .Append(42);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Append(42);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -9030,7 +9030,7 @@ public class Append_Tests
     public void MultipleEnumeration_MustBeSame_IntEmpty()
     {
         var enumerable = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Append(42);
 
         var array1 = enumerable.ToArray();
@@ -9050,7 +9050,7 @@ public class Append_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEmpty
-            .Specialize()
+            .Gen()
             .Append(42)
             .Skip(skip).Take(take);
 
@@ -9064,7 +9064,7 @@ public class Append_Tests
             .Append(42);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Append(42);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -9074,7 +9074,7 @@ public class Append_Tests
     public void MultipleEnumeration_MustBeSame_IntArray()
     {
         var enumerable = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Append(42);
 
         var array1 = enumerable.ToArray();
@@ -9094,7 +9094,7 @@ public class Append_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntArray
-            .Specialize()
+            .Gen()
             .Append(42)
             .Skip(skip).Take(take);
 
@@ -9108,7 +9108,7 @@ public class Append_Tests
             .Append(42);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Append(42);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -9118,7 +9118,7 @@ public class Append_Tests
     public void MultipleEnumeration_MustBeSame_IntList()
     {
         var enumerable = TestData.IntList
-            .Specialize()
+            .Gen()
             .Append(42);
 
         var array1 = enumerable.ToArray();
@@ -9138,7 +9138,7 @@ public class Append_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntList
-            .Specialize()
+            .Gen()
             .Append(42)
             .Skip(skip).Take(take);
 
@@ -9152,7 +9152,7 @@ public class Append_Tests
             .Append(42);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Append(42);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -9162,7 +9162,7 @@ public class Append_Tests
     public void MultipleEnumeration_MustBeSame_IntEnumerable()
     {
         var enumerable = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Append(42);
 
         var array1 = enumerable.ToArray();
@@ -9182,7 +9182,7 @@ public class Append_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.IntEnumerable
-            .Specialize()
+            .Gen()
             .Append(42)
             .Skip(skip).Take(take);
 

@@ -9,7 +9,7 @@ public class LinqGenSample : MonoBehaviour
 
     void Start()
     {
-        foreach (var i in myList.Specialize().Order().Select(x => x * 2))
+        foreach (var i in myList.Gen().Order().Select(x => x * 2))
         {
             Debug.Log(i);
         }

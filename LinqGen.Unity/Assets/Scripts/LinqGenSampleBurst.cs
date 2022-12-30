@@ -47,7 +47,7 @@ public struct LinqGenSampleJob : IJob
     {
         int index = 0;
 
-        foreach (var item in Input.Specialize()
+        foreach (var item in Input.Gen()
                      .Select(new Selector())
                      .Order(new Comparer()))
         {

@@ -35,7 +35,7 @@ public class ArraySelectToArray
     public int[] LinqGenDelegate()
     {
         return TestData
-            .Specialize()
+            .Gen()
             .Select(x => x * 2)
             .ToArray();
     }
@@ -44,7 +44,7 @@ public class ArraySelectToArray
     public int[] LinqGenStruct()
     {
         return TestData
-            .Specialize()
+            .Gen()
             .Select(new Selector())
             .ToArray();
     }

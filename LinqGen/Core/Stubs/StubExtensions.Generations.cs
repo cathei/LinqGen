@@ -22,7 +22,7 @@ namespace Cathei.LinqGen
         /// <summary>
         /// Only reference type can use covariance support
         /// </summary>
-        public static Stub<T, Specialize<T>> Specialize<T>(this T enumerable)
+        public static Stub<T, Gen<T>> Gen<T>(this T enumerable)
             where T : class, IEnumerable
         {
             throw new NotImplementedException();
@@ -31,7 +31,7 @@ namespace Cathei.LinqGen
         /// <summary>
         /// Struct version of specialize
         /// </summary>
-        public static Stub<IList<T>, SpecializeList<T>> Specialize<T>(this IList<T> enumerable)
+        public static Stub<IList<T>, GenList<T>> Gen<T>(this IList<T> enumerable)
         {
             throw new NotImplementedException();
         }
@@ -39,20 +39,20 @@ namespace Cathei.LinqGen
         /// <summary>
         /// Struct version of specialize
         /// </summary>
-        public static Stub<IEnumerable<T>, SpecializeStruct<T, TEnumerator>> Specialize<T, TEnumerator>(
+        public static Stub<IEnumerable<T>, GenStruct<T, TEnumerator>> Gen<T, TEnumerator>(
             this IStructEnumerable<T, TEnumerator> enumerable)
             where TEnumerator : IEnumerator<T>
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<TValue>, Specialize<GroupingManaged<TKey, TValue>>> Specialize<TKey, TValue>(
+        public static Stub<IEnumerable<TValue>, Gen<GroupingManaged<TKey, TValue>>> Gen<TKey, TValue>(
             this GroupingManaged<TKey, TValue> enumerable)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<TValue>, Specialize<GroupingNative<TKey, TValue>>> Specialize<TKey, TValue>(
+        public static Stub<IEnumerable<TValue>, Gen<GroupingNative<TKey, TValue>>> Gen<TKey, TValue>(
             this GroupingNative<TKey, TValue> enumerable)
             where TKey : unmanaged
             where TValue : unmanaged
@@ -61,13 +61,13 @@ namespace Cathei.LinqGen
         }
 
         // TODO span support
-        public static Stub<IEnumerable<T>, SpecializeSpan<T>> Specialize<T>(this Span<T> enumerable)
+        public static Stub<IEnumerable<T>, GenSpan<T>> Gen<T>(this Span<T> enumerable)
         {
             throw new NotImplementedException();
         }
 
         // TODO span support
-        public static Stub<IEnumerable<T>, SpecializeSpan<T>> Specialize<T>(this ReadOnlySpan<T> enumerable)
+        public static Stub<IEnumerable<T>, GenSpan<T>> Gen<T>(this ReadOnlySpan<T> enumerable)
         {
             throw new NotImplementedException();
         }

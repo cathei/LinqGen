@@ -30,7 +30,7 @@ public class FundamentalTests
 
         int count = 0;
 
-        foreach (var i in array.Specialize())
+        foreach (var i in array.Gen())
             count++;
 
         Assert.AreEqual(c1, count);
@@ -42,7 +42,7 @@ public class FundamentalTests
         double[] array1 = new double[10];
         double[] array2 = new double[5];
 
-        var concat = array1.Specialize().Concat(array2.Specialize());
+        var concat = array1.Gen().Concat(array2.Gen());
 
         int count = 0;
 
@@ -58,7 +58,7 @@ public class FundamentalTests
     {
         double[] array = new double[10];
 
-        var concat = array.Specialize().Concat(array.Specialize().Select(x => x * 2));
+        var concat = array.Gen().Concat(array.Gen().Select(x => x * 2));
 
         int count = 0;
 
@@ -74,8 +74,8 @@ public class FundamentalTests
     {
         double[] array = new double[10];
 
-        var enumerable = array.Specialize()
-            .Concat(array.Specialize().Select(x => x * 2)).Prepend(24.12);
+        var enumerable = array.Gen()
+            .Concat(array.Gen().Select(x => x * 2)).Prepend(24.12);
 
         int count = 0;
 
@@ -91,8 +91,8 @@ public class FundamentalTests
     {
         double[] array = new double[10];
 
-        var enumerable = array.Specialize()
-            .Concat(array.Specialize().Select(x => x * 2)).Append(43.21);
+        var enumerable = array.Gen()
+            .Concat(array.Gen().Select(x => x * 2)).Append(43.21);
 
         int count = 0;
 
@@ -112,7 +112,7 @@ public class FundamentalTests
     //
     //     int count = 0;
     //
-    //     foreach (var i in array.Specialize())
+    //     foreach (var i in array.Gen())
     //         count++;
     //
     //     Assert.AreEqual(c1 * c2 * c3 * c4, count);
@@ -129,14 +129,14 @@ public class FundamentalTests
     private TTestParam TypeGenerationTest<TTestParam>(TTestParam value)
     {
         return Enumerable.Repeat(value, 1)
-            .Specialize()
+            .Gen()
             .First();
     }
 
     [Test]
     public void CustomGenericEnumerableTest()
     {
-        int value = new CustomEnumerable<int>().Specialize()
+        int value = new CustomEnumerable<int>().Gen()
             .Select(x => x * 10)
             .First();
 
@@ -170,7 +170,7 @@ public class FundamentalTests
     [Test]
     public void CustomEnumerableTest()
     {
-        string value = new CustomEnumerable().Specialize()
+        string value = new CustomEnumerable().Gen()
             .Skip(3)
             .First();
 

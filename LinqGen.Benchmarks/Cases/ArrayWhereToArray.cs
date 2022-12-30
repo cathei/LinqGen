@@ -34,7 +34,7 @@ public class ArrayWhereToArray
     public int[] LinqGenDelegate()
     {
         return TestData
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0)
             .ToArray();
     }
@@ -43,7 +43,7 @@ public class ArrayWhereToArray
     public int[] LinqGenStruct()
     {
         return TestData
-            .Specialize()
+            .Gen()
             .Where(new Predicate())
             .ToArray();
     }

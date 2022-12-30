@@ -22,7 +22,7 @@ public class OrderBySkipTake : OrderByBenchmarkBase
     [ArgumentsSource(nameof(Lists))]
     public double LinqGenDelegate(int[] list)
     {
-        return list.Specialize()
+        return list.Gen()
             .Order()
             .Skip(10)
             .Take(10)
@@ -33,7 +33,7 @@ public class OrderBySkipTake : OrderByBenchmarkBase
     [ArgumentsSource(nameof(Lists))]
     public double LinqGenStruct(int[] list)
     {
-        return list.Specialize()
+        return list.Gen()
             .Order(new Comparer())
             .Skip(10)
             .Take(10)

@@ -19,7 +19,7 @@ namespace Cathei.LinqGen.Generator
         {
             switch (expression.SignatureSymbol!.Name)
             {
-                case "Specialize":
+                case "Gen":
                 {
                     ITypeSymbol typeArgument = expression.SignatureSymbol!.TypeArguments[0];
 
@@ -55,7 +55,7 @@ namespace Cathei.LinqGen.Generator
                     break;
                 }
 
-                case "SpecializeList":
+                case "GenList":
                 {
                     if (expression.MethodSymbol.ReceiverType is not INamedTypeSymbol listSymbol)
                         break;
@@ -64,7 +64,7 @@ namespace Cathei.LinqGen.Generator
                         listSymbol, listSymbol.TypeArguments[0], CountProperty, true);
                 }
 
-                case "SpecializeStruct":
+                case "GenStruct":
                 {
                     if (expression.MethodSymbol.ReceiverType is not INamedTypeSymbol sourceSymbol)
                         break;

@@ -45,7 +45,7 @@ public class ListSelectSum
     public double LinqGenDelegate()
     {
         return TestData
-            .Specialize()
+            .Gen()
             .Select(x => x * 2.0)
             .Sum();
     }
@@ -56,7 +56,7 @@ public class ListSelectSum
         var selector = new Selector();
 
         return TestData
-            .Specialize()
+            .Gen()
             .Select(selector)
             .Sum();
     }

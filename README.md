@@ -33,14 +33,14 @@ openupm add com.cathei.linqgen
 Feel free to make an issue, or ask me directly from [Discord](https://discord.gg/kpuRTkpeQC)!
 
 ## Usage
-Just add `Specialize()` in front of your Linq query.
+Just add `Gen()` in front of your Linq query.
 It will generate code to ensure zero-allocation, may have slightly better performance.
 ```csharp
 using Cathei.LinqGen;
  
 int[] array = new int[] { 1, 2, 3, 4, 5 };
 
-int result = array.Specialize()
+int result = array.Gen()
                   .Where(x => x % 2 == 0)
                   .Select(x => x * 2)
                   .Sum();
@@ -48,7 +48,7 @@ int result = array.Specialize()
 
 For additional performance boost, use struct functions with `IStructFunction` interface.
 ```csharp
-int result = array.Specialize()
+int result = array.Gen()
                   .Where(new Predicate())
                   .Select(new Selector())
                   .Sum();
@@ -106,7 +106,7 @@ public struct LinqGenSampleJob : IJob
     {
         int index = 0;
 
-        foreach (var item in Input.Specialize()
+        foreach (var item in Input.Gen()
                      .Select(new Selector())
                      .Order(new Comparer()))
         {
@@ -156,7 +156,7 @@ public struct Comparer : IComparer<int>
 * Min, Max
 
 ### Etc
-* Specialize
+* Gen
     * Converts IEnumerable to LinqGen enumerable
 * AsEnumerable
     * Converts LinqGen enumerable to IEnumerable

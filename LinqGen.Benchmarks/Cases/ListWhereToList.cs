@@ -34,7 +34,7 @@ public class ListWhereToList
     public List<int> LinqGenDelegate()
     {
         return TestData
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0)
             .ToList();
     }
@@ -43,7 +43,7 @@ public class ListWhereToList
     public List<int> LinqGenStruct()
     {
         return TestData
-            .Specialize()
+            .Gen()
             .Where(new Predicate())
             .ToList();
     }

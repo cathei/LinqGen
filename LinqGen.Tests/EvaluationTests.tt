@@ -70,7 +70,7 @@ public class <#= expression.title #>_Tests
         try
         {
             actual = TestData.<#= source.variable #>
-                .Specialize()
+                .Gen()
                 .<#= expression.linqgen #>;
 
         }
@@ -106,7 +106,7 @@ public class <#= expression.title #>_Tests
         try
         {
             actual = TestData.<#= source.variable #>
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .<#= expression.linqgen #>;
         }

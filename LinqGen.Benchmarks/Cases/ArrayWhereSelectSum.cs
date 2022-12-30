@@ -64,7 +64,7 @@ public class ArrayWhereSelectSum
     public double LinqGenDelegate()
     {
         return TestData
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0)
             .Select(x => x * 2.0)
             .Sum();
@@ -77,7 +77,7 @@ public class ArrayWhereSelectSum
         var selector = new Selector();
 
         return TestData
-           .Specialize()
+           .Gen()
            .Where(predicate)
            .Select(selector)
            .Sum();

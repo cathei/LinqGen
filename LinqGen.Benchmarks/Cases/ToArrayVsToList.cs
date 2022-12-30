@@ -59,7 +59,7 @@ public class ToArrayVsToList
     public int[] ToArray()
     {
         return TestData
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0)
             .ToArray();
     }
@@ -68,7 +68,7 @@ public class ToArrayVsToList
     public int[] ToArrayStruct()
     {
         return TestData
-            .Specialize()
+            .Gen()
             .Where(new Predicate())
             .ToArray();
     }
@@ -77,7 +77,7 @@ public class ToArrayVsToList
     public List<int> ToList()
     {
         return TestData
-            .Specialize()
+            .Gen()
             .Where(x => x % 2 == 0)
             .ToList();
     }
@@ -86,7 +86,7 @@ public class ToArrayVsToList
     public List<int> ToListStruct()
     {
         return TestData
-            .Specialize()
+            .Gen()
             .Where(new Predicate())
             .ToList();
     }

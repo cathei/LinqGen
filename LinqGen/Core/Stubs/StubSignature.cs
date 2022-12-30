@@ -20,13 +20,13 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class Repeat : IStubSignature { }
 
-    public abstract class Specialize<TEnumerable> : IStubSignature { }
+    public abstract class Gen<TEnumerable> : IStubSignature { }
 
-    public abstract class SpecializeList<T> : IStubSignature { }
+    public abstract class GenList<T> : IStubSignature { }
 
-    public abstract class SpecializeStruct<T, TEnumerator> : IStubSignature { }
+    public abstract class GenStruct<T, TEnumerator> : IStubSignature { }
 
-    public abstract class SpecializeSpan<T> : IStubSignature { }
+    public abstract class GenSpan<T> : IStubSignature { }
 
     public abstract class Cast<TUp> : IStubSignature { }
 

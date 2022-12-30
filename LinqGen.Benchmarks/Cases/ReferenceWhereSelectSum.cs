@@ -48,7 +48,7 @@ public class ReferenceWhereSelectSum
     [Benchmark]
     public double LinqGenDelegate()
     {
-        return TestData.Specialize()
+        return TestData.Gen()
             .Where(x => x.Value % 2 == 0)
             .Select(x => x.Value * 2.0)
             .Sum();
@@ -60,7 +60,7 @@ public class ReferenceWhereSelectSum
         var predicate = new Predicate();
         var selector = new Selector();
 
-        return TestData.Specialize()
+        return TestData.Gen()
            .Where(predicate)
            .Select(selector)
            .Sum();

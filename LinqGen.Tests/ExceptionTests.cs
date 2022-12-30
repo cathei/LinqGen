@@ -19,7 +19,7 @@ public class ExceptionTests
             "A", "B", new object(), 1, "DDD", null, "EEE"
         };
 
-        var enumerable = list.Specialize().Cast<string>();
+        var enumerable = list.Gen().Cast<string>();
 
         Assert.Throws<InvalidCastException>(() =>
         {
@@ -38,7 +38,7 @@ public class ExceptionTests
             "A", "B", new object(), 1, "DDD", null, "EEE"
         };
 
-        var enumerable = list.Specialize().OfType<string>();
+        var enumerable = list.Gen().OfType<string>();
 
         int count = 0;
 

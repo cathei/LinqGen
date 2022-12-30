@@ -20,7 +20,7 @@ public class OrderByKey : OrderByBenchmarkBase
     [ArgumentsSource(nameof(Lists))]
     public double LinqGenDelegate(int[] list)
     {
-        return list.Specialize()
+        return list.Gen()
             .OrderBy(x => -x)
             .Sum();
     }
@@ -32,7 +32,7 @@ public class OrderByKey : OrderByBenchmarkBase
         var selector = new KeySelector();
         var comparer = new Comparer();
 
-        return list.Specialize()
+        return list.Gen()
             .OrderBy(selector, comparer)
             .Sum();
     }

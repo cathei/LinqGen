@@ -91,17 +91,17 @@
             "GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)", intSources),
         ("Cast", "Cast<string>()", "Cast<string>()", castSources),
         ("OfType", "OfType<string>()", "OfType<string>()", castSources),
-        ("Concat", "Concat(TestData.IntArray)", "Concat(TestData.IntArray.Specialize())", intSources),
+        ("Concat", "Concat(TestData.IntArray)", "Concat(TestData.IntArray.Gen())", intSources),
         ("ConcatComplex",
             "Concat(TestData.IntArray.Where(x => x % 2 == 0))",
-            "Concat(TestData.IntArray.Specialize().Where(x => x % 2 == 0))", intSources),
+            "Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0))", intSources),
         ("ConcatTwoOne",
             "Concat(TestData.IntArray.Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.OrderBy(x => x))",
-            "Concat(TestData.IntArray.Specialize().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Specialize().Order())",
+            "Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order())",
             intSources),
         ("ConcatOneTwo",
             "Concat(TestData.IntArray.Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.OrderBy(x => x)))",
-            "Concat(TestData.IntArray.Specialize().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Specialize().Order()))",
+            "Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()))",
             intSources),
         ("Prepend", "Prepend(77)", "Prepend(77)", intSources),
         ("Append", "Append(42)", "Append(42)", intSources),
@@ -135,7 +135,7 @@ public class <#= expression.title #>_Tests
             .<#= expression.linq #>;
 
         var actual = TestData.<#= source #>
-            .Specialize()
+            .Gen()
             .<#= expression.linqgen #>;
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -145,7 +145,7 @@ public class <#= expression.title #>_Tests
     public void MultipleEnumeration_MustBeSame_<#= source #>()
     {
         var enumerable = TestData.<#= source #>
-            .Specialize()
+            .Gen()
             .<#= expression.linqgen #>;
 
         var array1 = enumerable.ToArray();
@@ -165,7 +165,7 @@ public class <#= expression.title #>_Tests
             .Skip(skip).Take(take);
 
         var actual = TestData.<#= source #>
-            .Specialize()
+            .Gen()
             .<#= expression.linqgen #>
             .Skip(skip).Take(take);
 

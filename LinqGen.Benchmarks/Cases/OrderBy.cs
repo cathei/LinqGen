@@ -52,7 +52,7 @@ public class OrderBy : OrderByBenchmarkBase
     [ArgumentsSource(nameof(Lists))]
     public double LinqGenDelegate(int[] list)
     {
-        return list.Specialize()
+        return list.Gen()
             .Order()
             .Sum();
     }
@@ -61,7 +61,7 @@ public class OrderBy : OrderByBenchmarkBase
     [ArgumentsSource(nameof(Lists))]
     public double LinqGenStruct(int[] list)
     {
-        return list.Specialize()
+        return list.Gen()
             .Order(new Comparer())
             .Sum();
     }

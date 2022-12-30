@@ -32,7 +32,7 @@ public class Count_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Count();
 
         }
@@ -68,7 +68,7 @@ public class Count_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Count();
         }
@@ -100,7 +100,7 @@ public class Count_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Count();
 
         }
@@ -136,7 +136,7 @@ public class Count_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Count();
         }
@@ -168,7 +168,7 @@ public class Count_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Count();
 
         }
@@ -204,7 +204,7 @@ public class Count_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Count();
         }
@@ -236,7 +236,7 @@ public class Count_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Count();
 
         }
@@ -272,7 +272,7 @@ public class Count_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Count();
         }
@@ -308,7 +308,7 @@ public class CountPred_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Count(x => x % 2 == 0);
 
         }
@@ -344,7 +344,7 @@ public class CountPred_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Count(x => x % 2 == 0);
         }
@@ -376,7 +376,7 @@ public class CountPred_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Count(x => x % 2 == 0);
 
         }
@@ -412,7 +412,7 @@ public class CountPred_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Count(x => x % 2 == 0);
         }
@@ -444,7 +444,7 @@ public class CountPred_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Count(x => x % 2 == 0);
 
         }
@@ -480,7 +480,7 @@ public class CountPred_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Count(x => x % 2 == 0);
         }
@@ -512,7 +512,7 @@ public class CountPred_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Count(x => x % 2 == 0);
 
         }
@@ -548,7 +548,7 @@ public class CountPred_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Count(x => x % 2 == 0);
         }
@@ -584,7 +584,7 @@ public class CountPredStruct_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Count(new EvenPredicate());
 
         }
@@ -620,7 +620,7 @@ public class CountPredStruct_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Count(new EvenPredicate());
         }
@@ -652,7 +652,7 @@ public class CountPredStruct_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Count(new EvenPredicate());
 
         }
@@ -688,7 +688,7 @@ public class CountPredStruct_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Count(new EvenPredicate());
         }
@@ -720,7 +720,7 @@ public class CountPredStruct_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Count(new EvenPredicate());
 
         }
@@ -756,7 +756,7 @@ public class CountPredStruct_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Count(new EvenPredicate());
         }
@@ -788,7 +788,7 @@ public class CountPredStruct_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Count(new EvenPredicate());
 
         }
@@ -824,7 +824,7 @@ public class CountPredStruct_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Count(new EvenPredicate());
         }
@@ -860,7 +860,7 @@ public class First_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .First();
 
         }
@@ -896,7 +896,7 @@ public class First_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .First();
         }
@@ -928,7 +928,7 @@ public class First_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .First();
 
         }
@@ -964,7 +964,7 @@ public class First_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .First();
         }
@@ -996,7 +996,7 @@ public class First_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .First();
 
         }
@@ -1032,7 +1032,7 @@ public class First_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .First();
         }
@@ -1064,7 +1064,7 @@ public class First_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .First();
 
         }
@@ -1100,7 +1100,7 @@ public class First_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .First();
         }
@@ -1136,7 +1136,7 @@ public class FirstOrDefault_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .FirstOrDefault();
 
         }
@@ -1172,7 +1172,7 @@ public class FirstOrDefault_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .FirstOrDefault();
         }
@@ -1204,7 +1204,7 @@ public class FirstOrDefault_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .FirstOrDefault();
 
         }
@@ -1240,7 +1240,7 @@ public class FirstOrDefault_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .FirstOrDefault();
         }
@@ -1272,7 +1272,7 @@ public class FirstOrDefault_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .FirstOrDefault();
 
         }
@@ -1308,7 +1308,7 @@ public class FirstOrDefault_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .FirstOrDefault();
         }
@@ -1340,7 +1340,7 @@ public class FirstOrDefault_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .FirstOrDefault();
 
         }
@@ -1376,7 +1376,7 @@ public class FirstOrDefault_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .FirstOrDefault();
         }
@@ -1412,7 +1412,7 @@ public class Last_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Last();
 
         }
@@ -1448,7 +1448,7 @@ public class Last_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Last();
         }
@@ -1480,7 +1480,7 @@ public class Last_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Last();
 
         }
@@ -1516,7 +1516,7 @@ public class Last_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Last();
         }
@@ -1548,7 +1548,7 @@ public class Last_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Last();
 
         }
@@ -1584,7 +1584,7 @@ public class Last_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Last();
         }
@@ -1616,7 +1616,7 @@ public class Last_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Last();
 
         }
@@ -1652,7 +1652,7 @@ public class Last_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Last();
         }
@@ -1688,7 +1688,7 @@ public class LastOrDefault_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .LastOrDefault();
 
         }
@@ -1724,7 +1724,7 @@ public class LastOrDefault_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .LastOrDefault();
         }
@@ -1756,7 +1756,7 @@ public class LastOrDefault_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .LastOrDefault();
 
         }
@@ -1792,7 +1792,7 @@ public class LastOrDefault_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .LastOrDefault();
         }
@@ -1824,7 +1824,7 @@ public class LastOrDefault_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .LastOrDefault();
 
         }
@@ -1860,7 +1860,7 @@ public class LastOrDefault_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .LastOrDefault();
         }
@@ -1892,7 +1892,7 @@ public class LastOrDefault_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .LastOrDefault();
 
         }
@@ -1928,7 +1928,7 @@ public class LastOrDefault_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .LastOrDefault();
         }
@@ -1964,7 +1964,7 @@ public class Min_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Min();
 
         }
@@ -2000,7 +2000,7 @@ public class Min_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Min();
         }
@@ -2032,7 +2032,7 @@ public class Min_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Min();
 
         }
@@ -2068,7 +2068,7 @@ public class Min_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Min();
         }
@@ -2100,7 +2100,7 @@ public class Min_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Min();
 
         }
@@ -2136,7 +2136,7 @@ public class Min_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Min();
         }
@@ -2168,7 +2168,7 @@ public class Min_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Min();
 
         }
@@ -2204,7 +2204,7 @@ public class Min_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Min();
         }
@@ -2240,7 +2240,7 @@ public class MinComp_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Min(new StructComparer());
 
         }
@@ -2276,7 +2276,7 @@ public class MinComp_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Min(new StructComparer());
         }
@@ -2308,7 +2308,7 @@ public class MinComp_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Min(new StructComparer());
 
         }
@@ -2344,7 +2344,7 @@ public class MinComp_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Min(new StructComparer());
         }
@@ -2376,7 +2376,7 @@ public class MinComp_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Min(new StructComparer());
 
         }
@@ -2412,7 +2412,7 @@ public class MinComp_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Min(new StructComparer());
         }
@@ -2444,7 +2444,7 @@ public class MinComp_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Min(new StructComparer());
 
         }
@@ -2480,7 +2480,7 @@ public class MinComp_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Min(new StructComparer());
         }
@@ -2516,7 +2516,7 @@ public class Max_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Max();
 
         }
@@ -2552,7 +2552,7 @@ public class Max_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Max();
         }
@@ -2584,7 +2584,7 @@ public class Max_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Max();
 
         }
@@ -2620,7 +2620,7 @@ public class Max_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Max();
         }
@@ -2652,7 +2652,7 @@ public class Max_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Max();
 
         }
@@ -2688,7 +2688,7 @@ public class Max_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Max();
         }
@@ -2720,7 +2720,7 @@ public class Max_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Max();
 
         }
@@ -2756,7 +2756,7 @@ public class Max_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Max();
         }
@@ -2792,7 +2792,7 @@ public class MaxComp_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Max(new StructComparer());
 
         }
@@ -2828,7 +2828,7 @@ public class MaxComp_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Max(new StructComparer());
         }
@@ -2860,7 +2860,7 @@ public class MaxComp_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Max(new StructComparer());
 
         }
@@ -2896,7 +2896,7 @@ public class MaxComp_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Max(new StructComparer());
         }
@@ -2928,7 +2928,7 @@ public class MaxComp_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Max(new StructComparer());
 
         }
@@ -2964,7 +2964,7 @@ public class MaxComp_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Max(new StructComparer());
         }
@@ -2996,7 +2996,7 @@ public class MaxComp_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Max(new StructComparer());
 
         }
@@ -3032,7 +3032,7 @@ public class MaxComp_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Max(new StructComparer());
         }
@@ -3068,7 +3068,7 @@ public class Sum_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Sum();
 
         }
@@ -3104,7 +3104,7 @@ public class Sum_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Sum();
         }
@@ -3136,7 +3136,7 @@ public class Sum_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Sum();
 
         }
@@ -3172,7 +3172,7 @@ public class Sum_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Sum();
         }
@@ -3204,7 +3204,7 @@ public class Sum_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Sum();
 
         }
@@ -3240,7 +3240,7 @@ public class Sum_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Sum();
         }
@@ -3272,7 +3272,7 @@ public class Sum_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Sum();
 
         }
@@ -3308,7 +3308,7 @@ public class Sum_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Sum();
         }
@@ -3344,7 +3344,7 @@ public class SumSelector_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Sum(new DoubleSelector());
 
         }
@@ -3380,7 +3380,7 @@ public class SumSelector_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Sum(new DoubleSelector());
         }
@@ -3412,7 +3412,7 @@ public class SumSelector_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Sum(new DoubleSelector());
 
         }
@@ -3448,7 +3448,7 @@ public class SumSelector_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Sum(new DoubleSelector());
         }
@@ -3480,7 +3480,7 @@ public class SumSelector_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Sum(new DoubleSelector());
 
         }
@@ -3516,7 +3516,7 @@ public class SumSelector_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Sum(new DoubleSelector());
         }
@@ -3548,7 +3548,7 @@ public class SumSelector_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Sum(new DoubleSelector());
 
         }
@@ -3584,7 +3584,7 @@ public class SumSelector_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .Sum(new DoubleSelector());
         }
@@ -3620,7 +3620,7 @@ public class ToArray_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .ToArray();
 
         }
@@ -3656,7 +3656,7 @@ public class ToArray_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .ToArray();
         }
@@ -3688,7 +3688,7 @@ public class ToArray_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .ToArray();
 
         }
@@ -3724,7 +3724,7 @@ public class ToArray_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .ToArray();
         }
@@ -3756,7 +3756,7 @@ public class ToArray_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .ToArray();
 
         }
@@ -3792,7 +3792,7 @@ public class ToArray_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .ToArray();
         }
@@ -3824,7 +3824,7 @@ public class ToArray_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .ToArray();
 
         }
@@ -3860,7 +3860,7 @@ public class ToArray_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .ToArray();
         }
@@ -3896,7 +3896,7 @@ public class ToList_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .ToList();
 
         }
@@ -3932,7 +3932,7 @@ public class ToList_Tests
         try
         {
             actual = TestData.IntEmpty
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .ToList();
         }
@@ -3964,7 +3964,7 @@ public class ToList_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .ToList();
 
         }
@@ -4000,7 +4000,7 @@ public class ToList_Tests
         try
         {
             actual = TestData.IntArray
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .ToList();
         }
@@ -4032,7 +4032,7 @@ public class ToList_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .ToList();
 
         }
@@ -4068,7 +4068,7 @@ public class ToList_Tests
         try
         {
             actual = TestData.IntList
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .ToList();
         }
@@ -4100,7 +4100,7 @@ public class ToList_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .ToList();
 
         }
@@ -4136,7 +4136,7 @@ public class ToList_Tests
         try
         {
             actual = TestData.IntEnumerable
-                .Specialize()
+                .Gen()
                 .Skip(skip).Take(take)
                 .ToList();
         }
