@@ -154,6 +154,7 @@ public struct Comparer : IComparer<int>
 * Sum
   * Supports duck typing with `+` operator overload
 * Min, Max
+* MinBy, MaxBy
 
 ### Etc
 * Gen

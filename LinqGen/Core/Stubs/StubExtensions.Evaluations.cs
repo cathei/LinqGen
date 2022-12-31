@@ -78,48 +78,66 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        public static int Min<T, TUp, TComparer>(this IStub<IEnumerable<T>, TUp> enumerable, TComparer comparer)
-            where TComparer : IComparer<T>
+        public static int Min<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable, IComparer<T> comparer)
         {
             throw new NotImplementedException();
         }
 
-        // public static int MinBy<T, TUp, TKey>(this IStub<IEnumerable<T>, TUp> enumerable,
-        //     Func<T, TKey> selector, IComparer<TKey>? comparer = null)
-        // {
-        //     throw new NotImplementedException();
-        // }
-        //
-        // public static int MinBy<T, TUp, TKey, TComparer>(this IStub<IEnumerable<T>, TUp> enumerable,
-        //     IStructFunction<T, TKey> keySelector, TComparer comparer)
-        //     where TComparer : IComparer<TKey>
-        // {
-        //     throw new NotImplementedException();
-        // }
+        public static int MinBy<T, TUp, TKey>(this IStub<IEnumerable<T>, TUp> enumerable, Func<T, TKey> keySelector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int MinBy<T, TUp, TKey>(this IStub<IEnumerable<T>, TUp> enumerable,
+            Func<T, TKey> keySelector, IComparer<TKey> comparer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int MinBy<T, TUp, TKey>(this IStub<IEnumerable<T>, TUp> enumerable,
+            IStructFunction<T, TKey> keySelector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int MinBy<T, TUp, TKey>(this IStub<IEnumerable<T>, TUp> enumerable,
+            IStructFunction<T, TKey> keySelector, IComparer<TKey> comparer)
+        {
+            throw new NotImplementedException();
+        }
 
         public static int Max<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable)
         {
             throw new NotImplementedException();
         }
 
-        public static int Max<T, TUp, TComparer>(this IStub<IEnumerable<T>, TUp> enumerable, TComparer comparer)
-            where TComparer : IComparer<T>
+        public static int Max<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable, IComparer<T> comparer)
         {
             throw new NotImplementedException();
         }
 
-        // public static int MaxBy<T, TUp, TKey>(this IStub<IEnumerable<T>, TUp> enumerable,
-        //     Func<T, TKey> selector, IComparer<TKey>? comparer = null)
-        // {
-        //     throw new NotImplementedException();
-        // }
-        //
-        // public static int MaxBy<T, TUp, TKey, TComparer>(this IStub<IEnumerable<T>, TUp> enumerable,
-        //     IStructFunction<T, TKey> keySelector, TComparer comparer)
-        //     where TComparer : IComparer<TKey>
-        // {
-        //     throw new NotImplementedException();
-        // }
+        public static int MaxBy<T, TUp, TKey>(this IStub<IEnumerable<T>, TUp> enumerable, Func<T, TKey> keySelector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int MaxBy<T, TUp, TKey>(this IStub<IEnumerable<T>, TUp> enumerable,
+            Func<T, TKey> keySelector, IComparer<TKey> comparer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int MaxBy<T, TUp, TKey>(this IStub<IEnumerable<T>, TUp> enumerable,
+            IStructFunction<T, TKey> keySelector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int MaxBy<T, TUp, TKey>(this IStub<IEnumerable<T>, TUp> enumerable,
+            IStructFunction<T, TKey> keySelector, IComparer<TKey> comparer)
+        {
+            throw new NotImplementedException();
+        }
 
         public static List<T> ToList<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable)
         {

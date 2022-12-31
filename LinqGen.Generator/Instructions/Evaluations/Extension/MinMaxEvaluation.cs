@@ -18,21 +18,48 @@ namespace Cathei.LinqGen.Generator
     {
         private bool IsMin { get; }
 
+        private FunctionKind KeySelectorKind { get; }
         private ComparerKind ComparerKind { get; }
 
-        public MinMaxEvaluation(in LinqGenExpression expression, int id, bool isMin) : base(expression, id)
+        private TypeSyntax KeyType { get; }
+        private ITypeSymbol KeySymbol { get; }
+
+        public MinMaxEvaluation(in LinqGenExpression expression, int id, bool isMin, bool withKey)
+            : base(expression, id)
         {
             IsMin = isMin;
 
-            if (expression.MethodSymbol.Parameters.Length == 1)
+            if (withKey)
             {
-                // Min and Max with parameter
-                ComparerKind = ComparerKind.Struct;
+                var parameterType = expression.GetNamedParameterType(0);
+
+                // Func<TIn, TOut> or IStructFunction<TIn, TOut>
+                KeySymbol = parameterType.TypeArguments[1];
+                KeyType = ParseTypeName(KeySymbol);
+
+                if (parameterType.Name == "Func")
+                    KeySelectorKind = FunctionKind.Delegate;
+                else
+                    KeySelectorKind = FunctionKind.Struct;
+
+                if (expression.MethodSymbol.Parameters.Length == 2)
+                    ComparerKind = ComparerKind.Struct;
+                else
+                    ComparerKind = ComparerKind.Default;
             }
             else
             {
-                ComparerKind = ComparerKind.Default;
+                KeyType = InputElementType;
+                KeySymbol = InputElementSymbol;
+
+                KeySelectorKind = FunctionKind.Default;
+
+                if (expression.MethodSymbol.Parameters.Length == 1)
+                    ComparerKind = ComparerKind.Struct;
+                else
+                    ComparerKind = ComparerKind.Default;
             }
+
         }
 
         protected override TypeSyntax ReturnType => InputElementType;
@@ -42,22 +69,35 @@ namespace Cathei.LinqGen.Generator
 
         protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
         {
+            if (KeySelectorKind == FunctionKind.Struct)
+                yield return new(TypeName("Selector"), StructFunctionInterfaceType(InputElementType, KeyType));
+
             if (ComparerKind == ComparerKind.Struct)
                 yield return new(TypeName("Comparer"), ComparerInterfaceType);
         }
 
         protected override IEnumerable<ParameterInfo> GetParameterInfos()
         {
+            if (KeySelectorKind != FunctionKind.Default)
+            {
+                yield return new(KeySelectorKind == FunctionKind.Delegate
+                    ? FuncDelegateType(InputElementType, KeyType)
+                    : TypeName("Selector"), IdentifierName("selector"));
+            }
+
             if (ComparerKind == ComparerKind.Struct)
                 yield return new(TypeName("Comparer"), IdentifierName("comparer"));
         }
 
         protected override IEnumerable<StatementSyntax> RenderInitialization()
         {
+            if (KeySelectorKind != FunctionKind.Default)
+                yield return LocalDeclarationStatement(KeyType, LocalName("resultKey").Identifier, DefaultLiteral);
+
             if (ComparerKind == ComparerKind.Default)
             {
-                yield return LocalDeclarationStatement(ComparerDefaultType(InputElementType, InputElementSymbol),
-                    IdentifierName("comparer").Identifier, ComparerDefault(InputElementType, InputElementSymbol));
+                yield return LocalDeclarationStatement(ComparerDefaultType(KeyType, KeySymbol),
+                    IdentifierName("comparer").Identifier, ComparerDefault(KeyType, KeySymbol));
             }
 
             yield return LocalDeclarationStatement(BoolType, LocalName("isSet").Identifier, DefaultLiteral);
@@ -68,15 +108,37 @@ namespace Cathei.LinqGen.Generator
         {
             var expressionKind = IsMin ? SyntaxKind.LessThanExpression : SyntaxKind.GreaterThanExpression;
 
+            var resultSetBlock = Block(
+                ExpressionStatement(SimpleAssignmentExpression(LocalName("isSet"), TrueExpression())),
+                ExpressionStatement(SimpleAssignmentExpression(LocalName("result"), CurrentPlaceholder)));
+
+            ExpressionSyntax key, resultKey;
+
+            if (KeySelectorKind == FunctionKind.Default)
+            {
+                key = CurrentPlaceholder;
+                resultKey = LocalName("result");
+            }
+            else
+            {
+                yield return LocalDeclarationStatement(LocalName("key").Identifier,
+                    InvocationExpression(MemberAccessExpression(IdentifierName("selector"), InvokeMethod),
+                        ArgumentList(CurrentPlaceholder)));
+
+                key = LocalName("key");
+                resultKey = LocalName("resultKey");
+
+                resultSetBlock = resultSetBlock.AddStatements(
+                    ExpressionStatement(SimpleAssignmentExpression(resultKey, key)));
+            }
+
             var comparison = BinaryExpression(expressionKind,
                 LiteralExpression(0),
                 InvocationExpression(MemberAccessExpression(IdentifierName("comparer"), CompareMethod),
-                    ArgumentList(LocalName("result"), CurrentPlaceholder)));
+                    ArgumentList(resultKey, key)));
 
             yield return IfStatement(
-                LogicalOrExpression(LogicalNotExpression(LocalName("isSet")), comparison), Block(
-                    ExpressionStatement(SimpleAssignmentExpression(LocalName("isSet"), TrueExpression())),
-                    ExpressionStatement(SimpleAssignmentExpression(LocalName("result"), CurrentPlaceholder))));
+                LogicalOrExpression(LogicalNotExpression(LocalName("isSet")), comparison), resultSetBlock);
         }
 
         protected override IEnumerable<StatementSyntax> RenderReturn()
