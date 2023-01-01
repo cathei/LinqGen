@@ -147,6 +147,7 @@ public struct Comparer : IComparer<int>
 * Prepend, Append
 
 ### Evaluations
+* GetEnumerator
 * ToArray, ToList
 * First, FirstOrDefault
 * Last, LastOrDefault
