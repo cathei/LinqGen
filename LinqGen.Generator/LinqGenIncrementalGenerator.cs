@@ -1,8 +1,5 @@
 ﻿// LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-using System;
-using Microsoft.CodeAnalysis;
-
 namespace Cathei.LinqGen.Generator
 {
     // Not supported in current Unity version

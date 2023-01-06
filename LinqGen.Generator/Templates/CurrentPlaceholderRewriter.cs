@@ -1,16 +1,7 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-using System;
-using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
 namespace Cathei.LinqGen.Generator
 {
-    using static SyntaxFactory;
-    using static CodeGenUtils;
-
     public class CurrentPlaceholderRewriter : CSharpSyntaxRewriter
     {
         private readonly ExpressionSyntax _current;

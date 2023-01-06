@@ -1,20 +1,10 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 
 namespace Cathei.LinqGen.Generator
 {
-    using static SyntaxFactory;
-    using static CodeGenUtils;
-
     /// <summary>
     /// Common base class for CompilingGeneration and CompiledGeneration.
     /// So they can provide metadata with same interfaces.

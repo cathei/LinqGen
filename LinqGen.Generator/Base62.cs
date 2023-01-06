@@ -1,8 +1,6 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-using System.Collections.Generic;
 using System.Text;
-using Microsoft.CodeAnalysis;
 
 namespace Cathei.LinqGen.Generator
 {
