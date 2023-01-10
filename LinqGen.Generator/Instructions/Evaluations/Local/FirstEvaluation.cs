@@ -1,32 +1,31 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+public sealed class FirstEvaluation : LocalEvaluation
 {
-    public sealed class FirstEvaluation : LocalEvaluation
+    private bool OrDefault { get; }
+
+    public FirstEvaluation(in LinqGenExpression expression, int id, bool orDefault) : base(expression, id)
     {
-        private bool OrDefault { get; }
+        OrDefault = orDefault;
+    }
 
-        public FirstEvaluation(in LinqGenExpression expression, int id, bool orDefault) : base(expression, id)
-        {
-            OrDefault = orDefault;
-        }
+    protected override ExpressionSyntax? SkipExpression => null;
+    protected override ExpressionSyntax TakeExpression => LiteralExpression(1);
 
-        protected override ExpressionSyntax? SkipExpression => null;
-        protected override ExpressionSyntax TakeExpression => LiteralExpression(1);
+    protected override TypeSyntax ReturnType => Upstream.OutputElementType;
 
-        protected override TypeSyntax ReturnType => Upstream.OutputElementType;
+    protected override IEnumerable<StatementSyntax> RenderAccumulation()
+    {
+        yield return ReturnStatement(CurrentPlaceholder);
+    }
 
-        protected override IEnumerable<StatementSyntax> RenderAccumulation()
-        {
-            yield return ReturnStatement(CurrentPlaceholder);
-        }
+    protected override IEnumerable<StatementSyntax> RenderReturn()
+    {
+        if (!OrDefault)
+            yield return ThrowInvalidOperationStatement();
 
-        protected override IEnumerable<StatementSyntax> RenderReturn()
-        {
-            if (!OrDefault)
-                yield return ThrowInvalidOperationStatement();
-
-            yield return ReturnStatement(DefaultLiteral);
-        }
+        yield return ReturnStatement(DefaultLiteral);
     }
 }

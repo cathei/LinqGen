@@ -2,24 +2,23 @@
 
 using System.Linq;
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+public abstract class PredefinedGeneration : Generation
 {
-    public abstract class PredefinedGeneration : Generation
+    protected PredefinedGeneration(in LinqGenExpression expression, int id) : base(expression, id)
     {
-        protected PredefinedGeneration(in LinqGenExpression expression, int id) : base(expression, id)
-        {
-        }
+    }
 
-        public override bool SupportPartition => true;
+    public override bool SupportPartition => true;
 
-        protected override ParameterListSyntax GetExtensionMethodParameters()
-        {
-            var parameters = GetParameters(true);
+    protected override ParameterListSyntax GetExtensionMethodParameters()
+    {
+        var parameters = GetParameters(true);
 
-            parameters = parameters.Prepend(
-                Parameter(IdentifierName("GenerationStub"), Identifier("stub")).WithModifiers(ThisTokenList));
+        parameters = parameters.Prepend(
+            Parameter(IdentifierName("GenerationStub"), Identifier("stub")).WithModifiers(ThisTokenList));
 
-            return ParameterList(parameters);
-        }
+        return ParameterList(parameters);
     }
 }

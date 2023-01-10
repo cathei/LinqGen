@@ -1,24 +1,23 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+internal class GenericRewriter : CSharpSyntaxRewriter
 {
-    internal class GenericRewriter : CSharpSyntaxRewriter
+    private readonly IdentifierNameSyntax _target;
+    private readonly IdentifierNameSyntax _replace;
+
+    public GenericRewriter(IdentifierNameSyntax target, IdentifierNameSyntax replace)
     {
-        private readonly IdentifierNameSyntax _target;
-        private readonly IdentifierNameSyntax _replace;
+        _target = target;
+        _replace = replace;
+    }
 
-        public GenericRewriter(IdentifierNameSyntax target, IdentifierNameSyntax replace)
-        {
-            _target = target;
-            _replace = replace;
-        }
+    public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+    {
+        if (node.Identifier.ValueText == _target.Identifier.ValueText)
+            return _replace;
 
-        public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
-        {
-            if (node.Identifier.ValueText == _target.Identifier.ValueText)
-                return _replace;
-
-            return base.VisitIdentifierName(node);
-        }
+        return base.VisitIdentifierName(node);
     }
 }

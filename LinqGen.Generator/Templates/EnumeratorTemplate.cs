@@ -2,11 +2,11 @@
 
 using System.Linq;
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+public static class EnumeratorTemplate
 {
-    public static class EnumeratorTemplate
-    {
-        private static readonly SyntaxTree TemplateSyntaxTree = CSharpSyntaxTree.ParseText(@"
+    private static readonly SyntaxTree TemplateSyntaxTree = CSharpSyntaxTree.ParseText(@"
         internal struct Enumerator : IEnumerator<_Element_>
         {
             private _Enumerable_ parent;
@@ -45,123 +45,122 @@ namespace Cathei.LinqGen.Generator
         }
 ");
 
-        private class Rewriter : ThisPlaceholderRewriter
+    private class Rewriter : ThisPlaceholderRewriter
+    {
+        private readonly Generation _instruction;
+
+        public Rewriter(Generation instruction) : base(IdentifierName("parent"), string.Empty)
         {
-            private readonly Generation _instruction;
-
-            public Rewriter(Generation instruction) : base(IdentifierName("parent"), string.Empty)
+            _instruction = instruction;
+        }
+        public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
+        {
+            switch (node.Identifier.ValueText)
             {
-                _instruction = instruction;
-            }
-            public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
-            {
-                switch (node.Identifier.ValueText)
-                {
-                    case "Enumerator":
-                        node = RewriteEnumeratorStruct(node);
-                        break;
-                }
-
-                return base.VisitStructDeclaration(node);
+                case "Enumerator":
+                    node = RewriteEnumeratorStruct(node);
+                    break;
             }
 
-            public override SyntaxNode? VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
-            {
-                switch (node.Identifier.ValueText)
-                {
-                    case "Enumerator":
-                        node = RewriteEnumeratorConstructor(node);
-                        break;
-                }
-
-                return base.VisitConstructorDeclaration(node);
-            }
-
-            public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
-            {
-                switch (node.Identifier.ValueText)
-                {
-                    case "InitState":
-                        node = RewriteEnumeratorInitState(node);
-                        break;
-
-                    case "MoveNext":
-                        node = RewriteEnumeratorMoveNext(node);
-                        break;
-
-                    case "Dispose":
-                        node = RewriteEnumeratorDispose(node);
-                        break;
-                }
-
-                return base.VisitMethodDeclaration(node);
-            }
-
-            public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
-            {
-                switch (node.Identifier.ValueText)
-                {
-                    case "_Enumerable_":
-                        return _instruction.ResolvedClassName;
-                }
-
-                return base.VisitIdentifierName(node);
-            }
-
-            private StructDeclarationSyntax RewriteEnumeratorStruct(StructDeclarationSyntax node)
-            {
-                return node.AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerator).ToArray());
-            }
-
-            private ConstructorDeclarationSyntax RewriteEnumeratorConstructor(ConstructorDeclarationSyntax node)
-            {
-                return node.AddBodyStatements(_instruction.GetFieldDefaultAssignments(MemberKind.Enumerator).ToArray());
-            }
-
-            private MethodDeclarationSyntax RewriteEnumeratorInitState(MethodDeclarationSyntax node)
-            {
-                return node.WithBody(Block(
-                    _instruction.RenderInitialization(false, null, null)));
-            }
-
-            private MethodDeclarationSyntax RewriteEnumeratorMoveNext(MethodDeclarationSyntax node)
-            {
-                var initStatement = IfStatement(LogicalNotExpression(IdentifierName("state")),
-                    Block(ExpressionStatement(InvocationExpression(IdentifierName("InitState"))),
-                        ExpressionStatement(SimpleAssignmentExpression(IdentifierName("state"), TrueExpression()))));
-
-                var successStatements = new StatementSyntax[]
-                {
-                    ExpressionStatement(SimpleAssignmentExpression(
-                        IdentifierName("current"), Instruction.CurrentPlaceholder)),
-                    ReturnStatement(TrueExpression())
-                };
-
-                var failStatement = ReturnStatement(FalseExpression());
-
-                var body = Block(initStatement)
-                    .AddStatements(_instruction.RenderIteration(false, new(successStatements)).Statements.ToArray())
-                    .AddStatements(failStatement);
-
-                return node.WithBody(body);
-            }
-
-            private MethodDeclarationSyntax RewriteEnumeratorDispose(MethodDeclarationSyntax node)
-            {
-                var body = Block(_instruction.RenderDispose(false));
-                return node.WithBody(body);
-            }
+            return base.VisitStructDeclaration(node);
         }
 
-        public static MemberDeclarationSyntax Render(Generation instruction)
+        public override SyntaxNode? VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
-            var structSyntax = TemplateSyntaxTree.GetRoot()
-                .DescendantNodesAndSelf()
-                .OfType<StructDeclarationSyntax>()
-                .First();
+            switch (node.Identifier.ValueText)
+            {
+                case "Enumerator":
+                    node = RewriteEnumeratorConstructor(node);
+                    break;
+            }
 
-            var rewriter = new Rewriter(instruction);
-            return (StructDeclarationSyntax)rewriter.Visit(structSyntax);
+            return base.VisitConstructorDeclaration(node);
         }
+
+        public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+            switch (node.Identifier.ValueText)
+            {
+                case "InitState":
+                    node = RewriteEnumeratorInitState(node);
+                    break;
+
+                case "MoveNext":
+                    node = RewriteEnumeratorMoveNext(node);
+                    break;
+
+                case "Dispose":
+                    node = RewriteEnumeratorDispose(node);
+                    break;
+            }
+
+            return base.VisitMethodDeclaration(node);
+        }
+
+        public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+        {
+            switch (node.Identifier.ValueText)
+            {
+                case "_Enumerable_":
+                    return _instruction.ResolvedClassName;
+            }
+
+            return base.VisitIdentifierName(node);
+        }
+
+        private StructDeclarationSyntax RewriteEnumeratorStruct(StructDeclarationSyntax node)
+        {
+            return node.AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerator).ToArray());
+        }
+
+        private ConstructorDeclarationSyntax RewriteEnumeratorConstructor(ConstructorDeclarationSyntax node)
+        {
+            return node.AddBodyStatements(_instruction.GetFieldDefaultAssignments(MemberKind.Enumerator).ToArray());
+        }
+
+        private MethodDeclarationSyntax RewriteEnumeratorInitState(MethodDeclarationSyntax node)
+        {
+            return node.WithBody(Block(
+                _instruction.RenderInitialization(false, null, null)));
+        }
+
+        private MethodDeclarationSyntax RewriteEnumeratorMoveNext(MethodDeclarationSyntax node)
+        {
+            var initStatement = IfStatement(LogicalNotExpression(IdentifierName("state")),
+                Block(ExpressionStatement(InvocationExpression(IdentifierName("InitState"))),
+                    ExpressionStatement(SimpleAssignmentExpression(IdentifierName("state"), TrueExpression()))));
+
+            var successStatements = new StatementSyntax[]
+            {
+                ExpressionStatement(SimpleAssignmentExpression(
+                    IdentifierName("current"), Instruction.CurrentPlaceholder)),
+                ReturnStatement(TrueExpression())
+            };
+
+            var failStatement = ReturnStatement(FalseExpression());
+
+            var body = Block(initStatement)
+                .AddStatements(_instruction.RenderIteration(false, new(successStatements)).Statements.ToArray())
+                .AddStatements(failStatement);
+
+            return node.WithBody(body);
+        }
+
+        private MethodDeclarationSyntax RewriteEnumeratorDispose(MethodDeclarationSyntax node)
+        {
+            var body = Block(_instruction.RenderDispose(false));
+            return node.WithBody(body);
+        }
+    }
+
+    public static MemberDeclarationSyntax Render(Generation instruction)
+    {
+        var structSyntax = TemplateSyntaxTree.GetRoot()
+            .DescendantNodesAndSelf()
+            .OfType<StructDeclarationSyntax>()
+            .First();
+
+        var rewriter = new Rewriter(instruction);
+        return (StructDeclarationSyntax)rewriter.Visit(structSyntax);
     }
 }

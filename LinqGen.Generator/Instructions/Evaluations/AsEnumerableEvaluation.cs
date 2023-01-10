@@ -2,11 +2,11 @@
 
 using System.Linq;
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+public sealed class AsEnumerableEvaluation : Evaluation
 {
-    public sealed class AsEnumerableEvaluation : Evaluation
-    {
-        private static readonly SyntaxTree TemplateSyntaxTree = CSharpSyntaxTree.ParseText(@"
+    private static readonly SyntaxTree TemplateSyntaxTree = CSharpSyntaxTree.ParseText(@"
         // result of AsEnumerable, doesn't need to be public
         public class BoxedEnumerable : IEnumerable<_Element_>
         {
@@ -24,53 +24,52 @@ namespace Cathei.LinqGen.Generator
         }
 ");
 
-        private class Rewriter : CSharpSyntaxRewriter
-        {
-            private readonly AsEnumerableEvaluation _instruction;
+    private class Rewriter : CSharpSyntaxRewriter
+    {
+        private readonly AsEnumerableEvaluation _instruction;
 
-            public Rewriter(AsEnumerableEvaluation instruction)
+        public Rewriter(AsEnumerableEvaluation instruction)
+        {
+            _instruction = instruction;
+        }
+
+        public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+        {
+            switch (node.Identifier.ValueText)
             {
-                _instruction = instruction;
+                case "_Upstream_":
+                    return _instruction.Upstream.ResolvedClassName;
             }
 
-            public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
-            {
-                switch (node.Identifier.ValueText)
-                {
-                    case "_Upstream_":
-                        return _instruction.Upstream.ResolvedClassName;
-                }
-
-                return base.VisitIdentifierName(node);
-            }
+            return base.VisitIdentifierName(node);
         }
+    }
 
-        private readonly Rewriter _rewriter;
+    private readonly Rewriter _rewriter;
 
-        public AsEnumerableEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
-        {
-            _rewriter = new(this);
-        }
+    public AsEnumerableEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+    {
+        _rewriter = new(this);
+    }
 
-        public override void AddUpstream(Generation upstream)
-        {
-            upstream.HasEnumerator = true;
-            base.AddUpstream(upstream);
-        }
+    public override void AddUpstream(Generation upstream)
+    {
+        upstream.HasEnumerator = true;
+        base.AddUpstream(upstream);
+    }
 
-        public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
-        {
-            var classSyntax = TemplateSyntaxTree.GetRoot()
-                .DescendantNodesAndSelf()
-                .OfType<ClassDeclarationSyntax>()
-                .First();
+    public override IEnumerable<MemberDeclarationSyntax> RenderUpstreamMembers()
+    {
+        var classSyntax = TemplateSyntaxTree.GetRoot()
+            .DescendantNodesAndSelf()
+            .OfType<ClassDeclarationSyntax>()
+            .First();
 
-            yield return (MemberDeclarationSyntax)_rewriter.Visit(classSyntax);
+        yield return (MemberDeclarationSyntax)_rewriter.Visit(classSyntax);
 
-            yield return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList,
-                IdentifierName("BoxedEnumerable"), null, MethodName.Identifier, null, ParameterList(), default, null,
-                ArrowExpressionClause(ObjectCreationExpression(
-                    IdentifierName("BoxedEnumerable"), ArgumentList(ThisExpression()), null)), SemicolonToken);
-        }
+        yield return MethodDeclaration(SingletonList(AggressiveInliningAttributeList), PublicTokenList,
+            IdentifierName("BoxedEnumerable"), null, MethodName.Identifier, null, ParameterList(), default, null,
+            ArrowExpressionClause(ObjectCreationExpression(
+                IdentifierName("BoxedEnumerable"), ArgumentList(ThisExpression()), null)), SemicolonToken);
     }
 }

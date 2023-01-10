@@ -2,13 +2,12 @@
 
 using System;
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+[Flags]
+public enum MemberKind
 {
-    [Flags]
-    public enum MemberKind
-    {
-        Enumerable = 1,
-        Enumerator = 2,
-        Both = Enumerable// | Enumerator
-    }
+    Enumerable = 1,
+    Enumerator = 2,
+    Both = Enumerable// | Enumerator
 }

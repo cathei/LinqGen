@@ -2,32 +2,31 @@
 
 using System.Text;
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+public static class Base62
 {
-    public static class Base62
+    private const string PossibleLetters =
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    private static readonly StringBuilder Builder = new();
+
+    public static string Encode(int value)
     {
-        private const string PossibleLetters =
-            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        if (value == 0)
+            return "0";
 
-        private static readonly StringBuilder Builder = new();
+        Builder.Clear();
 
-        public static string Encode(int value)
+        while (value > 0)
         {
-            if (value == 0)
-                return "0";
+            int idx = value % PossibleLetters.Length;
 
-            Builder.Clear();
+            Builder.Append(PossibleLetters[idx]);
 
-            while (value > 0)
-            {
-                int idx = value % PossibleLetters.Length;
-
-                Builder.Append(PossibleLetters[idx]);
-
-                value /= PossibleLetters.Length;
-            }
-
-            return Builder.ToString();
+            value /= PossibleLetters.Length;
         }
+
+        return Builder.ToString();
     }
 }

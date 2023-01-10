@@ -1,53 +1,52 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+public class SkipOperation : Operation
 {
-    public class SkipOperation : Operation
+    public SkipOperation(in LinqGenExpression expression, int id) : base(expression, id)
     {
-        public SkipOperation(in LinqGenExpression expression, int id) : base(expression, id)
+    }
+
+    protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
+    {
+        yield return new MemberInfo(MemberKind.Both, IntType, LocalName("skip"));
+
+        if (!Upstream.SupportPartition)
         {
+            yield return new MemberInfo(MemberKind.Enumerator, IntType, LocalName("index"), LiteralExpression(-1));
         }
+    }
 
-        protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
-        {
-            yield return new MemberInfo(MemberKind.Both, IntType, LocalName("skip"));
+    public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
+        ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+    {
+        ExpressionSyntax newSkipVar = Member("skip");
 
-            if (!Upstream.SupportPartition)
-            {
-                yield return new MemberInfo(MemberKind.Enumerator, IntType, LocalName("index"), LiteralExpression(-1));
-            }
-        }
+        if (skipVar != null)
+            newSkipVar = AddExpression(newSkipVar, skipVar);
 
-        public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
-            ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
-        {
-            ExpressionSyntax newSkipVar = Member("skip");
+        return base.RenderInitialization(isLocal, newSkipVar, takeVar);
+    }
 
-            if (skipVar != null)
-                newSkipVar = AddExpression(newSkipVar, skipVar);
+    public override ExpressionSyntax? RenderCount()
+    {
+        var upstreamCount = Upstream.RenderCount();
 
-            return base.RenderInitialization(isLocal, newSkipVar, takeVar);
-        }
+        if (upstreamCount == null)
+            return null;
 
-        public override ExpressionSyntax? RenderCount()
-        {
-            var upstreamCount = Upstream.RenderCount();
+        return MathMax(SubtractExpression(
+            ParenthesizedExpression(upstreamCount), Member("skip")), LiteralExpression(0));
+    }
 
-            if (upstreamCount == null)
-                return null;
+    protected override StatementSyntax? RenderMoveNext()
+    {
+        if (Upstream.SupportPartition)
+            return null;
 
-            return MathMax(SubtractExpression(
-                ParenthesizedExpression(upstreamCount), Member("skip")), LiteralExpression(0));
-        }
-
-        protected override StatementSyntax? RenderMoveNext()
-        {
-            if (Upstream.SupportPartition)
-                return null;
-
-            return IfStatement(
-                LessThanExpression(PreIncrementExpression(Iterator("index")), Member("skip")),
-                ContinueStatement());
-        }
+        return IfStatement(
+            LessThanExpression(PreIncrementExpression(Iterator("index")), Member("skip")),
+            ContinueStatement());
     }
 }

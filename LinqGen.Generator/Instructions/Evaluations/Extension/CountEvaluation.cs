@@ -1,79 +1,78 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+public sealed class CountEvaluation : ExtensionEvaluation
 {
-    public sealed class CountEvaluation : ExtensionEvaluation
+    private TypeSyntax? PredicateType { get; }
+    private bool WithStruct { get; }
+
+    public CountEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
     {
-        private TypeSyntax? PredicateType { get; }
-        private bool WithStruct { get; }
-
-        public CountEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+        if (MethodSymbol.Parameters.Length >= 1)
         {
-            if (MethodSymbol.Parameters.Length >= 1)
-            {
-                // Sum with a parameter uses selector
-                var parameterType = MethodSymbol.Parameters[0].Type;
+            // Sum with a parameter uses selector
+            var parameterType = MethodSymbol.Parameters[0].Type;
 
-                PredicateType = ParseTypeName(parameterType);
-                WithStruct = IsStructFunction(parameterType);
-            }
-            else
-            {
-                // and single parameter only has default value
-                PredicateType = null;
-                WithStruct = false;
-            }
+            PredicateType = ParseTypeName(parameterType);
+            WithStruct = IsStructFunction(parameterType);
         }
-
-        protected override TypeSyntax ReturnType => IntType;
-
-        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+        else
         {
-            if (WithStruct)
-                yield return new(TypeName("Predicate"), PredicateType!);
+            // and single parameter only has default value
+            PredicateType = null;
+            WithStruct = false;
         }
+    }
 
-        protected override IEnumerable<ParameterInfo> GetParameterInfos()
+    protected override TypeSyntax ReturnType => IntType;
+
+    protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+    {
+        if (WithStruct)
+            yield return new(TypeName("Predicate"), PredicateType!);
+    }
+
+    protected override IEnumerable<ParameterInfo> GetParameterInfos()
+    {
+        if (PredicateType != null)
         {
-            if (PredicateType != null)
-            {
-                yield return new ParameterInfo(
-                    WithStruct ? TypeName("Predicate") : PredicateType, IdentifierName("predicate"));
-            }
+            yield return new ParameterInfo(
+                WithStruct ? TypeName("Predicate") : PredicateType, IdentifierName("predicate"));
         }
+    }
 
-        public override IEnumerable<MemberDeclarationSyntax> RenderExtensionMembers()
+    public override IEnumerable<MemberDeclarationSyntax> RenderExtensionMembers()
+    {
+        // Count method is already there
+        if (PredicateType == null && Upstream.SupportCount)
+            yield break;
+
+        foreach (var member in base.RenderExtensionMembers())
+            yield return member;
+    }
+
+    protected override IEnumerable<StatementSyntax> RenderInitialization()
+    {
+        yield return LocalDeclarationStatement(IntType, LocalName("result").Identifier, DefaultLiteral);
+    }
+
+    protected override IEnumerable<StatementSyntax> RenderAccumulation()
+    {
+        if (PredicateType == null)
         {
-            // Count method is already there
-            if (PredicateType == null && Upstream.SupportCount)
-                yield break;
-
-            foreach (var member in base.RenderExtensionMembers())
-                yield return member;
+            yield return ExpressionStatement(PreIncrementExpression(LocalName("result")));
         }
-
-        protected override IEnumerable<StatementSyntax> RenderInitialization()
+        else
         {
-            yield return LocalDeclarationStatement(IntType, LocalName("result").Identifier, DefaultLiteral);
+            yield return IfStatement(InvocationExpression(MemberAccessExpression(
+                    IdentifierName("predicate"), InvokeMethod), ArgumentList(CurrentPlaceholder)),
+                ExpressionStatement(PreIncrementExpression(LocalName("result"))));
         }
+    }
 
-        protected override IEnumerable<StatementSyntax> RenderAccumulation()
-        {
-            if (PredicateType == null)
-            {
-                yield return ExpressionStatement(PreIncrementExpression(LocalName("result")));
-            }
-            else
-            {
-                yield return IfStatement(InvocationExpression(MemberAccessExpression(
-                        IdentifierName("predicate"), InvokeMethod), ArgumentList(CurrentPlaceholder)),
-                    ExpressionStatement(PreIncrementExpression(LocalName("result"))));
-            }
-        }
-
-        protected override IEnumerable<StatementSyntax> RenderReturn()
-        {
-            yield return ReturnStatement(LocalName("result"));
-        }
+    protected override IEnumerable<StatementSyntax> RenderReturn()
+    {
+        yield return ReturnStatement(LocalName("result"));
     }
 }

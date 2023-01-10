@@ -1,51 +1,50 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+public class CastOperation : Operation
 {
-    public class CastOperation : Operation
+    private bool SkipIfMismatch { get; }
+
+    public CastOperation(in LinqGenExpression expression, int id, bool skipIfMismatch) : base(expression, id)
     {
-        private bool SkipIfMismatch { get; }
+        SkipIfMismatch = skipIfMismatch;
+        OutputElementSymbol = expression.MethodSymbol.ConstructedFrom.TypeParameters[0];
+        OutputElementType = TypeName("Out");
+    }
 
-        public CastOperation(in LinqGenExpression expression, int id, bool skipIfMismatch) : base(expression, id)
+    public override ITypeSymbol OutputElementSymbol { get; }
+    public override TypeSyntax OutputElementType { get; }
+
+    protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+    {
+        yield return new TypeParameterInfo(TypeName("Out"));
+    }
+
+    protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
+    {
+        yield break;
+    }
+
+    public override ExpressionSyntax? RenderCount()
+    {
+        return Upstream.RenderCount();
+    }
+
+    protected override StatementSyntax? RenderMoveNext()
+    {
+        if (SkipIfMismatch)
         {
-            SkipIfMismatch = skipIfMismatch;
-            OutputElementSymbol = expression.MethodSymbol.ConstructedFrom.TypeParameters[0];
-            OutputElementType = TypeName("Out");
+            return IfStatement(LogicalNotExpression(
+                    ParenthesizedExpression(IsExpression(CurrentPlaceholder, OutputElementType))),
+                ContinueStatement());
         }
 
-        public override ITypeSymbol OutputElementSymbol { get; }
-        public override TypeSyntax OutputElementType { get; }
+        return null;
+    }
 
-        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
-        {
-            yield return new TypeParameterInfo(TypeName("Out"));
-        }
-
-        protected override IEnumerable<MemberInfo> GetMemberInfos(bool isLocal)
-        {
-            yield break;
-        }
-
-        public override ExpressionSyntax? RenderCount()
-        {
-            return Upstream.RenderCount();
-        }
-
-        protected override StatementSyntax? RenderMoveNext()
-        {
-            if (SkipIfMismatch)
-            {
-                return IfStatement(LogicalNotExpression(
-                        ParenthesizedExpression(IsExpression(CurrentPlaceholder, OutputElementType))),
-                    ContinueStatement());
-            }
-
-            return null;
-        }
-
-        protected override ExpressionSyntax RenderCurrent()
-        {
-            return CastExpression(OutputElementType, CastExpression(ObjectType, CurrentPlaceholder));
-        }
+    protected override ExpressionSyntax RenderCurrent()
+    {
+        return CastExpression(OutputElementType, CastExpression(ObjectType, CurrentPlaceholder));
     }
 }

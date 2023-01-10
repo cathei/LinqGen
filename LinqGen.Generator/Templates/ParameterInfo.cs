@@ -1,28 +1,27 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+public readonly struct ParameterInfo
 {
-    public readonly struct ParameterInfo
+    public readonly TypeSyntax Type;
+    public readonly IdentifierNameSyntax Name;
+    public readonly ExpressionSyntax? DefaultValue;
+
+    public ParameterInfo(TypeSyntax type, IdentifierNameSyntax name, ExpressionSyntax? defaultValue = null)
     {
-        public readonly TypeSyntax Type;
-        public readonly IdentifierNameSyntax Name;
-        public readonly ExpressionSyntax? DefaultValue;
+        Type = type;
+        Name = name;
+        DefaultValue = defaultValue;
+    }
 
-        public ParameterInfo(TypeSyntax type, IdentifierNameSyntax name, ExpressionSyntax? defaultValue = null)
-        {
-            Type = type;
-            Name = name;
-            DefaultValue = defaultValue;
-        }
+    public ParameterSyntax AsParameter(bool defaultValue)
+    {
+        return Parameter(Type, Name.Identifier, defaultValue ? DefaultValue : null);
+    }
 
-        public ParameterSyntax AsParameter(bool defaultValue)
-        {
-            return Parameter(Type, Name.Identifier, defaultValue ? DefaultValue : null);
-        }
-
-        public ArgumentSyntax AsArgument()
-        {
-            return Argument(Name);
-        }
+    public ArgumentSyntax AsArgument()
+    {
+        return Argument(Name);
     }
 }

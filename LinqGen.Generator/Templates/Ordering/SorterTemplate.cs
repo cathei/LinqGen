@@ -2,11 +2,11 @@
 
 using System.Linq;
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+public static class SorterTemplate
 {
-    public static class SorterTemplate
-    {
-        private static readonly SyntaxTree TemplateSyntaxTree = CSharpSyntaxTree.ParseText(@"
+    private static readonly SyntaxTree TemplateSyntaxTree = CSharpSyntaxTree.ParseText(@"
         internal struct Sorter : IComparer<int>, IDisposable
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -73,200 +73,199 @@ namespace Cathei.LinqGen.Generator
         }
 ");
 
-        private class Rewriter : CSharpSyntaxRewriter
+    private class Rewriter : CSharpSyntaxRewriter
+    {
+        private readonly OrderingOperation _operation;
+
+        public Rewriter(OrderingOperation operation)
         {
-            private readonly OrderingOperation _operation;
+            _operation = operation;
+        }
 
-            public Rewriter(OrderingOperation operation)
+        public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+        {
+            switch (node.Identifier.ValueText)
             {
-                _operation = operation;
+                case "_PooledList_":
+                    return _operation.ElementListType;
             }
 
-            public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+            return base.VisitIdentifierName(node);
+        }
+
+        public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
+        {
+            node = RenderComparerStruct(node);
+            return base.VisitStructDeclaration(node);
+        }
+
+        public override SyntaxNode? VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
+        {
+            node = RenderConstructor(node);
+            return base.VisitConstructorDeclaration(node);
+        }
+
+        public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+            switch (node.Identifier.ValueText)
             {
-                switch (node.Identifier.ValueText)
+                case "Compare":
+                    node = RenderCompareMethod(node);
+                    break;
+
+                case "Dispose":
+                    node = RenderDisposeMethod(node);
+                    break;
+            }
+
+            return base.VisitMethodDeclaration(node);
+        }
+
+        private StructDeclarationSyntax RenderComparerStruct(StructDeclarationSyntax node)
+        {
+            var list = new List<MemberDeclarationSyntax>();
+
+            bool needElement = false;
+
+            foreach (var member in _operation.GetOrderMemberInfos())
+            {
+                if (member.ComparerType != null)
                 {
-                    case "_PooledList_":
-                        return _operation.ElementListType;
+                    list.Add(FieldDeclaration(
+                        PrivateTokenList, member.ComparerType, member.ComparerName.Identifier));
+                }
+                else
+                {
+                    list.Add(FieldDeclaration(PrivateTokenList,
+                        ComparerDefaultType(member.KeyType, member.KeySymbol), member.ComparerName.Identifier));
                 }
 
-                return base.VisitIdentifierName(node);
-            }
-
-            public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
-            {
-                node = RenderComparerStruct(node);
-                return base.VisitStructDeclaration(node);
-            }
-
-            public override SyntaxNode? VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
-            {
-                node = RenderConstructor(node);
-                return base.VisitConstructorDeclaration(node);
-            }
-
-            public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
-            {
-                switch (node.Identifier.ValueText)
+                if (member.SelectorType != null)
                 {
-                    case "Compare":
-                        node = RenderCompareMethod(node);
-                        break;
-
-                    case "Dispose":
-                        node = RenderDisposeMethod(node);
-                        break;
+                    list.Add(FieldDeclaration(
+                        PrivateTokenList, member.KeyListType, member.KeysName.Identifier));
                 }
-
-                return base.VisitMethodDeclaration(node);
+                else
+                {
+                    needElement = true;
+                }
             }
 
-            private StructDeclarationSyntax RenderComparerStruct(StructDeclarationSyntax node)
+            if (needElement)
             {
-                var list = new List<MemberDeclarationSyntax>();
-
-                bool needElement = false;
-
-                foreach (var member in _operation.GetOrderMemberInfos())
-                {
-                    if (member.ComparerType != null)
-                    {
-                        list.Add(FieldDeclaration(
-                            PrivateTokenList, member.ComparerType, member.ComparerName.Identifier));
-                    }
-                    else
-                    {
-                        list.Add(FieldDeclaration(PrivateTokenList,
-                            ComparerDefaultType(member.KeyType, member.KeySymbol), member.ComparerName.Identifier));
-                    }
-
-                    if (member.SelectorType != null)
-                    {
-                        list.Add(FieldDeclaration(
-                            PrivateTokenList, member.KeyListType, member.KeysName.Identifier));
-                    }
-                    else
-                    {
-                        needElement = true;
-                    }
-                }
-
-                if (needElement)
-                {
-                    list.Add(FieldDeclaration(PrivateTokenList, _operation.ElementListType, Identifier("elements")));
-                }
-
-                return node.AddMembers(list.ToArray());
+                list.Add(FieldDeclaration(PrivateTokenList, _operation.ElementListType, Identifier("elements")));
             }
 
-            private ConstructorDeclarationSyntax RenderConstructor(ConstructorDeclarationSyntax node)
+            return node.AddMembers(list.ToArray());
+        }
+
+        private ConstructorDeclarationSyntax RenderConstructor(ConstructorDeclarationSyntax node)
+        {
+            var list = new List<StatementSyntax>();
+
+            var elementName = IdentifierName("elements");
+            var elementCount = MemberAccessExpression(elementName, CountProperty);
+
+            bool needElement = false;
+
+            foreach (var member in _operation.GetOrderMemberInfos())
             {
-                var list = new List<StatementSyntax>();
-
-                var elementName = IdentifierName("elements");
-                var elementCount = MemberAccessExpression(elementName, CountProperty);
-
-                bool needElement = false;
-
-                foreach (var member in _operation.GetOrderMemberInfos())
+                if (member.ComparerType != null)
                 {
-                    if (member.ComparerType != null)
-                    {
-                        // assign to field
-                        list.Add(ExpressionStatement(SimpleAssignmentExpression(
-                            MemberAccessExpression(ThisExpression(), member.ComparerName),
-                            member.ComparerName)));
-                    }
-                    else
-                    {
-                        list.Add(ExpressionStatement(SimpleAssignmentExpression(
-                            MemberAccessExpression(ThisExpression(), member.ComparerName),
-                            ComparerDefault(member.KeyType, member.KeySymbol))));
-                    }
-
-                    if (member.SelectorType == null)
-                    {
-                        needElement = true;
-                        continue;
-                    }
-
-                    list.Add(ExpressionStatement(SimpleAssignmentExpression(member.KeysName,
-                        ObjectCreationExpression(member.KeyListType, ArgumentList(elementCount), null))));
-
-                    var indexName = IdentifierName("i");
-
-                    var forStatement = ForStatement(indexName, LiteralExpression(0), elementCount,
-                        ExpressionStatement(InvocationExpression(
-                            MemberAccessExpression(member.KeysName, AddMethod),
-                            ArgumentList(InvocationExpression(
-                                MemberAccessExpression(member.SelectorName, InvokeMethod),
-                                ArgumentList(ElementAccessExpression(elementName, indexName)))))));
-
-                    list.Add(forStatement);
+                    // assign to field
+                    list.Add(ExpressionStatement(SimpleAssignmentExpression(
+                        MemberAccessExpression(ThisExpression(), member.ComparerName),
+                        member.ComparerName)));
                 }
-
-                if (needElement)
+                else
                 {
                     list.Add(ExpressionStatement(SimpleAssignmentExpression(
-                        MemberAccessExpression(ThisExpression(), elementName), elementName)));
+                        MemberAccessExpression(ThisExpression(), member.ComparerName),
+                        ComparerDefault(member.KeyType, member.KeySymbol))));
                 }
 
-                return node
-                    .AddParameterListParameters(_operation.GetOrderParameters().ToArray())
-                    .AddBodyStatements(list.ToArray());
-            }
-
-            private MethodDeclarationSyntax RenderCompareMethod(MethodDeclarationSyntax node)
-            {
-                var list = new List<StatementSyntax>();
-
-                var xVar = IdentifierName("x");
-                var yVar = IdentifierName("y");
-                var resultVar = IdentifierName("result");
-
-                foreach (var member in _operation.GetOrderMemberInfos())
+                if (member.SelectorType == null)
                 {
-                    var keyIdentifier = member.SelectorType == null ? IdentifierName("elements") : member.KeysName;
-
-                    list.Add(ExpressionStatement(SimpleAssignmentExpression(resultVar, InvocationExpression(
-                        MemberAccessExpression(member.ComparerName, CompareMethod), ArgumentList(
-                            ElementAccessExpression(keyIdentifier, xVar),
-                            ElementAccessExpression(keyIdentifier, yVar))))));
-
-                    list.Add(IfStatement(NotEqualsExpression(resultVar, LiteralExpression(0)),
-                        ReturnStatement(member.Desc ? MinusExpression(resultVar) : resultVar)));
+                    needElement = true;
+                    continue;
                 }
 
-                list.Add(ReturnStatement(SubtractExpression(xVar, yVar)));
+                list.Add(ExpressionStatement(SimpleAssignmentExpression(member.KeysName,
+                    ObjectCreationExpression(member.KeyListType, ArgumentList(elementCount), null))));
 
-                return node.AddBodyStatements(list.ToArray());
+                var indexName = IdentifierName("i");
+
+                var forStatement = ForStatement(indexName, LiteralExpression(0), elementCount,
+                    ExpressionStatement(InvocationExpression(
+                        MemberAccessExpression(member.KeysName, AddMethod),
+                        ArgumentList(InvocationExpression(
+                            MemberAccessExpression(member.SelectorName, InvokeMethod),
+                            ArgumentList(ElementAccessExpression(elementName, indexName)))))));
+
+                list.Add(forStatement);
             }
 
-            private MethodDeclarationSyntax RenderDisposeMethod(MethodDeclarationSyntax node)
+            if (needElement)
             {
-                var list = new List<StatementSyntax>();
-
-                foreach (var member in _operation.GetOrderMemberInfos())
-                {
-                    if (member.SelectorType == null)
-                        continue;
-
-                    list.Add(ExpressionStatement(InvocationExpression(member.KeysName, DisposeMethod)));
-                }
-
-                return node.AddBodyStatements(list.ToArray());
+                list.Add(ExpressionStatement(SimpleAssignmentExpression(
+                    MemberAccessExpression(ThisExpression(), elementName), elementName)));
             }
+
+            return node
+                .AddParameterListParameters(_operation.GetOrderParameters().ToArray())
+                .AddBodyStatements(list.ToArray());
         }
 
-        public static StructDeclarationSyntax Render(OrderingOperation operation)
+        private MethodDeclarationSyntax RenderCompareMethod(MethodDeclarationSyntax node)
         {
-            var structSyntax = TemplateSyntaxTree.GetRoot()
-                .DescendantNodesAndSelf()
-                .OfType<StructDeclarationSyntax>()
-                .First();
+            var list = new List<StatementSyntax>();
 
-            var rewriter = new Rewriter(operation);
-            return (StructDeclarationSyntax)rewriter.Visit(structSyntax);
+            var xVar = IdentifierName("x");
+            var yVar = IdentifierName("y");
+            var resultVar = IdentifierName("result");
+
+            foreach (var member in _operation.GetOrderMemberInfos())
+            {
+                var keyIdentifier = member.SelectorType == null ? IdentifierName("elements") : member.KeysName;
+
+                list.Add(ExpressionStatement(SimpleAssignmentExpression(resultVar, InvocationExpression(
+                    MemberAccessExpression(member.ComparerName, CompareMethod), ArgumentList(
+                        ElementAccessExpression(keyIdentifier, xVar),
+                        ElementAccessExpression(keyIdentifier, yVar))))));
+
+                list.Add(IfStatement(NotEqualsExpression(resultVar, LiteralExpression(0)),
+                    ReturnStatement(member.Desc ? MinusExpression(resultVar) : resultVar)));
+            }
+
+            list.Add(ReturnStatement(SubtractExpression(xVar, yVar)));
+
+            return node.AddBodyStatements(list.ToArray());
         }
+
+        private MethodDeclarationSyntax RenderDisposeMethod(MethodDeclarationSyntax node)
+        {
+            var list = new List<StatementSyntax>();
+
+            foreach (var member in _operation.GetOrderMemberInfos())
+            {
+                if (member.SelectorType == null)
+                    continue;
+
+                list.Add(ExpressionStatement(InvocationExpression(member.KeysName, DisposeMethod)));
+            }
+
+            return node.AddBodyStatements(list.ToArray());
+        }
+    }
+
+    public static StructDeclarationSyntax Render(OrderingOperation operation)
+    {
+        var structSyntax = TemplateSyntaxTree.GetRoot()
+            .DescendantNodesAndSelf()
+            .OfType<StructDeclarationSyntax>()
+            .First();
+
+        var rewriter = new Rewriter(operation);
+        return (StructDeclarationSyntax)rewriter.Visit(structSyntax);
     }
 }

@@ -2,11 +2,10 @@
 
 using System;
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+[Flags]
+public enum ComparerKind
 {
-    [Flags]
-    public enum ComparerKind
-    {
-        Default, Interface, Struct
-    }
+    Default, Interface, Struct
 }

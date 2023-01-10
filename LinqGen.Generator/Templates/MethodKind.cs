@@ -2,12 +2,11 @@
 
 using System;
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+[Flags]
+public enum MethodKind
 {
-    [Flags]
-    public enum MethodKind
-    {
-        Enumerable,
-        Extension,
-    }
+    Enumerable,
+    Extension,
 }

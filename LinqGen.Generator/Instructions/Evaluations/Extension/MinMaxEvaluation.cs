@@ -1,138 +1,137 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+public sealed class MinMaxEvaluation : ExtensionEvaluation
 {
-    public sealed class MinMaxEvaluation : ExtensionEvaluation
+    private bool IsMin { get; }
+
+    private FunctionKind KeySelectorKind { get; }
+    private ComparerKind ComparerKind { get; }
+
+    private TypeSyntax KeyType { get; }
+    private ITypeSymbol KeySymbol { get; }
+
+    public MinMaxEvaluation(in LinqGenExpression expression, int id, bool isMin, bool withKey)
+        : base(expression, id)
     {
-        private bool IsMin { get; }
+        IsMin = isMin;
 
-        private FunctionKind KeySelectorKind { get; }
-        private ComparerKind ComparerKind { get; }
-
-        private TypeSyntax KeyType { get; }
-        private ITypeSymbol KeySymbol { get; }
-
-        public MinMaxEvaluation(in LinqGenExpression expression, int id, bool isMin, bool withKey)
-            : base(expression, id)
+        if (withKey)
         {
-            IsMin = isMin;
+            var parameterType = expression.GetNamedParameterType(0);
 
-            if (withKey)
-            {
-                var parameterType = expression.GetNamedParameterType(0);
+            // Func<TIn, TOut> or IStructFunction<TIn, TOut>
+            KeySymbol = parameterType.TypeArguments[1];
+            KeyType = ParseTypeName(KeySymbol);
 
-                // Func<TIn, TOut> or IStructFunction<TIn, TOut>
-                KeySymbol = parameterType.TypeArguments[1];
-                KeyType = ParseTypeName(KeySymbol);
-
-                if (parameterType.Name == "Func")
-                    KeySelectorKind = FunctionKind.Delegate;
-                else
-                    KeySelectorKind = FunctionKind.Struct;
-
-                if (expression.MethodSymbol.Parameters.Length == 2)
-                    ComparerKind = ComparerKind.Struct;
-                else
-                    ComparerKind = ComparerKind.Default;
-            }
+            if (parameterType.Name == "Func")
+                KeySelectorKind = FunctionKind.Delegate;
             else
-            {
-                KeyType = InputElementType;
-                KeySymbol = InputElementSymbol;
+                KeySelectorKind = FunctionKind.Struct;
 
-                KeySelectorKind = FunctionKind.Default;
-
-                if (expression.MethodSymbol.Parameters.Length == 1)
-                    ComparerKind = ComparerKind.Struct;
-                else
-                    ComparerKind = ComparerKind.Default;
-            }
-
-        }
-
-        protected override TypeSyntax ReturnType => InputElementType;
-
-        private TypeSyntax ComparerInterfaceType =>
-            GenericName(Identifier("IComparer"), TypeArgumentList(InputElementType));
-
-        protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
-        {
-            if (KeySelectorKind == FunctionKind.Struct)
-                yield return new(TypeName("Selector"), StructFunctionInterfaceType(InputElementType, KeyType));
-
-            if (ComparerKind == ComparerKind.Struct)
-                yield return new(TypeName("Comparer"), ComparerInterfaceType);
-        }
-
-        protected override IEnumerable<ParameterInfo> GetParameterInfos()
-        {
-            if (KeySelectorKind != FunctionKind.Default)
-            {
-                yield return new(KeySelectorKind == FunctionKind.Delegate
-                    ? FuncDelegateType(InputElementType, KeyType)
-                    : TypeName("Selector"), IdentifierName("selector"));
-            }
-
-            if (ComparerKind == ComparerKind.Struct)
-                yield return new(TypeName("Comparer"), IdentifierName("comparer"));
-        }
-
-        protected override IEnumerable<StatementSyntax> RenderInitialization()
-        {
-            if (KeySelectorKind != FunctionKind.Default)
-                yield return LocalDeclarationStatement(KeyType, LocalName("resultKey").Identifier, DefaultLiteral);
-
-            if (ComparerKind == ComparerKind.Default)
-            {
-                yield return LocalDeclarationStatement(ComparerDefaultType(KeyType, KeySymbol),
-                    IdentifierName("comparer").Identifier, ComparerDefault(KeyType, KeySymbol));
-            }
-
-            yield return LocalDeclarationStatement(BoolType, LocalName("isSet").Identifier, DefaultLiteral);
-            yield return LocalDeclarationStatement(ReturnType, LocalName("result").Identifier, DefaultLiteral);
-        }
-
-        protected override IEnumerable<StatementSyntax> RenderAccumulation()
-        {
-            var expressionKind = IsMin ? SyntaxKind.LessThanExpression : SyntaxKind.GreaterThanExpression;
-
-            var resultSetBlock = Block(
-                ExpressionStatement(SimpleAssignmentExpression(LocalName("isSet"), TrueExpression())),
-                ExpressionStatement(SimpleAssignmentExpression(LocalName("result"), CurrentPlaceholder)));
-
-            ExpressionSyntax key, resultKey;
-
-            if (KeySelectorKind == FunctionKind.Default)
-            {
-                key = CurrentPlaceholder;
-                resultKey = LocalName("result");
-            }
+            if (expression.MethodSymbol.Parameters.Length == 2)
+                ComparerKind = ComparerKind.Struct;
             else
-            {
-                yield return LocalDeclarationStatement(LocalName("key").Identifier,
-                    InvocationExpression(MemberAccessExpression(IdentifierName("selector"), InvokeMethod),
-                        ArgumentList(CurrentPlaceholder)));
-
-                key = LocalName("key");
-                resultKey = LocalName("resultKey");
-
-                resultSetBlock = resultSetBlock.AddStatements(
-                    ExpressionStatement(SimpleAssignmentExpression(resultKey, key)));
-            }
-
-            var comparison = BinaryExpression(expressionKind,
-                LiteralExpression(0),
-                InvocationExpression(MemberAccessExpression(IdentifierName("comparer"), CompareMethod),
-                    ArgumentList(resultKey, key)));
-
-            yield return IfStatement(
-                LogicalOrExpression(LogicalNotExpression(LocalName("isSet")), comparison), resultSetBlock);
+                ComparerKind = ComparerKind.Default;
         }
-
-        protected override IEnumerable<StatementSyntax> RenderReturn()
+        else
         {
-            yield return IfStatement(LogicalNotExpression(LocalName("isSet")), ThrowInvalidOperationStatement());
-            yield return ReturnStatement(LocalName("result"));
+            KeyType = InputElementType;
+            KeySymbol = InputElementSymbol;
+
+            KeySelectorKind = FunctionKind.Default;
+
+            if (expression.MethodSymbol.Parameters.Length == 1)
+                ComparerKind = ComparerKind.Struct;
+            else
+                ComparerKind = ComparerKind.Default;
         }
+
+    }
+
+    protected override TypeSyntax ReturnType => InputElementType;
+
+    private TypeSyntax ComparerInterfaceType =>
+        GenericName(Identifier("IComparer"), TypeArgumentList(InputElementType));
+
+    protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
+    {
+        if (KeySelectorKind == FunctionKind.Struct)
+            yield return new(TypeName("Selector"), StructFunctionInterfaceType(InputElementType, KeyType));
+
+        if (ComparerKind == ComparerKind.Struct)
+            yield return new(TypeName("Comparer"), ComparerInterfaceType);
+    }
+
+    protected override IEnumerable<ParameterInfo> GetParameterInfos()
+    {
+        if (KeySelectorKind != FunctionKind.Default)
+        {
+            yield return new(KeySelectorKind == FunctionKind.Delegate
+                ? FuncDelegateType(InputElementType, KeyType)
+                : TypeName("Selector"), IdentifierName("selector"));
+        }
+
+        if (ComparerKind == ComparerKind.Struct)
+            yield return new(TypeName("Comparer"), IdentifierName("comparer"));
+    }
+
+    protected override IEnumerable<StatementSyntax> RenderInitialization()
+    {
+        if (KeySelectorKind != FunctionKind.Default)
+            yield return LocalDeclarationStatement(KeyType, LocalName("resultKey").Identifier, DefaultLiteral);
+
+        if (ComparerKind == ComparerKind.Default)
+        {
+            yield return LocalDeclarationStatement(ComparerDefaultType(KeyType, KeySymbol),
+                IdentifierName("comparer").Identifier, ComparerDefault(KeyType, KeySymbol));
+        }
+
+        yield return LocalDeclarationStatement(BoolType, LocalName("isSet").Identifier, DefaultLiteral);
+        yield return LocalDeclarationStatement(ReturnType, LocalName("result").Identifier, DefaultLiteral);
+    }
+
+    protected override IEnumerable<StatementSyntax> RenderAccumulation()
+    {
+        var expressionKind = IsMin ? SyntaxKind.LessThanExpression : SyntaxKind.GreaterThanExpression;
+
+        var resultSetBlock = Block(
+            ExpressionStatement(SimpleAssignmentExpression(LocalName("isSet"), TrueExpression())),
+            ExpressionStatement(SimpleAssignmentExpression(LocalName("result"), CurrentPlaceholder)));
+
+        ExpressionSyntax key, resultKey;
+
+        if (KeySelectorKind == FunctionKind.Default)
+        {
+            key = CurrentPlaceholder;
+            resultKey = LocalName("result");
+        }
+        else
+        {
+            yield return LocalDeclarationStatement(LocalName("key").Identifier,
+                InvocationExpression(MemberAccessExpression(IdentifierName("selector"), InvokeMethod),
+                    ArgumentList(CurrentPlaceholder)));
+
+            key = LocalName("key");
+            resultKey = LocalName("resultKey");
+
+            resultSetBlock = resultSetBlock.AddStatements(
+                ExpressionStatement(SimpleAssignmentExpression(resultKey, key)));
+        }
+
+        var comparison = BinaryExpression(expressionKind,
+            LiteralExpression(0),
+            InvocationExpression(MemberAccessExpression(IdentifierName("comparer"), CompareMethod),
+                ArgumentList(resultKey, key)));
+
+        yield return IfStatement(
+            LogicalOrExpression(LogicalNotExpression(LocalName("isSet")), comparison), resultSetBlock);
+    }
+
+    protected override IEnumerable<StatementSyntax> RenderReturn()
+    {
+        yield return IfStatement(LogicalNotExpression(LocalName("isSet")), ThrowInvalidOperationStatement());
+        yield return ReturnStatement(LocalName("result"));
     }
 }

@@ -1,13 +1,12 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+public sealed class OrderByOperation : OrderingOperation
 {
-    public sealed class OrderByOperation : OrderingOperation
+    public OrderByOperation(in LinqGenExpression expression, int id,
+        FunctionKind selectorKind, ComparerKind comparerKind, bool descending)
+        : base(in expression, id, selectorKind, comparerKind, descending)
     {
-        public OrderByOperation(in LinqGenExpression expression, int id,
-            FunctionKind selectorKind, ComparerKind comparerKind, bool descending)
-            : base(in expression, id, selectorKind, comparerKind, descending)
-        {
-        }
     }
 }

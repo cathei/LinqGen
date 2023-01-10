@@ -2,11 +2,10 @@
 
 using System;
 
-namespace Cathei.LinqGen.Generator
+namespace Cathei.LinqGen.Generator;
+
+[Flags]
+public enum FunctionKind
 {
-    [Flags]
-    public enum FunctionKind
-    {
-        Default, Delegate, Struct
-    }
+    Default, Delegate, Struct
 }
