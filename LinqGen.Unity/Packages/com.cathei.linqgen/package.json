@@ -4,8 +4,8 @@
   "author": {
     "name": "Maxwell Keonwoo Kang"
   },
-  "version": "0.2.0",
-  "unity": "2020.1",
+  "version": "0.2.1",
+  "unity": "2020.3",
   "description": "Fast Linq-to-object source generator",
   "license": "MIT",
   "documentationUrl": "https://github.com/cathei/LinqGen",

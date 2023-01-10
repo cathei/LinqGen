@@ -139,6 +139,31 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
+        public static T Any<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool Any<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable, Func<T, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool Any<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable, IStructFunction<T, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool All<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable, Func<T, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool All<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable, IStructFunction<T, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
         public static List<T> ToList<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable)
         {
             throw new NotImplementedException();

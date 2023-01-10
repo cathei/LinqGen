@@ -13,5 +13,7 @@ public class LinqGenSample : MonoBehaviour
         {
             Debug.Log(i);
         }
+
+        Debug.Log(myList.Gen().Take(0).Any());
     }
 }
