@@ -24,6 +24,11 @@
         ("MaxByStruct", "{0}", "MaxBy(x => -x)", "MaxBy(new NegateSelector(), new StructComparer())"),
         ("Sum", "{0}", "Sum()", "Sum()"),
         ("SumSelector", "{0}", "Sum(x => x * 2)", "Sum(new DoubleSelector())"),
+        ("NotEmpty", "bool", "Any()", "Any()"),
+        ("Any", "bool", "Any(x => x % 2 == 0)", "Any(x => x % 2 == 0)"),
+        ("AnyStruct", "bool", "Any(x => x % 2 == 0)", "Any(new EvenPredicate())"),
+        ("All", "bool", "All(x => x % 2 == 0)", "All(x => x % 2 == 0)"),
+        ("AllStruct", "bool", "All(x => x % 2 == 0)", "All(new EvenPredicate())"),
         ("ToArray", "{0}[]", "ToArray()", "ToArray()"),
         ("ToList", "List<{0}>", "ToList()", "ToList()"),
     };

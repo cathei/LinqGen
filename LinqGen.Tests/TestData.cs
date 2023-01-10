@@ -26,13 +26,15 @@ public static class TestData
 
         IntEmpty = Enumerable.Empty<int>();
 
+        // Even only
         IntArray = new int[100];
         for (int i = 0; i < 100; ++i)
-            IntArray[i] = rand.Next(10);
+            IntArray[i] = rand.Next(10) * 2;
 
+        // Odd only
         IntList = new List<int>();
         for (int i = 0; i < 50; ++i)
-            IntList.Add(rand.Next(-10, 50));
+            IntList.Add(rand.Next(-10, 50) * 2 + 1);
 
         IntEnumerable = GetIntEnumerable(rand.Next());
 

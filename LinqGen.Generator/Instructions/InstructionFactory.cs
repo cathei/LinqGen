@@ -317,6 +317,14 @@ public static class InstructionFactory
             case "Count":
                 return new CountEvaluation(expression, id);
 
+            case "Any":
+                if (expression.MethodSymbol.Parameters.Length == 0)
+                    return new NotEmptyEvaluation(expression, id);
+                return new AnyAllEvaluation(expression, id, false);
+
+            case "All":
+                return new AnyAllEvaluation(expression, id, true);
+
             case "ToArray":
                 return new ToArrayEvaluation(expression, id);
 
