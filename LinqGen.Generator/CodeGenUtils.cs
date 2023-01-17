@@ -495,7 +495,11 @@ public static class CodeGenUtils
     public static TypeSyntax ComparerDefaultType(TypeSyntax type, ITypeSymbol symbol)
     {
         if (TryGetComparableSelfInterface(symbol, out _))
-            return GenericName(Identifier("CompareToComparer"), TypeArgumentList(type));
+        {
+            return GenericName(
+                Identifier(symbol.IsValueType ? "ValueCompareToComparer" : "CompareToComparer"),
+                TypeArgumentList(type));
+        }
 
         return ComparerInterfaceType(type);
     }
@@ -517,7 +521,11 @@ public static class CodeGenUtils
     public static TypeSyntax EqualityComparerDefaultType(TypeSyntax type, ITypeSymbol symbol)
     {
         if (TryGetEquatableSelfInterface(symbol, out _))
-            return GenericName(Identifier("EquatableComparer"), TypeArgumentList(type));
+        {
+            return GenericName(
+                Identifier(symbol.IsValueType ? "ValueEquatableComparer" : "EquatableComparer"),
+                TypeArgumentList(type));
+        }
 
         return EqualityComparerInterfaceType(type);
     }

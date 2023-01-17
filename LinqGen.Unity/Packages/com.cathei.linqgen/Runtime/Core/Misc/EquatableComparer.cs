@@ -11,16 +11,37 @@ using Cathei.LinqGen.Hidden;
 
 namespace Cathei.LinqGen.Hidden
 {
-    public struct EquatableComparer<T> : IEqualityComparer<T> where T : IEquatable<T>
+    /// <summary>
+    /// Specialized equality comparer for IEquatable implementing types.
+    /// </summary>
+    public struct EquatableComparer<T> : IEqualityComparer<T> where T : class, IEquatable<T>
     {
         public bool Equals(T? x, T? y)
         {
             if (x == null)
                 return y == null;
 
-            if (y == null)
-                return false;
+            // Equals allows null argument
+#pragma warning disable CS8604
+            return x.Equals(y);
+#pragma warning restore CS8604
+        }
 
+        public int GetHashCode(T obj)
+        {
+            return obj.GetHashCode();
+        }
+    }
+
+    /// <summary>
+    /// Specialized equality comparer for IEquatable implementing types.
+    /// Comparing to null with value type can cause boxing allocation in Debug settings.
+    /// https://github.com/cathei/LinqGen/issues/4
+    /// </summary>
+    public struct ValueEquatableComparer<T> : IEqualityComparer<T> where T : struct, IEquatable<T>
+    {
+        public bool Equals(T x, T y)
+        {
             return x.Equals(y);
         }
 
