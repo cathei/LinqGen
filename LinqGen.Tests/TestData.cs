@@ -14,6 +14,7 @@ public static class TestData
     public static readonly int[] IntArray;
     public static readonly List<int> IntList;
     public static readonly IEnumerable<int> IntEnumerable;
+    public static readonly List<ReferenceInt> ReferenceIntList;
 
     public static readonly IEnumerable<object> ObjectEmpty;
     public static readonly object?[] ObjectStringArray;
@@ -37,6 +38,10 @@ public static class TestData
             IntList.Add(rand.Next(-10, 50) * 2 + 1);
 
         IntEnumerable = GetIntEnumerable(rand.Next());
+
+        ReferenceIntList = new List<ReferenceInt>();
+        foreach (var value in IntArray)
+            ReferenceIntList.Add(new(value));
 
         ObjectEmpty = Enumerable.Empty<object>();
         ObjectStringEnumerable = GetObjectStringEnumerable();
@@ -98,16 +103,36 @@ public class ReferenceInt : IEquatable<ReferenceInt>, IComparable<ReferenceInt>
         return new(x._value % y._value);
     }
 
+    public static ReferenceInt operator -(ReferenceInt x)
+    {
+        return new(-x._value);
+    }
+
+    public static bool operator ==(ReferenceInt? x, ReferenceInt? y)
+    {
+        return x?._value == y?._value;
+    }
+
+    public static bool operator !=(ReferenceInt? x, ReferenceInt? y)
+    {
+        return !(x == y);
+    }
+
+    public static implicit operator ReferenceInt(int value)
+    {
+        return new(value);
+    }
+
     public bool Equals(ReferenceInt? other)
     {
-        if (other == null)
+        if (other is null)
             return false;
         return _value == other._value;
     }
 
     public int CompareTo(ReferenceInt? other)
     {
-        if (other == null)
+        if (other is null)
             return 1;
         return _value.CompareTo(other._value);
     }
