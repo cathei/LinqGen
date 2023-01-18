@@ -7,38 +7,39 @@
     {
         ("Count", "{0}", "Count()", "Count()"),
         ("CountPred", "{0}", "Count(x => x % 2 == 0)", "Count(x => x % 2 == 0)"),
-        ("CountPredStruct", "{0}", "Count(x => x % 2 == 0)", "Count(new EvenPredicate())"),
+        ("CountPredStruct", "{0}", "Count(x => x % 2 == 0)", "Count(new {1}EvenPredicate())"),
         ("First", "{0}", "First()", "First()"),
         ("FirstOrDefault", "{0}", "FirstOrDefault()", "FirstOrDefault()"),
         ("Last", "{0}", "Last()", "Last()"),
         ("LastOrDefault", "{0}", "LastOrDefault()", "LastOrDefault()"),
         ("Min", "{0}", "Min()", "Min()"),
-        ("MinComp", "{0}", "Min()", "Min(new StructComparer())"),
+        ("MinComp", "{0}", "Min()", "Min(new {1}StructComparer())"),
         ("MinBy", "{0}", "MinBy(x => -x)", "MinBy(x => -x)"),
-        ("MinByComp", "{0}", "MinBy(x => -x)", "MinBy(x => -x, Comparer<int>.Default)"),
-        ("MinByStruct", "{0}", "MinBy(x => -x)", "MinBy(new NegateSelector(), new StructComparer())"),
+        ("MinByComp", "{0}", "MinBy(x => -x)", "MinBy(x => -x, Comparer<{0}>.Default)"),
+        ("MinByStruct", "{0}", "MinBy(x => -x)", "MinBy(new {1}NegateSelector(), new {1}StructComparer())"),
         ("Max", "{0}", "Max()", "Max()"),
-        ("MaxComp", "{0}", "Max()", "Max(new StructComparer())"),
+        ("MaxComp", "{0}", "Max()", "Max(new {1}StructComparer())"),
         ("MaxBy", "{0}", "MaxBy(x => -x)", "MaxBy(x => -x)"),
-        ("MaxByComp", "{0}", "MaxBy(x => -x)", "MaxBy(x => -x, Comparer<int>.Default)"),
-        ("MaxByStruct", "{0}", "MaxBy(x => -x)", "MaxBy(new NegateSelector(), new StructComparer())"),
+        ("MaxByComp", "{0}", "MaxBy(x => -x)", "MaxBy(x => -x, Comparer<{0}>.Default)"),
+        ("MaxByStruct", "{0}", "MaxBy(x => -x)", "MaxBy(new {1}NegateSelector(), new {1}StructComparer())"),
         ("Sum", "{0}", "Sum()", "Sum()"),
-        ("SumSelector", "{0}", "Sum(x => x * 2)", "Sum(new DoubleSelector())"),
+        ("SumSelector", "{0}", "Sum(x => x * 2)", "Sum(new {1}DoubleSelector())"),
         ("NotEmpty", "bool", "Any()", "Any()"),
         ("Any", "bool", "Any(x => x % 2 == 0)", "Any(x => x % 2 == 0)"),
-        ("AnyStruct", "bool", "Any(x => x % 2 == 0)", "Any(new EvenPredicate())"),
+        ("AnyStruct", "bool", "Any(x => x % 2 == 0)", "Any(new {1}EvenPredicate())"),
         ("All", "bool", "All(x => x % 2 == 0)", "All(x => x % 2 == 0)"),
-        ("AllStruct", "bool", "All(x => x % 2 == 0)", "All(new EvenPredicate())"),
+        ("AllStruct", "bool", "All(x => x % 2 == 0)", "All(new {1}EvenPredicate())"),
         ("ToArray", "{0}[]", "ToArray()", "ToArray()"),
         ("ToList", "List<{0}>", "ToList()", "ToList()"),
     };
 
-    var testSources = new (string element, string variable)[]
+    var testSources = new (string element, string variable, string prefix)[]
     {
-        ("int", "IntEmpty"),
-        ("int", "IntArray"),
-        ("int", "IntList"),
-        ("int", "IntEnumerable"),
+        ("int", "IntEmpty", null),
+        ("int", "IntArray", null),
+        ("int", "IntList", null),
+        ("int", "IntEnumerable", null),
+        ("ReferenceInt", "ReferenceIntList", "RefInt"),
     };
 #>
 
@@ -82,7 +83,7 @@ public class <#= expression.title #>_Tests
         {
             actual = TestData.<#= source.variable #>
                 .Gen()
-                .<#= expression.linqgen #>;
+                .<#= string.Format(expression.linqgen, source.element, source.prefix) #>;
 
         }
         catch (Exception e)
@@ -119,7 +120,7 @@ public class <#= expression.title #>_Tests
             actual = TestData.<#= source.variable #>
                 .Gen()
                 .Skip(skip).Take(take)
-                .<#= expression.linqgen #>;
+                .<#= string.Format(expression.linqgen, source.element, source.prefix) #>;
         }
         catch (Exception e)
         {
