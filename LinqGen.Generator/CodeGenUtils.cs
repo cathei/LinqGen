@@ -116,6 +116,17 @@ public static class CodeGenUtils
         return true;
     }
 
+    public static bool IsNullAssignable(ITypeSymbol symbol)
+    {
+        if (symbol.IsReferenceType)
+            return true;
+
+        if (symbol.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
+            return true;
+
+        return false;
+    }
+
     // known type names
     public static readonly PredefinedTypeSyntax VoidType = PredefinedType(Token(SyntaxKind.VoidKeyword));
     public static readonly PredefinedTypeSyntax IntType = PredefinedType(Token(SyntaxKind.IntKeyword));
@@ -455,6 +466,12 @@ public static class CodeGenUtils
     public static BinaryExpressionSyntax IsExpression(ExpressionSyntax left, ExpressionSyntax right)
     {
         return SyntaxFactory.BinaryExpression(SyntaxKind.IsExpression, left, right);
+    }
+
+    public static ExpressionSyntax IsNotExpression(ExpressionSyntax left, ExpressionSyntax right)
+    {
+        // Use !(x is null) for backward compatibility
+        return LogicalNotExpression(ParenthesizedExpression(IsExpression(left, right)));
     }
 
     public static ForStatementSyntax ForStatement(

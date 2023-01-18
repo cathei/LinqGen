@@ -88,17 +88,24 @@ public sealed class MinMaxEvaluation : ExtensionEvaluation
                 IdentifierName("comparer").Identifier, ComparerDefault(KeyType, KeySymbol));
         }
 
-        yield return LocalDeclarationStatement(BoolType, LocalName("isSet").Identifier, DefaultLiteral);
+        if (!IsNullAssignable(InputElementSymbol))
+        {
+            yield return LocalDeclarationStatement(BoolType, LocalName("isSet").Identifier, DefaultLiteral);
+        }
+
         yield return LocalDeclarationStatement(ReturnType, LocalName("result").Identifier, DefaultLiteral);
     }
 
     protected override IEnumerable<StatementSyntax> RenderAccumulation()
     {
-        var expressionKind = IsMin ? SyntaxKind.LessThanExpression : SyntaxKind.GreaterThanExpression;
+        var resultSetBlock = new List<StatementSyntax>();
 
-        var resultSetBlock = Block(
-            ExpressionStatement(SimpleAssignmentExpression(LocalName("isSet"), TrueExpression())),
-            ExpressionStatement(SimpleAssignmentExpression(LocalName("result"), CurrentPlaceholder)));
+        if (!IsNullAssignable(InputElementSymbol))
+        {
+            resultSetBlock.Add(ExpressionStatement(SimpleAssignmentExpression(LocalName("isSet"), TrueExpression())));
+        }
+
+        resultSetBlock.Add(ExpressionStatement(SimpleAssignmentExpression(LocalName("result"), CurrentPlaceholder)));
 
         ExpressionSyntax key, resultKey;
 
@@ -116,22 +123,39 @@ public sealed class MinMaxEvaluation : ExtensionEvaluation
             key = LocalName("key");
             resultKey = LocalName("resultKey");
 
-            resultSetBlock = resultSetBlock.AddStatements(
-                ExpressionStatement(SimpleAssignmentExpression(resultKey, key)));
+            resultSetBlock.Add(ExpressionStatement(SimpleAssignmentExpression(resultKey, key)));
         }
 
-        var comparison = BinaryExpression(expressionKind,
+        ExpressionSyntax comparison = BinaryExpression(
+            IsMin ? SyntaxKind.LessThanExpression : SyntaxKind.GreaterThanExpression,
             LiteralExpression(0),
             InvocationExpression(MemberAccessExpression(IdentifierName("comparer"), CompareMethod),
                 ArgumentList(resultKey, key)));
 
-        yield return IfStatement(
-            LogicalOrExpression(LogicalNotExpression(LocalName("isSet")), comparison), resultSetBlock);
+        if (IsNullAssignable(KeySymbol))
+        {
+            comparison = LogicalAndExpression(IsNotExpression(key, NullLiteral), comparison);
+        }
+
+        if (IsNullAssignable(InputElementSymbol))
+        {
+            comparison = LogicalOrExpression(IsExpression(LocalName("result"), NullLiteral), comparison);
+        }
+        else
+        {
+            comparison = LogicalOrExpression(LogicalNotExpression(LocalName("isSet")), comparison);
+        }
+
+        yield return IfStatement(comparison, Block(resultSetBlock));
     }
 
     protected override IEnumerable<StatementSyntax> RenderReturn()
     {
-        yield return IfStatement(LogicalNotExpression(LocalName("isSet")), ThrowInvalidOperationStatement());
+        if (!IsNullAssignable(InputElementSymbol))
+        {
+            yield return IfStatement(LogicalNotExpression(LocalName("isSet")), ThrowInvalidOperationStatement());
+        }
+
         yield return ReturnStatement(LocalName("result"));
     }
 }
