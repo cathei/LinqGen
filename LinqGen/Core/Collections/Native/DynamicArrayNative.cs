@@ -1,8 +1,4 @@
-﻿using System;
-using System.Buffers;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace Cathei.LinqGen.Hidden
 {

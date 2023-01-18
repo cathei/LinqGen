@@ -3,8 +3,6 @@
 #nullable enable
 
 using System;
-using System.Collections.Generic;
-using Cathei.LinqGen.Hidden;
 
 namespace Cathei.LinqGen.Hidden
 {

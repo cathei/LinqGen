@@ -1,8 +1,5 @@
 ﻿// LinqGen, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-using System;
-using System.Collections.Generic;
-
 namespace Cathei.LinqGen.Hidden
 {
     public abstract class OrderBy<TUp, TKey> : IStubSignature { }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Buffers;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace Cathei.LinqGen.Hidden
