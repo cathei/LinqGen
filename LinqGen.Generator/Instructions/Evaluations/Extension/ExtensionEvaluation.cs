@@ -11,7 +11,12 @@ public abstract class ExtensionEvaluation : Evaluation
 {
     protected ExtensionEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
     {
+        InputElementSymbol = expression.InputElementSymbol!;
+        InputElementType = ParseTypeName(InputElementSymbol);
     }
+
+    public ITypeSymbol InputElementSymbol { get; }
+    protected override TypeSyntax InputElementType { get; }
 
     protected abstract IEnumerable<StatementSyntax> RenderAccumulation();
     protected abstract IEnumerable<StatementSyntax> RenderReturn();

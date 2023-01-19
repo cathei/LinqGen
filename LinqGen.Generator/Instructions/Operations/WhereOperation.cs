@@ -4,18 +4,33 @@ namespace Cathei.LinqGen.Generator;
 
 public class WhereOperation : Operation
 {
-    private TypeSyntax PredicateType { get; }
     private bool WithIndex { get; }
     private bool WithStruct { get; }
 
     public WhereOperation(in LinqGenExpression expression, int id, bool withIndex, bool withStruct)
         : base(expression, id)
     {
-        var parameterType = expression.GetNamedParameterType(0);
-        PredicateType = ParseTypeName(parameterType);
-
         WithIndex = withIndex;
         WithStruct = withStruct;
+    }
+
+    private TypeSyntax? _predicateType;
+
+    private TypeSyntax PredicateType
+    {
+        get
+        {
+            if (_predicateType != null)
+                return _predicateType;
+
+            TypeSyntax[] typeArguments = WithIndex
+                ? new[] { Upstream.OutputElementType, IntType, BoolType }
+                : new[] { Upstream.OutputElementType, BoolType };
+
+            return _predicateType = WithStruct
+                ? StructFunctionInterfaceType(typeArguments)
+                : FuncDelegateType(typeArguments);
+        }
     }
 
     public override TypeSyntax? DummyParameterType => WithStruct && WithIndex ? BoolType : null;

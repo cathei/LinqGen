@@ -9,38 +9,34 @@ namespace Cathei.LinqGen.Tests;
 public class GenericElementTests
 {
     [Test]
-    public void CastWithSelect()
+    public void OfTypeWithWhereSelect()
     {
         // https://github.com/cathei/LinqGen/issues/3
 
-        // var strings = TestData.ObjectStringArray.Gen()
-        //     .OfType<string>().Where(string.IsNullOrEmpty);
+        var expected = TestData.ObjectStringArray
+            .OfType<string>()
+            .Where(x => !string.IsNullOrEmpty(x))
+            .Select(x => x + x);
 
-        // foreach (var elem in strings)
-        // {
-        //
-        // }
+        var actual = TestData.ObjectStringArray.Gen()
+            .OfType<string>()
+            .Where(x => !string.IsNullOrEmpty(x))
+            .Select(x => x + x);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
-    // public class Elem
-    // {
-    //     public float timeMs;
-    //     public object behaviour;
-    //     public int handType;
-    // }
-    //
-    // [Test]
-    // public void ThenByAllocation()
-    // {
-    //     List<int> list = new();
-    //
-    //     list.Select(x => x+1).Sum();
-    //
-    //     list
-    //         .Gen()
-    //         .OrderBy(x => x.timeMs)
-    //         .ThenBy(x => x.behaviour)
-    //         .ThenBy(x => x.handType)
-    //         .ToArray();
-    // }
+    [Test]
+    public void GenerationWithWhereSelect()
+    {
+        var expected = Enumerable.Repeat("LinqGenTest", 10)
+            .Where(x => !string.IsNullOrEmpty(x))
+            .Select(x => x + x);
+
+        var actual = Gen.Enumerable.Repeat("LinqGenTest", 10)
+            .Where(x => !string.IsNullOrEmpty(x))
+            .Select(x => x + x);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
 }

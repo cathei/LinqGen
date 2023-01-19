@@ -4,25 +4,42 @@ namespace Cathei.LinqGen.Generator;
 
 public class SelectOperation : Operation
 {
-    private TypeSyntax SelectorType { get; }
     private bool WithIndex { get; }
     private bool WithStruct { get; }
 
     public SelectOperation(in LinqGenExpression expression, int id, bool withIndex, bool withStruct)
         : base(expression, id)
     {
-        var parameterType = expression.GetNamedParameterType(0);
-        SelectorType = ParseTypeName(parameterType);
+        var selectorSymbol = expression.GetNamedParameterType(0);
 
         // Func<TIn, TOut> or IStructFunction<TIn, TOut>
         // Func<TIn, int, TOut> or IStructFunction<TIn, int, TOut>
-        var elementSymbol = parameterType.TypeArguments[withIndex ? 2 : 1];
+        var elementSymbol = selectorSymbol.TypeArguments[withIndex ? 2 : 1];
 
         OutputElementSymbol = elementSymbol;
         OutputElementType = ParseTypeName(elementSymbol);
 
         WithIndex = withIndex;
         WithStruct = withStruct;
+    }
+
+    private TypeSyntax? _selectorType;
+
+    private TypeSyntax SelectorType
+    {
+        get
+        {
+            if (_selectorType != null)
+                return _selectorType;
+
+            TypeSyntax[] typeArguments = WithIndex
+                ? new[] { Upstream.OutputElementType, IntType, OutputElementType }
+                : new[] { Upstream.OutputElementType, OutputElementType };
+
+            return _selectorType = WithStruct
+                ? StructFunctionInterfaceType(typeArguments)
+                : FuncDelegateType(typeArguments);
+        }
     }
 
     public override ITypeSymbol OutputElementSymbol { get; }

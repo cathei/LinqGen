@@ -4,17 +4,31 @@ namespace Cathei.LinqGen.Generator;
 
 public sealed class AnyAllEvaluation : LocalEvaluation
 {
-    private TypeSyntax PredicateType { get; }
     private bool WithStruct { get; }
     private bool IsAll { get; }
 
     public AnyAllEvaluation(in LinqGenExpression expression, int id, bool isAll) : base(expression, id)
     {
         var parameterType = expression.GetNamedParameterType(0);
-
-        PredicateType = ParseTypeName(parameterType);
         WithStruct = IsStructFunction(parameterType);
         IsAll = isAll;
+    }
+
+    private TypeSyntax? _predicateType;
+
+    private TypeSyntax PredicateType
+    {
+        get
+        {
+            if (_predicateType != null)
+                return _predicateType;
+
+            TypeSyntax[] typeArguments = { Upstream.OutputElementType, BoolType };
+
+            return _predicateType = WithStruct
+                ? StructFunctionInterfaceType(typeArguments)
+                : FuncDelegateType(typeArguments);
+        }
     }
 
     protected override ExpressionSyntax? SkipExpression => null;
