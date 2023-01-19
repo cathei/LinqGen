@@ -65,6 +65,7 @@ public static class TestData
         yield return "Steve Jobs";
         yield return "Bill Gates";
         yield return null;
+        yield return string.Empty;
         yield return "CCC";
     }
 }

@@ -26,19 +26,14 @@ public class CastOperation : Operation
         yield break;
     }
 
-    public override ExpressionSyntax? RenderCount()
-    {
-        return Upstream.RenderCount();
-    }
+    public override bool SupportPartition => false;
+
+    public override ExpressionSyntax? RenderCount() => null;
 
     protected override StatementSyntax? RenderMoveNext()
     {
         if (SkipIfMismatch)
-        {
-            return IfStatement(LogicalNotExpression(
-                    ParenthesizedExpression(IsExpression(CurrentPlaceholder, OutputElementType))),
-                ContinueStatement());
-        }
+            return IfStatement(IsNotExpression(CurrentPlaceholder, OutputElementType), ContinueStatement());
 
         return null;
     }
