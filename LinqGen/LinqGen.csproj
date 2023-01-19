@@ -5,6 +5,10 @@
         <Nullable>enable</Nullable>
         <LangVersion>9</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Authors>Maxwell Keonwoo Kang</Authors>
+        <PackageDescription>Alloc-free and fast replacement for Linq, with code generation.</PackageDescription>
+        <RepositoryUrl>https://github.com/cathei/LinqGen</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">

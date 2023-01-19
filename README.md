@@ -14,14 +14,14 @@ Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as li
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="LinqGen" Version="0.2.1" />
-    <PackageReference Include="LinqGen.Generator" Version="0.2.1" />
+    <PackageReference Include="LinqGen" Version="0.2.2" />
+    <PackageReference Include="LinqGen.Generator" Version="0.2.2" />
 </ItemGroup>
 ```
 
 For Unity, you can install as git package from Unity Package Manager.
 ```
-https://github.com/cathei/LinqGen.git?path=LinqGen.Unity/Packages/com.cathei.linqgen#v0.2.1
+https://github.com/cathei/LinqGen.git?path=LinqGen.Unity/Packages/com.cathei.linqgen#v0.2.2
 ```
 Or install via OpenUPM.
 ```
