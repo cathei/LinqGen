@@ -93,6 +93,8 @@
             "GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<{0}>.Default)", intSources),
         ("Cast", "Cast<string>()", "Cast<string>()", castSources),
         ("OfType", "OfType<string>()", "OfType<string>()", castSources),
+        ("OfTypeSelect", "OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])", "OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])", castSources),
+        ("OfTypeWhere", "OfType<string>().Where(g => string.IsNullOrEmpty(g))", "OfType<string>().Where(g => string.IsNullOrEmpty(g))", castSources),
         ("Concat", "Concat(TestData.{2})", "Concat(TestData.{2}.Gen())", intSources),
         ("ConcatComplex",
             "Concat(TestData.{2}.Where(x => x % 2 == 0))",

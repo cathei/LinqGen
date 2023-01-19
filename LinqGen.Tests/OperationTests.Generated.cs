@@ -10002,6 +10002,366 @@ public class OfType_Tests
     }
 }
 [TestFixture]
+public class OfTypeSelect_Tests
+{
+
+    [Test]
+    public void SameAsLinq_ObjectEmpty()
+    {
+        var expected = TestData.ObjectEmpty
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+
+        var actual = TestData.ObjectEmpty
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ObjectEmpty()
+    {
+        var enumerable = TestData.ObjectEmpty
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ObjectEmpty(int skip, int take)
+    {
+        var expected = TestData.ObjectEmpty
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ObjectEmpty
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ObjectStringArray()
+    {
+        var expected = TestData.ObjectStringArray
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+
+        var actual = TestData.ObjectStringArray
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ObjectStringArray()
+    {
+        var enumerable = TestData.ObjectStringArray
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ObjectStringArray(int skip, int take)
+    {
+        var expected = TestData.ObjectStringArray
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ObjectStringArray
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ObjectStringList()
+    {
+        var expected = TestData.ObjectStringList
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+
+        var actual = TestData.ObjectStringList
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ObjectStringList()
+    {
+        var enumerable = TestData.ObjectStringList
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ObjectStringList(int skip, int take)
+    {
+        var expected = TestData.ObjectStringList
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ObjectStringList
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ObjectStringEnumerable()
+    {
+        var expected = TestData.ObjectStringEnumerable
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+
+        var actual = TestData.ObjectStringEnumerable
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ObjectStringEnumerable()
+    {
+        var enumerable = TestData.ObjectStringEnumerable
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ObjectStringEnumerable(int skip, int take)
+    {
+        var expected = TestData.ObjectStringEnumerable
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ObjectStringEnumerable
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class OfTypeWhere_Tests
+{
+
+    [Test]
+    public void SameAsLinq_ObjectEmpty()
+    {
+        var expected = TestData.ObjectEmpty
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g));
+
+        var actual = TestData.ObjectEmpty
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ObjectEmpty()
+    {
+        var enumerable = TestData.ObjectEmpty
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ObjectEmpty(int skip, int take)
+    {
+        var expected = TestData.ObjectEmpty
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ObjectEmpty
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ObjectStringArray()
+    {
+        var expected = TestData.ObjectStringArray
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g));
+
+        var actual = TestData.ObjectStringArray
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ObjectStringArray()
+    {
+        var enumerable = TestData.ObjectStringArray
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ObjectStringArray(int skip, int take)
+    {
+        var expected = TestData.ObjectStringArray
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ObjectStringArray
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ObjectStringList()
+    {
+        var expected = TestData.ObjectStringList
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g));
+
+        var actual = TestData.ObjectStringList
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ObjectStringList()
+    {
+        var enumerable = TestData.ObjectStringList
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ObjectStringList(int skip, int take)
+    {
+        var expected = TestData.ObjectStringList
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ObjectStringList
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ObjectStringEnumerable()
+    {
+        var expected = TestData.ObjectStringEnumerable
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g));
+
+        var actual = TestData.ObjectStringEnumerable
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ObjectStringEnumerable()
+    {
+        var enumerable = TestData.ObjectStringEnumerable
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ObjectStringEnumerable(int skip, int take)
+    {
+        var expected = TestData.ObjectStringEnumerable
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ObjectStringEnumerable
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
 public class Concat_Tests
 {
 

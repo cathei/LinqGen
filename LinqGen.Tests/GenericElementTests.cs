@@ -20,7 +20,7 @@ public class GenericElementTests
 
         var actual = TestData.ObjectStringArray.Gen()
             .OfType<string>()
-            .Where(x => !string.IsNullOrEmpty(x))
+            .Where(new Predicate())
             .Select(x => x + x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -40,5 +40,10 @@ public class GenericElementTests
             .Select(x => x + x);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    public struct Predicate : IStructFunction<string, bool>
+    {
+        public bool Invoke(string arg) => !string.IsNullOrEmpty(arg);
     }
 }
