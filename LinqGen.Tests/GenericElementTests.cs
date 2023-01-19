@@ -29,6 +29,8 @@ public class GenericElementTests
     [Test]
     public void GenerationWithWhereSelect()
     {
+        // https://github.com/cathei/LinqGen/issues/3
+
         var expected = Enumerable.Repeat("LinqGenTest", 10)
             .Where(x => !string.IsNullOrEmpty(x))
             .Select(x => x + x);
