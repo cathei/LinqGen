@@ -1,11 +1,9 @@
 ﻿// LinqGen, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
-using System;
-using System.Collections;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Jobs.LowLevel.Unsafe;
 
 namespace Cathei.LinqGen.Hidden
 {
@@ -24,13 +22,15 @@ namespace Cathei.LinqGen.Hidden
         public static T* ArrayAlloc<T>(int size)
             where T : unmanaged
         {
-            return (T*)UnsafeUtility.Malloc(size * sizeof(T), UnsafeUtility.AlignOf<T>(), Allocator.Temp);
+            var allocator = JobsUtility.IsExecutingJob ? Allocator.Temp : Allocator.Persistent;
+            return (T*)UnsafeUtility.Malloc(size * sizeof(T), UnsafeUtility.AlignOf<T>(), allocator);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ArrayFree(void* array)
         {
-            UnsafeUtility.Free(array, Allocator.Temp);
+            var allocator = JobsUtility.IsExecutingJob ? Allocator.Temp : Allocator.Persistent;
+            UnsafeUtility.Free(array, allocator);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
