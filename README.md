@@ -21,7 +21,7 @@ Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as li
 
 For Unity, you can install as git package from Unity Package Manager.
 ```
-https://github.com/cathei/LinqGen.git?path=LinqGen.Unity/Packages/com.cathei.linqgen#v0.2.3
+https://github.com/cathei/LinqGen.git?path=LinqGen.Unity/Packages/com.cathei.linqgen
 ```
 Or install via OpenUPM.
 ```
