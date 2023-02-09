@@ -7,7 +7,6 @@ public sealed class EnumerableGeneration : Generation
     public EnumerableGeneration(in LinqGenExpression expression, int id,
         ITypeSymbol sourceSymbol) : base(expression, id)
     {
-        // TODO ICollection, ICollection<T>, IReadOnlyCollection<T> ...
         IsCollection = TryGetGenericCollectionInterface(sourceSymbol, out _);
 
         var enumeratorSymbol = GetEnumeratorSymbol(sourceSymbol)!.ReturnType;
