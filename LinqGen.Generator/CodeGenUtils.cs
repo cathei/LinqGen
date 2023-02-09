@@ -24,6 +24,8 @@ public static class CodeGenUtils
     private const string UnityNativeArrayTypeName = "NativeArray`1";
     private const string UnityNativeSliceTypeName = "NativeSlice`1";
 
+    private static readonly string[] CollectionInterfaces = { "ICollection`1", "IReadOnlyCollection`1", "ICollection" };
+
     public static bool IsStubMethod(IMethodSymbol symbol)
     {
         // is it member of extension class or member of stub enumerable?
@@ -633,10 +635,17 @@ public static class CodeGenUtils
         return interfaceSymbol != null!;
     }
 
-    public static bool TryGetGenericCollectionInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
+    public static bool TryGetGenericCollectionInterface(ITypeSymbol symbol, out INamedTypeSymbol? interfaceSymbol)
     {
-        interfaceSymbol = GetInterface(symbol, SystemCollectionsGenericNamespace, "ICollection`1")!;
-        return interfaceSymbol != null!;
+        foreach (var collectionInterface in CollectionInterfaces)
+        {
+            interfaceSymbol = GetInterface(symbol, SystemCollectionsGenericNamespace, collectionInterface);
+            if (interfaceSymbol != null)
+                return true;
+        }
+
+        interfaceSymbol = null;
+        return false;
     }
 
     public static bool TryGetComparableSelfInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
@@ -660,9 +669,9 @@ public static class CodeGenUtils
     public static IMethodSymbol? GetEnumeratorSymbol(ITypeSymbol enumerableSymbol)
     {
         // find GetEnumerator with same rule as C# duck typing
-        // TODO fallback to interface implementation
         return enumerableSymbol.GetMembers()
             .OfType<IMethodSymbol>()
+            .Concat(enumerableSymbol.AllInterfaces.SelectMany(a=>a.GetMembers()).OfType<IMethodSymbol>())
             .FirstOrDefault(x =>
                 x.DeclaredAccessibility == Accessibility.Public &&
                 x.Name == "GetEnumerator" && x.Parameters.Length == 0 && x.TypeParameters.Length == 0);
