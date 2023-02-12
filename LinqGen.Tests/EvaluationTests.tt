@@ -39,8 +39,6 @@
         ("int", "IntArray", null),
         ("int", "IntList", null),
         ("int", "IntEnumerable", null),
-        ("int", "IntCollection", null),
-        ("int", "IntReadOnlyCollection", null),
         ("ReferenceInt", "ReferenceIntList", "RefInt"),
     };
 #>

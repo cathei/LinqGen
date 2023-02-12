@@ -200,4 +200,28 @@ public class FundamentalTests
             return new Enumerator();
         }
     }
+
+    [Test]
+    public void CollectionInterfaceTest()
+    {
+        ICollection<int> collection = TestData.IntList;
+
+        int value = collection.Gen()
+            .Select(x => x * 10)
+            .First();
+
+        Assert.AreEqual(TestData.IntList[0] * 10, value);
+    }
+
+    [Test]
+    public void ReadOnlyCollectionInterfaceTest()
+    {
+        IReadOnlyCollection<int> readOnlyCollection = TestData.IntList;
+
+        int value = readOnlyCollection.Gen()
+            .Select(x => x * 10)
+            .First();
+
+        Assert.AreEqual(TestData.IntList[0] * 10, value);
+    }
 }

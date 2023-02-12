@@ -14,8 +14,6 @@ public static class TestData
     public static readonly int[] IntArray;
     public static readonly List<int> IntList;
     public static readonly IEnumerable<int> IntEnumerable;
-    public static readonly ICollection<int> IntCollection;
-    public static readonly IReadOnlyCollection<int> IntReadOnlyCollection;
     public static readonly List<ReferenceInt> ReferenceIntList;
 
     public static readonly IEnumerable<object> ObjectEmpty;
@@ -40,8 +38,6 @@ public static class TestData
             IntList.Add(rand.Next(-10, 50) * 2 + 1);
 
         IntEnumerable = GetIntEnumerable(rand.Next());
-        IntCollection = new List<int>(GetIntEnumerable(rand.Next()));
-        IntReadOnlyCollection = new List<int>(GetIntEnumerable(rand.Next()));
 
         ReferenceIntList = new List<ReferenceInt>();
         foreach (var value in IntArray)
