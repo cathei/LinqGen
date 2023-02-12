@@ -9,8 +9,9 @@ public sealed class EnumerableGeneration : Generation
     {
         IsCollection = TryGetGenericCollectionInterface(sourceSymbol, out _);
 
+        // TODO fallback to interface specific implementation
         var enumeratorSymbol = GetEnumeratorSymbol(sourceSymbol)!.ReturnType;
-        var elementSymbol = GetCurrentSymbol(enumeratorSymbol);
+        var elementSymbol = GetCurrentSymbol(enumeratorSymbol)!;
 
         SourceEnumerableType = ParseTypeName(sourceSymbol);
         SourceEnumeratorType = ParseTypeName(enumeratorSymbol);
