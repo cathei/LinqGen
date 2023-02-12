@@ -201,27 +201,45 @@ public class FundamentalTests
         }
     }
 
+    // [Test]
+    // public void CollectionInterfaceTest()
+    // {
+    //     ICollection collection = TestData.IntList;
+    //     var generation = collection.Gen();
+    //
+    //     object value = generation
+    //         .Select(x => x)
+    //         .First();
+    //
+    //     Assert.AreEqual(collection.Count, generation.Count());
+    //     Assert.AreEqual(TestData.IntList[0], value);
+    // }
+
     [Test]
-    public void CollectionInterfaceTest()
+    public void CollectionGenericInterfaceTest()
     {
         ICollection<int> collection = TestData.IntList;
+        var generation = collection.Gen();
 
-        int value = collection.Gen()
+        int value = generation
             .Select(x => x * 10)
             .First();
 
+        Assert.AreEqual(collection.Count, generation.Count());
         Assert.AreEqual(TestData.IntList[0] * 10, value);
     }
 
     [Test]
     public void ReadOnlyCollectionInterfaceTest()
     {
-        IReadOnlyCollection<int> readOnlyCollection = TestData.IntList;
+        IReadOnlyCollection<int> collection = TestData.IntList;
+        var generation = collection.Gen();
 
-        int value = readOnlyCollection.Gen()
+        int value = generation
             .Select(x => x * 10)
             .First();
 
+        Assert.AreEqual(collection.Count, generation.Count());
         Assert.AreEqual(TestData.IntList[0] * 10, value);
     }
 }

@@ -24,8 +24,6 @@ public static class CodeGenUtils
     private const string UnityNativeArrayTypeName = "NativeArray`1";
     private const string UnityNativeSliceTypeName = "NativeSlice`1";
 
-    private static readonly string[] CollectionInterfaces = { "ICollection`1", "IReadOnlyCollection`1", "ICollection" };
-
     public static bool IsStubMethod(IMethodSymbol symbol)
     {
         // is it member of extension class or member of stub enumerable?
@@ -637,14 +635,18 @@ public static class CodeGenUtils
 
     public static bool TryGetGenericCollectionInterface(ITypeSymbol symbol, out INamedTypeSymbol? interfaceSymbol)
     {
-        foreach (var collectionInterface in CollectionInterfaces)
-        {
-            interfaceSymbol = GetInterface(symbol, SystemCollectionsGenericNamespace, collectionInterface);
-            if (interfaceSymbol != null)
-                return true;
-        }
+        interfaceSymbol = GetInterface(symbol, SystemCollectionsGenericNamespace, "ICollection`1")!;
+        if (interfaceSymbol != null!)
+            return true;
 
-        interfaceSymbol = null;
+        interfaceSymbol = GetInterface(symbol, SystemCollectionsGenericNamespace, "IReadOnlyCollection`1")!;
+        if (interfaceSymbol != null!)
+            return true;
+
+        interfaceSymbol = GetInterface(symbol, SystemCollectionsNamespace, "ICollection")!;
+        if (interfaceSymbol != null!)
+            return true;
+
         return false;
     }
 
