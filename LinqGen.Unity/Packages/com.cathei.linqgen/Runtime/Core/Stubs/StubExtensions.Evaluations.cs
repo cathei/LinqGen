@@ -139,7 +139,7 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        public static T Any<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable)
+        public static bool Any<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable)
         {
             throw new NotImplementedException();
         }
