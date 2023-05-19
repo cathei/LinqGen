@@ -14,8 +14,8 @@ Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as li
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="LinqGen" Version="0.2.3" />
-    <PackageReference Include="LinqGen.Generator" Version="0.2.3" />
+    <PackageReference Include="LinqGen" Version="0.2.4" />
+    <PackageReference Include="LinqGen.Generator" Version="0.2.4" />
 </ItemGroup>
 ```
 
