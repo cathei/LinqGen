@@ -4,7 +4,7 @@
   "author": {
     "name": "Maxwell Keonwoo Kang"
   },
-  "version": "0.2.5",
+  "version": "0.2.6",
   "unity": "2020.3",
   "description": "Fast Linq-to-object source generator",
   "license": "MIT",
