@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Cathei.LinqGen.Generator;
 
-public readonly struct LinqGenExpression
+public readonly struct LinqGenExpression : IEquatable<LinqGenExpression>
 {
     public IMethodSymbol MethodSymbol { get; }
     public INamedTypeSymbol? SignatureSymbol { get; }
@@ -136,6 +136,9 @@ public readonly struct LinqGenExpression
         return true;
     }
 
+    public SymbolKey GenerationKey => new(SignatureSymbol!);
+    public EvaluationKey EvaluationKey => new(UpstreamSignatureSymbols[0], MethodSymbol, InputElementSymbol!);
+
     public bool TryGetParameterType(int index, out ITypeSymbol result)
     {
         if (MethodSymbol.Parameters.Length <= index)
@@ -177,5 +180,27 @@ public readonly struct LinqGenExpression
     public bool IsCompilingGeneration()
     {
         return SignatureSymbol != null;
+    }
+
+    public bool Equals(LinqGenExpression other)
+    {
+        if (IsCompilingGeneration() != other.IsCompilingGeneration())
+            return false;
+
+        return IsCompilingGeneration()
+            ? GenerationKey.Equals(other.GenerationKey)
+            : EvaluationKey.Equals(other.EvaluationKey);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is LinqGenExpression other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return IsCompilingGeneration()
+            ? GenerationKey.GetHashCode()
+            : EvaluationKey.GetHashCode();
     }
 }

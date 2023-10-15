@@ -1,5 +1,6 @@
 ﻿// LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -15,48 +16,41 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
                 static (node, _) => ExpressionPredicate(node),
                 static (ctx, _) => ExpressionTransform(ctx.SemanticModel, ctx.Node))
             .Where(static x => x != null)
-            .Select(static (x, _) => x!.Value);
+            .Select(static (x, _) => x!.Value)
+            .WithTrackingName("Expressions");
 
         var generations = expressions
             .Where(static x => x.IsCompilingGeneration())
             .Collect()
-            .Select(static (x, _) => CreateGenerationDictionary(x));
+            .WithComparer(ImmutableArrayComparer<LinqGenExpression>.Default)
+            .Select(static (x, _) => CreateGenerationDictionary(x))
+            .WithComparer(ImmutableDictionaryComparer<SymbolKey, LinqGenExpression>.Default)
+            .WithTrackingName("Generations");
 
         var evaluations = expressions
             .Where(static x => !x.IsCompilingGeneration())
             .Collect()
-            .Select(static (x, _) => CreateEvaluationDictionary(x));
+            .WithComparer(ImmutableArrayComparer<LinqGenExpression>.Default)
+            .Select(static (x, _) => CreateEvaluationDictionary(x))
+            .WithComparer(ImmutableDictionaryComparer<EvaluationKey, LinqGenExpression>.Default)
+            .WithTrackingName("Evaluations");
 
         var downstream = generations.Combine(evaluations)
-            .Select(static (x, _) => CreateDownstreamDictionary(x.Left, x.Right));
+            .Select(static (x, _) => CreateDownstreamDictionary(x.Left, x.Right))
+            .WithComparer(new ImmutableDictionaryComparer<SymbolKey, ImmutableArray<LinqGenExpression>>(
+                EqualityComparer<SymbolKey>.Default, ImmutableArrayComparer<LinqGenExpression>.Default))
+            .WithTrackingName("Downstream");
 
         var dependencies = generations.Combine(downstream)
-            .SelectMany(static (x, _) => CreateDependencies(x.Left, x.Right));
+            .SelectMany(static (x, _) => CreateDependencies(x.Left, x.Right))
+            .WithTrackingName("Dependencies");
 
         context.RegisterSourceOutput(dependencies, Render);
     }
 
-    public readonly struct LinqGenExpressionDependency
-    {
-        public readonly LinqGenExpression Expression;
-        public readonly ImmutableArray<LinqGenExpression> Dependencies;
-
-        /// logic
-        /// consider all nested upstreams
-        /// consider direct downstream and its all additional nested upstreams
-
-        public LinqGenExpressionDependency(
-            in LinqGenExpression expression,
-            in ImmutableArray<LinqGenExpression> dependencies)
-        {
-            Expression = expression;
-            Dependencies = dependencies;
-        }
-    }
-
     private static uint GenerateStableId(in LinqGenExpression expr)
     {
-        return unchecked((uint)SymbolEqualityComparer.Default.GetHashCode(expr.SignatureSymbol));
+        return unchecked((uint)expr.GenerationKey.GetHashCode());
     }
 
     private static bool ExpressionPredicate(SyntaxNode node)
@@ -86,20 +80,20 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
         return null;
     }
 
-    private static ImmutableDictionary<ISymbol, LinqGenExpression> CreateGenerationDictionary(
+    private static ImmutableDictionary<SymbolKey, LinqGenExpression> CreateGenerationDictionary(
         in ImmutableArray<LinqGenExpression> expressions)
     {
-        var builder = ImmutableDictionary.CreateBuilder<ISymbol, LinqGenExpression>(SymbolEqualityComparer.Default);
+        var builder = ImmutableDictionary.CreateBuilder<SymbolKey, LinqGenExpression>();
 
         foreach (var expr in expressions)
         {
-            if (builder.ContainsKey(expr.SignatureSymbol!))
+            if (builder.ContainsKey(expr.GenerationKey))
             {
                 // already registered
                 continue;
             }
 
-            builder.Add(expr.SignatureSymbol!, expr);
+            builder.Add(expr.GenerationKey, expr);
         }
 
         return builder.ToImmutable();
@@ -112,7 +106,7 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
 
         foreach (var expr in expressions)
         {
-            var key = new EvaluationKey(expr.UpstreamSignatureSymbols[0], expr.MethodSymbol, expr.InputElementSymbol!);
+            var key = expr.EvaluationKey;
 
             if (builder.ContainsKey(key))
             {
@@ -126,14 +120,13 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
         return builder.ToImmutable();
     }
 
-    private static ImmutableDictionary<ISymbol, ImmutableArray<LinqGenExpression>> CreateDownstreamDictionary(
-        ImmutableDictionary<ISymbol, LinqGenExpression> generations,
+    private static ImmutableDictionary<SymbolKey, ImmutableArray<LinqGenExpression>> CreateDownstreamDictionary(
+        ImmutableDictionary<SymbolKey, LinqGenExpression> generations,
         ImmutableDictionary<EvaluationKey, LinqGenExpression> evaluations)
     {
         var downstream = generations.ToDictionary(
             static x => x.Key,
-            static _ => ImmutableArray.CreateBuilder<LinqGenExpression>(),
-            generations.KeyComparer);
+            static _ => ImmutableArray.CreateBuilder<LinqGenExpression>());
 
         foreach (var generation in generations.Values)
         {
@@ -141,14 +134,14 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
                 continue;
 
             // only first upstream depends on downstream
-            if (downstream.TryGetValue(generation.UpstreamSignatureSymbols[0], out var builder))
+            if (downstream.TryGetValue(new(generation.UpstreamSignatureSymbols[0]), out var builder))
                 builder.Add(generation);
         }
 
         foreach (var evaluation in evaluations.Values)
         {
             // only first upstream depends on downstream
-            if (downstream.TryGetValue(evaluation.UpstreamSignatureSymbols[0], out var builder))
+            if (downstream.TryGetValue(new(evaluation.UpstreamSignatureSymbols[0]), out var builder))
                 builder.Add(evaluation);
         }
 
@@ -159,8 +152,8 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
     }
 
     private static IEnumerable<LinqGenExpressionDependency> CreateDependencies(
-        ImmutableDictionary<ISymbol, LinqGenExpression> generations,
-        ImmutableDictionary<ISymbol, ImmutableArray<LinqGenExpression>> downstream)
+        ImmutableDictionary<SymbolKey, LinqGenExpression> generations,
+        ImmutableDictionary<SymbolKey, ImmutableArray<LinqGenExpression>> downstream)
     {
         var hashSet = new HashSet<LinqGenExpression>();
 
@@ -182,13 +175,13 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
 
     private static void CollectUpwardDependencies(
         in LinqGenExpression current,
-        ImmutableDictionary<ISymbol, LinqGenExpression> generations,
+        ImmutableDictionary<SymbolKey, LinqGenExpression> generations,
         HashSet<LinqGenExpression> result)
     {
         foreach (var symbol in current.UpstreamSignatureSymbols)
         {
             // failed to find upstream
-            if (!generations.TryGetValue(symbol, out var upstream))
+            if (!generations.TryGetValue(new(symbol), out var upstream))
                 continue;
 
             // result already been added
@@ -205,7 +198,7 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
 
     private static void Render(SourceProductionContext context, LinqGenExpressionDependency dependency)
     {
-        var generations = new Dictionary<ISymbol, Generation>(SymbolEqualityComparer.Default);
+        var generations = new Dictionary<SymbolKey, Generation>();
 
         foreach (var dep in dependency.Dependencies)
         {
@@ -218,14 +211,14 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
             if (generation == null)
                 continue;
 
-            generations.Add(dep.SignatureSymbol!, generation);
+            generations.Add(dep.GenerationKey, generation);
         }
 
         foreach (var generation in generations.Values)
         {
             foreach (var upstreamSymbol in generation.UpstreamSignatureSymbols)
             {
-                if (!generations.TryGetValue(upstreamSymbol, out var upstream))
+                if (!generations.TryGetValue(new(upstreamSymbol), out var upstream))
                     continue;
 
                 generation.AddUpstream(upstream);
@@ -245,14 +238,14 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
 
             foreach (var upstreamSymbol in evaluation.UpstreamSignatureSymbols)
             {
-                if (!generations.TryGetValue(upstreamSymbol, out var upstream))
+                if (!generations.TryGetValue(new(upstreamSymbol), out var upstream))
                     continue;
 
                 evaluation.AddUpstream(upstream);
             }
         }
 
-        var generationToRender = generations[dependency.Expression.SignatureSymbol!];
+        var generationToRender = generations[dependency.Expression.GenerationKey];
         var sourceText = FileTemplate.Render(generationToRender.Render());
 
         context.AddSource($"LinqGen.{generationToRender.FileName}", sourceText);
