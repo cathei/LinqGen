@@ -7,7 +7,7 @@ public sealed class AnyAllEvaluation : LocalEvaluation
     private bool WithStruct { get; }
     private bool IsAll { get; }
 
-    public AnyAllEvaluation(in LinqGenExpression expression, int id, bool isAll) : base(expression, id)
+    public AnyAllEvaluation(in LinqGenExpression expression, uint id, bool isAll) : base(expression, id)
     {
         var parameterType = expression.GetNamedParameterType(0);
         WithStruct = IsStructFunction(parameterType);

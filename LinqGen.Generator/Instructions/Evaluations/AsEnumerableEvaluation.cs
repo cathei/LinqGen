@@ -47,7 +47,7 @@ public sealed class AsEnumerableEvaluation : Evaluation
 
     private readonly Rewriter _rewriter;
 
-    public AsEnumerableEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+    public AsEnumerableEvaluation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
         _rewriter = new(this);
     }

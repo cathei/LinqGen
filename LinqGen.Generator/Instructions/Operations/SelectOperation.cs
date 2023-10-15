@@ -7,7 +7,7 @@ public class SelectOperation : Operation
     private bool WithIndex { get; }
     private bool WithStruct { get; }
 
-    public SelectOperation(in LinqGenExpression expression, int id, bool withIndex, bool withStruct)
+    public SelectOperation(in LinqGenExpression expression, uint id, bool withIndex, bool withStruct)
         : base(expression, id)
     {
         var selectorSymbol = expression.GetNamedParameterType(0);

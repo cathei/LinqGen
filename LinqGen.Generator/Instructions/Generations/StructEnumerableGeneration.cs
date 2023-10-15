@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public sealed class StructEnumerableGeneration : Generation
 {
-    public StructEnumerableGeneration(in LinqGenExpression expression, int id,
+    public StructEnumerableGeneration(in LinqGenExpression expression, uint id,
         INamedTypeSymbol sourceSymbol) : base(expression, id)
     {
         // TODO ICollection, ICollection<T>, IReadOnlyCollection<T> ...

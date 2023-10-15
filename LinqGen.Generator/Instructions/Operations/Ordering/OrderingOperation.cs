@@ -11,7 +11,7 @@ public abstract class OrderingOperation : Operation
     private ComparerKind ComparerKind { get; }
     public bool Descending { get; }
 
-    public OrderingOperation(in LinqGenExpression expression, int id,
+    public OrderingOperation(in LinqGenExpression expression, uint id,
         FunctionKind selectorKind, ComparerKind comparerKind, bool descending) : base(expression, id)
     {
         SelectorKind = selectorKind;

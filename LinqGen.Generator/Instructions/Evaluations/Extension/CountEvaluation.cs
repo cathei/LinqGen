@@ -6,7 +6,7 @@ public sealed class CountEvaluation : ExtensionEvaluation
 {
     private FunctionKind PredicatorKind { get;  }
 
-    public CountEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+    public CountEvaluation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
         if (MethodSymbol.Parameters.Length >= 1)
         {

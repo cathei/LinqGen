@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public sealed class RangeGeneration : PredefinedGeneration
 {
-    public RangeGeneration(in LinqGenExpression expression, int id) : base(expression, id)
+    public RangeGeneration(in LinqGenExpression expression, uint id) : base(expression, id)
     {
         OutputElementSymbol = expression.MethodSymbol.Parameters[0].Type;
     }

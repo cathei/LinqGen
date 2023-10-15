@@ -13,7 +13,7 @@ public abstract class Generation : Instruction
 {
     public IdentifierNameSyntax MethodName { get; }
 
-    protected Generation(in LinqGenExpression expression, int id) : base(expression, id)
+    protected Generation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
         // File name has to use integer id
         FileName = $"{expression.MethodSymbol.Name}_{id}.g.cs";

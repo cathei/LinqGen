@@ -7,7 +7,7 @@ public sealed class SumEvaluation : ExtensionEvaluation
     private TypeSyntax? SelectorType { get; }
     private bool WithStruct { get; }
 
-    public SumEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+    public SumEvaluation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
         ReturnType = ParseTypeName(MethodSymbol.ReturnType);
 

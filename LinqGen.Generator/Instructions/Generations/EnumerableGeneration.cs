@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public sealed class EnumerableGeneration : Generation
 {
-    public EnumerableGeneration(in LinqGenExpression expression, int id,
+    public EnumerableGeneration(in LinqGenExpression expression, uint id,
         ITypeSymbol sourceSymbol) : base(expression, id)
     {
         IsCollection = TryGetGenericCollectionInterface(sourceSymbol, out _);

@@ -9,7 +9,7 @@ namespace Cathei.LinqGen.Generator;
 /// </summary>
 public abstract class ExtensionEvaluation : Evaluation
 {
-    protected ExtensionEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+    protected ExtensionEvaluation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
         InputElementSymbol = expression.InputElementSymbol!;
         InputElementType = ParseTypeName(InputElementSymbol);

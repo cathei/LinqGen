@@ -12,7 +12,7 @@ public sealed class MinMaxEvaluation : ExtensionEvaluation
     private TypeSyntax KeyType { get; }
     private ITypeSymbol KeySymbol { get; }
 
-    public MinMaxEvaluation(in LinqGenExpression expression, int id, bool isMin, bool withKey)
+    public MinMaxEvaluation(in LinqGenExpression expression, uint id, bool isMin, bool withKey)
         : base(expression, id)
     {
         IsMin = isMin;

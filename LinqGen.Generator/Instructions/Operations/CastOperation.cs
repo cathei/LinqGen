@@ -6,7 +6,7 @@ public class CastOperation : Operation
 {
     private bool SkipIfMismatch { get; }
 
-    public CastOperation(in LinqGenExpression expression, int id, bool skipIfMismatch) : base(expression, id)
+    public CastOperation(in LinqGenExpression expression, uint id, bool skipIfMismatch) : base(expression, id)
     {
         SkipIfMismatch = skipIfMismatch;
         OutputElementSymbol = expression.MethodSymbol.ConstructedFrom.TypeParameters[0];

@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public sealed class ToListEvaluation : LocalEvaluation
 {
-    public ToListEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+    public ToListEvaluation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
     }
 

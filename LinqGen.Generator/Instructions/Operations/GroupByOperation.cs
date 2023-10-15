@@ -14,7 +14,7 @@ public sealed class GroupByOperation : Operation
     private FunctionKind ResultSelectorKind { get; }
     private ComparerKind ComparerKind { get; }
 
-    public GroupByOperation(in LinqGenExpression expression, int id,
+    public GroupByOperation(in LinqGenExpression expression, uint id,
         FunctionKind keySelectorKind, FunctionKind valueSelectorKind, FunctionKind resultSelectorKind,
         ComparerKind comparerKind) : base(expression, id)
     {

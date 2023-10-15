@@ -11,7 +11,7 @@ public static class Base62
 
     private static readonly StringBuilder Builder = new();
 
-    public static string Encode(int value)
+    public static string Encode(uint value)
     {
         if (value == 0)
             return "0";
@@ -20,11 +20,11 @@ public static class Base62
 
         while (value > 0)
         {
-            int idx = value % PossibleLetters.Length;
+            int idx = (int)(value % (uint)PossibleLetters.Length);
 
             Builder.Append(PossibleLetters[idx]);
 
-            value /= PossibleLetters.Length;
+            value /= (uint)PossibleLetters.Length;
         }
 
         return Builder.ToString();

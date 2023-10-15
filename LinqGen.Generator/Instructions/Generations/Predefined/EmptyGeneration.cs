@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public sealed class EmptyGeneration : PredefinedGeneration
 {
-    public EmptyGeneration(in LinqGenExpression expression, int id) : base(expression, id)
+    public EmptyGeneration(in LinqGenExpression expression, uint id) : base(expression, id)
     {
         OutputElementSymbol = expression.MethodSymbol.ConstructedFrom.TypeParameters[0];
     }

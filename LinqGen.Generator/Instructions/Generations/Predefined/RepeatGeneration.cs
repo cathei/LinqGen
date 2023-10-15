@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public sealed class RepeatGeneration : PredefinedGeneration
 {
-    public RepeatGeneration(in LinqGenExpression expression, int id) : base(expression, id)
+    public RepeatGeneration(in LinqGenExpression expression, uint id) : base(expression, id)
     {
         OutputElementSymbol = expression.MethodSymbol.ConstructedFrom.TypeParameters[0];
     }

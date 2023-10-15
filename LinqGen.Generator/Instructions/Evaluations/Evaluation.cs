@@ -7,7 +7,7 @@ namespace Cathei.LinqGen.Generator;
 /// </summary>
 public abstract class Evaluation : Instruction
 {
-    protected Evaluation(in LinqGenExpression expression, int id) : base(expression, id)
+    protected Evaluation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
         MethodSymbol = expression.MethodSymbol;
         MethodName = IdentifierName(MethodSymbol.Name);

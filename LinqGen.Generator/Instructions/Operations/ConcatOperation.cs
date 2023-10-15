@@ -10,7 +10,7 @@ public class ConcatOperation : Operation
     private ThisPlaceholderRewriter TempRewriter { get; }
     private ThisPlaceholderRewriter TempRevertRewriter { get; }
 
-    public ConcatOperation(in LinqGenExpression expression, int id) : base(expression, id)
+    public ConcatOperation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
         SecondRewriter = new ThisPlaceholderRewriter(Member("second"), $"{IterPlaceholder}s{Id}_");
 

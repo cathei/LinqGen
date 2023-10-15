@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public class TakeOperation : Operation
 {
-    public TakeOperation(in LinqGenExpression expression, int id) : base(expression, id)
+    public TakeOperation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
     }
 

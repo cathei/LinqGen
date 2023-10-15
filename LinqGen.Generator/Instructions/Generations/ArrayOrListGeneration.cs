@@ -8,7 +8,7 @@ public sealed class ArrayOrListGeneration : Generation
     public IdentifierNameSyntax ListCountProperty { get; }
     public bool AsStruct { get; }
 
-    public ArrayOrListGeneration(in LinqGenExpression expression, int id,
+    public ArrayOrListGeneration(in LinqGenExpression expression, uint id,
         ITypeSymbol listSymbol, ITypeSymbol elementSymbol, IdentifierNameSyntax countProperty, bool asStruct)
         : base(expression, id)
     {

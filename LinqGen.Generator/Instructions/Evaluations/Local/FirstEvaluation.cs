@@ -6,7 +6,7 @@ public sealed class FirstEvaluation : LocalEvaluation
 {
     private bool OrDefault { get; }
 
-    public FirstEvaluation(in LinqGenExpression expression, int id, bool orDefault) : base(expression, id)
+    public FirstEvaluation(in LinqGenExpression expression, uint id, bool orDefault) : base(expression, id)
     {
         OrDefault = orDefault;
     }

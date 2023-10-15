@@ -7,7 +7,7 @@ public class WhereOperation : Operation
     private bool WithIndex { get; }
     private bool WithStruct { get; }
 
-    public WhereOperation(in LinqGenExpression expression, int id, bool withIndex, bool withStruct)
+    public WhereOperation(in LinqGenExpression expression, uint id, bool withIndex, bool withStruct)
         : base(expression, id)
     {
         WithIndex = withIndex;

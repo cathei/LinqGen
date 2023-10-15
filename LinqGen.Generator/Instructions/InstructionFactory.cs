@@ -11,7 +11,7 @@ public static class InstructionFactory
     /// <summary>
     /// The Instruction instance must be unique per signature (per generic arguments combination).
     /// </summary>
-    public static Generation? CreateGeneration(in LinqGenExpression expression, int id)
+    public static Generation? CreateGeneration(in LinqGenExpression expression, uint id)
     {
         switch (expression.SignatureSymbol!.Name)
         {
@@ -274,7 +274,7 @@ public static class InstructionFactory
         return null;
     }
 
-    public static Evaluation? CreateEvaluation(in LinqGenExpression expression, int id)
+    public static Evaluation? CreateEvaluation(in LinqGenExpression expression, uint id)
     {
         switch (expression.MethodSymbol.Name)
         {

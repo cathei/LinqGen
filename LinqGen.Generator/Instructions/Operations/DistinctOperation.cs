@@ -8,7 +8,7 @@ public class DistinctOperation : Operation
 {
     private ComparerKind ComparerKind { get; }
 
-    public DistinctOperation(in LinqGenExpression expression, int id, ComparerKind comparerKind)
+    public DistinctOperation(in LinqGenExpression expression, uint id, ComparerKind comparerKind)
         : base(expression, id)
     {
         ComparerKind = comparerKind;

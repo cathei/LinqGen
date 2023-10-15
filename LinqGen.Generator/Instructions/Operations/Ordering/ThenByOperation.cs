@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public sealed class ThenByOperation : OrderingOperation
 {
-    public ThenByOperation(in LinqGenExpression expression, int id,
+    public ThenByOperation(in LinqGenExpression expression, uint id,
         FunctionKind selectorKind, ComparerKind comparerKind, bool descending)
         : base(in expression, id, selectorKind, comparerKind, descending)
     {

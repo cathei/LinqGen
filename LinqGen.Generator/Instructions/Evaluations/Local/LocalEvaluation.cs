@@ -6,7 +6,7 @@ namespace Cathei.LinqGen.Generator;
 
 public abstract class LocalEvaluation : Evaluation
 {
-    public LocalEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+    public LocalEvaluation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
     }
 

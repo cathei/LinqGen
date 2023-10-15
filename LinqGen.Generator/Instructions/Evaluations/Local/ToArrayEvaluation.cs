@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public sealed class ToArrayEvaluation : LocalEvaluation
 {
-    public ToArrayEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+    public ToArrayEvaluation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
     }
 

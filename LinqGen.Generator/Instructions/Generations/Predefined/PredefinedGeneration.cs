@@ -6,7 +6,7 @@ namespace Cathei.LinqGen.Generator;
 
 public abstract class PredefinedGeneration : Generation
 {
-    protected PredefinedGeneration(in LinqGenExpression expression, int id) : base(expression, id)
+    protected PredefinedGeneration(in LinqGenExpression expression, uint id) : base(expression, id)
     {
     }
 

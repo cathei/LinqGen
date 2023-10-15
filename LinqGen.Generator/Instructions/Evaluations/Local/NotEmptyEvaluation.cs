@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public sealed class NotEmptyEvaluation : LocalEvaluation
 {
-    public NotEmptyEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+    public NotEmptyEvaluation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
     }
 

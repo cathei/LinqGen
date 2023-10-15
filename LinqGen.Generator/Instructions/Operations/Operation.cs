@@ -9,7 +9,7 @@ namespace Cathei.LinqGen.Generator;
 /// </summary>
 public abstract class Operation : Generation
 {
-    protected Operation(in LinqGenExpression expression, int id) : base(expression, id) { }
+    protected Operation(in LinqGenExpression expression, uint id) : base(expression, id) { }
 
     public override void AddUpstream(Generation upstream)
     {

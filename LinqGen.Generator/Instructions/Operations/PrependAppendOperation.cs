@@ -6,7 +6,7 @@ public class PrependAppendOperation : Operation
 {
     private bool IsAppend { get; }
 
-    public PrependAppendOperation(in LinqGenExpression expression, int id, bool isAppend) : base(expression, id)
+    public PrependAppendOperation(in LinqGenExpression expression, uint id, bool isAppend) : base(expression, id)
     {
         IsAppend = isAppend;
     }

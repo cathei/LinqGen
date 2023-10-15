@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public sealed class GetEnumeratorEvaluation : Evaluation
 {
-    public GetEnumeratorEvaluation(in LinqGenExpression expression, int id) : base(expression, id)
+    public GetEnumeratorEvaluation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
     }
 

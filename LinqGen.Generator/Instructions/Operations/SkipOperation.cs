@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public class SkipOperation : Operation
 {
-    public SkipOperation(in LinqGenExpression expression, int id) : base(expression, id)
+    public SkipOperation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
     }
 
