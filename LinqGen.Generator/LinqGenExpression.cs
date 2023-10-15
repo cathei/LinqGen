@@ -1,6 +1,7 @@
 ﻿// LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace Cathei.LinqGen.Generator;
@@ -10,10 +11,10 @@ public readonly struct LinqGenExpression
     public IMethodSymbol MethodSymbol { get; }
     public INamedTypeSymbol? SignatureSymbol { get; }
     public ITypeSymbol? InputElementSymbol { get; }
-    public INamedTypeSymbol[]? UpstreamSignatureSymbols { get; }
+    public ImmutableArray<INamedTypeSymbol> UpstreamSignatureSymbols { get; }
 
     private LinqGenExpression(IMethodSymbol methodSymbol, INamedTypeSymbol? signatureSymbol,
-        ITypeSymbol? inputElementSymbol, INamedTypeSymbol[]? upstreamSignatureSymbols)
+        ITypeSymbol? inputElementSymbol, ImmutableArray<INamedTypeSymbol> upstreamSignatureSymbols)
     {
         MethodSymbol = methodSymbol;
         SignatureSymbol = signatureSymbol;
@@ -57,7 +58,7 @@ public readonly struct LinqGenExpression
         }
 
         ITypeSymbol? inputElementSymbol = null;
-        INamedTypeSymbol[]? upstreamSignatureSymbols = null;
+        IEnumerable<INamedTypeSymbol>? upstreamSignatureSymbols = null;
 
         // this means it takes LinqGen enumerable as input, and upstream type is required
         if (methodSymbol.ReceiverType is INamedTypeSymbol receiverTypeSymbol &&
@@ -80,10 +81,11 @@ public readonly struct LinqGenExpression
             signatureSymbol = NormalizeSignature(signatureSymbol);
 
         if (upstreamSignatureSymbols != null)
-            upstreamSignatureSymbols = upstreamSignatureSymbols.Select(NormalizeSignature).ToArray();
+            upstreamSignatureSymbols = upstreamSignatureSymbols.Select(NormalizeSignature);
 
         result = new LinqGenExpression(
-            methodSymbol, signatureSymbol, inputElementSymbol, upstreamSignatureSymbols);
+            methodSymbol, signatureSymbol, inputElementSymbol,
+            upstreamSignatureSymbols?.ToImmutableArray() ?? ImmutableArray<INamedTypeSymbol>.Empty);
 
         return true;
     }
@@ -129,7 +131,7 @@ public readonly struct LinqGenExpression
         }
 
         result = new LinqGenExpression(
-            methodSymbol, null, inputElementSymbol, new[] { NormalizeSignature(upstreamSignatureSymbol) });
+            methodSymbol, null, inputElementSymbol, ImmutableArray.Create(upstreamSignatureSymbol));
 
         return true;
     }

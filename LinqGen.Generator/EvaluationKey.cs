@@ -1,8 +1,10 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
+using System;
+
 namespace Cathei.LinqGen.Generator;
 
-public readonly struct EvaluationKey : IEqualityComparer<EvaluationKey>
+public readonly struct EvaluationKey : IEquatable<EvaluationKey>
 {
     private static readonly SymbolEqualityComparer SymbolComparer = SymbolEqualityComparer.Default;
 
@@ -18,17 +20,18 @@ public readonly struct EvaluationKey : IEqualityComparer<EvaluationKey>
         InputElementSymbol = inputElementSymbol;
     }
 
-    public bool Equals(EvaluationKey x, EvaluationKey y)
+    public bool Equals(EvaluationKey other)
     {
-        return SymbolComparer.Equals(x.SignatureSymbol, y.SignatureSymbol) &&
-               SymbolComparer.Equals(x.MethodSymbol, y.MethodSymbol) &&
-               SymbolComparer.Equals(x.InputElementSymbol, y.InputElementSymbol);
+        return SymbolComparer.Equals(SignatureSymbol, other.SignatureSymbol) &&
+               SymbolComparer.Equals(MethodSymbol, other.MethodSymbol) &&
+               SymbolComparer.Equals(InputElementSymbol, other.InputElementSymbol);
     }
 
-    public int GetHashCode(EvaluationKey obj)
+    public override int GetHashCode()
     {
-        return SymbolComparer.GetHashCode(obj.SignatureSymbol) ^
-               SymbolComparer.GetHashCode(obj.MethodSymbol) ^
-               SymbolComparer.GetHashCode(obj.InputElementSymbol);
+        int hashCode = SymbolComparer.GetHashCode(SignatureSymbol);
+        hashCode = HashCombine(hashCode, SymbolComparer.GetHashCode(MethodSymbol));
+        hashCode = HashCombine(hashCode, SymbolComparer.GetHashCode(InputElementSymbol));
+        return hashCode;
     }
 }

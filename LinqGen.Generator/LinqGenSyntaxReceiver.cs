@@ -65,7 +65,7 @@ public class LinqGenSyntaxReceiver // : ISyntaxContextReceiver
             return;
         }
 
-        var generation = InstructionFactory.CreateGeneration(_logBuilder, expression, ++_idCounter);
+        var generation = InstructionFactory.CreateGeneration(expression, ++_idCounter);
 
         if (generation == null)
         {
@@ -84,7 +84,7 @@ public class LinqGenSyntaxReceiver // : ISyntaxContextReceiver
     private void AddEvaluation(in LinqGenExpression expression)
     {
         var key = new EvaluationKey(
-            expression.UpstreamSignatureSymbols![0], expression.MethodSymbol, expression.InputElementSymbol!);
+            expression.UpstreamSignatureSymbols[0], expression.MethodSymbol, expression.InputElementSymbol!);
 
         if (_evaluations.ContainsKey(key))
         {
@@ -92,7 +92,7 @@ public class LinqGenSyntaxReceiver // : ISyntaxContextReceiver
             return;
         }
 
-        var evaluation = InstructionFactory.CreateEvaluation(_logBuilder, expression, ++_idCounter);
+        var evaluation = InstructionFactory.CreateEvaluation(expression, ++_idCounter);
 
         if (evaluation == null)
         {
@@ -114,7 +114,7 @@ public class LinqGenSyntaxReceiver // : ISyntaxContextReceiver
         {
             var upstreamSymbols = generation.UpstreamSignatureSymbols;
 
-            if (upstreamSymbols == null)
+            if (upstreamSymbols.IsDefaultOrEmpty)
             {
                 Roots.Add(generation);
                 continue;

@@ -1,6 +1,7 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace Cathei.LinqGen.Generator;
@@ -13,10 +14,10 @@ namespace Cathei.LinqGen.Generator;
 /// </summary>
 public abstract class Instruction
 {
-    public INamedTypeSymbol[]? UpstreamSignatureSymbols { get; }
+    public ImmutableArray<INamedTypeSymbol> UpstreamSignatureSymbols { get; }
     public string Id { get; }
 
-    protected Instruction(in LinqGenExpression expression, int id)
+    protected Instruction(in LinqGenExpression expression, uint id)
     {
         UpstreamSignatureSymbols = expression.UpstreamSignatureSymbols;
         Id = Base62.Encode(id);

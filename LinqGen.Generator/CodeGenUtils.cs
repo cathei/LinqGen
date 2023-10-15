@@ -1,6 +1,7 @@
 ﻿// LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace Cathei.LinqGen.Generator;
@@ -96,7 +97,7 @@ public static class CodeGenUtils
     }
 
     public static bool TryParseStubMethod(IMethodSymbol methodSymbol,
-        out ITypeSymbol inputElementSymbol, out INamedTypeSymbol[] signatureSymbols)
+        out ITypeSymbol inputElementSymbol, out IEnumerable<INamedTypeSymbol> signatureSymbols)
     {
         if (methodSymbol.ReceiverType is not INamedTypeSymbol receiverTypeSymbol ||
             !TryParseStubInterface(receiverTypeSymbol, out inputElementSymbol, out var receiverSignatureSymbol))
@@ -124,7 +125,7 @@ public static class CodeGenUtils
             signatureSymbolsList.Add(paramSignatureSymbol);
         }
 
-        signatureSymbols = signatureSymbolsList.ToArray();
+        signatureSymbols = signatureSymbolsList;
         return true;
     }
 
@@ -781,5 +782,10 @@ public static class CodeGenUtils
     public static BlockSyntax AddStatements(this BlockSyntax block, SyntaxList<StatementSyntax> statements)
     {
         return block.WithStatements(block.Statements.AddRange(statements));
+    }
+
+    public static int HashCombine(int a, int b)
+    {
+        return unchecked((a * 397) ^ b);
     }
 }
