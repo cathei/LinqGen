@@ -6,7 +6,7 @@ using System.Linq;
 namespace Cathei.LinqGen.Generator;
 
 // Not supported in current Unity version
-[Generator]
+[Generator(LanguageNames.CSharp)]
 public class LinqGenIncrementalGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
@@ -255,6 +255,6 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
         var generationToRender = generations[dependency.Expression.SignatureSymbol!];
         var sourceText = FileTemplate.Render(generationToRender.Render());
 
-        context.AddSource($"LinqGen.{generationToRender.FileName}.g.cs", sourceText);
+        context.AddSource($"LinqGen.{generationToRender.FileName}", sourceText);
     }
 }
