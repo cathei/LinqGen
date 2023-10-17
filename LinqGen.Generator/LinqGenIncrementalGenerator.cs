@@ -51,6 +51,9 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
             .SelectMany(static (x, _) => CreateDependencies(x.Left, x.Right))
             .WithTrackingName("Dependencies");
 
+        var diagnostics = generations.Combine(evaluations);
+
+        context.RegisterSourceOutput(diagnostics, ReportDiagnostics);
         context.RegisterSourceOutput(dependencies, Render);
     }
 
@@ -209,6 +212,20 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
 
             CollectUpwardDependencies(upstream, generations, result);
         }
+    }
+
+    private static readonly DiagnosticDescriptor GenerationTriggerDiagnostic = new(
+        "LQ0001", "LinqGen Incremental Generation Triggered",
+        "Found Generation: {0}, Evaluation: {1}", "LinqGen",
+        DiagnosticSeverity.Info, true);
+
+    private static void ReportDiagnostics(SourceProductionContext context,
+        (ImmutableDictionary<SymbolKey, LinqGenExpression>, ImmutableDictionary<EvaluationKey, LinqGenExpression>) pair)
+    {
+        var (generations, evaluations) = pair;
+
+        context.ReportDiagnostic(Diagnostic.Create(
+            GenerationTriggerDiagnostic, null, generations.Count, evaluations.Count));
     }
 
     private static void Render(SourceProductionContext context, LinqGenExpressionDependency dependency)
