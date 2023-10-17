@@ -53,8 +53,9 @@ public class ImmutableDictionaryComparer<TKey, TValue> : IEqualityComparer<Immut
 
         foreach (var pair in dict)
         {
-            hash = HashCombine(hash, KeyComparer.GetHashCode(pair.Key));
-            hash = HashCombine(hash, ValueComparer.GetHashCode(pair.Value));
+            // Just XOR to get same result with same set
+            hash ^= KeyComparer.GetHashCode(pair.Key);
+            hash ^= ValueComparer.GetHashCode(pair.Value);
         }
 
         return hash;

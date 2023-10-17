@@ -130,6 +130,8 @@ public readonly struct LinqGenExpression : IEquatable<LinqGenExpression>
             return false;
         }
 
+        upstreamSignatureSymbol = NormalizeSignature(upstreamSignatureSymbol);
+
         result = new LinqGenExpression(
             methodSymbol, null, inputElementSymbol, ImmutableArray.Create(upstreamSignatureSymbol));
 
