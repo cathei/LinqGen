@@ -28,4 +28,9 @@ public readonly struct EvaluationKey : IEquatable<EvaluationKey>
     {
         return (SignatureSymbol, MethodSymbol, InputElementSymbol).GetHashCode();
     }
+
+    public override string ToString()
+    {
+        return string.Join(" ", SignatureSymbol.ToString(), MethodSymbol.ToString(), InputElementSymbol.ToString());
+    }
 }

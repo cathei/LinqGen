@@ -12,19 +12,17 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var compilation = context.CompilationProvider
-            .Select(static (comp, _) => new CompilationCache(comp))
-            .WithTrackingName("Compilation");
+        // *Caveat* Even though we are specifying tracking name,
+        // CodeAnalysis 4.1.0 left out (modified, added) state from single to many.
+        // So we cannot support GeneratorDriverOptions.TrackIncrementalGeneratorSteps at this time.
+        // See https://github.com/dotnet/roslyn/pull/61308
 
-        var nodes = context.SyntaxProvider
+        var expressions = context.SyntaxProvider
             .CreateSyntaxProvider(
-                static (node, _) => ExpressionPredicate(node), static (ctx, _) => ctx.Node)
-            .WithTrackingName("Nodes");
-
-        var expressions = nodes.Combine(compilation)
-            .Select(static (x, _) => ExpressionTransform(x.Right, x.Left))
-            .Collect()
-            .SelectMany(static (x, _) => DistinctExpression(x))
+                static (node, _) => ExpressionPredicate(node),
+                static (ctx, _) => ExpressionTransform(ctx.SemanticModel, ctx.Node))
+            .Where(static x => x != null)
+            .Select(static (x, _) => x!.Value)
             .WithTrackingName("Expressions");
 
         var generations = expressions
@@ -49,17 +47,8 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
                 EqualityComparer<SymbolKey>.Default, ImmutableArrayComparer<LinqGenExpression>.Default))
             .WithTrackingName("Downstream");
 
-        // var dependencies = generations.Combine(downstream)
-        //     .SelectMany(static (x, _) => CreateDependencies(x.Left, x.Right))
-        //     .WithTrackingName("Dependencies");
-
-        // This is bit dumb but CodeAnalysis 4.1.0 left out (modified, added) state.
-        // See https://github.com/dotnet/roslyn/pull/61308
-        var dependencies = expressions
-            .Where(x => x.IsCompilingGeneration())
-            .Combine(generations)
-            .Combine(downstream)
-            .Select(static (x, _) => CreateDependency(x.Left.Left, x.Left.Right, x.Right))
+        var dependencies = generations.Combine(downstream)
+            .SelectMany(static (x, _) => CreateDependencies(x.Left, x.Right))
             .WithTrackingName("Dependencies");
 
         context.RegisterSourceOutput(dependencies, Render);
@@ -69,18 +58,9 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
     {
         unchecked
         {
-            string str;
-
-            if (expr.IsCompilingGeneration())
-            {
-                str = expr.SignatureSymbol!
-                    .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-            }
-            else
-            {
-                str = expr.UpstreamSignatureSymbols[0]
-                    .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-            }
+            string str = expr.IsCompilingGeneration()
+                ? expr.GenerationKey.ToString()
+                : expr.EvaluationKey.ToString();
 
             int hash = 0;
 
@@ -101,10 +81,8 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
             CommonForEachStatementSyntax;
     }
 
-    private static LinqGenExpression? ExpressionTransform(in CompilationCache compilation, SyntaxNode node)
+    private static LinqGenExpression? ExpressionTransform(SemanticModel model, SyntaxNode node)
     {
-        var model = compilation.GetSemanticModel(node.SyntaxTree);
-
         if (node is InvocationExpressionSyntax invocationSyntax)
         {
             if (LinqGenExpression.TryParse(model, invocationSyntax, out var expression))
@@ -123,11 +101,6 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
         return null;
     }
 
-    private static IEnumerable<LinqGenExpression> DistinctExpression(in ImmutableArray<LinqGenExpression?> expressions)
-    {
-        return expressions.Where(x => x != null).Select(x => x!.Value).Distinct();
-    }
-
     private static ImmutableDictionary<SymbolKey, LinqGenExpression> CreateGenerationDictionary(
         in ImmutableArray<LinqGenExpression> expressions)
     {
@@ -136,10 +109,7 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
         foreach (var expr in expressions)
         {
             if (builder.ContainsKey(expr.GenerationKey))
-            {
-                // already registered
                 continue;
-            }
 
             builder.Add(expr.GenerationKey, expr);
         }
@@ -154,15 +124,10 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
 
         foreach (var expr in expressions)
         {
-            var key = expr.EvaluationKey;
-
-            if (builder.ContainsKey(key))
-            {
-                // already registered
+            if (builder.ContainsKey(expr.EvaluationKey))
                 continue;
-            }
 
-            builder.Add(key, expr);
+            builder.Add(expr.EvaluationKey, expr);
         }
 
         return builder.ToImmutable();
@@ -198,46 +163,29 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
             x => x.Value.ToImmutable());
     }
 
-    // private static IEnumerable<LinqGenExpressionDependency> CreateDependencies(
-    //     ImmutableDictionary<SymbolKey, LinqGenExpression> generations,
-    //     ImmutableDictionary<SymbolKey, ImmutableArray<LinqGenExpression>> downstream)
-    // {
-    //     var hashSet = new HashSet<LinqGenExpression>();
-    //
-    //     foreach (var pair in generations)
-    //     {
-    //         hashSet.Clear();
-    //         hashSet.Add(pair.Value);
-    //         CollectUpwardDependencies(pair.Value, generations, hashSet);
-    //
-    //         foreach (var expression in downstream[pair.Key])
-    //         {
-    //             hashSet.Add(expression);
-    //             CollectUpwardDependencies(expression, generations, hashSet);
-    //         }
-    //
-    //         yield return new LinqGenExpressionDependency(pair.Value, hashSet.ToImmutableArray());
-    //     }
-    // }
-
-    private static LinqGenExpressionDependency CreateDependency(
-        in LinqGenExpression generation,
+    private static ImmutableArray<LinqGenExpressionDependency> CreateDependencies(
         ImmutableDictionary<SymbolKey, LinqGenExpression> generations,
         ImmutableDictionary<SymbolKey, ImmutableArray<LinqGenExpression>> downstream)
     {
         var hashSet = new HashSet<LinqGenExpression>();
+        var builder = ImmutableArray.CreateBuilder<LinqGenExpressionDependency>();
 
-        hashSet.Clear();
-        hashSet.Add(generation);
-        CollectUpwardDependencies(generation, generations, hashSet);
-
-        foreach (var expression in downstream[generation.GenerationKey])
+        foreach (var pair in generations)
         {
-            hashSet.Add(expression);
-            CollectUpwardDependencies(expression, generations, hashSet);
+            hashSet.Clear();
+            hashSet.Add(pair.Value);
+            CollectUpwardDependencies(pair.Value, generations, hashSet);
+
+            foreach (var expression in downstream[pair.Key])
+            {
+                hashSet.Add(expression);
+                CollectUpwardDependencies(expression, generations, hashSet);
+            }
+
+            builder.Add(new LinqGenExpressionDependency(pair.Value, hashSet.ToImmutableArray()));
         }
 
-        return new LinqGenExpressionDependency(generation, hashSet.ToImmutableArray());
+        return builder.ToImmutable();
     }
 
     private static void CollectUpwardDependencies(
@@ -315,22 +263,6 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
         var generationToRender = generations[dependency.Expression.GenerationKey];
         var sourceText = FileTemplate.Render(generationToRender.Render());
 
-        context.ReportDiagnostic(Diagnostic.Create(
-            new DiagnosticDescriptor("AAA", $"{generationToRender.FileName}",
-                $"I am generating {dependency.Expression.SignatureSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}",
-                "LinqGen.Generation",
-                DiagnosticSeverity.Error,
-                true), null));
-
-        // try
-        // {
         context.AddSource($"LinqGen.{generationToRender.FileName}", sourceText);
-        // }
-        // catch (Exception ex)
-        // {
-        //     throw new Exception($"I am generating {dependency.Expression.SignatureSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}" +
-        //                         $"-> {GenerateStableId(dependency.Expression)} -> {ex.Message}",
-        //         ex);
-        // }
     }
 }

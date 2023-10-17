@@ -29,4 +29,9 @@ public readonly struct SymbolKey : IEquatable<SymbolKey>
     {
         return SymbolComparer.GetHashCode(Symbol);
     }
+
+    public override string ToString()
+    {
+        return Symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+    }
 }

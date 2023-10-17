@@ -24,11 +24,18 @@ void ReportErrors(ImmutableArray<Diagnostic> diagnostics)
 
 GeneratorDriver driver = CSharpGeneratorDriver.Create(
     new [] { new LinqGenIncrementalGenerator().AsSourceGenerator() }, null, null, null,
-    new GeneratorDriverOptions(IncrementalGeneratorOutputKind.None, true));
+    new GeneratorDriverOptions(IncrementalGeneratorOutputKind.None, false /* true */));
 
 var systemAssembly = typeof(int).Assembly;
 var systemRuntimeAssembly = FindAssembly("System.Runtime");
 var linqGenAssembly = typeof(Gen).Assembly;
+
+MetadataReference[] asmRefs =
+{
+    MetadataReference.CreateFromFile(systemAssembly.Location),
+    MetadataReference.CreateFromFile(systemRuntimeAssembly.Location),
+    MetadataReference.CreateFromFile(linqGenAssembly.Location)
+};
 
 SyntaxTree synTree1 = CSharpSyntaxTree.ParseText("""
 using Cathei.LinqGen;
@@ -51,24 +58,6 @@ public static class MyClass1
     }
 }
 """, CSharpParseOptions.Default, "MyClass1.cs");
-
-MetadataReference[] asmRefs =
-{
-    MetadataReference.CreateFromFile(systemAssembly.Location),
-    MetadataReference.CreateFromFile(systemRuntimeAssembly.Location),
-    MetadataReference.CreateFromFile(linqGenAssembly.Location)
-};
-
-Compilation comp = CSharpCompilation.Create(
-    "LinqGen.Test.Incremental", new [] { synTree1 },
-    asmRefs,
-    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-
-ReportErrors(comp.GetDiagnostics());
-
-// Run the generators once to set up the baseline cached results.
-// driver = driver.RunGeneratorsAndUpdateCompilation(comp, out comp, out _);
-driver = driver.RunGenerators(comp);
 
 SyntaxTree synTree2 = CSharpSyntaxTree.ParseText("""
 using Cathei.LinqGen;
@@ -94,24 +83,22 @@ public static class MyClass2
 }
 """, CSharpParseOptions.Default, "MyClass2.cs");
 
+Compilation comp = CSharpCompilation.Create(
+    "LinqGen.Test.Incremental", new [] { synTree1 },
+    asmRefs,
+    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+// Run the generators once to set up the baseline cached results.
+driver = driver.RunGenerators(comp);
+
 comp = comp.AddSyntaxTrees(synTree2);
-// driver = driver.RunGeneratorsAndUpdateCompilation(comp, out comp, out _);
 driver = driver.RunGenerators(comp);
 
-ReportErrors(comp.GetDiagnostics());
+comp = comp.RemoveSyntaxTrees(synTree1);
+driver = driver.RunGenerators(comp);
 
 driver = driver.RunGenerators(comp);
-// driver = driver.RunGeneratorsAndUpdateCompilation(comp, out comp, out _);
-
-ReportErrors(comp.GetDiagnostics());
-
 driver = driver.RunGenerators(comp);
-// driver = driver.RunGeneratorsAndUpdateCompilation(comp, out comp, out _);
-
-ReportErrors(comp.GetDiagnostics());
-
-driver = driver.RunGenerators(comp);
-// driver = driver.RunGeneratorsAndUpdateCompilation(comp, out comp, out _);
 
 ReportErrors(comp.GetDiagnostics());
 
