@@ -10,10 +10,9 @@ public readonly struct LinqGenExpressionDependency : IEquatable<LinqGenExpressio
     public readonly LinqGenExpression Expression;
     public readonly ImmutableArray<LinqGenExpression> Dependencies;
 
-    /// logic
-    /// consider all nested upstreams
-    /// consider direct downstream and its all additional nested upstreams
-
+    /// Dependencies of single expression.
+    /// Consider all nested upstreams.
+    /// Consider direct downstream and its all additional nested upstreams.
     public LinqGenExpressionDependency(
         in LinqGenExpression expression,
         in ImmutableArray<LinqGenExpression> dependencies)
@@ -24,8 +23,19 @@ public readonly struct LinqGenExpressionDependency : IEquatable<LinqGenExpressio
 
     public bool Equals(LinqGenExpressionDependency other)
     {
-        return Expression.Equals(other.Expression) &&
-               ImmutableArrayComparer<LinqGenExpression>.Default.Equals(Dependencies, other.Dependencies);
+        if (!Expression.Equals(other.Expression))
+            return false;
+
+        if (Dependencies.Length != other.Dependencies.Length)
+            return false;
+
+        for (int i = 0; i < Dependencies.Length; ++i)
+        {
+            if (!Dependencies[i].Equals(other.Dependencies[i]))
+                return false;
+        }
+
+        return true;
     }
 
     public override bool Equals(object? obj)
@@ -35,8 +45,6 @@ public readonly struct LinqGenExpressionDependency : IEquatable<LinqGenExpressio
 
     public override int GetHashCode()
     {
-        return HashCombine(
-            Expression.GetHashCode(),
-            ImmutableArrayComparer<LinqGenExpression>.Default.GetHashCode(Dependencies));
+        return Expression.GetHashCode();
     }
 }

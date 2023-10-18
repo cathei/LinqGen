@@ -28,26 +28,18 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
         var generations = expressions
             .Where(static x => x.IsCompilingGeneration())
             .Collect()
-            .WithComparer(ImmutableArrayComparer<LinqGenExpression>.Default)
-            .Select(static (x, _) => CreateGenerationDictionary(x))
-            .WithComparer(ImmutableDictionaryComparer<SymbolKey, LinqGenExpression>.Default)
+            .Select(static (x, _) => x.ToImmutableHashSet())
+            .WithComparer(ImmutableHashSetComparer<LinqGenExpression>.Default)
             .WithTrackingName("Generations");
 
         var evaluations = expressions
             .Where(static x => !x.IsCompilingGeneration())
             .Collect()
-            .WithComparer(ImmutableArrayComparer<LinqGenExpression>.Default)
-            .Select(static (x, _) => CreateEvaluationDictionary(x))
-            .WithComparer(ImmutableDictionaryComparer<EvaluationKey, LinqGenExpression>.Default)
+            .Select(static (x, _) => x.ToImmutableHashSet())
+            .WithComparer(ImmutableHashSetComparer<LinqGenExpression>.Default)
             .WithTrackingName("Evaluations");
 
-        var downstream = generations.Combine(evaluations)
-            .Select(static (x, _) => CreateDownstreamDictionary(x.Left, x.Right))
-            .WithComparer(new ImmutableDictionaryComparer<SymbolKey, ImmutableArray<LinqGenExpression>>(
-                EqualityComparer<SymbolKey>.Default, ImmutableArrayComparer<LinqGenExpression>.Default))
-            .WithTrackingName("Downstream");
-
-        var dependencies = generations.Combine(downstream)
+        var dependencies = generations.Combine(evaluations)
             .SelectMany(static (x, _) => CreateDependencies(x.Left, x.Right))
             .WithTrackingName("Dependencies");
 
@@ -105,102 +97,86 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
     }
 
     private static ImmutableDictionary<SymbolKey, LinqGenExpression> CreateGenerationDictionary(
-        in ImmutableArray<LinqGenExpression> expressions)
+        ImmutableHashSet<LinqGenExpression> expressions)
     {
-        var builder = ImmutableDictionary.CreateBuilder<SymbolKey, LinqGenExpression>();
-
-        foreach (var expr in expressions)
-        {
-            if (builder.ContainsKey(expr.GenerationKey))
-                continue;
-
-            builder.Add(expr.GenerationKey, expr);
-        }
-
-        return builder.ToImmutable();
+        return expressions.ToImmutableDictionary(static x => x.GenerationKey);
     }
 
     private static ImmutableDictionary<EvaluationKey, LinqGenExpression> CreateEvaluationDictionary(
-        in ImmutableArray<LinqGenExpression> expressions)
+        ImmutableHashSet<LinqGenExpression> expressions)
     {
-        var builder = ImmutableDictionary.CreateBuilder<EvaluationKey, LinqGenExpression>();
-
-        foreach (var expr in expressions)
-        {
-            if (builder.ContainsKey(expr.EvaluationKey))
-                continue;
-
-            builder.Add(expr.EvaluationKey, expr);
-        }
-
-        return builder.ToImmutable();
+        return expressions.ToImmutableDictionary(static x => x.EvaluationKey);
     }
 
-    private static ImmutableDictionary<SymbolKey, ImmutableArray<LinqGenExpression>> CreateDownstreamDictionary(
-        ImmutableDictionary<SymbolKey, LinqGenExpression> generations,
-        ImmutableDictionary<EvaluationKey, LinqGenExpression> evaluations)
+    private static Dictionary<SymbolKey, (LinqGenExpression, List<LinqGenExpression>)> CreateDownstreamDictionary(
+        ImmutableHashSet<LinqGenExpression> generations,
+        ImmutableHashSet<LinqGenExpression> evaluations)
     {
         var downstream = generations.ToDictionary(
-            static x => x.Key,
-            static _ => ImmutableArray.CreateBuilder<LinqGenExpression>());
+            static x => x.GenerationKey,
+            static x => (Expr: x, List: new List<LinqGenExpression>()));
 
-        foreach (var generation in generations.Values)
+        foreach (var generation in generations)
         {
             if (generation.UpstreamSignatureSymbols.IsEmpty)
                 continue;
 
             // only first upstream depends on downstream
-            if (downstream.TryGetValue(new(generation.UpstreamSignatureSymbols[0]), out var builder))
-                builder.Add(generation);
+            if (downstream.TryGetValue(new(generation.UpstreamSignatureSymbols[0]), out var tuple))
+                tuple.List.Add(generation);
         }
 
-        foreach (var evaluation in evaluations.Values)
+        foreach (var evaluation in evaluations)
         {
             // only first upstream depends on downstream
-            if (downstream.TryGetValue(new(evaluation.UpstreamSignatureSymbols[0]), out var builder))
-                builder.Add(evaluation);
+            if (downstream.TryGetValue(new(evaluation.UpstreamSignatureSymbols[0]), out var tuple))
+                tuple.List.Add(evaluation);
         }
 
-        return downstream.ToImmutableDictionary(
-            x => x.Key,
-            x => x.Value.ToImmutable());
+        return downstream;
     }
 
     private static ImmutableArray<LinqGenExpressionDependency> CreateDependencies(
-        ImmutableDictionary<SymbolKey, LinqGenExpression> generations,
-        ImmutableDictionary<SymbolKey, ImmutableArray<LinqGenExpression>> downstream)
+        ImmutableHashSet<LinqGenExpression> generations,
+        ImmutableHashSet<LinqGenExpression> evaluations)
     {
+        var downstream = CreateDownstreamDictionary(generations, evaluations);
+
         var hashSet = new HashSet<LinqGenExpression>();
-        var builder = ImmutableArray.CreateBuilder<LinqGenExpressionDependency>();
+        var builder = ImmutableArray.CreateBuilder<LinqGenExpressionDependency>(generations.Count);
 
-        foreach (var pair in generations)
+        foreach (var pair in downstream)
         {
-            hashSet.Clear();
-            hashSet.Add(pair.Value);
-            CollectUpwardDependencies(pair.Value, generations, hashSet);
+            var (expr, list) = pair.Value;
 
-            foreach (var expression in downstream[pair.Key])
+            hashSet.Clear();
+            hashSet.Add(expr);
+            CollectUpwardDependencies(expr, downstream, hashSet);
+
+            foreach (var child in list)
             {
-                hashSet.Add(expression);
-                CollectUpwardDependencies(expression, generations, hashSet);
+                hashSet.Add(child);
+                CollectUpwardDependencies(child, downstream, hashSet);
             }
 
-            builder.Add(new LinqGenExpressionDependency(pair.Value, hashSet.ToImmutableArray()));
+            builder.Add(new LinqGenExpressionDependency(expr, hashSet.ToImmutableArray()));
         }
 
-        return builder.ToImmutable();
+        return builder.MoveToImmutable();
     }
 
     private static void CollectUpwardDependencies(
         in LinqGenExpression current,
-        ImmutableDictionary<SymbolKey, LinqGenExpression> generations,
+        Dictionary<SymbolKey, (LinqGenExpression, List<LinqGenExpression>)> downstream,
         HashSet<LinqGenExpression> result)
     {
         foreach (var symbol in current.UpstreamSignatureSymbols)
         {
             // failed to find upstream
-            if (!generations.TryGetValue(new(symbol), out var upstream))
+            if (!downstream.TryGetValue(new(symbol), out var tuple))
                 continue;
+
+            var (upstream, _) = tuple;
 
             // result already been added
             if (!result.Add(upstream))
@@ -210,7 +186,7 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
             if (upstream.UpstreamSignatureSymbols.IsEmpty)
                 continue;
 
-            CollectUpwardDependencies(upstream, generations, result);
+            CollectUpwardDependencies(upstream, downstream, result);
         }
     }
 
@@ -220,7 +196,7 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
         DiagnosticSeverity.Info, true);
 
     private static void ReportDiagnostics(SourceProductionContext context,
-        (ImmutableDictionary<SymbolKey, LinqGenExpression>, ImmutableDictionary<EvaluationKey, LinqGenExpression>) pair)
+        (ImmutableHashSet<LinqGenExpression>, ImmutableHashSet<LinqGenExpression>) pair)
     {
         var (generations, evaluations) = pair;
 
