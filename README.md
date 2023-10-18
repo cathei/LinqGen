@@ -10,12 +10,12 @@ LinqGen is project to optimize Linq queries using source generation of user code
 It aims to make allocation-free, specialized Linq queries per your type.
 
 ## Install
-Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as library and [LinqGen.Generator](https://www.nuget.org/packages/LinqGen.Generator) as source generator.
+Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as library and [LinqGen.Generator](https://www.nuget.org/packages/LinqGen.Generator) as incremental source generator.
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="LinqGen" Version="0.2.6" />
-    <PackageReference Include="LinqGen.Generator" Version="0.2.6" />
+    <PackageReference Include="LinqGen" Version="0.3.0" />
+    <PackageReference Include="LinqGen.Generator" Version="0.3.0" />
 </ItemGroup>
 ```
 
