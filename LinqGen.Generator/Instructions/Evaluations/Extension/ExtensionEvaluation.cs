@@ -5,7 +5,8 @@ using System.Linq;
 namespace Cathei.LinqGen.Generator;
 
 /// <summary>
-/// Visitor evaluation is used for extension methods to not expose private variables.
+/// Evaluations implemented with extension method.
+/// Used when element type needs to be known, otherwise should prefer LocalEvaluation.
 /// </summary>
 public abstract class ExtensionEvaluation : Evaluation
 {

@@ -302,6 +302,9 @@ public static class InstructionFactory
             case "Sum":
                 return new SumEvaluation(expression, id);
 
+            case "Aggregate":
+                return new AggregateEvaluation(expression, id);
+
             case "Min":
                 return new MinMaxEvaluation(expression, id, true, false);
 

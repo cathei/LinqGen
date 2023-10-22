@@ -10,7 +10,7 @@ public sealed class CountEvaluation : ExtensionEvaluation
     {
         if (MethodSymbol.Parameters.Length >= 1)
         {
-            // Sum with a parameter uses selector
+            // Count with a parameter uses selector
             var parameterType = MethodSymbol.Parameters[0].Type;
             PredicatorKind = IsStructFunction(parameterType) ? FunctionKind.Struct : FunctionKind.Delegate;
         }

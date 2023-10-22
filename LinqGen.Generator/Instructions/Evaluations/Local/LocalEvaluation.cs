@@ -55,7 +55,6 @@ public abstract class LocalEvaluation : Evaluation
         var takeVar = supportPartition ? TakeExpression : null;
 
         var copyName = IdentifierName("copy");
-        var contextName = IdentifierName("context");
         var copyRewriter = new ThisPlaceholderRewriter(copyName, string.Empty);
 
         var initialDeclarations = new List<StatementSyntax>
