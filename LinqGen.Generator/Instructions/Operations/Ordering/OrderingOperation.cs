@@ -165,7 +165,6 @@ public abstract class OrderingOperation : Operation
         var rootUpstream = RootOrder.Upstream;
 
         var contextName = $"{IterPlaceholder}c{Id}_";
-
         var initStatements = new List<StatementSyntax>();
 
         initStatements.AddRange(rootUpstream.GetLocalDeclarations(MemberKind.Enumerator));

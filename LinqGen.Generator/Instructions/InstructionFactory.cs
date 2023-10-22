@@ -113,6 +113,9 @@ public static class InstructionFactory
             case "Take":
                 return new TakeOperation(expression, id);
 
+            case "TakeLast":
+                return new TakeLastOperation(expression, id);
+
             case "SkipWhile":
                 return new SkipWhileOperation(expression, id, false, false);
 
@@ -361,5 +364,4 @@ public static class InstructionFactory
 
         return null;
     }
-
 }

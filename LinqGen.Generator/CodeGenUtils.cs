@@ -158,6 +158,7 @@ public static class CodeGenUtils
     public static readonly IdentifierNameSyntax CompareMethod = IdentifierName("Compare");
     public static readonly IdentifierNameSyntax CompareToMethod = IdentifierName("CompareTo");
     public static readonly IdentifierNameSyntax VisitMethod = IdentifierName("Visit");
+    public static readonly IdentifierNameSyntax EnqueueMethod = IdentifierName("Enqueue");
 
     // known property names
     public static readonly IdentifierNameSyntax CurrentProperty = IdentifierName("Current");
@@ -591,6 +592,12 @@ public static class CodeGenUtils
     {
         return GenericName(Identifier(isUnmanaged ? "PooledDictionaryNative" : "PooledDictionaryManaged"),
             TypeArgumentList(keyType, elementType, comparerType));
+    }
+
+    public static TypeSyntax PooledQueueType(TypeSyntax elementType, bool isUnmanaged)
+    {
+        return GenericName(Identifier(isUnmanaged ? "PooledQueueNative" : "PooledQueueManaged"),
+            TypeArgumentList(elementType));
     }
 
     public static TypeSyntax GroupingType(TypeSyntax keyType, TypeSyntax elementType, bool isUnmanaged)

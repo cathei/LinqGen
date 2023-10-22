@@ -88,69 +88,69 @@ public class ListVsPooledList
         return buffer;
     }
 
-    // [Benchmark(Baseline = true)]
-    // public int[] Linq()
-    // {
-    //     return TestData
-    //         .Select(x=> x * 2)
-    //         .ToArray();
-    // }
-    //
-    // [Benchmark]
-    // public int[] LinqGenDelegate()
-    // {
-    //     return TestData
-    //         .Gen()
-    //         .Select(x => x * 2)
-    //         .ToArray();
-    // }
-    //
-    // [Benchmark]
-    // public int[] LinqGenStruct()
-    // {
-    //     return TestData
-    //         .Gen()
-    //         .Select(new Selector())
-    //         .ToArray();
-    // }
-    //
-    // [Benchmark]
-    // public int[] StructLinqDelegate()
-    // {
-    //     return TestData
-    //         .ToStructEnumerable()
-    //         .Select(x => x * 2)
-    //         .ToArray();
-    // }
-    //
-    // [Benchmark]
-    // public int[] StructLinqStruct()
-    // {
-    //     var selector = new Selector();
-    //
-    //     return TestData
-    //         .ToStructEnumerable()
-    //         .Select(ref selector, x => x, x => x)
-    //         .ToArray(x => x);
-    // }
-    //
-    // [Benchmark]
-    // public int[] HyperLinqDelegate()
-    // {
-    //     return TestData
-    //         .AsValueEnumerable()
-    //         .Select(x => x * 2)
-    //         .ToArray();
-    // }
-    //
-    // [Benchmark]
-    // public int[] HyperLinqStruct()
-    // {
-    //     return TestData
-    //         .AsValueEnumerable()
-    //         .Select<int, Selector>()
-    //         .ToArray();
-    // }
+    [Benchmark(Baseline = true)]
+    public int[] Linq()
+    {
+        return TestData
+            .Select(x=> x * 2)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public int[] LinqGenDelegate()
+    {
+        return TestData
+            .Gen()
+            .Select(x => x * 2)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public int[] LinqGenStruct()
+    {
+        return TestData
+            .Gen()
+            .Select(new Selector())
+            .ToArray();
+    }
+
+    [Benchmark]
+    public int[] StructLinqDelegate()
+    {
+        return TestData
+            .ToStructEnumerable()
+            .Select(x => x * 2)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public int[] StructLinqStruct()
+    {
+        var selector = new Selector();
+
+        return TestData
+            .ToStructEnumerable()
+            .Select(ref selector, x => x, x => x)
+            .ToArray(x => x);
+    }
+
+    [Benchmark]
+    public int[] HyperLinqDelegate()
+    {
+        return TestData
+            .AsValueEnumerable()
+            .Select(x => x * 2)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public int[] HyperLinqStruct()
+    {
+        return TestData
+            .AsValueEnumerable()
+            .Select<int, Selector>()
+            .ToArray();
+    }
 
     readonly struct Selector :
         StructLinq.IFunction<int, int>,
