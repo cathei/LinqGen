@@ -48,11 +48,26 @@ public struct RefIntMinusEvenPredicate : IStructFunction<ReferenceInt, int, bool
     }
 }
 
-public struct RefIntAddSelector : IStructFunction<ReferenceInt, int, ReferenceInt>
+public struct RefIntAddIndexSelector : IStructFunction<ReferenceInt, int, ReferenceInt>
 {
     public ReferenceInt Invoke(ReferenceInt arg, int index)
     {
         return arg + index;
+    }
+}
+
+public struct RefIntAddSelector :
+    IStructFunction<ReferenceInt, int, ReferenceInt>,
+    IStructFunction<ReferenceInt, ReferenceInt, ReferenceInt>
+{
+    public ReferenceInt Invoke(ReferenceInt arg1, int arg2)
+    {
+        return arg1 + arg2;
+    }
+
+    public ReferenceInt Invoke(ReferenceInt arg1, ReferenceInt arg2)
+    {
+        return arg1 + arg2;
     }
 }
 

@@ -26,7 +26,7 @@
         ("Select", "Select(x => x * 2)", "Select(x => x * 2)", intSources),
         ("SelectStruct", "Select(x => x * 2)", "Select(new {1}DoubleSelector())", intSources),
         ("SelectAt", "Select((x, i) => x + i)", "Select((x, i) => x + i)", intSources),
-        ("SelectAtStruct", "Select((x, i) => x + i)", "Select(new {1}AddSelector())", intSources),
+        ("SelectAtStruct", "Select((x, i) => x + i)", "Select(new {1}AddIndexSelector())", intSources),
         ("Where", "Where(x => x % 2 == 0)", "Where(x => x % 2 == 0)", intSources),
         ("WhereStruct", "Where(x => x % 2 == 0)", "Where(new {1}EvenPredicate())", intSources),
         ("WhereAt", "Where((x, i) => (x - i) % 2 == 0)", "Where((x, i) => (x - i) % 2 == 0)", intSources),

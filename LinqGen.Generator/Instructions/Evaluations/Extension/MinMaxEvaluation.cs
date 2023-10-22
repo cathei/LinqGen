@@ -25,10 +25,10 @@ public sealed class MinMaxEvaluation : ExtensionEvaluation
             KeySymbol = parameterType.TypeArguments[1];
             KeyType = ParseTypeName(KeySymbol);
 
-            if (parameterType.Name == "Func")
-                KeySelectorKind = FunctionKind.Delegate;
-            else
+            if (IsStructFunction(parameterType))
                 KeySelectorKind = FunctionKind.Struct;
+            else
+                KeySelectorKind = FunctionKind.Delegate;
 
             if (expression.MethodSymbol.Parameters.Length == 2)
                 ComparerKind = ComparerKind.Struct;

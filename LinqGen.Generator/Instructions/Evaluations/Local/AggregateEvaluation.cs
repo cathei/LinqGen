@@ -35,7 +35,10 @@ public sealed class AggregateEvaluation : LocalEvaluation
     protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
     {
         if (WithStruct)
-            yield return new(TypeName("Selector"), SelectorType);
+        {
+            yield return new(TypeName("Selector"),
+                StructFunctionInterfaceType(ReturnType, Upstream.OutputElementType, ReturnType));
+        }
     }
 
     protected override IEnumerable<ParameterInfo> GetParameterInfos()

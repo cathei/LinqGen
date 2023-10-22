@@ -48,6 +48,14 @@ public struct MinusEvenPredicate : IStructFunction<int, int, bool>
     }
 }
 
+public struct AddIndexSelector : IStructFunction<int, int, int>
+{
+    public int Invoke(int arg, int index)
+    {
+        return arg + index;
+    }
+}
+
 public struct AddSelector : IStructFunction<int, int, int>
 {
     public int Invoke(int arg, int index)

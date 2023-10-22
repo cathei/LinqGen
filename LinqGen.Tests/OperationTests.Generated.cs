@@ -693,7 +693,7 @@ public class SelectAtStruct_Tests
 
         var actual = TestData.IntEmpty
             .Gen()
-            .Select(new AddSelector());
+            .Select(new AddIndexSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -703,7 +703,7 @@ public class SelectAtStruct_Tests
     {
         var enumerable = TestData.IntEmpty
             .Gen()
-            .Select(new AddSelector());
+            .Select(new AddIndexSelector());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -723,7 +723,7 @@ public class SelectAtStruct_Tests
 
         var actual = TestData.IntEmpty
             .Gen()
-            .Select(new AddSelector())
+            .Select(new AddIndexSelector())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -737,7 +737,7 @@ public class SelectAtStruct_Tests
 
         var actual = TestData.IntArray
             .Gen()
-            .Select(new AddSelector());
+            .Select(new AddIndexSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -747,7 +747,7 @@ public class SelectAtStruct_Tests
     {
         var enumerable = TestData.IntArray
             .Gen()
-            .Select(new AddSelector());
+            .Select(new AddIndexSelector());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -767,7 +767,7 @@ public class SelectAtStruct_Tests
 
         var actual = TestData.IntArray
             .Gen()
-            .Select(new AddSelector())
+            .Select(new AddIndexSelector())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -781,7 +781,7 @@ public class SelectAtStruct_Tests
 
         var actual = TestData.IntList
             .Gen()
-            .Select(new AddSelector());
+            .Select(new AddIndexSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -791,7 +791,7 @@ public class SelectAtStruct_Tests
     {
         var enumerable = TestData.IntList
             .Gen()
-            .Select(new AddSelector());
+            .Select(new AddIndexSelector());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -811,7 +811,7 @@ public class SelectAtStruct_Tests
 
         var actual = TestData.IntList
             .Gen()
-            .Select(new AddSelector())
+            .Select(new AddIndexSelector())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -825,7 +825,7 @@ public class SelectAtStruct_Tests
 
         var actual = TestData.IntEnumerable
             .Gen()
-            .Select(new AddSelector());
+            .Select(new AddIndexSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -835,7 +835,7 @@ public class SelectAtStruct_Tests
     {
         var enumerable = TestData.IntEnumerable
             .Gen()
-            .Select(new AddSelector());
+            .Select(new AddIndexSelector());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -855,7 +855,7 @@ public class SelectAtStruct_Tests
 
         var actual = TestData.IntEnumerable
             .Gen()
-            .Select(new AddSelector())
+            .Select(new AddIndexSelector())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -869,7 +869,7 @@ public class SelectAtStruct_Tests
 
         var actual = TestData.ReferenceIntList
             .Gen()
-            .Select(new RefIntAddSelector());
+            .Select(new RefIntAddIndexSelector());
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -879,7 +879,7 @@ public class SelectAtStruct_Tests
     {
         var enumerable = TestData.ReferenceIntList
             .Gen()
-            .Select(new RefIntAddSelector());
+            .Select(new RefIntAddIndexSelector());
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -899,7 +899,7 @@ public class SelectAtStruct_Tests
 
         var actual = TestData.ReferenceIntList
             .Gen()
-            .Select(new RefIntAddSelector())
+            .Select(new RefIntAddIndexSelector())
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
