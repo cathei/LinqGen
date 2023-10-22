@@ -14,8 +14,8 @@ Install from NuGet, both [LinqGen](https://www.nuget.org/packages/LinqGen) as li
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="LinqGen" Version="0.3.0" />
-    <PackageReference Include="LinqGen.Generator" Version="0.3.0" />
+    <PackageReference Include="LinqGen" Version="0.3.1" />
+    <PackageReference Include="LinqGen.Generator" Version="0.3.1" />
 </ItemGroup>
 ```
 
@@ -138,7 +138,8 @@ public struct Comparer : IComparer<int>
 * Select
 * Where
 * Cast, OfType
-* Skip, Take
+* Skip, Take, TakeLast
+* SkipWhile, TakeWhile
 * Distinct
 * Order, OrderBy, OrderByDescending
 * ThenBy, ThenByDescending
@@ -153,6 +154,7 @@ public struct Comparer : IComparer<int>
 * First, FirstOrDefault
 * Last, LastOrDefault
 * Count
+* Aggregate
 * Sum
   * Supports duck typing with `+` operator overload
 * Min, Max
