@@ -159,6 +159,7 @@ public static class CodeGenUtils
     public static readonly IdentifierNameSyntax CompareToMethod = IdentifierName("CompareTo");
     public static readonly IdentifierNameSyntax VisitMethod = IdentifierName("Visit");
     public static readonly IdentifierNameSyntax EnqueueMethod = IdentifierName("Enqueue");
+    public static readonly IdentifierNameSyntax DequeueMethod = IdentifierName("Dequeue");
 
     // known property names
     public static readonly IdentifierNameSyntax CurrentProperty = IdentifierName("Current");

@@ -41,8 +41,6 @@ public class TakeLastOperation : Operation
 
             yield return new MemberInfo(MemberKind.Enumerator, ElementQueueType, LocalName("elements"),
                 ObjectCreationExpression(ElementQueueType, ArgumentList(LiteralExpression(0)), null));
-
-            yield return new MemberInfo(MemberKind.Enumerator, IntType, LocalName("index"));
         }
     }
 
@@ -94,14 +92,17 @@ public class TakeLastOperation : Operation
         for (int i = 0; i < initStatements.Count; ++i)
             initStatements[i] = (StatementSyntax)thisRewriter.Visit(initStatements[i]);
 
+        // apply skip
+        if (skipVar != null)
+        {
+            initStatements.Add(ExpressionStatement(InvocationExpression(
+                MemberAccessExpression(elementsName, IdentifierName("Forward")), ArgumentList(skipVar))));
+        }
+
         // lastly access to iterator
         // initialize elements
         initStatements.Add(ExpressionStatement(SimpleAssignmentExpression(
             Iterator("elements"), elementsName)));
-
-        // initialize index
-        initStatements.Add(ExpressionStatement(SimpleAssignmentExpression(
-            Iterator("index"), SubtractExpression(skipVar ?? LiteralExpression(0), LiteralExpression(1)))));
 
         return initStatements;
     }
@@ -123,12 +124,12 @@ public class TakeLastOperation : Operation
         {
             // for optimal JIT compile it needs to be inside of while, not the condition
             IfStatement(GreaterOrEqualExpression(
-                    CastExpression(UIntType, PreIncrementExpression(Iterator("index"))),
-                    CastExpression(UIntType, MemberAccessExpression(Iterator("elements"), CountProperty))),
+                    LiteralExpression(0),
+                    MemberAccessExpression(Iterator("elements"), CountProperty)),
                 BreakStatement()),
             // set current
             LocalDeclarationStatement(
-                currentName.Identifier, ElementAccessExpression(Iterator("elements"), Iterator("index")))
+                currentName.Identifier, InvocationExpression(Iterator("elements"), DequeueMethod))
         });
 
         var result = WhileStatement(TrueExpression(), Block(statements));

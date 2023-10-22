@@ -11,34 +11,66 @@ namespace Cathei.LinqGen.Hidden
         where T : unmanaged
     {
         private DynamicArrayNative<T> _array;
-        private int _cursor;
         private int _count;
+        private int _front;
+        private int _rear;
 
         public PooledQueueNative(int capacity) : this()
         {
             _array = new DynamicArrayNative<T>(capacity);
-            _cursor = 0;
-            _count = 0;
+            _count = _front = _rear = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Enqueue(T item)
         {
             var localArray = _array;
-            int cursor = _cursor;
+            int rear = _rear;
+            int count = _count;
 
-            if ((uint)cursor < (uint)(localArray.Length - 1))
+            localArray[rear] = item;
+            _rear = ++rear == localArray.Length ? 0 : rear;
+
+            if (count == localArray.Length)
             {
-                localArray[cursor] = item;
-                _cursor += 1;
+                // push front, keeping count same
+                int front = _front;
+                _front = ++front == localArray.Length ? 0 : front;
             }
             else
             {
-                localArray[cursor] = item;
-                _cursor = 0;
+                ++_count;
             }
+        }
 
-            _count = Math.Min(_count + 1, localArray.Length);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T Dequeue()
+        {
+            var localArray = _array;
+            int front = _front;
+
+            T value = localArray[front];
+            _front = ++front == localArray.Length ? 0 : front;
+            --_count;
+
+            return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Forward(int step)
+        {
+            // drops n elements
+            var localArray = _array;
+            int front = _front;
+
+            step = Math.Min(step, _count);
+            front += step;
+
+            if (front >= localArray.Length)
+                front -= localArray.Length;
+
+            _front = front;
+            _count -= step;
         }
 
         public int Count
@@ -47,30 +79,11 @@ namespace Cathei.LinqGen.Hidden
             get => _count;
         }
 
-        public ref T this[int index]
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                var localArray = _array;
-
-                if ((uint)_count < (uint)localArray.Length)
-                    return ref localArray[index];
-
-                index += _cursor;
-
-                if ((uint)index < (uint)localArray.Length)
-                    return ref localArray[index];
-
-                return ref localArray[index - localArray.Length];
-            }
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
             _array.Dispose();
-            _cursor = _count = 0;
+            _count = _front = _rear = 0;
         }
     }
 }
