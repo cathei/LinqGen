@@ -26,8 +26,11 @@ public class PrependAppendOperation : Operation
     {
         if (skipVar != null && !IsAppend)
         {
-            yield return IfStatement(GreaterOrEqualExpression(skipVar, LiteralExpression(1)),
-                ExpressionStatement(SimpleAssignmentExpression(Iterator("processed"), TrueExpression())));
+            if (!isLocal)
+            {
+                yield return IfStatement(GreaterOrEqualExpression(skipVar, LiteralExpression(1)),
+                    ExpressionStatement(SimpleAssignmentExpression(Iterator("processed"), TrueExpression())));
+            }
 
             skipVar = MathMax(SubtractExpression(
                 ParenthesizedExpression(skipVar), LiteralExpression(1)), LiteralExpression(0));

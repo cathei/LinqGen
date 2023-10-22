@@ -71,6 +71,36 @@ public struct RefIntAddSelector :
     }
 }
 
+public struct RefIntLessThanPredicate : IStructFunction<ReferenceInt, bool>
+{
+    public RefIntLessThanPredicate(int threshold)
+    {
+        Threshold = threshold;
+    }
+
+    private int Threshold { get; }
+
+    public bool Invoke(ReferenceInt arg)
+    {
+        return arg < Threshold;
+    }
+}
+
+public struct RefIntLessThanIndexPredicate : IStructFunction<ReferenceInt, int, bool>
+{
+    public RefIntLessThanIndexPredicate(int threshold)
+    {
+        Threshold = threshold;
+    }
+
+    private int Threshold { get; }
+
+    public bool Invoke(ReferenceInt arg, int index)
+    {
+        return index < Threshold;
+    }
+}
+
 public struct RefIntStructEqualityComparer : IEqualityComparer<ReferenceInt>
 {
     public bool Equals(ReferenceInt? x, ReferenceInt? y)

@@ -64,6 +64,36 @@ public struct AddSelector : IStructFunction<int, int, int>
     }
 }
 
+public struct LessThanPredicate : IStructFunction<int, bool>
+{
+    public LessThanPredicate(int threshold)
+    {
+        Threshold = threshold;
+    }
+
+    private int Threshold { get; }
+
+    public bool Invoke(int arg)
+    {
+        return arg < Threshold;
+    }
+}
+
+public struct LessThanIndexPredicate : IStructFunction<int, int, bool>
+{
+    public LessThanIndexPredicate(int threshold)
+    {
+        Threshold = threshold;
+    }
+
+    private int Threshold { get; }
+
+    public bool Invoke(int arg, int index)
+    {
+        return index < Threshold;
+    }
+}
+
 public struct StructEqualityComparer : IEqualityComparer<int>
 {
     public bool Equals(int x, int y)

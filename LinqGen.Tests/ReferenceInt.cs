@@ -57,6 +57,16 @@ public class ReferenceInt : IEquatable<ReferenceInt>, IComparable<ReferenceInt>
         return !(x == y);
     }
 
+    public static bool operator <(ReferenceInt? x, ReferenceInt? y)
+    {
+        return x?._value < y?._value;
+    }
+
+    public static bool operator >(ReferenceInt? x, ReferenceInt? y)
+    {
+        return x?._value > y?._value;
+    }
+
     public static implicit operator ReferenceInt(int value)
     {
         return new(value);

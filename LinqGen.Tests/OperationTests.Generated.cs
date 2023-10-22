@@ -2922,6 +2922,1798 @@ public class Take_Tests
     }
 }
 [TestFixture]
+public class SkipWhile_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .SkipWhile(x => x < 10);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipWhile(x => x < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Gen()
+            .SkipWhile(x => x < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .SkipWhile(x => x < 10);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipWhile(x => x < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Gen()
+            .SkipWhile(x => x < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .SkipWhile(x => x < 10);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipWhile(x => x < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Gen()
+            .SkipWhile(x => x < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .SkipWhile(x => x < 10);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile(x => x < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile(x => x < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ReferenceIntList()
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipWhile(x => x < 10);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile(x => x < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ReferenceIntList()
+    {
+        var enumerable = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile(x => x < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class SkipWhileStruct_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .SkipWhile(x => x < 10);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .SkipWhile(x => x < 10);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .SkipWhile(x => x < 10);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .SkipWhile(x => x < 10);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ReferenceIntList()
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipWhile(x => x < 10);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile(new RefIntLessThanPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ReferenceIntList()
+    {
+        var enumerable = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile(new RefIntLessThanPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile(new RefIntLessThanPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class SkipWhileAt_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .SkipWhile((x, i) => i < 10);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipWhile((x, i) => i < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Gen()
+            .SkipWhile((x, i) => i < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .SkipWhile((x, i) => i < 10);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipWhile((x, i) => i < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Gen()
+            .SkipWhile((x, i) => i < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .SkipWhile((x, i) => i < 10);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipWhile((x, i) => i < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Gen()
+            .SkipWhile((x, i) => i < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .SkipWhile((x, i) => i < 10);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile((x, i) => i < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile((x, i) => i < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ReferenceIntList()
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipWhile((x, i) => i < 10);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile((x, i) => i < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ReferenceIntList()
+    {
+        var enumerable = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile((x, i) => i < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class SkipWhileAtStruct_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .SkipWhile((x, i) => i < 10);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .SkipWhile((x, i) => i < 10);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .SkipWhile((x, i) => i < 10);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .SkipWhile((x, i) => i < 10);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ReferenceIntList()
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipWhile((x, i) => i < 10);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile(new RefIntLessThanIndexPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ReferenceIntList()
+    {
+        var enumerable = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile(new RefIntLessThanIndexPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile(new RefIntLessThanIndexPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class TakeWhile_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .TakeWhile(x => x < 10);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeWhile(x => x < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Gen()
+            .TakeWhile(x => x < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .TakeWhile(x => x < 10);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeWhile(x => x < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Gen()
+            .TakeWhile(x => x < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .TakeWhile(x => x < 10);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeWhile(x => x < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Gen()
+            .TakeWhile(x => x < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .TakeWhile(x => x < 10);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile(x => x < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile(x => x < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ReferenceIntList()
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeWhile(x => x < 10);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile(x => x < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ReferenceIntList()
+    {
+        var enumerable = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile(x => x < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class TakeWhileStruct_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .TakeWhile(x => x < 10);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .TakeWhile(x => x < 10);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .TakeWhile(x => x < 10);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .TakeWhile(x => x < 10);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ReferenceIntList()
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeWhile(x => x < 10);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile(new RefIntLessThanPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ReferenceIntList()
+    {
+        var enumerable = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile(new RefIntLessThanPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeWhile(x => x < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile(new RefIntLessThanPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class TakeWhileAt_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .TakeWhile((x, i) => i < 10);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeWhile((x, i) => i < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Gen()
+            .TakeWhile((x, i) => i < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .TakeWhile((x, i) => i < 10);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeWhile((x, i) => i < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Gen()
+            .TakeWhile((x, i) => i < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .TakeWhile((x, i) => i < 10);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeWhile((x, i) => i < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Gen()
+            .TakeWhile((x, i) => i < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .TakeWhile((x, i) => i < 10);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile((x, i) => i < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile((x, i) => i < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ReferenceIntList()
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeWhile((x, i) => i < 10);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile((x, i) => i < 10);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ReferenceIntList()
+    {
+        var enumerable = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile((x, i) => i < 10);
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class TakeWhileAtStruct_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .TakeWhile((x, i) => i < 10);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .TakeWhile((x, i) => i < 10);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .TakeWhile((x, i) => i < 10);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .TakeWhile((x, i) => i < 10);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ReferenceIntList()
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeWhile((x, i) => i < 10);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile(new RefIntLessThanIndexPredicate(10));
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ReferenceIntList()
+    {
+        var enumerable = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile(new RefIntLessThanIndexPredicate(10));
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeWhile((x, i) => i < 10)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile(new RefIntLessThanIndexPredicate(10))
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
 public class Order_Tests
 {
 

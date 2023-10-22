@@ -50,6 +50,9 @@ public class SkipWhileOperation : Operation
 
         if (WithIndex)
             yield return new MemberInfo(MemberKind.Enumerator, IntType, LocalName("index"), LiteralExpression(-1));
+
+        if (!isLocal)
+            yield return new MemberInfo(MemberKind.Enumerator, BoolType, LocalName("processed"), FalseExpression());
     }
 
     public override bool SupportPartition => false;
@@ -57,12 +60,10 @@ public class SkipWhileOperation : Operation
     // Cannot tell count after predicate
     public override ExpressionSyntax? RenderCount() => null;
 
-    public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
-        ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
+    public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
     {
-        var initStatements = new List<StatementSyntax>();
-
-        initStatements.AddRange(base.RenderInitialization(isLocal, skipVar, takeVar));
+        if (!isLocal)
+            return base.RenderIteration(isLocal, statements);
 
         ExpressionSyntax predicateExpression =
             InvocationExpression(MemberAccessExpression(Member("predicate"), InvokeMethod),
@@ -70,9 +71,23 @@ public class SkipWhileOperation : Operation
                     ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(Iterator("index")) }
                     : new ExpressionSyntax[] { CurrentPlaceholder }));
 
-        initStatements.Add(Upstream.RenderIteration(isLocal,
-            SingletonList<StatementSyntax>(IfStatement(LogicalNotExpression(predicateExpression), BreakStatement()))));
+        var iteration = Upstream.RenderIteration(isLocal,
+            SingletonList<StatementSyntax>(IfStatement(LogicalNotExpression(predicateExpression),
+                Block(statements).AddStatements(BreakStatement()))));
 
-        return initStatements;
+        return iteration.AddStatements(Upstream.RenderIteration(isLocal, statements));
+    }
+
+    protected override StatementSyntax RenderMoveNext()
+    {
+        ExpressionSyntax predicateExpression =
+            InvocationExpression(MemberAccessExpression(Member("predicate"), InvokeMethod),
+                ArgumentList(WithIndex
+                    ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(Iterator("index")) }
+                    : new ExpressionSyntax[] { CurrentPlaceholder }));
+
+        return IfStatement(LogicalNotExpression(Iterator("processed")),
+            IfStatement(predicateExpression, ContinueStatement(),
+                ElseClause(ExpressionStatement(SimpleAssignmentExpression(Iterator("processed"), TrueExpression())))));
     }
 }
