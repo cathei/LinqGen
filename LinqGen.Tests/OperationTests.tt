@@ -185,6 +185,24 @@ public class <#= expression.title #>_Tests
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_<#= source.variable #>(int skip, int take)
+    {
+        var expected = TestData.<#= source.variable #>
+            .<#= string.Format(expression.linq, source.element, source.prefix, source.variable) #>
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.<#= source.variable #>
+            .Gen()
+            .<#= string.Format(expression.linqgen, source.element, source.prefix, source.variable) #>
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
 <#
         }
 #>

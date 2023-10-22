@@ -54,8 +54,9 @@ public class TakeLastOperation : Operation
             if (skipVar != null)
                 tempVar = ParenthesizedExpression(SubtractExpression(tempVar, skipVar));
 
-            // skip = count - (takeLast - skip))
+            // skip = Max(0, count - (takeLast - skip)))
             skipVar = SubtractExpression(ParenthesizedExpression(upstreamCount), tempVar);
+            skipVar = MathMax(LiteralExpression(0), skipVar);
 
             // take = Min(take, takeLast - skip)
             if (takeVar != null)
@@ -82,7 +83,10 @@ public class TakeLastOperation : Operation
             ExpressionStatement(InvocationExpression(
                 MemberAccessExpression(elementsName, EnqueueMethod), ArgumentList(CurrentPlaceholder))));
 
-        initStatements.AddRange(Upstream.RenderIteration(true, enqueueStatements).Statements);
+        enqueueStatements = Upstream.RenderIteration(true, enqueueStatements).Statements;
+
+        initStatements.Add(IfStatement(LessThanExpression(LiteralExpression(0), Member("take")),
+            Block(enqueueStatements)));
 
         // TODO try block
         initStatements.AddRange(Upstream.RenderDispose(true));

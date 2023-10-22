@@ -26,12 +26,11 @@ namespace Cathei.LinqGen.Hidden
         {
             var localArray = _array;
             int rear = _rear;
-            int count = _count;
 
             localArray[rear] = item;
             _rear = ++rear == localArray.Length ? 0 : rear;
 
-            if (count == localArray.Length)
+            if (_count == localArray.Length)
             {
                 // push front, keeping count same
                 int front = _front;

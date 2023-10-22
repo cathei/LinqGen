@@ -57,6 +57,24 @@ public class Select_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -97,6 +115,24 @@ public class Select_Tests
             .Gen()
             .Select(x => x * 2)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -145,6 +181,24 @@ public class Select_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -189,6 +243,24 @@ public class Select_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -229,6 +301,24 @@ public class Select_Tests
             .Gen()
             .Select(x => x * 2)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -281,6 +371,24 @@ public class SelectStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Select(new DoubleSelector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -321,6 +429,24 @@ public class SelectStruct_Tests
             .Gen()
             .Select(new DoubleSelector())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Select(new DoubleSelector())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -369,6 +495,24 @@ public class SelectStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Select(new DoubleSelector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -413,6 +557,24 @@ public class SelectStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Select(new DoubleSelector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -453,6 +615,24 @@ public class SelectStruct_Tests
             .Gen()
             .Select(new RefIntDoubleSelector())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Select(x => x * 2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Select(new RefIntDoubleSelector())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -505,6 +685,24 @@ public class SelectAt_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -545,6 +743,24 @@ public class SelectAt_Tests
             .Gen()
             .Select((x, i) => x + i)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -593,6 +809,24 @@ public class SelectAt_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -637,6 +871,24 @@ public class SelectAt_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -677,6 +929,24 @@ public class SelectAt_Tests
             .Gen()
             .Select((x, i) => x + i)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -729,6 +999,24 @@ public class SelectAtStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Select(new AddIndexSelector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -769,6 +1057,24 @@ public class SelectAtStruct_Tests
             .Gen()
             .Select(new AddIndexSelector())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Select(new AddIndexSelector())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -817,6 +1123,24 @@ public class SelectAtStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Select(new AddIndexSelector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -861,6 +1185,24 @@ public class SelectAtStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Select(new AddIndexSelector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -901,6 +1243,24 @@ public class SelectAtStruct_Tests
             .Gen()
             .Select(new RefIntAddIndexSelector())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Select((x, i) => x + i)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Select(new RefIntAddIndexSelector())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -953,6 +1313,24 @@ public class Where_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -993,6 +1371,24 @@ public class Where_Tests
             .Gen()
             .Where(x => x % 2 == 0)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1041,6 +1437,24 @@ public class Where_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -1085,6 +1499,24 @@ public class Where_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -1125,6 +1557,24 @@ public class Where_Tests
             .Gen()
             .Where(x => x % 2 == 0)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1177,6 +1627,24 @@ public class WhereStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Where(new EvenPredicate())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -1217,6 +1685,24 @@ public class WhereStruct_Tests
             .Gen()
             .Where(new EvenPredicate())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Where(new EvenPredicate())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1265,6 +1751,24 @@ public class WhereStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Where(new EvenPredicate())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -1309,6 +1813,24 @@ public class WhereStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Where(new EvenPredicate())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -1349,6 +1871,24 @@ public class WhereStruct_Tests
             .Gen()
             .Where(new RefIntEvenPredicate())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Where(x => x % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Where(new RefIntEvenPredicate())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1401,6 +1941,24 @@ public class WhereAt_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -1441,6 +1999,24 @@ public class WhereAt_Tests
             .Gen()
             .Where((x, i) => (x - i) % 2 == 0)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1489,6 +2065,24 @@ public class WhereAt_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -1533,6 +2127,24 @@ public class WhereAt_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -1573,6 +2185,24 @@ public class WhereAt_Tests
             .Gen()
             .Where((x, i) => (x - i) % 2 == 0)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1625,6 +2255,24 @@ public class WhereAtStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Where(new MinusEvenPredicate())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -1665,6 +2313,24 @@ public class WhereAtStruct_Tests
             .Gen()
             .Where(new MinusEvenPredicate())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Where(new MinusEvenPredicate())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1713,6 +2379,24 @@ public class WhereAtStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Where(new MinusEvenPredicate())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -1757,6 +2441,24 @@ public class WhereAtStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Where(new MinusEvenPredicate())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -1797,6 +2499,24 @@ public class WhereAtStruct_Tests
             .Gen()
             .Where(new RefIntMinusEvenPredicate())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Where((x, i) => (x - i) % 2 == 0)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Where(new RefIntMinusEvenPredicate())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1849,6 +2569,24 @@ public class Distinct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -1889,6 +2627,24 @@ public class Distinct_Tests
             .Gen()
             .Distinct()
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -1937,6 +2693,24 @@ public class Distinct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -1981,6 +2755,24 @@ public class Distinct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -2021,6 +2813,24 @@ public class Distinct_Tests
             .Gen()
             .Distinct()
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -2073,6 +2883,24 @@ public class DistinctInterface_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Distinct(EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -2113,6 +2941,24 @@ public class DistinctInterface_Tests
             .Gen()
             .Distinct(EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Distinct(EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -2161,6 +3007,24 @@ public class DistinctInterface_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Distinct(EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -2205,6 +3069,24 @@ public class DistinctInterface_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Distinct(EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -2245,6 +3127,24 @@ public class DistinctInterface_Tests
             .Gen()
             .Distinct(EqualityComparer<ReferenceInt>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Distinct(EqualityComparer<ReferenceInt>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -2297,6 +3197,24 @@ public class DistinctStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Distinct(new StructEqualityComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -2337,6 +3255,24 @@ public class DistinctStruct_Tests
             .Gen()
             .Distinct(new StructEqualityComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Distinct(new StructEqualityComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -2385,6 +3321,24 @@ public class DistinctStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Distinct(new StructEqualityComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -2429,6 +3383,24 @@ public class DistinctStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Distinct(new StructEqualityComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -2469,6 +3441,24 @@ public class DistinctStruct_Tests
             .Gen()
             .Distinct(new RefIntStructEqualityComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Distinct()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Distinct(new RefIntStructEqualityComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -2521,6 +3511,24 @@ public class Skip_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Skip(2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Skip(2)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -2561,6 +3569,24 @@ public class Skip_Tests
             .Gen()
             .Skip(2)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Skip(2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Skip(2)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -2609,6 +3635,24 @@ public class Skip_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Skip(2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Skip(2)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -2653,6 +3697,24 @@ public class Skip_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Skip(2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Skip(2)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -2693,6 +3755,24 @@ public class Skip_Tests
             .Gen()
             .Skip(2)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Skip(2)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Skip(2)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -2745,6 +3825,24 @@ public class Take_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Take(7)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Take(7)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -2785,6 +3883,24 @@ public class Take_Tests
             .Gen()
             .Take(7)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Take(7)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Take(7)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -2833,6 +3949,24 @@ public class Take_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Take(7)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Take(7)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -2877,6 +4011,24 @@ public class Take_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Take(7)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Take(7)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -2917,6 +4069,24 @@ public class Take_Tests
             .Gen()
             .Take(7)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Take(7)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Take(7)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -2969,6 +4139,24 @@ public class SkipLast_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .SkipLast(3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipLast(3)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -3009,6 +4197,24 @@ public class SkipLast_Tests
             .Gen()
             .SkipLast(3)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .SkipLast(3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipLast(3)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -3057,6 +4263,24 @@ public class SkipLast_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .SkipLast(3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipLast(3)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -3101,6 +4325,24 @@ public class SkipLast_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .SkipLast(3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipLast(3)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -3141,6 +4383,24 @@ public class SkipLast_Tests
             .Gen()
             .SkipLast(3)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipLast(3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipLast(3)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -3193,6 +4453,24 @@ public class TakeLast_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .TakeLast(5)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeLast(5)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -3233,6 +4511,24 @@ public class TakeLast_Tests
             .Gen()
             .TakeLast(5)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .TakeLast(5)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeLast(5)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -3281,6 +4577,24 @@ public class TakeLast_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .TakeLast(5)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeLast(5)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -3325,6 +4639,24 @@ public class TakeLast_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .TakeLast(5)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeLast(5)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -3365,6 +4697,24 @@ public class TakeLast_Tests
             .Gen()
             .TakeLast(5)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeLast(5)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeLast(5)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -3417,6 +4767,24 @@ public class SkipWhile_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -3457,6 +4825,24 @@ public class SkipWhile_Tests
             .Gen()
             .SkipWhile(x => x < 10)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -3505,6 +4891,24 @@ public class SkipWhile_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -3549,6 +4953,24 @@ public class SkipWhile_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -3589,6 +5011,24 @@ public class SkipWhile_Tests
             .Gen()
             .SkipWhile(x => x < 10)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -3641,6 +5081,24 @@ public class SkipWhileStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -3681,6 +5139,24 @@ public class SkipWhileStruct_Tests
             .Gen()
             .SkipWhile(new LessThanPredicate(10))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -3729,6 +5205,24 @@ public class SkipWhileStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -3773,6 +5267,24 @@ public class SkipWhileStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile(new LessThanPredicate(10))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -3813,6 +5325,24 @@ public class SkipWhileStruct_Tests
             .Gen()
             .SkipWhile(new RefIntLessThanPredicate(10))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile(new RefIntLessThanPredicate(10))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -3865,6 +5395,24 @@ public class SkipWhileAt_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -3905,6 +5453,24 @@ public class SkipWhileAt_Tests
             .Gen()
             .SkipWhile((x, i) => i < 10)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -3953,6 +5519,24 @@ public class SkipWhileAt_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -3997,6 +5581,24 @@ public class SkipWhileAt_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -4037,6 +5639,24 @@ public class SkipWhileAt_Tests
             .Gen()
             .SkipWhile((x, i) => i < 10)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -4089,6 +5709,24 @@ public class SkipWhileAtStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -4129,6 +5767,24 @@ public class SkipWhileAtStruct_Tests
             .Gen()
             .SkipWhile(new LessThanIndexPredicate(10))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -4177,6 +5833,24 @@ public class SkipWhileAtStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -4221,6 +5895,24 @@ public class SkipWhileAtStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .SkipWhile(new LessThanIndexPredicate(10))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -4261,6 +5953,24 @@ public class SkipWhileAtStruct_Tests
             .Gen()
             .SkipWhile(new RefIntLessThanIndexPredicate(10))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .SkipWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .SkipWhile(new RefIntLessThanIndexPredicate(10))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -4313,6 +6023,24 @@ public class TakeWhile_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -4353,6 +6081,24 @@ public class TakeWhile_Tests
             .Gen()
             .TakeWhile(x => x < 10)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -4401,6 +6147,24 @@ public class TakeWhile_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -4445,6 +6209,24 @@ public class TakeWhile_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -4485,6 +6267,24 @@ public class TakeWhile_Tests
             .Gen()
             .TakeWhile(x => x < 10)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -4537,6 +6337,24 @@ public class TakeWhileStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -4577,6 +6395,24 @@ public class TakeWhileStruct_Tests
             .Gen()
             .TakeWhile(new LessThanPredicate(10))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -4625,6 +6461,24 @@ public class TakeWhileStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -4669,6 +6523,24 @@ public class TakeWhileStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile(new LessThanPredicate(10))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -4709,6 +6581,24 @@ public class TakeWhileStruct_Tests
             .Gen()
             .TakeWhile(new RefIntLessThanPredicate(10))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeWhile(x => x < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile(new RefIntLessThanPredicate(10))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -4761,6 +6651,24 @@ public class TakeWhileAt_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -4801,6 +6709,24 @@ public class TakeWhileAt_Tests
             .Gen()
             .TakeWhile((x, i) => i < 10)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -4849,6 +6775,24 @@ public class TakeWhileAt_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -4893,6 +6837,24 @@ public class TakeWhileAt_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -4933,6 +6895,24 @@ public class TakeWhileAt_Tests
             .Gen()
             .TakeWhile((x, i) => i < 10)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -4985,6 +6965,24 @@ public class TakeWhileAtStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -5025,6 +7023,24 @@ public class TakeWhileAtStruct_Tests
             .Gen()
             .TakeWhile(new LessThanIndexPredicate(10))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -5073,6 +7089,24 @@ public class TakeWhileAtStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -5117,6 +7151,24 @@ public class TakeWhileAtStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .TakeWhile(new LessThanIndexPredicate(10))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -5157,6 +7209,24 @@ public class TakeWhileAtStruct_Tests
             .Gen()
             .TakeWhile(new RefIntLessThanIndexPredicate(10))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .TakeWhile((x, i) => i < 10)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .TakeWhile(new RefIntLessThanIndexPredicate(10))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -5209,6 +7279,24 @@ public class Order_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Order()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -5249,6 +7337,24 @@ public class Order_Tests
             .Gen()
             .Order()
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Order()
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -5297,6 +7403,24 @@ public class Order_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Order()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -5341,6 +7465,24 @@ public class Order_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Order()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -5381,6 +7523,24 @@ public class Order_Tests
             .Gen()
             .Order()
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Order()
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -5433,6 +7593,24 @@ public class OrderComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Order(Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -5473,6 +7651,24 @@ public class OrderComparer_Tests
             .Gen()
             .Order(Comparer<int>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Order(Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -5521,6 +7717,24 @@ public class OrderComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Order(Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -5565,6 +7779,24 @@ public class OrderComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Order(Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -5605,6 +7837,24 @@ public class OrderComparer_Tests
             .Gen()
             .Order(Comparer<ReferenceInt>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Order(Comparer<ReferenceInt>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -5657,6 +7907,24 @@ public class OrderStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Order(new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -5697,6 +7965,24 @@ public class OrderStruct_Tests
             .Gen()
             .Order(new StructComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Order(new StructComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -5745,6 +8031,24 @@ public class OrderStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Order(new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -5789,6 +8093,24 @@ public class OrderStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Order(new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -5829,6 +8151,24 @@ public class OrderStruct_Tests
             .Gen()
             .Order(new RefIntStructComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Order(new RefIntStructComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -5881,6 +8221,24 @@ public class OrderDesc_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderDescending()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -5921,6 +8279,24 @@ public class OrderDesc_Tests
             .Gen()
             .OrderDescending()
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderDescending()
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -5969,6 +8345,24 @@ public class OrderDesc_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderDescending()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -6013,6 +8407,24 @@ public class OrderDesc_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderDescending()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -6053,6 +8465,24 @@ public class OrderDesc_Tests
             .Gen()
             .OrderDescending()
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderDescending()
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -6105,6 +8535,24 @@ public class OrderDescComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderDescending(Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -6145,6 +8593,24 @@ public class OrderDescComparer_Tests
             .Gen()
             .OrderDescending(Comparer<int>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderDescending(Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -6193,6 +8659,24 @@ public class OrderDescComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderDescending(Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -6237,6 +8721,24 @@ public class OrderDescComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderDescending(Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -6277,6 +8779,24 @@ public class OrderDescComparer_Tests
             .Gen()
             .OrderDescending(Comparer<ReferenceInt>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderDescending(Comparer<ReferenceInt>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -6329,6 +8849,24 @@ public class OrderDescStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderDescending(new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -6369,6 +8907,24 @@ public class OrderDescStruct_Tests
             .Gen()
             .OrderDescending(new StructComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderDescending(new StructComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -6417,6 +8973,24 @@ public class OrderDescStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderDescending(new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -6461,6 +9035,24 @@ public class OrderDescStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderDescending(new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -6501,6 +9093,24 @@ public class OrderDescStruct_Tests
             .Gen()
             .OrderDescending(new RefIntStructComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderByDescending(x => x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderDescending(new RefIntStructComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -6553,6 +9163,24 @@ public class OrderBy_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -6593,6 +9221,24 @@ public class OrderBy_Tests
             .Gen()
             .OrderBy(x => x % 3)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -6641,6 +9287,24 @@ public class OrderBy_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -6685,6 +9349,24 @@ public class OrderBy_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -6725,6 +9407,24 @@ public class OrderBy_Tests
             .Gen()
             .OrderBy(x => x % 3)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -6777,6 +9477,24 @@ public class OrderByKey_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderBy(new Mod3Selector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -6817,6 +9535,24 @@ public class OrderByKey_Tests
             .Gen()
             .OrderBy(new Mod3Selector())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderBy(new Mod3Selector())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -6865,6 +9601,24 @@ public class OrderByKey_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderBy(new Mod3Selector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -6909,6 +9663,24 @@ public class OrderByKey_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderBy(new Mod3Selector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -6949,6 +9721,24 @@ public class OrderByKey_Tests
             .Gen()
             .OrderBy(new RefIntMod3Selector())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderBy(new RefIntMod3Selector())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -7001,6 +9791,24 @@ public class OrderByComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderBy(x => x % 3, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -7041,6 +9849,24 @@ public class OrderByComparer_Tests
             .Gen()
             .OrderBy(x => x % 3, Comparer<int>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderBy(x => x % 3, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -7089,6 +9915,24 @@ public class OrderByComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderBy(x => x % 3, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -7133,6 +9977,24 @@ public class OrderByComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderBy(x => x % 3, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -7173,6 +10035,24 @@ public class OrderByComparer_Tests
             .Gen()
             .OrderBy(x => x % 3, Comparer<ReferenceInt>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderBy(x => x % 3, Comparer<ReferenceInt>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -7225,6 +10105,24 @@ public class OrderByStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderBy(new Mod3Selector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -7265,6 +10163,24 @@ public class OrderByStruct_Tests
             .Gen()
             .OrderBy(new Mod3Selector(), new StructComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderBy(new Mod3Selector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -7313,6 +10229,24 @@ public class OrderByStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderBy(new Mod3Selector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -7357,6 +10291,24 @@ public class OrderByStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderBy(new Mod3Selector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -7397,6 +10349,24 @@ public class OrderByStruct_Tests
             .Gen()
             .OrderBy(new RefIntMod3Selector(), new RefIntStructComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderBy(new RefIntMod3Selector(), new RefIntStructComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -7449,6 +10419,24 @@ public class OrderByDesc_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -7489,6 +10477,24 @@ public class OrderByDesc_Tests
             .Gen()
             .OrderByDescending(x => x % 3)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -7537,6 +10543,24 @@ public class OrderByDesc_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -7581,6 +10605,24 @@ public class OrderByDesc_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -7621,6 +10663,24 @@ public class OrderByDesc_Tests
             .Gen()
             .OrderByDescending(x => x % 3)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -7673,6 +10733,24 @@ public class OrderByDescKey_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderByDescending(new Mod3Selector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -7713,6 +10791,24 @@ public class OrderByDescKey_Tests
             .Gen()
             .OrderByDescending(new Mod3Selector())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderByDescending(new Mod3Selector())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -7761,6 +10857,24 @@ public class OrderByDescKey_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderByDescending(new Mod3Selector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -7805,6 +10919,24 @@ public class OrderByDescKey_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderByDescending(new Mod3Selector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -7845,6 +10977,24 @@ public class OrderByDescKey_Tests
             .Gen()
             .OrderByDescending(new RefIntMod3Selector())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderByDescending(new RefIntMod3Selector())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -7897,6 +11047,24 @@ public class OrderByDescComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -7937,6 +11105,24 @@ public class OrderByDescComparer_Tests
             .Gen()
             .OrderByDescending(x => x % 3, Comparer<int>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -7985,6 +11171,24 @@ public class OrderByDescComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -8029,6 +11233,24 @@ public class OrderByDescComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderByDescending(x => x % 3, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -8069,6 +11291,24 @@ public class OrderByDescComparer_Tests
             .Gen()
             .OrderByDescending(x => x % 3, Comparer<ReferenceInt>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderByDescending(x => x % 3, Comparer<ReferenceInt>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8121,6 +11361,24 @@ public class OrderByDescStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderByDescending(new Mod3Selector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -8161,6 +11419,24 @@ public class OrderByDescStruct_Tests
             .Gen()
             .OrderByDescending(new Mod3Selector(), new StructComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderByDescending(new Mod3Selector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8209,6 +11485,24 @@ public class OrderByDescStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderByDescending(new Mod3Selector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -8253,6 +11547,24 @@ public class OrderByDescStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderByDescending(new Mod3Selector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -8293,6 +11605,24 @@ public class OrderByDescStruct_Tests
             .Gen()
             .OrderByDescending(new RefIntMod3Selector(), new RefIntStructComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderByDescending(x => x % 3)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderByDescending(new RefIntMod3Selector(), new RefIntStructComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8345,6 +11675,24 @@ public class ThenBy_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -8385,6 +11733,24 @@ public class ThenBy_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8433,6 +11799,24 @@ public class ThenBy_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -8477,6 +11861,24 @@ public class ThenBy_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -8517,6 +11919,24 @@ public class ThenBy_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8569,6 +11989,24 @@ public class ThenByKey_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -8609,6 +12047,24 @@ public class ThenByKey_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8657,6 +12113,24 @@ public class ThenByKey_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -8701,6 +12175,24 @@ public class ThenByKey_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -8741,6 +12233,24 @@ public class ThenByKey_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenBy(new RefIntNegateSelector())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(new RefIntNegateSelector())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8793,6 +12303,24 @@ public class ThenByComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -8833,6 +12361,24 @@ public class ThenByComparer_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -8881,6 +12427,24 @@ public class ThenByComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -8925,6 +12489,24 @@ public class ThenByComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -8965,6 +12547,24 @@ public class ThenByComparer_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<ReferenceInt>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(x => -x, Comparer<ReferenceInt>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -9017,6 +12617,24 @@ public class ThenByStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -9057,6 +12675,24 @@ public class ThenByStruct_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -9105,6 +12741,24 @@ public class ThenByStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -9149,6 +12803,24 @@ public class ThenByStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(new NegateSelector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -9189,6 +12861,24 @@ public class ThenByStruct_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenBy(new RefIntNegateSelector(), new RefIntStructComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x % 3).ThenBy(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenBy(new RefIntNegateSelector(), new RefIntStructComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -9241,6 +12931,24 @@ public class ThenByDesc_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -9281,6 +12989,24 @@ public class ThenByDesc_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -9329,6 +13055,24 @@ public class ThenByDesc_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -9373,6 +13117,24 @@ public class ThenByDesc_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -9413,6 +13175,24 @@ public class ThenByDesc_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -9465,6 +13245,24 @@ public class ThenByDescKey_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -9505,6 +13303,24 @@ public class ThenByDescKey_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -9553,6 +13369,24 @@ public class ThenByDescKey_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -9597,6 +13431,24 @@ public class ThenByDescKey_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -9637,6 +13489,24 @@ public class ThenByDescKey_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new RefIntNegateSelector())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(new RefIntNegateSelector())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -9689,6 +13559,24 @@ public class ThenByDescComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -9729,6 +13617,24 @@ public class ThenByDescComparer_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -9777,6 +13683,24 @@ public class ThenByDescComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -9821,6 +13745,24 @@ public class ThenByDescComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -9861,6 +13803,24 @@ public class ThenByDescComparer_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<ReferenceInt>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(x => -x, Comparer<ReferenceInt>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -9913,6 +13873,24 @@ public class ThenByDescStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -9953,6 +13931,24 @@ public class ThenByDescStruct_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -10001,6 +13997,24 @@ public class ThenByDescStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -10045,6 +14059,24 @@ public class ThenByDescStruct_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(new NegateSelector(), new StructComparer())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -10085,6 +14117,24 @@ public class ThenByDescStruct_Tests
             .Gen()
             .OrderBy(x => x % 3).ThenByDescending(new RefIntNegateSelector(), new RefIntStructComparer())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .OrderBy(x => x % 3).ThenByDescending(x => -x)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .OrderBy(x => x % 3).ThenByDescending(new RefIntNegateSelector(), new RefIntStructComparer())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -10137,6 +14187,24 @@ public class GroupBy_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -10177,6 +14245,24 @@ public class GroupBy_Tests
             .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -10225,6 +14311,24 @@ public class GroupBy_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -10269,6 +14373,24 @@ public class GroupBy_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -10309,6 +14431,24 @@ public class GroupBy_Tests
             .Gen()
             .GroupBy(x => x % 3).Select(x => x.Sum())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .GroupBy(x => x % 3).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -10361,6 +14501,24 @@ public class GroupByComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -10401,6 +14559,24 @@ public class GroupByComparer_Tests
             .Gen()
             .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -10449,6 +14625,24 @@ public class GroupByComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -10493,6 +14687,24 @@ public class GroupByComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .GroupBy(x => x % 3, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -10533,6 +14745,24 @@ public class GroupByComparer_Tests
             .Gen()
             .GroupBy(x => x % 3, EqualityComparer<ReferenceInt>.Default).Select(x => x.Sum())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .GroupBy(x => x % 3, EqualityComparer<ReferenceInt>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .GroupBy(x => x % 3, EqualityComparer<ReferenceInt>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -10585,6 +14815,24 @@ public class GroupByElement_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -10625,6 +14873,24 @@ public class GroupByElement_Tests
             .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -10673,6 +14939,24 @@ public class GroupByElement_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -10717,6 +15001,24 @@ public class GroupByElement_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -10757,6 +15059,24 @@ public class GroupByElement_Tests
             .Gen()
             .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .GroupBy(x => x % 3, x => x).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -10809,6 +15129,24 @@ public class GroupByElementComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -10849,6 +15187,24 @@ public class GroupByElementComparer_Tests
             .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -10897,6 +15253,24 @@ public class GroupByElementComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -10941,6 +15315,24 @@ public class GroupByElementComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<int>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -10981,6 +15373,24 @@ public class GroupByElementComparer_Tests
             .Gen()
             .GroupBy(x => x % 3, x => x, EqualityComparer<ReferenceInt>.Default).Select(x => x.Sum())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .GroupBy(x => x % 3, x => x, EqualityComparer<ReferenceInt>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .GroupBy(x => x % 3, x => x, EqualityComparer<ReferenceInt>.Default).Select(x => x.Sum())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -11033,6 +15443,24 @@ public class GroupByResult_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -11073,6 +15501,24 @@ public class GroupByResult_Tests
             .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -11121,6 +15567,24 @@ public class GroupByResult_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -11165,6 +15629,24 @@ public class GroupByResult_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -11205,6 +15687,24 @@ public class GroupByResult_Tests
             .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .GroupBy(x => x % 3, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -11257,6 +15757,24 @@ public class GroupByResultComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -11297,6 +15815,24 @@ public class GroupByResultComparer_Tests
             .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -11345,6 +15881,24 @@ public class GroupByResultComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -11389,6 +15943,24 @@ public class GroupByResultComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -11429,6 +16001,24 @@ public class GroupByResultComparer_Tests
             .Gen()
             .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<ReferenceInt>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<ReferenceInt>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .GroupBy(x => x % 3, (k, v) => v.Sum(), EqualityComparer<ReferenceInt>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -11481,6 +16071,24 @@ public class GroupByElementResult_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -11521,6 +16129,24 @@ public class GroupByElementResult_Tests
             .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -11569,6 +16195,24 @@ public class GroupByElementResult_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -11613,6 +16257,24 @@ public class GroupByElementResult_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -11653,6 +16315,24 @@ public class GroupByElementResult_Tests
             .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -11705,6 +16385,24 @@ public class GroupByElementResultComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -11745,6 +16443,24 @@ public class GroupByElementResultComparer_Tests
             .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -11793,6 +16509,24 @@ public class GroupByElementResultComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -11837,6 +16571,24 @@ public class GroupByElementResultComparer_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<int>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -11877,6 +16629,24 @@ public class GroupByElementResultComparer_Tests
             .Gen()
             .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<ReferenceInt>.Default)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<ReferenceInt>.Default)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .GroupBy(x => x % 3, x => x, (k, v) => v.Sum(), EqualityComparer<ReferenceInt>.Default)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -11929,6 +16699,24 @@ public class Cast_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectEmpty(int skip, int take)
+    {
+        var expected = TestData.ObjectEmpty
+            .Cast<string>()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectEmpty
+            .Gen()
+            .Cast<string>()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ObjectStringArray()
     {
@@ -11969,6 +16757,24 @@ public class Cast_Tests
             .Gen()
             .Cast<string>()
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectStringArray(int skip, int take)
+    {
+        var expected = TestData.ObjectStringArray
+            .Cast<string>()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectStringArray
+            .Gen()
+            .Cast<string>()
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -12017,6 +16823,24 @@ public class Cast_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectStringList(int skip, int take)
+    {
+        var expected = TestData.ObjectStringList
+            .Cast<string>()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectStringList
+            .Gen()
+            .Cast<string>()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ObjectStringEnumerable()
     {
@@ -12057,6 +16881,24 @@ public class Cast_Tests
             .Gen()
             .Cast<string>()
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectStringEnumerable(int skip, int take)
+    {
+        var expected = TestData.ObjectStringEnumerable
+            .Cast<string>()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectStringEnumerable
+            .Gen()
+            .Cast<string>()
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -12109,6 +16951,24 @@ public class OfType_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectEmpty(int skip, int take)
+    {
+        var expected = TestData.ObjectEmpty
+            .OfType<string>()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectEmpty
+            .Gen()
+            .OfType<string>()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ObjectStringArray()
     {
@@ -12149,6 +17009,24 @@ public class OfType_Tests
             .Gen()
             .OfType<string>()
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectStringArray(int skip, int take)
+    {
+        var expected = TestData.ObjectStringArray
+            .OfType<string>()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectStringArray
+            .Gen()
+            .OfType<string>()
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -12197,6 +17075,24 @@ public class OfType_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectStringList(int skip, int take)
+    {
+        var expected = TestData.ObjectStringList
+            .OfType<string>()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectStringList
+            .Gen()
+            .OfType<string>()
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ObjectStringEnumerable()
     {
@@ -12237,6 +17133,24 @@ public class OfType_Tests
             .Gen()
             .OfType<string>()
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectStringEnumerable(int skip, int take)
+    {
+        var expected = TestData.ObjectStringEnumerable
+            .OfType<string>()
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectStringEnumerable
+            .Gen()
+            .OfType<string>()
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -12289,6 +17203,24 @@ public class OfTypeSelect_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectEmpty(int skip, int take)
+    {
+        var expected = TestData.ObjectEmpty
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectEmpty
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ObjectStringArray()
     {
@@ -12329,6 +17261,24 @@ public class OfTypeSelect_Tests
             .Gen()
             .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectStringArray(int skip, int take)
+    {
+        var expected = TestData.ObjectStringArray
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectStringArray
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -12377,6 +17327,24 @@ public class OfTypeSelect_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectStringList(int skip, int take)
+    {
+        var expected = TestData.ObjectStringList
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectStringList
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ObjectStringEnumerable()
     {
@@ -12417,6 +17385,24 @@ public class OfTypeSelect_Tests
             .Gen()
             .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectStringEnumerable(int skip, int take)
+    {
+        var expected = TestData.ObjectStringEnumerable
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectStringEnumerable
+            .Gen()
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -12469,6 +17455,24 @@ public class OfTypeWhere_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectEmpty(int skip, int take)
+    {
+        var expected = TestData.ObjectEmpty
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectEmpty
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ObjectStringArray()
     {
@@ -12509,6 +17513,24 @@ public class OfTypeWhere_Tests
             .Gen()
             .OfType<string>().Where(g => string.IsNullOrEmpty(g))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectStringArray(int skip, int take)
+    {
+        var expected = TestData.ObjectStringArray
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectStringArray
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -12557,6 +17579,24 @@ public class OfTypeWhere_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectStringList(int skip, int take)
+    {
+        var expected = TestData.ObjectStringList
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectStringList
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ObjectStringEnumerable()
     {
@@ -12597,6 +17637,24 @@ public class OfTypeWhere_Tests
             .Gen()
             .OfType<string>().Where(g => string.IsNullOrEmpty(g))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ObjectStringEnumerable(int skip, int take)
+    {
+        var expected = TestData.ObjectStringEnumerable
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ObjectStringEnumerable
+            .Gen()
+            .OfType<string>().Where(g => string.IsNullOrEmpty(g))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -12649,6 +17707,24 @@ public class Concat_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Concat(TestData.IntEmpty)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Concat(TestData.IntEmpty.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -12689,6 +17765,24 @@ public class Concat_Tests
             .Gen()
             .Concat(TestData.IntArray.Gen())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Concat(TestData.IntArray)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Concat(TestData.IntArray.Gen())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -12737,6 +17831,24 @@ public class Concat_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Concat(TestData.IntList)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Concat(TestData.IntList.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -12781,6 +17893,24 @@ public class Concat_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Concat(TestData.IntEnumerable)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Concat(TestData.IntEnumerable.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -12821,6 +17951,24 @@ public class Concat_Tests
             .Gen()
             .Concat(TestData.ReferenceIntList.Gen())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Concat(TestData.ReferenceIntList)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Concat(TestData.ReferenceIntList.Gen())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -12873,6 +18021,24 @@ public class ConcatComplex_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Concat(TestData.IntEmpty.Where(x => x % 2 == 0))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Concat(TestData.IntEmpty.Gen().Where(x => x % 2 == 0))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -12913,6 +18079,24 @@ public class ConcatComplex_Tests
             .Gen()
             .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Concat(TestData.IntArray.Where(x => x % 2 == 0))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(x => x % 2 == 0))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -12961,6 +18145,24 @@ public class ConcatComplex_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Concat(TestData.IntList.Where(x => x % 2 == 0))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Concat(TestData.IntList.Gen().Where(x => x % 2 == 0))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -13005,6 +18207,24 @@ public class ConcatComplex_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Concat(TestData.IntEnumerable.Where(x => x % 2 == 0))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Concat(TestData.IntEnumerable.Gen().Where(x => x % 2 == 0))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -13045,6 +18265,24 @@ public class ConcatComplex_Tests
             .Gen()
             .Concat(TestData.ReferenceIntList.Gen().Where(x => x % 2 == 0))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Concat(TestData.ReferenceIntList.Where(x => x % 2 == 0))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Concat(TestData.ReferenceIntList.Gen().Where(x => x % 2 == 0))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -13097,6 +18335,24 @@ public class ConcatTwoOne_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Concat(TestData.IntEmpty.Where(x => x % 2 == 0)).Concat(TestData.IntEmpty.OrderBy(x => x))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Concat(TestData.IntEmpty.Gen().Where(new EvenPredicate())).Concat(TestData.IntEmpty.Gen().Order())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -13137,6 +18393,24 @@ public class ConcatTwoOne_Tests
             .Gen()
             .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntArray.Gen().Order())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Concat(TestData.IntArray.Where(x => x % 2 == 0)).Concat(TestData.IntArray.OrderBy(x => x))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate())).Concat(TestData.IntArray.Gen().Order())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -13185,6 +18459,24 @@ public class ConcatTwoOne_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Concat(TestData.IntList.Where(x => x % 2 == 0)).Concat(TestData.IntList.OrderBy(x => x))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Concat(TestData.IntList.Gen().Where(new EvenPredicate())).Concat(TestData.IntList.Gen().Order())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -13229,6 +18521,24 @@ public class ConcatTwoOne_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Concat(TestData.IntEnumerable.Where(x => x % 2 == 0)).Concat(TestData.IntEnumerable.OrderBy(x => x))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Concat(TestData.IntEnumerable.Gen().Where(new EvenPredicate())).Concat(TestData.IntEnumerable.Gen().Order())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -13269,6 +18579,24 @@ public class ConcatTwoOne_Tests
             .Gen()
             .Concat(TestData.ReferenceIntList.Gen().Where(new RefIntEvenPredicate())).Concat(TestData.ReferenceIntList.Gen().Order())
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Concat(TestData.ReferenceIntList.Where(x => x % 2 == 0)).Concat(TestData.ReferenceIntList.OrderBy(x => x))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Concat(TestData.ReferenceIntList.Gen().Where(new RefIntEvenPredicate())).Concat(TestData.ReferenceIntList.Gen().Order())
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -13321,6 +18649,24 @@ public class ConcatOneTwo_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Concat(TestData.IntEmpty.Where(x => x % 2 == 0).Concat(TestData.IntEmpty.OrderBy(x => x)))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Concat(TestData.IntEmpty.Gen().Where(new EvenPredicate()).Concat(TestData.IntEmpty.Gen().Order()))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -13361,6 +18707,24 @@ public class ConcatOneTwo_Tests
             .Gen()
             .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntArray.Gen().Order()))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Concat(TestData.IntArray.Where(x => x % 2 == 0).Concat(TestData.IntArray.OrderBy(x => x)))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Concat(TestData.IntArray.Gen().Where(new EvenPredicate()).Concat(TestData.IntArray.Gen().Order()))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -13409,6 +18773,24 @@ public class ConcatOneTwo_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Concat(TestData.IntList.Where(x => x % 2 == 0).Concat(TestData.IntList.OrderBy(x => x)))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Concat(TestData.IntList.Gen().Where(new EvenPredicate()).Concat(TestData.IntList.Gen().Order()))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -13453,6 +18835,24 @@ public class ConcatOneTwo_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Concat(TestData.IntEnumerable.Where(x => x % 2 == 0).Concat(TestData.IntEnumerable.OrderBy(x => x)))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Concat(TestData.IntEnumerable.Gen().Where(new EvenPredicate()).Concat(TestData.IntEnumerable.Gen().Order()))
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -13493,6 +18893,24 @@ public class ConcatOneTwo_Tests
             .Gen()
             .Concat(TestData.ReferenceIntList.Gen().Where(new RefIntEvenPredicate()).Concat(TestData.ReferenceIntList.Gen().Order()))
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Concat(TestData.ReferenceIntList.Where(x => x % 2 == 0).Concat(TestData.ReferenceIntList.OrderBy(x => x)))
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Concat(TestData.ReferenceIntList.Gen().Where(new RefIntEvenPredicate()).Concat(TestData.ReferenceIntList.Gen().Order()))
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -13545,6 +18963,24 @@ public class Prepend_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Prepend(77)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Prepend(77)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -13585,6 +19021,24 @@ public class Prepend_Tests
             .Gen()
             .Prepend(77)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Prepend(77)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Prepend(77)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -13633,6 +19087,24 @@ public class Prepend_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Prepend(77)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Prepend(77)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -13677,6 +19149,24 @@ public class Prepend_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Prepend(77)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Prepend(77)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -13717,6 +19207,24 @@ public class Prepend_Tests
             .Gen()
             .Prepend(77)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Prepend(77)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Prepend(77)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -13769,6 +19277,24 @@ public class Append_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Append(42)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Append(42)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntArray()
     {
@@ -13809,6 +19335,24 @@ public class Append_Tests
             .Gen()
             .Append(42)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Append(42)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Append(42)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -13857,6 +19401,24 @@ public class Append_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Append(42)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Append(42)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_IntEnumerable()
     {
@@ -13901,6 +19463,24 @@ public class Append_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Append(42)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Append(42)
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
     [Test]
     public void SameAsLinq_ReferenceIntList()
     {
@@ -13941,6 +19521,24 @@ public class Append_Tests
             .Gen()
             .Append(42)
             .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Append(42)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Append(42)
+            .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }

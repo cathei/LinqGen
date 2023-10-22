@@ -10,6 +10,7 @@ namespace Cathei.LinqGen.Hidden
     public struct PooledQueueManaged<T> : IDisposable
     {
         private T[] _array;
+        private int _capacity;
         private int _count;
         private int _front;
         private int _rear;
@@ -21,41 +22,40 @@ namespace Cathei.LinqGen.Hidden
         public PooledQueueManaged(int capacity) : this()
         {
             _array = Pool.Rent(capacity);
+            _capacity = capacity;
             _count = _front = _rear = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Enqueue(T item)
         {
-            var localArray = _array;
+            int capacity = _capacity;
             int rear = _rear;
-            int count = _count;
 
-            localArray[rear] = item;
-            _rear = ++rear == localArray.Length ? 0 : rear;
+            _array[rear] = item;
+            _rear = ++rear == capacity ? 0 : rear;
 
-            if (count == localArray.Length)
+            if (_count == capacity)
             {
                 // push front
                 int front = _front;
-                _front = ++front == localArray.Length ? 0 : front;
+                _front = ++front == capacity ? 0 : front;
                 return true;
             }
             else
             {
                 // return value indicates if queue is full
-                return ++_count == localArray.Length;
+                return ++_count == capacity;
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Dequeue()
         {
-            var localArray = _array;
             int front = _front;
 
-            T value = localArray[front];
-            _front = ++front == localArray.Length ? 0 : front;
+            T value = _array[front];
+            _front = ++front == _capacity ? 0 : front;
             --_count;
 
             return value;
@@ -65,14 +65,14 @@ namespace Cathei.LinqGen.Hidden
         public void Forward(int step)
         {
             // drops n elements
-            var localArray = _array;
+            int capacity = _capacity;
             int front = _front;
 
             step = Math.Min(step, _count);
             front += step;
 
-            if (front >= localArray.Length)
-                front -= localArray.Length;
+            if (front >= capacity)
+                front -= capacity;
 
             _front = front;
             _count -= step;
@@ -92,6 +92,7 @@ namespace Cathei.LinqGen.Hidden
 
             Pool.Return(_array, true);
             _array = EmptyArray;
+            _capacity = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
