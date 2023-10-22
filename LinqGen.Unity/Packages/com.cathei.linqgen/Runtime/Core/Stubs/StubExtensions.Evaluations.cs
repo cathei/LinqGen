@@ -173,5 +173,25 @@ namespace Cathei.LinqGen
         {
             throw new NotImplementedException();
         }
+
+        public static T Aggregate<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable, Func<T, T, T> func)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static T Aggregate<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable, IStructFunction<T, T, T> func)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static TAcc Aggregate<T, TUp, TAcc>(this IStub<IEnumerable<T>, TUp> enumerable, TAcc seed, Func<TAcc, T, TAcc> func)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static TAcc Aggregate<T, TUp, TAcc>(this IStub<IEnumerable<T>, TUp> enumerable, TAcc seed, IStructFunction<TAcc, T, TAcc> func)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

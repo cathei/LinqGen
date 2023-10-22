@@ -43,20 +43,6 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<TValue>, Gen<GroupingManaged<TKey, TValue>>> Gen<TKey, TValue>(
-            this GroupingManaged<TKey, TValue> enumerable)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static Stub<IEnumerable<TValue>, Gen<GroupingNative<TKey, TValue>>> Gen<TKey, TValue>(
-            this GroupingNative<TKey, TValue> enumerable)
-            where TKey : unmanaged
-            where TValue : unmanaged
-        {
-            throw new NotImplementedException();
-        }
-
         // TODO span support
         public static Stub<IEnumerable<T>, GenSpan<T>> Gen<T>(this Span<T> enumerable)
         {

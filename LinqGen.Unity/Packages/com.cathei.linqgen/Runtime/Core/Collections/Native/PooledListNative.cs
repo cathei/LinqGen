@@ -54,7 +54,11 @@ namespace Cathei.LinqGen.Hidden
             get => _count;
         }
 
-        public DynamicArrayNative<T> Array => _array;
+        public DynamicArrayNative<T> Array
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _array;
+        }
 
         public ref T this[int index]
         {

@@ -85,6 +85,60 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
+        public static Stub<IEnumerable<T>, TakeLast<TUp>> TakeLast<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, int take)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<T>, SkipWhile<TUp>> SkipWhile<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, Func<T, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<T>, SkipWhileStruct<TUp>> SkipWhile<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, IStructFunction<T, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<T>, SkipWhileAt<TUp>> SkipWhile<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, Func<T, int, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<T>, SkipWhileAtStruct<TUp>> SkipWhile<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, IStructFunction<T, int, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<T>, TakeWhile<TUp>> TakeWhile<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, Func<T, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<T>, TakeWhileStruct<TUp>> TakeWhile<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, IStructFunction<T, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<T>, TakeWhileAt<TUp>> TakeWhile<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, Func<T, int, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<T>, TakeWhileAtStruct<TUp>> TakeWhile<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, IStructFunction<T, int, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
         public static Stub<IEnumerable<T>, Distinct<TUp>> Distinct<T, TUp>(
             this IStub<IEnumerable<T>, TUp> enumerable)
         {
