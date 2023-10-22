@@ -25,7 +25,7 @@ namespace Cathei.LinqGen.Hidden
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Enqueue(T item)
+        public bool Enqueue(T item)
         {
             var localArray = _array;
             int rear = _rear;
@@ -39,10 +39,12 @@ namespace Cathei.LinqGen.Hidden
                 // push front
                 int front = _front;
                 _front = ++front == localArray.Length ? 0 : front;
+                return true;
             }
             else
             {
-                ++_count;
+                // return value indicates if queue is full
+                return ++_count == localArray.Length;
             }
         }
 

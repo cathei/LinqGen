@@ -63,7 +63,10 @@ public class SkipWhileOperation : Operation
     public override BlockSyntax RenderIteration(bool isLocal, SyntaxList<StatementSyntax> statements)
     {
         if (!isLocal)
+        {
+            // Uses regular MoveNext
             return base.RenderIteration(isLocal, statements);
+        }
 
         ExpressionSyntax predicateExpression =
             InvocationExpression(MemberAccessExpression(Member("predicate"), InvokeMethod),

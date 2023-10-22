@@ -49,6 +49,8 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class Take<TUp> : IStubSignature { }
 
+    public abstract class SkipLast<TUp> : IStubSignature { }
+
     public abstract class TakeLast<TUp> : IStubSignature { }
 
     public abstract class SkipWhile<TUp> : IStubSignature { }

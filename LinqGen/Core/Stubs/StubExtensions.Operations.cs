@@ -85,6 +85,12 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
+        public static Stub<IEnumerable<T>, SkipLast<TUp>> SkipLast<T, TUp>(
+            this IStub<IEnumerable<T>, TUp> enumerable, int skip)
+        {
+            throw new NotImplementedException();
+        }
+
         public static Stub<IEnumerable<T>, TakeLast<TUp>> TakeLast<T, TUp>(
             this IStub<IEnumerable<T>, TUp> enumerable, int take)
         {

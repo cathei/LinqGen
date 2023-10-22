@@ -49,19 +49,19 @@ public class TakeLastOperation : Operation
         if (EasyPath)
         {
             var upstreamCount = Upstream.RenderCount()!;
-            ExpressionSyntax takeLastVar = Member("take");
+            ExpressionSyntax tempVar = Member("take");
 
             if (skipVar != null)
-                takeLastVar = ParenthesizedExpression(SubtractExpression(takeLastVar, skipVar));
+                tempVar = ParenthesizedExpression(SubtractExpression(tempVar, skipVar));
 
             // skip = count - (takeLast - skip))
-            skipVar = SubtractExpression(ParenthesizedExpression(upstreamCount), takeLastVar);
+            skipVar = SubtractExpression(ParenthesizedExpression(upstreamCount), tempVar);
 
             // take = Min(take, takeLast - skip)
             if (takeVar != null)
-                takeVar = MathMin(takeLastVar, takeVar);
+                takeVar = MathMin(tempVar, takeVar);
             else
-                takeVar = takeLastVar;
+                takeVar = tempVar;
 
             return base.RenderInitialization(isLocal, skipVar, takeVar);
         }
