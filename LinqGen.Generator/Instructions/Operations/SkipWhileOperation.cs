@@ -2,12 +2,12 @@
 
 namespace Cathei.LinqGen.Generator;
 
-public class WhereOperation : Operation
+public class SkipWhileOperation : Operation
 {
     private bool WithIndex { get; }
     private bool WithStruct { get; }
 
-    public WhereOperation(in LinqGenExpression expression, uint id, bool withIndex, bool withStruct)
+    public SkipWhileOperation(in LinqGenExpression expression, uint id, bool withIndex, bool withStruct)
         : base(expression, id)
     {
         WithIndex = withIndex;
@@ -57,14 +57,22 @@ public class WhereOperation : Operation
     // Cannot tell count after predicate
     public override ExpressionSyntax? RenderCount() => null;
 
-    protected override StatementSyntax RenderMoveNext()
+    public override IEnumerable<StatementSyntax> RenderInitialization(bool isLocal,
+        ExpressionSyntax? skipVar, ExpressionSyntax? takeVar)
     {
-        return IfStatement(
-            LogicalNotExpression(InvocationExpression(
-                MemberAccessExpression(Member("predicate"), InvokeMethod),
+        var initStatements = new List<StatementSyntax>();
+
+        initStatements.AddRange(base.RenderInitialization(isLocal, skipVar, takeVar));
+
+        ExpressionSyntax predicateExpression =
+            InvocationExpression(MemberAccessExpression(Member("predicate"), InvokeMethod),
                 ArgumentList(WithIndex
                     ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(Iterator("index")) }
-                    : new ExpressionSyntax[] { CurrentPlaceholder }))),
-            ContinueStatement());
+                    : new ExpressionSyntax[] { CurrentPlaceholder }));
+
+        initStatements.Add(Upstream.RenderIteration(isLocal,
+            SingletonList<StatementSyntax>(IfStatement(LogicalNotExpression(predicateExpression), BreakStatement()))));
+
+        return initStatements;
     }
 }

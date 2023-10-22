@@ -2,12 +2,12 @@
 
 namespace Cathei.LinqGen.Generator;
 
-public class WhereOperation : Operation
+public class TakeWhileOperation : Operation
 {
     private bool WithIndex { get; }
     private bool WithStruct { get; }
 
-    public WhereOperation(in LinqGenExpression expression, uint id, bool withIndex, bool withStruct)
+    public TakeWhileOperation(in LinqGenExpression expression, uint id, bool withIndex, bool withStruct)
         : base(expression, id)
     {
         WithIndex = withIndex;
@@ -57,14 +57,14 @@ public class WhereOperation : Operation
     // Cannot tell count after predicate
     public override ExpressionSyntax? RenderCount() => null;
 
-    protected override StatementSyntax RenderMoveNext()
+    protected override StatementSyntax? RenderMoveNext()
     {
-        return IfStatement(
-            LogicalNotExpression(InvocationExpression(
-                MemberAccessExpression(Member("predicate"), InvokeMethod),
+        ExpressionSyntax predicateExpression =
+            InvocationExpression(MemberAccessExpression(Member("predicate"), InvokeMethod),
                 ArgumentList(WithIndex
                     ? new ExpressionSyntax[] { CurrentPlaceholder, PreIncrementExpression(Iterator("index")) }
-                    : new ExpressionSyntax[] { CurrentPlaceholder }))),
-            ContinueStatement());
+                    : new ExpressionSyntax[] { CurrentPlaceholder }));
+
+        return IfStatement(LogicalNotExpression(predicateExpression), BreakStatement());
     }
 }

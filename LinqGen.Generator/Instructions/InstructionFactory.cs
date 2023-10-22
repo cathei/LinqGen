@@ -113,6 +113,30 @@ public static class InstructionFactory
             case "Take":
                 return new TakeOperation(expression, id);
 
+            case "SkipWhile":
+                return new SkipWhileOperation(expression, id, false, false);
+
+            case "SkipWhileStruct":
+                return new SkipWhileOperation(expression, id, false, true);
+
+            case "SkipWhileAt":
+                return new SkipWhileOperation(expression, id, true, false);
+
+            case "SkipWhileAtStruct":
+                return new SkipWhileOperation(expression, id, true, true);
+
+            case "TakeWhile":
+                return new TakeWhileOperation(expression, id, false, false);
+
+            case "TakeWhileStruct":
+                return new TakeWhileOperation(expression, id, false, true);
+
+            case "TakeWhileAt":
+                return new TakeWhileOperation(expression, id, true, false);
+
+            case "TakeWhileAtStruct":
+                return new TakeWhileOperation(expression, id, true, true);
+
             case "Distinct":
                 return new DistinctOperation(expression, id, ComparerKind.Default);
 
