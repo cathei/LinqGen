@@ -119,6 +119,8 @@
             intSources),
         ("Prepend", "Prepend(77)", "Prepend(77)", intSources),
         ("Append", "Append(42)", "Append(42)", intSources),
+        ("Zip2Tuple", "Zip(TestData.{2})", "Zip(TestData.{2}.Gen())", intSources),
+        ("Zip3Tuple", "Zip(TestData.{2}, TestData.{2})", "Zip(TestData.{2}.Gen(), TestData.{2}.Gen())", intSources),
     };
 #>
 

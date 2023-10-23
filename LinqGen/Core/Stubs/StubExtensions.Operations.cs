@@ -181,5 +181,36 @@ namespace Cathei.LinqGen
         {
             throw new NotImplementedException();
         }
+
+        public static Stub<IEnumerable<TOut>, Zip<TUp1, TUp2, TOut>> Zip<T1, T2, TUp1, TUp2, TOut>(
+            this IStub<IEnumerable<T1>, TUp1> first,
+            IStub<IEnumerable<T2>, TUp2> second,
+            Func<T1, T2, TOut> resultSelector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<TOut>, ZipStruct<TUp1, TUp2, TOut>> Zip<T1, T2, TUp1, TUp2, TOut>(
+            this IStub<IEnumerable<T1>, TUp1> first,
+            IStub<IEnumerable<T2>, TUp2> second,
+            IStructFunction<T1, T2, TOut> resultSelector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<(T1 First, T2 Second)>, Zip2Tuple<TUp1, TUp2>> Zip<T1, T2, TUp1, TUp2>(
+            this IStub<IEnumerable<T1>, TUp1> first,
+            IStub<IEnumerable<T2>, TUp2> second)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stub<IEnumerable<(T1 First, T2 Second, T3 Third)>, Zip3Tuple<TUp1, TUp2, TUp3>> Zip<T1, T2, T3, TUp1, TUp2, TUp3>(
+            this IStub<IEnumerable<T1>, TUp1> first,
+            IStub<IEnumerable<T2>, TUp2> second,
+            IStub<IEnumerable<T3>, TUp3> third)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

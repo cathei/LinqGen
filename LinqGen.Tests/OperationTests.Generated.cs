@@ -19543,3 +19543,631 @@ public class Append_Tests
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
 }
+[TestFixture]
+public class Zip2Tuple_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .Zip(TestData.IntEmpty);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Zip(TestData.IntEmpty.Gen());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Gen()
+            .Zip(TestData.IntEmpty.Gen());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Zip(TestData.IntEmpty)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Zip(TestData.IntEmpty.Gen())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Zip(TestData.IntEmpty)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Zip(TestData.IntEmpty.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .Zip(TestData.IntArray);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Zip(TestData.IntArray.Gen());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Gen()
+            .Zip(TestData.IntArray.Gen());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Zip(TestData.IntArray)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Zip(TestData.IntArray.Gen())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Zip(TestData.IntArray)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Zip(TestData.IntArray.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .Zip(TestData.IntList);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Zip(TestData.IntList.Gen());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Gen()
+            .Zip(TestData.IntList.Gen());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Zip(TestData.IntList)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Zip(TestData.IntList.Gen())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Zip(TestData.IntList)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Zip(TestData.IntList.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .Zip(TestData.IntEnumerable);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Zip(TestData.IntEnumerable.Gen());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Gen()
+            .Zip(TestData.IntEnumerable.Gen());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Zip(TestData.IntEnumerable)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Zip(TestData.IntEnumerable.Gen())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Zip(TestData.IntEnumerable)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Zip(TestData.IntEnumerable.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ReferenceIntList()
+    {
+        var expected = TestData.ReferenceIntList
+            .Zip(TestData.ReferenceIntList);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Zip(TestData.ReferenceIntList.Gen());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ReferenceIntList()
+    {
+        var enumerable = TestData.ReferenceIntList
+            .Gen()
+            .Zip(TestData.ReferenceIntList.Gen());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Zip(TestData.ReferenceIntList)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Zip(TestData.ReferenceIntList.Gen())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Zip(TestData.ReferenceIntList)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Zip(TestData.ReferenceIntList.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
+[TestFixture]
+public class Zip3Tuple_Tests
+{
+
+    [Test]
+    public void SameAsLinq_IntEmpty()
+    {
+        var expected = TestData.IntEmpty
+            .Zip(TestData.IntEmpty, TestData.IntEmpty);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Zip(TestData.IntEmpty.Gen(), TestData.IntEmpty.Gen());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEmpty()
+    {
+        var enumerable = TestData.IntEmpty
+            .Gen()
+            .Zip(TestData.IntEmpty.Gen(), TestData.IntEmpty.Gen());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Zip(TestData.IntEmpty, TestData.IntEmpty)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Zip(TestData.IntEmpty.Gen(), TestData.IntEmpty.Gen())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEmpty(int skip, int take)
+    {
+        var expected = TestData.IntEmpty
+            .Zip(TestData.IntEmpty, TestData.IntEmpty)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEmpty
+            .Gen()
+            .Zip(TestData.IntEmpty.Gen(), TestData.IntEmpty.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntArray()
+    {
+        var expected = TestData.IntArray
+            .Zip(TestData.IntArray, TestData.IntArray);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Zip(TestData.IntArray.Gen(), TestData.IntArray.Gen());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntArray()
+    {
+        var enumerable = TestData.IntArray
+            .Gen()
+            .Zip(TestData.IntArray.Gen(), TestData.IntArray.Gen());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Zip(TestData.IntArray, TestData.IntArray)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Zip(TestData.IntArray.Gen(), TestData.IntArray.Gen())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntArray(int skip, int take)
+    {
+        var expected = TestData.IntArray
+            .Zip(TestData.IntArray, TestData.IntArray)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntArray
+            .Gen()
+            .Zip(TestData.IntArray.Gen(), TestData.IntArray.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntList()
+    {
+        var expected = TestData.IntList
+            .Zip(TestData.IntList, TestData.IntList);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Zip(TestData.IntList.Gen(), TestData.IntList.Gen());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntList()
+    {
+        var enumerable = TestData.IntList
+            .Gen()
+            .Zip(TestData.IntList.Gen(), TestData.IntList.Gen());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Zip(TestData.IntList, TestData.IntList)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Zip(TestData.IntList.Gen(), TestData.IntList.Gen())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntList(int skip, int take)
+    {
+        var expected = TestData.IntList
+            .Zip(TestData.IntList, TestData.IntList)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntList
+            .Gen()
+            .Zip(TestData.IntList.Gen(), TestData.IntList.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_IntEnumerable()
+    {
+        var expected = TestData.IntEnumerable
+            .Zip(TestData.IntEnumerable, TestData.IntEnumerable);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Zip(TestData.IntEnumerable.Gen(), TestData.IntEnumerable.Gen());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_IntEnumerable()
+    {
+        var enumerable = TestData.IntEnumerable
+            .Gen()
+            .Zip(TestData.IntEnumerable.Gen(), TestData.IntEnumerable.Gen());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Zip(TestData.IntEnumerable, TestData.IntEnumerable)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Zip(TestData.IntEnumerable.Gen(), TestData.IntEnumerable.Gen())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_IntEnumerable(int skip, int take)
+    {
+        var expected = TestData.IntEnumerable
+            .Zip(TestData.IntEnumerable, TestData.IntEnumerable)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.IntEnumerable
+            .Gen()
+            .Zip(TestData.IntEnumerable.Gen(), TestData.IntEnumerable.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void SameAsLinq_ReferenceIntList()
+    {
+        var expected = TestData.ReferenceIntList
+            .Zip(TestData.ReferenceIntList, TestData.ReferenceIntList);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Zip(TestData.ReferenceIntList.Gen(), TestData.ReferenceIntList.Gen());
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [Test]
+    public void MultipleEnumeration_MustBeSame_ReferenceIntList()
+    {
+        var enumerable = TestData.ReferenceIntList
+            .Gen()
+            .Zip(TestData.ReferenceIntList.Gen(), TestData.ReferenceIntList.Gen());
+
+        var array1 = enumerable.ToArray();
+        var array2 = enumerable.ToArray();
+
+        CollectionAssert.AreEqual(array1, array2);
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Zip(TestData.ReferenceIntList, TestData.ReferenceIntList)
+            .Skip(skip).Take(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Zip(TestData.ReferenceIntList.Gen(), TestData.ReferenceIntList.Gen())
+            .Skip(skip).Take(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+
+    [TestCase(0, 0)]
+    [TestCase(5, 0)]
+    [TestCase(0, 8)]
+    [TestCase(7, 9)]
+    public void SliceLastSameAsLinq_ReferenceIntList(int skip, int take)
+    {
+        var expected = TestData.ReferenceIntList
+            .Zip(TestData.ReferenceIntList, TestData.ReferenceIntList)
+            .SkipLast(skip).TakeLast(take);
+
+        var actual = TestData.ReferenceIntList
+            .Gen()
+            .Zip(TestData.ReferenceIntList.Gen(), TestData.ReferenceIntList.Gen())
+            .SkipLast(skip).TakeLast(take);
+
+        CollectionAssert.AreEqual(expected, actual.AsEnumerable());
+    }
+}
