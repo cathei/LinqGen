@@ -4,11 +4,11 @@ using System.Collections.Immutable;
 
 namespace Cathei.LinqGen.Generator;
 
-public class ImmutableHashSetComparer<T> : IEqualityComparer<ImmutableHashSet<T>>
+public class SetEqualComparer<T> : IEqualityComparer<HashSet<T>>
 {
-    public static readonly ImmutableHashSetComparer<T> Default = new();
+    public static readonly SetEqualComparer<T> Default = new();
 
-    public bool Equals(ImmutableHashSet<T> x, ImmutableHashSet<T> y)
+    public bool Equals(HashSet<T> x, HashSet<T> y)
     {
         if (ReferenceEquals(x, y))
             return true;
@@ -28,7 +28,7 @@ public class ImmutableHashSetComparer<T> : IEqualityComparer<ImmutableHashSet<T>
         return true;
     }
 
-    public int GetHashCode(ImmutableHashSet<T> arr)
+    public int GetHashCode(HashSet<T> arr)
     {
         // Should not be called
         return 0;

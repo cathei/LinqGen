@@ -28,15 +28,15 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
         var generations = expressions
             .Where(static x => x.IsCompilingGeneration())
             .Collect()
-            .Select(static (x, _) => x.ToImmutableHashSet())
-            .WithComparer(ImmutableHashSetComparer<LinqGenExpression>.Default)
+            .Select(static (x, _) => new HashSet<LinqGenExpression>(x)) // Considered Immutable
+            .WithComparer(SetEqualComparer<LinqGenExpression>.Default)
             .WithTrackingName("Generations");
 
         var evaluations = expressions
             .Where(static x => !x.IsCompilingGeneration())
             .Collect()
-            .Select(static (x, _) => x.ToImmutableHashSet())
-            .WithComparer(ImmutableHashSetComparer<LinqGenExpression>.Default)
+            .Select(static (x, _) => new HashSet<LinqGenExpression>(x)) // Considered Immutable
+            .WithComparer(SetEqualComparer<LinqGenExpression>.Default)
             .WithTrackingName("Evaluations");
 
         var dependencies = generations.Combine(evaluations)
@@ -97,20 +97,20 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
     }
 
     private static ImmutableDictionary<SymbolKey, LinqGenExpression> CreateGenerationDictionary(
-        ImmutableHashSet<LinqGenExpression> expressions)
+        HashSet<LinqGenExpression> expressions)
     {
         return expressions.ToImmutableDictionary(static x => x.GenerationKey);
     }
 
     private static ImmutableDictionary<EvaluationKey, LinqGenExpression> CreateEvaluationDictionary(
-        ImmutableHashSet<LinqGenExpression> expressions)
+        HashSet<LinqGenExpression> expressions)
     {
         return expressions.ToImmutableDictionary(static x => x.EvaluationKey);
     }
 
     private static Dictionary<SymbolKey, (LinqGenExpression, List<LinqGenExpression>)> CreateDownstreamDictionary(
-        ImmutableHashSet<LinqGenExpression> generations,
-        ImmutableHashSet<LinqGenExpression> evaluations)
+        HashSet<LinqGenExpression> generations,
+        HashSet<LinqGenExpression> evaluations)
     {
         var downstream = generations.ToDictionary(
             static x => x.GenerationKey,
@@ -137,8 +137,8 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
     }
 
     private static ImmutableArray<LinqGenExpressionDependency> CreateDependencies(
-        ImmutableHashSet<LinqGenExpression> generations,
-        ImmutableHashSet<LinqGenExpression> evaluations)
+        HashSet<LinqGenExpression> generations,
+        HashSet<LinqGenExpression> evaluations)
     {
         var downstream = CreateDownstreamDictionary(generations, evaluations);
 
@@ -196,7 +196,7 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
         DiagnosticSeverity.Info, true);
 
     private static void ReportDiagnostics(SourceProductionContext context,
-        (ImmutableHashSet<LinqGenExpression>, ImmutableHashSet<LinqGenExpression>) pair)
+        (HashSet<LinqGenExpression>, HashSet<LinqGenExpression>) pair)
     {
         var (generations, evaluations) = pair;
 

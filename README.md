@@ -138,7 +138,8 @@ public struct Comparer : IComparer<int>
 * Select
 * Where
 * Cast, OfType
-* Skip, Take, TakeLast
+* Skip, Take
+* SkipLast, TakeLast
 * SkipWhile, TakeWhile
 * Distinct
 * Order, OrderBy, OrderByDescending
