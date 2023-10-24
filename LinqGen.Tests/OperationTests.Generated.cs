@@ -17163,11 +17163,11 @@ public class OfTypeSelect_Tests
     public void SameAsLinq_ObjectEmpty()
     {
         var expected = TestData.ObjectEmpty
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0]);
 
         var actual = TestData.ObjectEmpty
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0]);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -17177,7 +17177,7 @@ public class OfTypeSelect_Tests
     {
         var enumerable = TestData.ObjectEmpty
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0]);
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -17192,12 +17192,12 @@ public class OfTypeSelect_Tests
     public void SliceSameAsLinq_ObjectEmpty(int skip, int take)
     {
         var expected = TestData.ObjectEmpty
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .Skip(skip).Take(take);
 
         var actual = TestData.ObjectEmpty
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -17210,12 +17210,12 @@ public class OfTypeSelect_Tests
     public void SliceLastSameAsLinq_ObjectEmpty(int skip, int take)
     {
         var expected = TestData.ObjectEmpty
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .SkipLast(skip).TakeLast(take);
 
         var actual = TestData.ObjectEmpty
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -17225,11 +17225,11 @@ public class OfTypeSelect_Tests
     public void SameAsLinq_ObjectStringArray()
     {
         var expected = TestData.ObjectStringArray
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0]);
 
         var actual = TestData.ObjectStringArray
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0]);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -17239,7 +17239,7 @@ public class OfTypeSelect_Tests
     {
         var enumerable = TestData.ObjectStringArray
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0]);
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -17254,12 +17254,12 @@ public class OfTypeSelect_Tests
     public void SliceSameAsLinq_ObjectStringArray(int skip, int take)
     {
         var expected = TestData.ObjectStringArray
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .Skip(skip).Take(take);
 
         var actual = TestData.ObjectStringArray
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -17272,12 +17272,12 @@ public class OfTypeSelect_Tests
     public void SliceLastSameAsLinq_ObjectStringArray(int skip, int take)
     {
         var expected = TestData.ObjectStringArray
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .SkipLast(skip).TakeLast(take);
 
         var actual = TestData.ObjectStringArray
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -17287,11 +17287,11 @@ public class OfTypeSelect_Tests
     public void SameAsLinq_ObjectStringList()
     {
         var expected = TestData.ObjectStringList
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0]);
 
         var actual = TestData.ObjectStringList
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0]);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -17301,7 +17301,7 @@ public class OfTypeSelect_Tests
     {
         var enumerable = TestData.ObjectStringList
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0]);
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -17316,12 +17316,12 @@ public class OfTypeSelect_Tests
     public void SliceSameAsLinq_ObjectStringList(int skip, int take)
     {
         var expected = TestData.ObjectStringList
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .Skip(skip).Take(take);
 
         var actual = TestData.ObjectStringList
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -17334,12 +17334,12 @@ public class OfTypeSelect_Tests
     public void SliceLastSameAsLinq_ObjectStringList(int skip, int take)
     {
         var expected = TestData.ObjectStringList
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .SkipLast(skip).TakeLast(take);
 
         var actual = TestData.ObjectStringList
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -17349,11 +17349,11 @@ public class OfTypeSelect_Tests
     public void SameAsLinq_ObjectStringEnumerable()
     {
         var expected = TestData.ObjectStringEnumerable
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0]);
 
         var actual = TestData.ObjectStringEnumerable
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0]);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
     }
@@ -17363,7 +17363,7 @@ public class OfTypeSelect_Tests
     {
         var enumerable = TestData.ObjectStringEnumerable
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0]);
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0]);
 
         var array1 = enumerable.ToArray();
         var array2 = enumerable.ToArray();
@@ -17378,12 +17378,12 @@ public class OfTypeSelect_Tests
     public void SliceSameAsLinq_ObjectStringEnumerable(int skip, int take)
     {
         var expected = TestData.ObjectStringEnumerable
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .Skip(skip).Take(take);
 
         var actual = TestData.ObjectStringEnumerable
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .Skip(skip).Take(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
@@ -17396,12 +17396,12 @@ public class OfTypeSelect_Tests
     public void SliceLastSameAsLinq_ObjectStringEnumerable(int skip, int take)
     {
         var expected = TestData.ObjectStringEnumerable
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .SkipLast(skip).TakeLast(take);
 
         var actual = TestData.ObjectStringEnumerable
             .Gen()
-            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? ' ' : g[0])
+            .OfType<string>().Select(g => string.IsNullOrEmpty(g) ? '\0' : g[0])
             .SkipLast(skip).TakeLast(take);
 
         CollectionAssert.AreEqual(expected, actual.AsEnumerable());
