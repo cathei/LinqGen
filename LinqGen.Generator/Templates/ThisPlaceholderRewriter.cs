@@ -58,4 +58,16 @@ public class ThisPlaceholderRewriter : CSharpSyntaxRewriter
 
         return base.VisitVariableDeclarator(node);
     }
+
+    public override SyntaxNode? VisitParameter(ParameterSyntax node)
+    {
+        // should not recursively solve
+        if (node.Identifier.ValueText.StartsWith(_iterOriginal))
+        {
+            string substring = node.Identifier.ValueText.Substring(_iterOriginal.Length);
+            return node.WithIdentifier(Identifier($"{_iterReplacement}{substring}"));
+        }
+
+        return base.VisitParameter(node);
+    }
 }

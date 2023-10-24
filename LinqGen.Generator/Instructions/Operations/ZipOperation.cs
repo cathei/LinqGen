@@ -12,7 +12,16 @@ public class ZipOperation : Operation
         var returnType = (INamedTypeSymbol)expression.MethodSymbol.ReturnType;
         var enumerableType = (INamedTypeSymbol)returnType.TypeArguments[0];
         OutputElementSymbol = enumerableType.TypeArguments[0];
+
+        var tempThisPlaceholder = IdentifierName($"_zip_this_{Id}_");
+        var tempIterPlaceholder = $"_zip_iter_{Id}_";
+
+        TempRewriter = new(tempThisPlaceholder, tempIterPlaceholder);
+        TempRevertRewriter = new(tempThisPlaceholder, ThisPlaceholder, tempIterPlaceholder, IterPlaceholder);
     }
+
+    private ThisPlaceholderRewriter TempRewriter { get; }
+    private ThisPlaceholderRewriter TempRevertRewriter { get; }
 
     public override bool SupportPartition => Upstreams.Any(x => x.SupportPartition);
 
@@ -102,14 +111,17 @@ public class ZipOperation : Operation
         for (int i = 1; i < Upstreams.Count; ++i)
         {
             var subUpstream = Upstreams[i];
-            var rewriter = GetRewriter(i);
+            var rewriter = GetRewriter(i, Member($"zip{i}"));
 
+            // skip and take should be escaped as they are unrelated to upstream
             var statements = subUpstream.SupportPartition
-                ? subUpstream.RenderInitialization(false, skipVar, takeVar)
+                ? subUpstream.RenderInitialization(false,
+                    (ExpressionSyntax?)TempRewriter.Visit(skipVar),
+                    (ExpressionSyntax?)TempRewriter.Visit(takeVar))
                 : subUpstream.RenderInitialization(false, null, null);
 
             foreach (var statement in statements)
-                yield return (StatementSyntax)rewriter.Visit(statement);
+                yield return (StatementSyntax)TempRevertRewriter.Visit(rewriter.Visit(statement));
         }
     }
 
@@ -131,16 +143,24 @@ public class ZipOperation : Operation
                 ReturnStatement(TrueExpression())
             };
 
-            var rewriter = GetRewriter(i);
-
             var subIteration = Upstreams[i].RenderIteration(false, new(successStatements))
                 .AddStatements(ReturnStatement(FalseExpression()));
 
-            subIteration = (BlockSyntax)rewriter.Visit(subIteration);
+            var memberInfos = subUpstream.GetAllMemberInfos(MemberKind.Enumerator, false);
+            var parameters = memberInfos
+                .Select(x => Parameter(default, RefTokenList, x.Type,
+                    Identifier($"{IterPlaceholder}{x.Name.Identifier.ValueText}"), null));
 
-            iterations.Add(LocalFunctionStatement(default, default,
-                BoolType, LocalName($"moveNext{i}").Identifier, null, EmptyParameterList, default,
-                subIteration, null));
+            var resolvedName = MakeGenericName(subUpstream.ClassName, GetSubTypeArguments(subUpstream));
+            parameters = parameters
+                .Prepend(Parameter(default, InTokenList, resolvedName, LocalName($"zip{i}").Identifier, null));
+
+            var funcStatement = LocalFunctionStatement(default, default,
+                BoolType, LocalName($"moveNext{i}").Identifier, null, ParameterList(parameters), default,
+                subIteration, null);
+
+            var rewriter = GetRewriter(i, LocalName($"zip{i}"));
+            iterations.Add((StatementSyntax)rewriter.Visit(funcStatement));
         }
 
         iterations.AddRange(base.RenderIteration(isLocal, statements).Statements);
@@ -154,7 +174,19 @@ public class ZipOperation : Operation
 
         for (int i = 1; i < Upstreams.Count; ++i)
         {
-            var invocation = InvocationExpression(LocalName($"moveNext{i}"));
+            var subUpstream = Upstreams[i];
+            var memberInfos = subUpstream.GetAllMemberInfos(MemberKind.Enumerator, false);
+
+            var arguments = memberInfos
+                .Select(x => Argument(null, Token(SyntaxKind.RefKeyword),
+                    IdentifierName($"{IterPlaceholder}{x.Name.Identifier.ValueText}")));
+
+            arguments = arguments.Prepend(Argument(null, Token(SyntaxKind.InKeyword), ThisPlaceholder));
+
+            var invocation = InvocationExpression(LocalName($"moveNext{i}"), ArgumentList(arguments));
+
+            var rewriter = GetRewriter(i, Member($"zip{i}"));
+            invocation = (InvocationExpressionSyntax)rewriter.Visit(invocation);
 
             if (expression == null)
                 expression = invocation;
@@ -191,15 +223,15 @@ public class ZipOperation : Operation
         for (int i = 1; i < Upstreams.Count; ++i)
         {
             var subUpstream = Upstreams[i];
-            var rewriter = GetRewriter(i);
+            var rewriter = GetRewriter(i, Member($"zip{i}"));
 
             foreach (var statement in subUpstream.RenderDispose(false))
                 yield return (StatementSyntax)rewriter.Visit(statement);
         }
     }
 
-    private ThisPlaceholderRewriter GetRewriter(int index)
+    private ThisPlaceholderRewriter GetRewriter(int index, ExpressionSyntax thisReplacement)
     {
-        return new ThisPlaceholderRewriter(Member($"zip{index}"), $"{IterPlaceholder}s{Id}_{index}_");
+        return new ThisPlaceholderRewriter(thisReplacement, $"{IterPlaceholder}s{Id}_{index}_");
     }
 }
