@@ -1,8 +1,6 @@
 // LinqGen.Benchmarks, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
 using BenchmarkDotNet.Attributes;
-using StructLinq;
-using Cathei.LinqGen;
 using NetFabric.Hyperlinq;
 
 namespace Cathei.LinqGen.Benchmarks.Cases;
@@ -11,7 +9,8 @@ namespace Cathei.LinqGen.Benchmarks.Cases;
 public class ArrayWhereSingle
 {
     private int[] TestData     { get; set; } = null!;
-    private int   SingularItem { get; set; } = 0;
+
+    private static int   SingularItem { get; set; } = 0;
 
     [Params(100, 10_000, 1_000_000)]
     public int Count { get; set; }
@@ -66,14 +65,14 @@ public class ArrayWhereSingle
     {
         // ReSharper disable once ReplaceWithSingleCallToSingle
         return TestData
-              .Where(x => x == SingularItem)
+              .Where(static x => x == SingularItem)
               .Single();
     }
 
     [Benchmark]
     public int CondensedLinq()
     {
-        return TestData.Single(x => x == SingularItem);
+        return TestData.Single(static x => x == SingularItem);
     }
 
     [Benchmark]
@@ -81,7 +80,7 @@ public class ArrayWhereSingle
     {
         return TestData
             .Gen()
-            .Where(x => x == SingularItem)
+            .Where(static x => x == SingularItem)
             .Single();
     }
 
@@ -93,27 +92,7 @@ public class ArrayWhereSingle
         return TestData
            .Gen()
            .Where(predicate)
-           .Sum();
-    }
-
-    [Benchmark]
-    public int StructLinqDelegate()
-    {
-        return TestData
-            .ToStructEnumerable()
-            .Where(x => x % 2 == 0)
-            .Sum();
-    }
-
-    [Benchmark]
-    public int StructLinqStruct()
-    {
-        var predicate = new Predicate(SingularItem);
-
-        return TestData
-            .ToStructEnumerable()
-            .Where(ref predicate, x => x)
-            .Sum(x=> x);
+           .Single();
     }
 
     [Benchmark]
@@ -121,8 +100,8 @@ public class ArrayWhereSingle
     {
         return TestData
             .AsValueEnumerable()
-            .Where(x => x % 2 == 0)
-            .Sum();
+            .Where(static x => x == SingularItem)
+            .Single().Value;
     }
 
     [Benchmark]
@@ -133,12 +112,12 @@ public class ArrayWhereSingle
         return TestData
             .AsValueEnumerable()
             .Where(predicate)
-            .Sum();
+            .Single().Value;
     }
 
     readonly struct Predicate :
         StructLinq.IFunction<int, bool>,
-        NetFabric.Hyperlinq.IFunction<int, bool>,
+        IFunction<int, bool>,
         IStructFunction<int, bool>
     {
         private readonly int _singularItem;
