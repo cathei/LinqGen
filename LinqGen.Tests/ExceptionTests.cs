@@ -49,4 +49,34 @@ public class ExceptionTests
 
         Assert.AreEqual(list.Length - 3, count);
     }
+    
+    [Test]
+    public void Single_Fail_ExceptionShouldBeThrown()
+    {
+        IEnumerable<object?> list = new object?[]
+        {
+            "A", "B", new object(), 1, "DDD", null, "EEE"
+        };
+
+        Assert.Throws<InvalidOperationException>(() => _ = list.Gen().Single());
+    }
+    
+    [Test]
+    public void Single_Fail_Empty_ExceptionShouldBeThrown()
+    {
+        IEnumerable<object?> list = Array.Empty<object?>();
+
+        Assert.Throws<InvalidOperationException>(() => _ = list.Gen().Single());
+    }
+    
+    [Test]
+    public void Single_Fail_Two_Elements_ExceptionShouldBeThrown()
+    {
+        IEnumerable<object?> list = new object?[]
+        {
+            "A", "B"
+        };
+
+        Assert.Throws<InvalidOperationException>(() => _ = list.Gen().Single());
+    }
 }
