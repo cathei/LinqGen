@@ -238,8 +238,8 @@ public struct Comparer : IComparer<int>
 | FirstOrDefault     | ✔️ Supported         |      |
 | Last               | ✔️ Supported         |      |
 | LastOrDefault      | ✔️ Supported         |      |
-| Single             | ⚠️ Work-in-progress  |      |
-| SingleOrDefault    | ⚠️ Work-in-progress  |      |
+| Single             | ✔️ Supported         |      |
+| SingleOrDefault    | ✔️ Supported         |      |
 | ElementAt          | ⚠️ Work-in-progress  |      |
 | ElementAtOrDefault | ⚠️ Work-in-progress  |      |
 
