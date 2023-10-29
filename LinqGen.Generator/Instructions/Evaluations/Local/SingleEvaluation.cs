@@ -12,12 +12,11 @@ public sealed class SingleEvaluation : LocalEvaluation {
 
     protected override IEnumerable<StatementSyntax> RenderInitialization() {
         if (Upstream.SupportCount) {
-            var expression = GreaterOrEqualExpression(Upstream.RenderCount()!, LiteralExpression(2));
             if (!OrDefault)
-                expression = LogicalOrExpression(expression, BinaryExpression(SyntaxKind.EqualsExpression,
-                                                                              Upstream.RenderCount()!,
-                                                                              LiteralExpression(0)));
-            yield return IfStatement(expression, Block(SingletonList(ThrowInvalidOperationStatement())));
+                yield return IfStatement(BinaryExpression(SyntaxKind.EqualsExpression,
+                                                          Upstream.RenderCount()!,
+                                                          LiteralExpression(0)), Block(SingletonList(ThrowInvalidOperationStatement("Sequence contains no elements"))));
+            yield return IfStatement(GreaterOrEqualExpression(Upstream.RenderCount()!, LiteralExpression(2)), Block(SingletonList(ThrowInvalidOperationStatement("Sequence contains more than one element"))));
         } else {
             yield return LocalDeclarationStatement(LocalName("count").Identifier, LiteralExpression(0));
             yield return LocalDeclarationStatement(ReturnType, LocalName("result").Identifier, DefaultLiteral);
@@ -28,7 +27,7 @@ public sealed class SingleEvaluation : LocalEvaluation {
         if (Upstream.SupportCount) {
             yield return ReturnStatement(CurrentPlaceholder);
         } else {
-            yield return IfStatement(GreaterOrEqualExpression(PrefixUnaryExpression(SyntaxKind.PreIncrementExpression, LocalName("count")), LiteralExpression(2)), Block(SingletonList(ThrowInvalidOperationStatement())));
+            yield return IfStatement(GreaterOrEqualExpression(PrefixUnaryExpression(SyntaxKind.PreIncrementExpression, LocalName("count")), LiteralExpression(2)), Block(SingletonList(ThrowInvalidOperationStatement("Sequence contains more than one element"))));
             yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("result"), CurrentPlaceholder));
         }
     }
@@ -42,7 +41,7 @@ public sealed class SingleEvaluation : LocalEvaluation {
             yield return IfStatement(BinaryExpression(SyntaxKind.EqualsExpression,
                                                       LocalName("count"),
                                                       LiteralExpression(0)),
-                                     ThrowInvalidOperationStatement());
+                                     ThrowInvalidOperationStatement("Sequence contains no elements"));
         yield return ReturnStatement(LocalName("result"));
     }
 }
