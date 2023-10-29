@@ -64,6 +64,14 @@ public struct AddSelector : IStructFunction<int, int, int>
     }
 }
 
+public struct SubSelector : IStructFunction<int, int, int>
+{
+    public int Invoke(int arg1, int arg2)
+    {
+        return arg1 - arg2;
+    }
+}
+
 public struct LessThanPredicate : IStructFunction<int, bool>
 {
     public LessThanPredicate(int threshold)

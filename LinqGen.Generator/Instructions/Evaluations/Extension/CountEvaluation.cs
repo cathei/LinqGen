@@ -4,7 +4,7 @@ namespace Cathei.LinqGen.Generator;
 
 public sealed class CountEvaluation : ExtensionEvaluation
 {
-    private FunctionKind PredicatorKind { get;  }
+    private FunctionKind PredicateKind { get;  }
 
     public CountEvaluation(in LinqGenExpression expression, uint id) : base(expression, id)
     {
@@ -12,12 +12,12 @@ public sealed class CountEvaluation : ExtensionEvaluation
         {
             // Count with a parameter uses selector
             var parameterType = MethodSymbol.Parameters[0].Type;
-            PredicatorKind = IsStructFunction(parameterType) ? FunctionKind.Struct : FunctionKind.Delegate;
+            PredicateKind = IsStructFunction(parameterType) ? FunctionKind.Struct : FunctionKind.Delegate;
         }
         else
         {
             // and single parameter only has default value
-            PredicatorKind = FunctionKind.Default;
+            PredicateKind = FunctionKind.Default;
         }
     }
 
@@ -32,7 +32,7 @@ public sealed class CountEvaluation : ExtensionEvaluation
 
             TypeSyntax[] typeArguments = { InputElementType, BoolType };
 
-            return _predicateType = PredicatorKind == FunctionKind.Struct
+            return _predicateType = PredicateKind == FunctionKind.Struct
                 ? StructFunctionInterfaceType(typeArguments)
                 : FuncDelegateType(typeArguments);
         }
@@ -42,17 +42,17 @@ public sealed class CountEvaluation : ExtensionEvaluation
 
     protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
     {
-        if (PredicatorKind == FunctionKind.Struct)
+        if (PredicateKind == FunctionKind.Struct)
             yield return new(TypeName("Predicate"), PredicateType!);
     }
 
     protected override IEnumerable<ParameterInfo> GetParameterInfos()
     {
-        if (PredicatorKind == FunctionKind.Struct)
+        if (PredicateKind == FunctionKind.Struct)
         {
             yield return new ParameterInfo(TypeName("Predicate"), IdentifierName("predicate"));
         }
-        else if (PredicatorKind == FunctionKind.Delegate)
+        else if (PredicateKind == FunctionKind.Delegate)
         {
             yield return new ParameterInfo(PredicateType, IdentifierName("predicate"));
         }
@@ -61,7 +61,7 @@ public sealed class CountEvaluation : ExtensionEvaluation
     public override IEnumerable<MemberDeclarationSyntax> RenderExtensionMembers()
     {
         // Count method is already there
-        if (PredicatorKind == FunctionKind.Default && Upstream.SupportCount)
+        if (PredicateKind == FunctionKind.Default && Upstream.SupportCount)
             yield break;
 
         foreach (var member in base.RenderExtensionMembers())
@@ -75,7 +75,7 @@ public sealed class CountEvaluation : ExtensionEvaluation
 
     protected override IEnumerable<StatementSyntax> RenderAccumulation()
     {
-        if (PredicatorKind == FunctionKind.Default)
+        if (PredicateKind == FunctionKind.Default)
         {
             yield return ExpressionStatement(PreIncrementExpression(LocalName("result")));
         }

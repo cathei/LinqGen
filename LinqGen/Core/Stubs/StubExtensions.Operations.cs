@@ -198,14 +198,14 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<(T1 First, T2 Second)>, Zip2Tuple<TUp1, TUp2>> Zip<T1, T2, TUp1, TUp2>(
+        public static Stub<IEnumerable<(T1 First, T2 Second)>, ZipTuple<TUp1, TUp2>> Zip<T1, T2, TUp1, TUp2>(
             this IStub<IEnumerable<T1>, TUp1> first,
             IStub<IEnumerable<T2>, TUp2> second)
         {
             throw new NotImplementedException();
         }
 
-        public static Stub<IEnumerable<(T1 First, T2 Second, T3 Third)>, Zip3Tuple<TUp1, TUp2, TUp3>> Zip<T1, T2, T3, TUp1, TUp2, TUp3>(
+        public static Stub<IEnumerable<(T1 First, T2 Second, T3 Third)>, ZipTuple<TUp1, TUp2, TUp3>> Zip<T1, T2, T3, TUp1, TUp2, TUp3>(
             this IStub<IEnumerable<T1>, TUp1> first,
             IStub<IEnumerable<T2>, TUp2> second,
             IStub<IEnumerable<T3>, TUp3> third)

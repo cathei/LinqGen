@@ -71,6 +71,15 @@ public struct RefIntAddSelector :
     }
 }
 
+public struct RefIntSubSelector :
+    IStructFunction<ReferenceInt, ReferenceInt, ReferenceInt>
+{
+    public ReferenceInt Invoke(ReferenceInt arg1, ReferenceInt arg2)
+    {
+        return arg1 - arg2;
+    }
+}
+
 public struct RefIntLessThanPredicate : IStructFunction<ReferenceInt, bool>
 {
     public RefIntLessThanPredicate(int threshold)

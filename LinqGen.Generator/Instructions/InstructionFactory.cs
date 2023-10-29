@@ -161,11 +161,14 @@ public static class InstructionFactory
             case "Append":
                 return new PrependAppendOperation(expression, id, true);
 
-            case "Zip2Tuple":
-                return new ZipOperation(expression, id);
+            case "Zip":
+                return new ZipOperation(expression, id, FunctionKind.Delegate);
 
-            case "Zip3Tuple":
-                return new ZipOperation(expression, id);
+            case "ZipStruct":
+                return new ZipOperation(expression, id, FunctionKind.Struct);
+
+            case "ZipTuple":
+                return new ZipOperation(expression, id, FunctionKind.Default);
 
             #region OrderBy
 

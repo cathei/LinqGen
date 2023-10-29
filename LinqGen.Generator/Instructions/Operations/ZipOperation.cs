@@ -1,13 +1,18 @@
 // LinqGen.Generator, Maxwell Keonwoo Kang <code.athei@gmail.com>, 2022
 
+using System;
 using System.Linq;
 
 namespace Cathei.LinqGen.Generator;
 
 public class ZipOperation : Operation
 {
-    public ZipOperation(in LinqGenExpression expression, uint id) : base(expression, id)
+    private FunctionKind SelectorKind { get; }
+
+    public ZipOperation(in LinqGenExpression expression, uint id, FunctionKind selectorKind) : base(expression, id)
     {
+        SelectorKind = selectorKind;
+
         // IStub<IEnumerable<Element>, ...>
         var returnType = (INamedTypeSymbol)expression.MethodSymbol.ReturnType;
         var enumerableType = (INamedTypeSymbol)returnType.TypeArguments[0];
@@ -29,8 +34,49 @@ public class ZipOperation : Operation
 
     private TypeSyntax? _outputElementType;
 
-    public override TypeSyntax OutputElementType => _outputElementType ??= TupleType(
-        SeparatedList(Upstreams.Select(t => TupleElement(t.OutputElementType))));
+    public override TypeSyntax OutputElementType
+    {
+        get
+        {
+            if (_outputElementType != null)
+                return _outputElementType;
+
+            if (SelectorKind == FunctionKind.Default)
+            {
+                _outputElementType = TupleType(
+                    SeparatedList(Upstreams.Select(t => TupleElement(t.OutputElementType))));
+            }
+            else
+            {
+                _outputElementType = ParseTypeName(OutputElementSymbol);
+            }
+
+            return _outputElementType;
+        }
+    }
+
+    private TypeSyntax? _selectorInterfaceType;
+
+    public TypeSyntax SelectorInterfaceType
+    {
+        get
+        {
+            if (_selectorInterfaceType != null)
+                return _selectorInterfaceType;
+
+            var typeArguments = Upstreams
+                .Select(static x => x.OutputElementType)
+                .Append(OutputElementType)
+                .ToArray();
+
+            return _selectorInterfaceType = SelectorKind switch
+            {
+                FunctionKind.Delegate => FuncDelegateType(typeArguments),
+                FunctionKind.Struct => StructFunctionInterfaceType(typeArguments),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+    }
 
     private TypeArgumentListSyntax? GetSubTypeArguments(Generation subUpstream)
     {
@@ -63,6 +109,17 @@ public class ZipOperation : Operation
                 yield return new(member.Kind, member.Type, overridenName, member.DefaultValue);
             }
         }
+
+        switch (SelectorKind)
+        {
+            case FunctionKind.Delegate:
+                yield return new MemberInfo(MemberKind.Both, SelectorInterfaceType, LocalName("selector"));
+                break;
+
+            case FunctionKind.Struct:
+                yield return new MemberInfo(MemberKind.Both, TypeName("Selector"), LocalName("selector"));
+                break;
+        }
     }
 
     protected override IEnumerable<TypeParameterInfo> GetTypeParameterInfos()
@@ -78,6 +135,11 @@ public class ZipOperation : Operation
 
                 yield return new TypeParameterInfo(type.Name, type.GenericConstraint?.Constraints.ToArray());
             }
+        }
+
+        if (SelectorKind == FunctionKind.Struct)
+        {
+            yield return new TypeParameterInfo(TypeName("Selector"), SelectorInterfaceType);
         }
     }
 
@@ -211,8 +273,16 @@ public class ZipOperation : Operation
             arguments.Add(Argument(LocalName($"current{i}")));
         }
 
-        // if tuple...
-        return TupleExpression(SeparatedList(arguments));
+        if (SelectorKind == FunctionKind.Default)
+        {
+            return TupleExpression(SeparatedList(arguments));
+        }
+        else
+        {
+            return InvocationExpression(
+                MemberAccessExpression(Member("selector"), InvokeMethod),
+                ArgumentList(arguments));
+        }
     }
 
     public override IEnumerable<StatementSyntax> RenderDispose(bool isLocal)

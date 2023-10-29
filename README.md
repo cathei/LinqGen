@@ -147,6 +147,7 @@ public struct Comparer : IComparer<int>
 * GroupBy
 * Concat
 * Prepend, Append
+* Zip
 
 ### Evaluations
 * GetEnumerator

@@ -85,7 +85,7 @@ namespace Cathei.LinqGen.Hidden
 
     public abstract class ZipStruct<TUp1, TUp2, TOut> : IStubSignature { }
 
-    public abstract class Zip2Tuple<TUp1, TUp2> : IStubSignature { }
+    public abstract class ZipTuple<TUp1, TUp2> : IStubSignature { }
 
-    public abstract class Zip3Tuple<TUp1, TUp2, TUp3> : IStubSignature { }
+    public abstract class ZipTuple<TUp1, TUp2, TUp3> : IStubSignature { }
 }

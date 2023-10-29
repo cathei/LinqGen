@@ -119,6 +119,8 @@
             intSources),
         ("Prepend", "Prepend(77)", "Prepend(77)", intSources),
         ("Append", "Append(42)", "Append(42)", intSources),
+        ("Zip", "Zip(TestData.{2}, (x, y) => x - y)", "Zip(TestData.{2}.Gen(), (x, y) => x - y)", intSources),
+        ("ZipStruct", "Zip(TestData.{2}, (x, y) => x - y)", "Zip(TestData.{2}.Gen(), new {1}SubSelector())", intSources),
         ("Zip2Tuple", "Zip(TestData.{2})", "Zip(TestData.{2}.Gen())", intSources),
         ("Zip3Tuple", "Zip(TestData.{2}, TestData.{2})", "Zip(TestData.{2}.Gen(), TestData.{2}.Gen())", intSources),
     };
