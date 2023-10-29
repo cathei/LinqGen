@@ -28,7 +28,7 @@ public sealed class SingleEvaluation : LocalEvaluation {
         if (Upstream.SupportCount) {
             yield return ReturnStatement(CurrentPlaceholder);
         } else {
-            yield return IfStatement(GreaterOrEqualExpression(PostfixUnaryExpression(SyntaxKind.PostIncrementExpression, LocalName("count")), LiteralExpression(2)), Block(SingletonList(ThrowInvalidOperationStatement())));
+            yield return IfStatement(GreaterOrEqualExpression(PrefixUnaryExpression(SyntaxKind.PreIncrementExpression, LocalName("count")), LiteralExpression(2)), Block(SingletonList(ThrowInvalidOperationStatement())));
             yield return ExpressionStatement(SimpleAssignmentExpression(LocalName("result"), CurrentPlaceholder));
         }
     }
