@@ -1,4 +1,4 @@
-# LinqGen ⚡
+# LinqGen ⚡️
 [![Nuget](https://img.shields.io/nuget/v/LinqGen)](https://www.nuget.org/packages?q=LinqGen)
 [![openupm](https://img.shields.io/npm/v/com.cathei.linqgen?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.cathei.linqgen/)
 [![Discord](https://img.shields.io/discord/942240862354702376?color=%235865F2&label=discord&logo=discord&logoColor=%23FFFFFF)](https://discord.gg/kpuRTkpeQC)
@@ -126,48 +126,139 @@ public struct Comparer : IComparer<int>
 }
 ```
 
-## Supported methods (working-in-progress)
+## Supported methods
 [List of Linq Operations](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/standard-query-operators-overview)
 
+* ✔️ Supported operation will work even if your .NET version Linq does not support corresponding method.
+* ⚡️ Indicates that the operation also support struct function and comparer for additional performance.
+
 ### Generations
-* Empty
-* Range
-* Repeat
+| Method         | Support             | Note |
+|----------------|---------------------|------|
+| Empty          | ✔️ Supported        |      |
+| Range          | ✔️ Supported        |      |
+| Repeat         | ✔️ Supported        |      |
+| DefaultIfEmpty | ⚠️ Work-in-progress |      |
 
-### Operations
-* Select
-* Where
-* Cast, OfType
-* Skip, Take
-* SkipLast, TakeLast
-* SkipWhile, TakeWhile
-* Distinct
-* Order, OrderBy, OrderByDescending
-* ThenBy, ThenByDescending
-* GroupBy
-* Concat
-* Prepend, Append
-* Zip
+### Filtering Operations
+| Method | Support          | Note |
+|--------|------------------|------|
+| Where  | ✔️ Supported ⚡️  |      |
+| OfType | ✔️ Supported     |      |
 
-### Evaluations
-* GetEnumerator
-* ToArray, ToList
-* Any, All
-* First, FirstOrDefault
-* Last, LastOrDefault
-* Count
-* Aggregate
-* Sum
-  * Supports duck typing with `+` operator overload
-* Min, Max
-* MinBy, MaxBy
+### Projection Operations
+| Method     | Support             | Note |
+|------------|---------------------|------|
+| Select     | ✔️ Supported ⚡️     |      |
+| SelectMany | ⚠️ Work-in-progress |      |
+| Zip        | ✔️ Supported ⚡️     |      |
 
-### Etc
-* Gen
-    * Converts IEnumerable to LinqGen enumerable
-* AsEnumerable
-    * Converts LinqGen enumerable to IEnumerable
-* RemoveAll
+### Set Operations
+| Method      | Support             | Note |
+|-------------|---------------------|------|
+| Distinct    | ✔️ Supported ⚡️     |      |
+| DistinctBy  | ⚠️ Work-in-progress |      |
+| Except      | ⚠️ Work-in-progress |      |
+| ExceptBy    | ⚠️ Work-in-progress |      |
+| Intersect   | ⚠️ Work-in-progress |      |
+| IntersectBy | ⚠️ Work-in-progress |      |
+| Union       | ⚠️ Work-in-progress |      |
+| UnionBy     | ⚠️ Work-in-progress |      |
+
+### Sorting Operations
+| Method            | Support             | Note                                                 |
+|-------------------|---------------------|------------------------------------------------------|
+| Order             | ✔️ Supported ⚡️     | `OrderBy` that uses element itself as key            |
+| OrderDescending   | ✔️ Supported ⚡️     | `OrderByDescending` that uses element itself as key  |
+| OrderBy           | ✔️ Supported ⚡️     |                                                      |
+| OrderByDescending | ✔️ Supported ⚡️     |                                                      |
+| ThenBy            | ✔️ Supported ⚡️     |                                                      |
+| ThenByDescending  | ✔️ Supported ⚡️     |                                                      |
+| Reverse           | ⚠️ Work-in-progress |                                                      |
+
+### Partitioning Operations
+| Method    | Support             | Note |
+|-----------|---------------------|------|
+| Skip      | ✔️ Supported        |      |
+| SkipLast  | ✔️ Supported        |      |
+| SkipWhile | ✔️ Supported ⚡️     |      |
+| Take      | ✔️ Supported        |      |
+| TakeLast  | ✔️ Supported        |      |
+| TakeWhile | ✔️ Supported ⚡️     |      |
+| Chunk     | ⚠️ Work-in-progress |      |
+
+### Converting Operations
+| Method        | Support             | Note                                              |
+|---------------|---------------------|---------------------------------------------------|
+| AsEnumerable  | ✔️ Supported        | Converts LinqGen enumerable to `IEnumerable`      |
+| Cast          | ✔️ Supported        |                                                   |
+| Gen           | ✔️ Supported        | Converts `IEnumerable` to LinqGen enumerable      |
+| GetEnumerator | ✔️ Supported        | Automatically generated when using with `foreach` |
+| OfType        | ✔️ Supported        |                                                   |
+| ToArray       | ✔️ Supported        |                                                   |
+| ToList        | ✔️ Supported        |                                                   |
+| ToDictionary  | ⚠️ Work-in-progress |                                                   |
+| ToLookup      | ⚠️ Work-in-progress |                                                   |
+
+### Concatenation Operations
+| Method  | Support             | Note |
+|---------|---------------------|------|
+| Append  | ✔️ Supported         |      |
+| Concat  | ✔️ Supported         |      |
+| Prepend | ✔️ Supported         |      |
+
+### Grouping Operations
+| Method  | Support          | Note |
+|---------|------------------|------|
+| GroupBy | ✔️ Supported ⚡️  |      |
+
+### Joining Operations
+| Method    | Support             | Note |
+|-----------|---------------------|------|
+| Join      | ⚠️ Work-in-progress |      |
+| GroupJoin | ⚠️ Work-in-progress |      |
+
+### Aggregation Evaluations
+| Method    | Support             | Note                                            |
+|-----------|---------------------|-------------------------------------------------|
+| Aggregate | ✔️ Supported ⚡️     |                                                 |
+| Count     | ✔️ Supported        |                                                 |
+| Max       | ✔️ Supported        |                                                 |
+| MaxBy     | ✔️ Supported ⚡️     |                                                 |
+| Min       | ✔️ Supported        |                                                 |
+| MinBy     | ✔️ Supported ⚡️     |                                                 |
+| Sum       | ✔️ Supported        | Supports duck typing with `+` operator overload |
+| Average   | ⚠️ Work-in-progress |                                                 |
+| LongCount | ⚠️ Work-in-progress |                                                 |
+
+### Element Evaluations
+| Method             | Support              | Note |
+|--------------------|----------------------|------|
+| First              | ✔️ Supported         |      |
+| FirstOrDefault     | ✔️ Supported         |      |
+| Last               | ✔️ Supported         |      |
+| LastOrDefault      | ✔️ Supported         |      |
+| Single             | ⚠️ Work-in-progress  |      |
+| SingleOrDefault    | ⚠️ Work-in-progress  |      |
+| ElementAt          | ⚠️ Work-in-progress  |      |
+| ElementAtOrDefault | ⚠️ Work-in-progress  |      |
+
+### Quantifier Evaluations
+| Method   | Support             | Note |
+|----------|---------------------|------|
+| All      | ✔️ Supported ⚡️     |      |
+| Any      | ✔️ Supported ⚡️     |      |
+| Contains | ⚠️ Work-in-progress |      |
+
+### Equality Evaluations
+| Method        | Support              | Note |
+|---------------|----------------------|------|
+| SequenceEqual | ⚠️ Work-in-progress  |      |
+
+### IStructFunction Utilities
+| Method    | Support          | Note                                        |
+|-----------|------------------|---------------------------------------------|
+| RemoveAll | ✔️ Supported ⚡️  | List extension method with struct predicate |
 
 ## Limitations
 * Element or key types that used with LinqGen must have at least `internal` accessibility.
