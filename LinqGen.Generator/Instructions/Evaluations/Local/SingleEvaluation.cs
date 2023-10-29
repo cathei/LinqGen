@@ -10,6 +10,8 @@ public sealed class SingleEvaluation : LocalEvaluation {
 
     protected override TypeSyntax ReturnType => Upstream.OutputElementType;
 
+    protected override ExpressionSyntax TakeExpression => LiteralExpression(2);
+
     protected override IEnumerable<StatementSyntax> RenderInitialization() {
         if (Upstream.SupportCount) {
             if (!OrDefault)
