@@ -78,4 +78,52 @@ public abstract class LinqGenInstruction : IEquatable<LinqGenInstruction>
             return _uniqueId.Value;
         }
     }
+
+    protected readonly struct MemberInfo
+    {
+        public readonly uint UniqueId;
+        public readonly TypeSyntax Type;
+        public readonly string Name;
+        public readonly ExpressionSyntax? DefaultValue;
+
+        public MemberInfo(uint id, TypeSyntax type, string name, ExpressionSyntax? defaultValue = null)
+        {
+            UniqueId = id;
+            Type = type;
+            Name = name;
+            DefaultValue = defaultValue;
+        }
+    }
+
+    /// <summary>
+    /// Will be used as method parameters.
+    /// </summary>
+    protected abstract void GetParameters(List<MemberInfo> infos);
+
+    /// <summary>
+    /// Will be added as Enumerable member.
+    /// If return value is false, invalidates upstream members.
+    /// </summary>
+    protected virtual bool GetEnumerableMembers(List<MemberInfo> infos)
+    {
+        return true;
+    }
+
+    /// <summary>
+    /// Will be added as Enumerator member.
+    /// If return value is false, invalidates upstream members.
+    /// </summary>
+    protected virtual bool GetEnumeratorMembers(List<MemberInfo> infos)
+    {
+        return true;
+    }
+
+    /// <summary>
+    /// Will be added as local evaluation member.
+    /// If return value is false, invalidates upstream members.
+    /// </summary>
+    protected virtual bool GetLocalMembers(List<MemberInfo> infos)
+    {
+        return true;
+    }
 }
