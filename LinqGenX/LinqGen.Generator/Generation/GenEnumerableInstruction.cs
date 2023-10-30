@@ -20,7 +20,7 @@ public class GenEnumerableNode : LinqGenNode
 
     protected override IEnumerable<LinqGenInstruction> Expand(in ExpansionContext ctx)
     {
-        ITypeSymbol targetType = NormalizeSignature((INamedTypeSymbol)MethodSymbol.ReceiverType!);
+        ITypeSymbol targetType = NormalizeSignature((INamedTypeSymbol)MethodSymbol.Parameters[0].Type);
 
         if (!TryGetEnumerableInterface(targetType, out var enumerableSymbol) ||
             enumerableSymbol.Arity < 1)

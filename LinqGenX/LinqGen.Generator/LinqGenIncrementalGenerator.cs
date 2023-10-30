@@ -6,7 +6,6 @@ using System.Linq;
 
 namespace Cathei.LinqGen.Generator;
 
-// Not supported in current Unity version
 [Generator(LanguageNames.CSharp)]
 public class LinqGenIncrementalGenerator : IIncrementalGenerator
 {

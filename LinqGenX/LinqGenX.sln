@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqGen", "LinqGen\LinqGen.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqGen.Generator", "LinqGen.Generator\LinqGen.Generator.csproj", "{00A05F2D-BA91-4C6C-B0A3-79AB13B09DBE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqGen.Tests.Incremental", "LinqGen.Tests.Incremental\LinqGen.Tests.Incremental.csproj", "{BC3D380A-8718-47DC-A278-9FAF3A21F843}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{00A05F2D-BA91-4C6C-B0A3-79AB13B09DBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00A05F2D-BA91-4C6C-B0A3-79AB13B09DBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00A05F2D-BA91-4C6C-B0A3-79AB13B09DBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC3D380A-8718-47DC-A278-9FAF3A21F843}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC3D380A-8718-47DC-A278-9FAF3A21F843}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC3D380A-8718-47DC-A278-9FAF3A21F843}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC3D380A-8718-47DC-A278-9FAF3A21F843}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

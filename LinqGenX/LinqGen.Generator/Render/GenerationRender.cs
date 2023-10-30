@@ -37,12 +37,18 @@ namespace Cathei.LinqGen
 
     public class Rewriter : CSharpSyntaxRewriter
     {
+        private readonly IdentifierNameSyntax _methodName;
         private readonly IdentifierNameSyntax _enumerableName;
         private readonly TypeSyntax _sourceType;
         private readonly TypeSyntax _interfaceType;
 
-        public Rewriter(IdentifierNameSyntax enumerableName, TypeSyntax sourceType, TypeSyntax interfaceType)
+        public Rewriter(
+            IdentifierNameSyntax methodName,
+            IdentifierNameSyntax enumerableName,
+            TypeSyntax sourceType,
+            TypeSyntax interfaceType)
         {
+            _methodName = methodName;
             _enumerableName = enumerableName;
             _sourceType = sourceType;
             _interfaceType = interfaceType;
@@ -82,6 +88,18 @@ namespace Cathei.LinqGen
             }
 
             return node == null ? null : base.VisitConstructorDeclaration(node);
+        }
+
+        public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax? node)
+        {
+            switch (node!.Identifier.ValueText)
+            {
+                case "_Method_":
+                    node = RewriteExtensionMethod(node);
+                    break;
+            }
+
+            return node == null ? null : base.VisitMethodDeclaration(node);
         }
 
         public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
@@ -143,6 +161,11 @@ namespace Cathei.LinqGen
             //     .WithParameterList(parameterList)
             //     .WithBody(Block(assignments));
         }
+
+        private MethodDeclarationSyntax? RewriteExtensionMethod(MethodDeclarationSyntax node)
+        {
+            return node.WithIdentifier(_methodName.Identifier);
+        }
     }
 
     public GenerationRender(IdentifierNameSyntax methodName) : base(methodName) {}
@@ -152,7 +175,7 @@ namespace Cathei.LinqGen
         var instruction = (GenerationInstruction)instructions[instructions.Count - 2];
         var enumerableName = IdentifierName($"{MethodName.Identifier.ValueText}_{id}");
 
-        var rewriter = new Rewriter(enumerableName, instruction.SourceType, instruction.InterfaceType);
+        var rewriter = new Rewriter(MethodName, enumerableName, instruction.SourceType, instruction.InterfaceType);
         return (CompilationUnitSyntax)rewriter.Visit(Template.GetCompilationUnitRoot());
     }
 }

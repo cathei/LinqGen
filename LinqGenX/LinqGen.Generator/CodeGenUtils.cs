@@ -55,7 +55,7 @@ public static class CodeGenUtils
     public static Type FindNodeType(string name)
     {
         return Assembly.GetExecutingAssembly()
-            .GetType($"LinqGen.Generator.{name}Node");
+            .GetType($"Cathei.LinqGen.Generator.{name}Node");
     }
 
     private const string LinqGenStubEnumerableTypeName = "Stub`2";
