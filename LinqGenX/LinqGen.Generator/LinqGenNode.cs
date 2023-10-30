@@ -9,43 +9,36 @@ namespace Cathei.LinqGen.Generator;
 /// </summary>
 public abstract class LinqGenNode
 {
+    public readonly LinqGenNode? Upstream;
     public readonly IMethodSymbol MethodSymbol;
 
-    private ImmutableList<LinqGenInstruction>? _expanded = null;
+    private LinqGenRender? _expanded = null;
 
-    protected LinqGenNode(IMethodSymbol methodSymbol)
+    protected LinqGenNode(LinqGenNode? upstream, IMethodSymbol methodSymbol)
     {
+        Upstream = upstream;
         MethodSymbol = methodSymbol;
     }
 
-    protected abstract IEnumerable<LinqGenInstruction> Expand(in ExpansionContext ctx);
+    protected abstract LinqGenRender Expand(in ExpansionContext ctx);
 
-    public ImmutableList<LinqGenInstruction> ExpandToInstructions(
-        ImmutableList<LinqGenNode> upstream,
-        Dictionary<ArgumentSyntax, ImmutableList<LinqGenNode>> arguments)
+    public LinqGenRender ExpandToRender(Dictionary<ArgumentSyntax, LinqGenNode> arguments)
     {
         if (_expanded != null)
             return _expanded;
 
-        var result = ImmutableList<LinqGenInstruction>.Empty;
-
-        if (upstream.Count >= 2)
-        {
-            // We can assume that direct upstream is already expanded
-            result = upstream[upstream.Count - 2]._expanded!;
-        }
-
-        return _expanded = result.AddRange(Expand(new(result, arguments)));
+        var upstreamRender = Upstream?.ExpandToRender(arguments);
+        return _expanded = Expand(new(upstreamRender, arguments));
     }
 
     protected readonly struct ExpansionContext
     {
-        public readonly ImmutableList<LinqGenInstruction> Upstream;
-        public readonly Dictionary<ArgumentSyntax, ImmutableList<LinqGenNode>> Arguments;
+        public readonly LinqGenRender? Upstream;
+        public readonly Dictionary<ArgumentSyntax, LinqGenNode> Arguments;
 
         public ExpansionContext(
-            ImmutableList<LinqGenInstruction> upstream,
-            Dictionary<ArgumentSyntax, ImmutableList<LinqGenNode>> arguments)
+            LinqGenRender? upstream,
+            Dictionary<ArgumentSyntax, LinqGenNode> arguments)
         {
             Upstream = upstream;
             Arguments = arguments;
@@ -56,11 +49,12 @@ public abstract class LinqGenNode
 public class GetEnumeratorNode : LinqGenNode
 {
     // Allows null argument since this can be deduced from foreach
-    public GetEnumeratorNode(IMethodSymbol? methodSymbol = null) : base(methodSymbol!) { }
+    public GetEnumeratorNode(LinqGenNode upstream, IMethodSymbol? methodSymbol = null)
+        : base(upstream, methodSymbol!) { }
 
-    protected override IEnumerable<LinqGenInstruction> Expand(in ExpansionContext ctx)
+    protected override LinqGenRender Expand(in ExpansionContext ctx)
     {
-        return new LinqGenInstruction[] { };
+        return null!;
     }
 }
 

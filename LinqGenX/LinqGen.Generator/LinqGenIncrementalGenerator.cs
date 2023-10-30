@@ -26,14 +26,9 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(signatures, RenderSourceOutput);
     }
 
-    private void RenderSourceOutput(SourceProductionContext ctx, LinqGenSignature signature)
+    private void RenderSourceOutput(SourceProductionContext ctx, LinqGenRender render)
     {
-        var instructions = signature.Instructions;
-        uint id = (uint)signature.GetHashCode();
-
-        var render = (LinqGenRender)instructions[instructions.Count - 1];
-        var source = FileRender.Render(render.Render(instructions, id));
-
-        ctx.AddSource($"LinqGen_{render.MethodName.Identifier.ValueText}_{id}.g.cs", source);
+        var source = FileRender.Render(render.Render());
+        ctx.AddSource($"LinqGen_{render.MethodName.Identifier.ValueText}_{render.UniqueId}.g.cs", source);
     }
 }

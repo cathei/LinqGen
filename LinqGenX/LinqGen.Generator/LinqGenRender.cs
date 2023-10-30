@@ -10,13 +10,13 @@ public abstract class LinqGenRender : LinqGenInstruction
 {
     public readonly IdentifierNameSyntax MethodName;
 
-    protected LinqGenRender(IdentifierNameSyntax methodName)
-        : base(ImmutableArray.Create<TypeSyntax>(methodName))
+    protected LinqGenRender(LinqGenInstruction upstream, IdentifierNameSyntax methodName)
+        : base(upstream, ImmutableArray.Create<TypeSyntax>(methodName))
     {
         MethodName = methodName;
     }
 
-    public abstract CompilationUnitSyntax Render(ImmutableList<LinqGenInstruction> instructions, uint id);
+    public abstract CompilationUnitSyntax Render();
 }
 
 // public class RenderMemberOperationInstruction : LinqGenRender

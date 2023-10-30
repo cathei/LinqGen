@@ -15,7 +15,9 @@ public static class CodeGenUtils
     private const string LinqGenOperationAttributeName = "LinqGenOperationAttribute";
     private const string LinqGenEvaluationAttributeName = "LinqGenEvaluationAttribute";
 
-    public static Type? ParseGenerationMethod(IMethodSymbol symbol)
+    public delegate LinqGenNode NodeConstructor(LinqGenNode? upstream, IMethodSymbol methodSymbol);
+
+    public static NodeConstructor? ParseGenerationMethod(IMethodSymbol symbol)
     {
         return symbol.GetAttributes()
             .Where(x => x.AttributeClass is
@@ -23,12 +25,11 @@ public static class CodeGenUtils
                 ContainingAssembly.Name: LinqGenAssemblyName,
                 MetadataName: LinqGenGenerationAttributeName,
             })
-            .Select(x => FindNodeType((string)x.ConstructorArguments[0].Value!))
+            .Select(x => FindNodeConstructor((string)x.ConstructorArguments[0].Value!))
             .FirstOrDefault();
     }
 
-
-    public static Type? ParseOperationMethod(IMethodSymbol symbol)
+    public static NodeConstructor? ParseOperationMethod(IMethodSymbol symbol)
     {
         return symbol.GetAttributes()
             .Where(x => x.AttributeClass is
@@ -36,11 +37,11 @@ public static class CodeGenUtils
                 ContainingAssembly.Name: LinqGenAssemblyName,
                 MetadataName: LinqGenOperationAttributeName,
             })
-            .Select(x => FindNodeType((string)x.ConstructorArguments[0].Value!))
+            .Select(x => FindNodeConstructor((string)x.ConstructorArguments[0].Value!))
             .FirstOrDefault();
     }
 
-    public static Type? ParseEvaluationMethod(IMethodSymbol symbol)
+    public static NodeConstructor? ParseEvaluationMethod(IMethodSymbol symbol)
     {
         return symbol.GetAttributes()
             .Where(x => x.AttributeClass is
@@ -48,14 +49,14 @@ public static class CodeGenUtils
                 ContainingAssembly.Name: LinqGenAssemblyName,
                 MetadataName: LinqGenEvaluationAttributeName,
             })
-            .Select(x => FindNodeType((string)x.ConstructorArguments[0].Value!))
+            .Select(x => FindNodeConstructor((string)x.ConstructorArguments[0].Value!))
             .FirstOrDefault();
     }
 
-    public static Type FindNodeType(string name)
+    public static NodeConstructor FindNodeConstructor(string name)
     {
-        return Assembly.GetExecutingAssembly()
-            .GetType($"Cathei.LinqGen.Generator.{name}Node");
+        var type = Assembly.GetExecutingAssembly().GetType($"Cathei.LinqGen.Generator.{name}Node");
+        return (upstream, methodSymbol) => (LinqGenNode)Activator.CreateInstance(type, upstream, methodSymbol);
     }
 
     private const string LinqGenStubEnumerableTypeName = "Stub`2";
@@ -842,5 +843,18 @@ public static class CodeGenUtils
     public static int HashCombine(int a, int b)
     {
         return unchecked((a * 397) ^ b);
+    }
+
+    // Generate stable hash code across executions
+    public static int StableHashCode(string str)
+    {
+        int hashCode = 0;
+
+        foreach (var ch in str)
+        {
+            hashCode = HashCombine(hashCode, ch);
+        }
+
+        return hashCode;
     }
 }

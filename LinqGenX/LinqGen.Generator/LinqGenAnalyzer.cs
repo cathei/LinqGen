@@ -21,22 +21,22 @@ public static class LinqGenAnalyzer
         return true;
     }
 
-    public static ImmutableArray<LinqGenSignature> Analyze(
+    public static ImmutableArray<LinqGenRender> Analyze(
         SemanticModel model, SyntaxNode syntax, CancellationToken cancellationToken)
     {
         if (syntax is not InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax memberAccessSyntax })
         {
             // not a method invocation
-            return ImmutableArray<LinqGenSignature>.Empty;
+            return ImmutableArray<LinqGenRender>.Empty;
         }
 
         var memberSymbolInfo = model.GetSymbolInfo(memberAccessSyntax);
 
         if (memberSymbolInfo.Symbol is not IMethodSymbol methodSymbol ||
-            ParseGenerationMethod(methodSymbol) is not Type nodeType)
+            ParseGenerationMethod(methodSymbol) is not NodeConstructor nodeConstructor)
         {
             // not a generation method
-            return ImmutableArray<LinqGenSignature>.Empty;
+            return ImmutableArray<LinqGenRender>.Empty;
         }
 
         var operation = model.GetOperation(syntax, cancellationToken);
@@ -44,20 +44,19 @@ public static class LinqGenAnalyzer
         if (operation is not IInvocationOperation invocationOperation)
         {
             // failed to find operation
-            return ImmutableArray<LinqGenSignature>.Empty;
+            return ImmutableArray<LinqGenRender>.Empty;
         }
 
         // Collection phase
-        var database = FindSignatures(invocationOperation, nodeType, cancellationToken);
+        var database = FindSignatures(invocationOperation, nodeConstructor, cancellationToken);
 
         // Expansion phase
-        var builder = ImmutableArray.CreateBuilder<LinqGenSignature>(database.Nodes.Count);
+        var builder = ImmutableArray.CreateBuilder<LinqGenRender>(database.Nodes.Count);
 
-        foreach (var upstream in database.Nodes)
+        foreach (var node in database.Nodes)
         {
-            var node = upstream[upstream.Count - 1];
-            var list = node.ExpandToInstructions(upstream, database.Arguments);
-            builder.Add(new LinqGenSignature(list));
+            var render = node.ExpandToRender(database.Arguments);
+            builder.Add(render);
         }
 
         return builder.MoveToImmutable();
@@ -65,20 +64,19 @@ public static class LinqGenAnalyzer
 
     private readonly struct SignatureDatabase
     {
-        public readonly List<ImmutableList<LinqGenNode>> Nodes = new();
-        public readonly Dictionary<ArgumentSyntax, ImmutableList<LinqGenNode>> Arguments = new();
+        public readonly List<LinqGenNode> Nodes = new();
+        public readonly Dictionary<ArgumentSyntax, LinqGenNode> Arguments = new();
 
         public SignatureDatabase() {}
     }
 
     private static SignatureDatabase FindSignatures(
         IInvocationOperation operation,
-        Type generationNode,
+        NodeConstructor nodeConstructor,
         CancellationToken cancellationToken)
     {
         var database = new SignatureDatabase();
-        var upstream = ImmutableList.Create(
-            (LinqGenNode)Activator.CreateInstance(generationNode, operation.TargetMethod));
+        var upstream = nodeConstructor(null, operation.TargetMethod);
 
         // register upstream itself first
         database.Nodes.Add(upstream);
@@ -90,7 +88,7 @@ public static class LinqGenAnalyzer
 
     private static void FindSignaturesFromUsage(
         in SignatureDatabase database,
-        ImmutableList<LinqGenNode> upstream,
+        LinqGenNode upstream,
         IOperation? operation,
         CancellationToken cancellationToken)
     {
@@ -128,7 +126,7 @@ public static class LinqGenAnalyzer
                 database.Arguments.Add((ArgumentSyntax)argumentOperation.Syntax, upstream);
 
                 // Also add get enumerator node
-                database.Nodes.Add(upstream.Add(new GetEnumeratorNode()));
+                database.Nodes.Add(new GetEnumeratorNode(upstream));
                 return;
             }
 
@@ -136,7 +134,7 @@ public static class LinqGenAnalyzer
                 forEachOperation.Collection == operation)
             {
                 // The operation is being enumerated
-                database.Nodes.Add(upstream.Add(new GetEnumeratorNode()));
+                database.Nodes.Add(new GetEnumeratorNode(upstream));
                 return;
             }
 
@@ -152,7 +150,7 @@ public static class LinqGenAnalyzer
 
     private static void FindSignaturesFromLocal(
         in SignatureDatabase database,
-        ImmutableList<LinqGenNode> upstream,
+        LinqGenNode upstream,
         IVariableDeclaratorOperation operation,
         CancellationToken cancellationToken)
     {
@@ -174,30 +172,29 @@ public static class LinqGenAnalyzer
 
     private static void FindSignaturesFromInvocation(
         in SignatureDatabase database,
-        ImmutableList<LinqGenNode> upstream,
+        LinqGenNode upstream,
         IInvocationOperation operation,
         CancellationToken cancellationToken)
     {
-        if (ParseOperationMethod(operation.TargetMethod) is Type operationNode)
+        if (ParseOperationMethod(operation.TargetMethod) is NodeConstructor operationNodeCtor)
         {
             // Operation node should have usages
-            var instance = (LinqGenNode)Activator.CreateInstance(operationNode, operation.TargetMethod);
-            upstream = upstream.Add(instance);
+            var node = operationNodeCtor(upstream, operation.TargetMethod);
 
             // Register operation itself first
-            database.Nodes.Add(upstream);
+            database.Nodes.Add(node);
 
             // Trace result usage
-            FindSignaturesFromUsage(database, upstream, operation.Parent, cancellationToken);
+            FindSignaturesFromUsage(database, node, operation.Parent, cancellationToken);
 
             // TODO: emit warning if result is not used
         }
-        else if (ParseEvaluationMethod(operation.TargetMethod) is Type evaluationNode)
+        else if (ParseEvaluationMethod(operation.TargetMethod) is NodeConstructor evaluationNodeCtor)
         {
             // Evaluation node is leaf node, no need to find downstream
-            var instance = (LinqGenNode)Activator.CreateInstance(evaluationNode, operation.TargetMethod);
+            var node = evaluationNodeCtor(upstream, operation.TargetMethod);
 
-            database.Nodes.Add(upstream.Add(instance));
+            database.Nodes.Add(node);
 
             // TODO: emit warning if result is not used
         }

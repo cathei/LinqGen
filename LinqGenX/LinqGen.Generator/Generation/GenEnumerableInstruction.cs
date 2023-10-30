@@ -7,8 +7,9 @@ public class GenEnumerableInstruction : GenerationInstruction
 {
     private readonly TypeSyntax EnumeratorType;
 
-    public GenEnumerableInstruction(TypeSyntax sourceType, TypeSyntax enumeratorType, TypeSyntax elementType)
-        : base(sourceType, elementType)
+    public GenEnumerableInstruction(
+        LinqGenInstruction? upstream, TypeSyntax sourceType, TypeSyntax enumeratorType, TypeSyntax elementType)
+        : base(upstream, sourceType, elementType)
     {
         EnumeratorType = enumeratorType;
     }
@@ -16,9 +17,10 @@ public class GenEnumerableInstruction : GenerationInstruction
 
 public class GenEnumerableNode : LinqGenNode
 {
-    public GenEnumerableNode(IMethodSymbol methodSymbol) : base(methodSymbol) { }
+    public GenEnumerableNode(LinqGenNode? upstream, IMethodSymbol methodSymbol)
+        : base(upstream, methodSymbol) { }
 
-    protected override IEnumerable<LinqGenInstruction> Expand(in ExpansionContext ctx)
+    protected override LinqGenRender Expand(in ExpansionContext ctx)
     {
         ITypeSymbol targetType = NormalizeSignature((INamedTypeSymbol)MethodSymbol.Parameters[0].Type);
 
@@ -30,26 +32,27 @@ public class GenEnumerableNode : LinqGenNode
 
         TypeSyntax elementType = ParseTypeName(enumerableSymbol.TypeArguments[0]);
 
-        return ImmutableList.Create<LinqGenInstruction>(
-            new GenEnumerableInstruction(
-                EnumerableInterfaceType(elementType),
-                EnumeratorInterfaceType(elementType),
-                elementType),
-            new GenerationRender(IdentifierName(MethodSymbol.Name)));
+        return new GenerationRender(new GenEnumerableInstruction(
+            ctx.Upstream,
+            EnumerableInterfaceType(elementType),
+            EnumeratorInterfaceType(elementType),
+            elementType
+        ), IdentifierName(MethodSymbol.Name));
     }
 }
 
 public class GenEnumerableObjectNode : LinqGenNode
 {
-    public GenEnumerableObjectNode(IMethodSymbol methodSymbol) : base(methodSymbol) { }
+    public GenEnumerableObjectNode(LinqGenNode? upstream, IMethodSymbol methodSymbol)
+        : base(upstream, methodSymbol) { }
 
-    protected override IEnumerable<LinqGenInstruction> Expand(in ExpansionContext ctx)
+    protected override LinqGenRender Expand(in ExpansionContext ctx)
     {
-        return ImmutableList.Create<LinqGenInstruction>(
-            new GenEnumerableInstruction(
-                IdentifierName("IEnumerable"),
-                IdentifierName("IEnumerator"),
-                ObjectType),
-            new GenerationRender(IdentifierName(MethodSymbol.Name)));
+        return new GenerationRender(new GenEnumerableInstruction(
+            ctx.Upstream,
+            IdentifierName("IEnumerable"),
+            IdentifierName("IEnumerator"),
+            ObjectType
+        ), IdentifierName(MethodSymbol.Name));
     }
 }

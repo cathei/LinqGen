@@ -12,10 +12,12 @@ namespace Cathei.LinqGen.Generator;
 /// </summary>
 public abstract class LinqGenInstruction : IEquatable<LinqGenInstruction>
 {
+    public readonly LinqGenInstruction? Upstream;
     public readonly ImmutableArray<TypeSyntax> Identity;
 
-    public LinqGenInstruction(in ImmutableArray<TypeSyntax> identity)
+    protected LinqGenInstruction(LinqGenInstruction? upstream, in ImmutableArray<TypeSyntax> identity)
     {
+        Upstream = upstream;
         Identity = identity;
     }
 
@@ -39,7 +41,10 @@ public abstract class LinqGenInstruction : IEquatable<LinqGenInstruction>
                 return false;
         }
 
-        return true;
+        if (Upstream != null)
+            return Upstream.Equals(other.Upstream);
+
+        return other.Upstream == null;
     }
 
     public override bool Equals(object? obj)
@@ -47,35 +52,30 @@ public abstract class LinqGenInstruction : IEquatable<LinqGenInstruction>
         return Equals(obj as LinqGenInstruction);
     }
 
-    private int? _hashCode = null;
-
-    [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
     public override int GetHashCode()
     {
-        if (_hashCode.HasValue)
-            return _hashCode.Value;
-
-        int hashCode = StableHashCode(GetType().Name);
-
-        foreach (var type in Identity)
-        {
-            hashCode = HashCombine(hashCode, StableHashCode(type.ToFullString()));
-        }
-
-        _hashCode = hashCode;
-        return hashCode;
+        return (int)UniqueId;
     }
 
-    // Generate stable hash code across executions
-    private static int StableHashCode(string str)
+    private uint? _uniqueId = null;
+
+    public uint UniqueId
     {
-        int hashCode = 0;
-
-        foreach (var ch in str)
+        get
         {
-            hashCode = HashCombine(hashCode, ch);
-        }
+            if (_uniqueId.HasValue)
+                return _uniqueId.Value;
 
-        return hashCode;
+            int id = StableHashCode(GetType().Name);
+
+            if (Upstream != null)
+                id = HashCombine(id, Upstream.GetHashCode());
+
+            foreach (var type in Identity)
+                id = HashCombine(id, StableHashCode(type.ToFullString()));
+
+            _uniqueId = (uint)id;
+            return _uniqueId.Value;
+        }
     }
 }

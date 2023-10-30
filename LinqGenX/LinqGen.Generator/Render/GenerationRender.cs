@@ -168,12 +168,14 @@ namespace Cathei.LinqGen
         }
     }
 
-    public GenerationRender(IdentifierNameSyntax methodName) : base(methodName) {}
+    public GenerationRender(LinqGenInstruction upstream, IdentifierNameSyntax methodName)
+        : base(upstream, methodName)
+    {}
 
-    public override CompilationUnitSyntax Render(ImmutableList<LinqGenInstruction> instructions, uint id)
+    public override CompilationUnitSyntax Render()
     {
-        var instruction = (GenerationInstruction)instructions[instructions.Count - 2];
-        var enumerableName = IdentifierName($"{MethodName.Identifier.ValueText}_{id}");
+        var instruction = (GenerationInstruction)Upstream!;
+        var enumerableName = IdentifierName($"{MethodName.Identifier.ValueText}_{UniqueId}");
 
         var rewriter = new Rewriter(MethodName, enumerableName, instruction.SourceType, instruction.InterfaceType);
         return (CompilationUnitSyntax)rewriter.Visit(Template.GetCompilationUnitRoot());

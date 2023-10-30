@@ -10,8 +10,8 @@ public abstract class GenerationInstruction : LinqGenInstruction
 
     public TypeSyntax InterfaceType => GenericName(Identifier("IStub"), TypeArgumentList(ElementType));
 
-    protected GenerationInstruction(TypeSyntax sourceType, TypeSyntax elementType)
-        : base(ImmutableArray.Create(sourceType))
+    protected GenerationInstruction(LinqGenInstruction? upstream, TypeSyntax sourceType, TypeSyntax elementType)
+        : base(upstream, ImmutableArray.Create(sourceType))
     {
         SourceType = sourceType;
         ElementType = elementType;
