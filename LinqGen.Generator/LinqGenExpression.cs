@@ -41,6 +41,8 @@ public readonly struct LinqGenExpression : IEquatable<LinqGenExpression>
             return false;
         }
 
+        IOperation? op = semanticModel.GetOperation(invocationSyntax);
+
         INamedTypeSymbol? signatureSymbol = null;
 
         // returning stub enumerable, meaning it's compiling generation

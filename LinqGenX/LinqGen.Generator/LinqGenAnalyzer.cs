@@ -10,20 +10,21 @@ namespace Cathei.LinqGen.Generator;
 
 public static class LinqGenAnalyzer
 {
-    public static bool ShouldAnalyze(SyntaxNode node)
+    public static bool ShouldAnalyze(SyntaxNode syntax)
     {
-        if (node is not InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax memberAccessSyntax })
+        if (syntax is not InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax })
         {
             // not a method invocation
             return false;
         }
 
-        return RootMethodNames.Contains(memberAccessSyntax.Name.Identifier.ValueText);
+        return true;
     }
 
-    public static ImmutableArray<LinqGenSignature> Analyze(SemanticModel model, SyntaxNode node, CancellationToken cancellationToken)
+    public static ImmutableArray<LinqGenSignature> Analyze(
+        SemanticModel model, SyntaxNode syntax, CancellationToken cancellationToken)
     {
-        if (node is not InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax memberAccessSyntax })
+        if (syntax is not InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax memberAccessSyntax })
         {
             // not a method invocation
             return ImmutableArray<LinqGenSignature>.Empty;
@@ -31,60 +32,67 @@ public static class LinqGenAnalyzer
 
         var memberSymbolInfo = model.GetSymbolInfo(memberAccessSyntax);
 
-        if (memberSymbolInfo.Symbol is not IMethodSymbol methodSymbol || !IsRootMethod(methodSymbol))
+        if (memberSymbolInfo.Symbol is not IMethodSymbol methodSymbol ||
+            ParseGenerationMethod(methodSymbol) is not Type nodeType)
         {
-            // not a root method
+            // not a generation method
             return ImmutableArray<LinqGenSignature>.Empty;
         }
 
-        var operation = model.GetOperation(memberAccessSyntax.Expression, cancellationToken);
+        var operation = model.GetOperation(syntax, cancellationToken);
 
-        if (operation == null)
+        if (operation is not IInvocationOperation invocationOperation)
         {
             // failed to find operation
             return ImmutableArray<LinqGenSignature>.Empty;
         }
 
         // Collection phase
-        var dict = FindSignatures(operation, cancellationToken);
+        var database = FindSignatures(invocationOperation, nodeType, cancellationToken);
 
         // Expansion phase
+        var builder = ImmutableArray.CreateBuilder<LinqGenSignature>(database.Nodes.Count);
 
-
-
-        // // create chain signatures
-        // return FindSignatures(operation, cancellationToken)
-        //     .Select(static x => new LinqGenSignature(x))
-        //     .ToImmutableArray();
-    }
-
-    private readonly struct SignaturePair
-    {
-        public readonly ISymbol Symbol;
-        public readonly ImmutableList<LinqGenNode> Signature;
-
-        public SignaturePair(ISymbol symbol, ImmutableList<LinqGenNode> signature)
+        foreach (var upstream in database.Nodes)
         {
-            Symbol = symbol;
-            Signature = signature;
+            var node = upstream[upstream.Count - 1];
+            var list = node.ExpandToInstructions(upstream, database.Arguments);
+            builder.Add(new LinqGenSignature(list));
         }
+
+        return builder.MoveToImmutable();
     }
 
-    private static IEnumerable<SignaturePair> FindSignatures(
-        IInvocationOperation operation, CancellationToken cancellationToken)
+    private readonly struct SignatureDatabase
     {
-        var upstream = ImmutableList.Create<LinqGenNode>(new SpecializeNode());
+        public readonly List<ImmutableList<LinqGenNode>> Nodes = new();
+        public readonly Dictionary<ArgumentSyntax, ImmutableList<LinqGenNode>> Arguments = new();
 
-        // return upstream itself first
-        yield return new(operation.TargetMethod, upstream);
+        public SignatureDatabase() {}
+    }
+
+    private static SignatureDatabase FindSignatures(
+        IInvocationOperation operation,
+        Type generationNode,
+        CancellationToken cancellationToken)
+    {
+        var database = new SignatureDatabase();
+        var upstream = ImmutableList.Create(
+            (LinqGenNode)Activator.CreateInstance(generationNode, operation.TargetMethod));
+
+        // register upstream itself first
+        database.Nodes.Add(upstream);
 
         // Trace result usage
-        foreach (var list in FindSignaturesFromUsage(upstream, operation.Parent, cancellationToken))
-            yield return list;
+        FindSignaturesFromUsage(database, upstream, operation.Parent, cancellationToken);
+        return database;
     }
 
-    private static IEnumerable<SignaturePair> FindSignaturesFromUsage(
-        ImmutableList<LinqGenNode> upstream, IOperation? operation, CancellationToken cancellationToken)
+    private static void FindSignaturesFromUsage(
+        in SignatureDatabase database,
+        ImmutableList<LinqGenNode> upstream,
+        IOperation? operation,
+        CancellationToken cancellationToken)
     {
         while (operation != null)
         {
@@ -93,7 +101,8 @@ public static class LinqGenAnalyzer
             if (operation is IVariableDeclaratorOperation varDeclOperation)
             {
                 // The operation saved as local variable
-                return FindSignaturesFromLocal(upstream, varDeclOperation, cancellationToken);
+                FindSignaturesFromLocal(database, upstream, varDeclOperation, cancellationToken);
+                return;
             }
 
             if (operation is IArgumentOperation argumentOperation &&
@@ -109,30 +118,43 @@ public static class LinqGenAnalyzer
                 if (invocationOperation.Arguments[0] == argumentOperation)
                 {
                     // The operation used as caller
-                    return FindSignaturesFromInvocation(upstream, invocationOperation, cancellationToken);
+                    FindSignaturesFromInvocation(database, upstream, invocationOperation, cancellationToken);
+                    return;
                 }
 
                 // The operation used as an argument
                 // This chain will be analyzed later
-                // For now, treat same as being enumerated
-                return GetEnumeratorSignature(upstream, operation);
+                // Map upstream with argument syntax
+                database.Arguments.Add((ArgumentSyntax)argumentOperation.Syntax, upstream);
+
+                // Also add get enumerator node
+                database.Nodes.Add(upstream.Add(new GetEnumeratorNode()));
+                return;
             }
 
             if (operation.Parent is IForEachLoopOperation forEachOperation &&
                 forEachOperation.Collection == operation)
             {
                 // The operation is being enumerated
-                return GetEnumeratorSignature(upstream, operation);
+                database.Nodes.Add(upstream.Add(new GetEnumeratorNode()));
+                return;
+            }
+
+            if (operation.Syntax is StatementSyntax)
+            {
+                // Current statement is finished, stop looping
+                return;
             }
 
             operation = operation.Parent;
         }
-
-        return Enumerable.Empty<SignaturePair>();
     }
 
-    private static IEnumerable<SignaturePair> FindSignaturesFromLocal(
-        ImmutableList<LinqGenNode> upstream, IVariableDeclaratorOperation operation, CancellationToken cancellationToken)
+    private static void FindSignaturesFromLocal(
+        in SignatureDatabase database,
+        ImmutableList<LinqGenNode> upstream,
+        IVariableDeclaratorOperation operation,
+        CancellationToken cancellationToken)
     {
         var symbol = operation.Symbol;
         var symbolComparer = SymbolEqualityComparer.Default;
@@ -146,22 +168,38 @@ public static class LinqGenAnalyzer
             .OfType<ILocalReferenceOperation>()
             .Where(x => symbolComparer.Equals(x.Local, symbol));
 
-        return usages.SelectMany(x => FindSignaturesFromUsage(upstream, x, cancellationToken));
+        foreach (var usage in usages)
+            FindSignaturesFromUsage(database, upstream, usage, cancellationToken);
     }
 
-    private static IEnumerable<SignaturePair> FindSignaturesFromInvocation(
-        ImmutableList<LinqGenNode> upstream, IInvocationOperation operation, CancellationToken cancellationToken)
+    private static void FindSignaturesFromInvocation(
+        in SignatureDatabase database,
+        ImmutableList<LinqGenNode> upstream,
+        IInvocationOperation operation,
+        CancellationToken cancellationToken)
     {
-        // operation.TargetMethod
-
-    }
-
-    private static IEnumerable<SignaturePair> GetEnumeratorSignature(
-        ImmutableList<LinqGenNode> upstream, IOperation operation)
-    {
-        if (operation.SemanticModel?.GetSymbolInfo(operation.Syntax).Symbol is ISymbol symbol)
+        if (ParseOperationMethod(operation.TargetMethod) is Type operationNode)
         {
-            yield return new(symbol, upstream.Add(new GetEnumeratorNode()));
+            // Operation node should have usages
+            var instance = (LinqGenNode)Activator.CreateInstance(operationNode, operation.TargetMethod);
+            upstream = upstream.Add(instance);
+
+            // Register operation itself first
+            database.Nodes.Add(upstream);
+
+            // Trace result usage
+            FindSignaturesFromUsage(database, upstream, operation.Parent, cancellationToken);
+
+            // TODO: emit warning if result is not used
+        }
+        else if (ParseEvaluationMethod(operation.TargetMethod) is Type evaluationNode)
+        {
+            // Evaluation node is leaf node, no need to find downstream
+            var instance = (LinqGenNode)Activator.CreateInstance(evaluationNode, operation.TargetMethod);
+
+            database.Nodes.Add(upstream.Add(instance));
+
+            // TODO: emit warning if result is not used
         }
     }
 }

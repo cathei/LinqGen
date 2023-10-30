@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 
 namespace Cathei.LinqGen.Generator;
 
@@ -10,20 +11,52 @@ public static class CodeGenUtils
 {
     private const string LinqGenAssemblyName = "LinqGen";
     private const string LinqGenStubExtensionsTypeName = "StubExtensions";
+    private const string LinqGenGenerationAttributeName = "LinqGenGenerationAttribute";
+    private const string LinqGenOperationAttributeName = "LinqGenOperationAttribute";
+    private const string LinqGenEvaluationAttributeName = "LinqGenEvaluationAttribute";
 
-    public static readonly HashSet<string> RootMethodNames = new()
+    public static Type? ParseGenerationMethod(IMethodSymbol symbol)
     {
-        "Gen"
-    };
-
-    public static bool IsRootMethod(IMethodSymbol symbol)
-    {
-        // is it member of extension class or member of stub enumerable?
-        return symbol.ContainingAssembly.Name is LinqGenAssemblyName &&
-               symbol.ContainingType.MetadataName is LinqGenStubExtensionsTypeName &&
-               RootMethodNames.Contains(symbol.Name);
+        return symbol.GetAttributes()
+            .Where(x => x.AttributeClass is
+            {
+                ContainingAssembly.Name: LinqGenAssemblyName,
+                MetadataName: LinqGenGenerationAttributeName,
+            })
+            .Select(x => FindNodeType((string)x.ConstructorArguments[0].Value!))
+            .FirstOrDefault();
     }
 
+
+    public static Type? ParseOperationMethod(IMethodSymbol symbol)
+    {
+        return symbol.GetAttributes()
+            .Where(x => x.AttributeClass is
+            {
+                ContainingAssembly.Name: LinqGenAssemblyName,
+                MetadataName: LinqGenOperationAttributeName,
+            })
+            .Select(x => FindNodeType((string)x.ConstructorArguments[0].Value!))
+            .FirstOrDefault();
+    }
+
+    public static Type? ParseEvaluationMethod(IMethodSymbol symbol)
+    {
+        return symbol.GetAttributes()
+            .Where(x => x.AttributeClass is
+            {
+                ContainingAssembly.Name: LinqGenAssemblyName,
+                MetadataName: LinqGenEvaluationAttributeName,
+            })
+            .Select(x => FindNodeType((string)x.ConstructorArguments[0].Value!))
+            .FirstOrDefault();
+    }
+
+    public static Type FindNodeType(string name)
+    {
+        return Assembly.GetExecutingAssembly()
+            .GetType($"LinqGen.Generator.{name}Node");
+    }
 
     private const string LinqGenStubEnumerableTypeName = "Stub`2";
     private const string LinqGenStubInterfaceTypeName = "IStub`2";
@@ -662,7 +695,7 @@ public static class CodeGenUtils
         return interfaceSymbol != null!;
     }
 
-    private static bool TryGetEnumerableInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
+    public static bool TryGetEnumerableInterface(ITypeSymbol symbol, out INamedTypeSymbol interfaceSymbol)
     {
         interfaceSymbol = GetInterface(symbol, SystemCollectionsGenericNamespace, "IEnumerable`1")!;
         if (interfaceSymbol != null!)

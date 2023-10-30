@@ -6,16 +6,16 @@ namespace Cathei.LinqGen.Generator;
 
 public readonly struct LinqGenSignature : IEquatable<LinqGenSignature>
 {
-    public readonly ImmutableList<LinqGenNode> Nodes;
+    public readonly ImmutableList<LinqGenInstruction> Instructions;
 
-    public LinqGenSignature(ImmutableList<LinqGenNode> nodes)
+    public LinqGenSignature(ImmutableList<LinqGenInstruction> instructions)
     {
-        Nodes = nodes;
+        Instructions = instructions;
     }
 
     public bool Equals(LinqGenSignature other)
     {
-        return Nodes.SequenceEqual(other.Nodes);
+        return Instructions.SequenceEqual(other.Instructions);
     }
 
     public override bool Equals(object? obj)
@@ -25,8 +25,14 @@ public readonly struct LinqGenSignature : IEquatable<LinqGenSignature>
 
     public override int GetHashCode()
     {
-        // should not be called
-        return 0;
+        int hashCode = 0;
+
+        foreach (var instruction in Instructions)
+        {
+            hashCode = HashCombine(hashCode, instruction.GetHashCode());
+        }
+
+        return hashCode;
     }
 }
 

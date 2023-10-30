@@ -17,32 +17,24 @@ public class LinqGenIncrementalGenerator : IIncrementalGenerator
         // So we cannot support GeneratorDriverOptions.TrackIncrementalGeneratorSteps at this time.
         // See https://github.com/dotnet/roslyn/pull/61308
 
-        var expressions = context.SyntaxProvider
+        var signatures = context.SyntaxProvider
             .CreateSyntaxProvider(
                 static (node, _) => LinqGenAnalyzer.ShouldAnalyze(node),
                 static (ctx, token) => LinqGenAnalyzer.Analyze(ctx.SemanticModel, ctx.Node, token))
-            .SelectMany(static (x, _) =>
-                x.HasValue ? ImmutableArray.Create(x.Value) : ImmutableArray<LinqGenSignature>.Empty)
-            .WithTrackingName("Expressions");
+            .SelectMany(static (x, _) => x)
+            .WithTrackingName("Signatures");
 
+        context.RegisterSourceOutput(signatures, RenderSourceOutput);
     }
 
-    private static uint GenerateStableId(in LinqGenSignature expr)
+    private void RenderSourceOutput(SourceProductionContext ctx, LinqGenSignature signature)
     {
-        unchecked
-        {
-            string str = expr.IsCompilingGeneration()
-                ? expr.GenerationKey.ToString()
-                : expr.EvaluationKey.ToString();
+        var instructions = signature.Instructions;
+        uint id = (uint)signature.GetHashCode();
 
-            int hash = 0;
+        var render = (LinqGenRender)instructions[instructions.Count - 1];
+        var source = FileRender.Render(render.Render(instructions, id));
 
-            foreach (var c in str)
-                hash = HashCombine(hash, c);
-
-            return (uint)hash;
-        }
+        ctx.AddSource($"LinqGen_{render.MethodName.Identifier.ValueText}_{id}.g.cs", source);
     }
-
-
 }
