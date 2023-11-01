@@ -6,7 +6,7 @@ namespace Cathei.LinqGen.Generator;
 /// <summary>
 /// Instruction that actually generates a source.
 /// </summary>
-public abstract class LinqGenRender : LinqGenInstruction
+public abstract class LinqGenRender : LinqGenOperation
 {
     public readonly IdentifierNameSyntax MethodName;
 

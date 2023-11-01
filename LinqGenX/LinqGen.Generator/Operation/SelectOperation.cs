@@ -2,12 +2,12 @@
 
 namespace Cathei.LinqGen.Generator;
 
-public class SelectInstruction : LinqGenInstruction
+public class SelectOperation : LinqGenOperation
 {
     public readonly TypeSyntax SelectorType;
     public readonly bool WithIndex;
 
-    public SelectInstruction(LinqGenInstruction? upstream, TypeSyntax selectorType, bool withIndex)
+    public SelectOperation(LinqGenInstruction upstream, TypeSyntax selectorType, bool withIndex)
         : base(upstream, ImmutableArray.Create(selectorType))
     {
         SelectorType = selectorType;
