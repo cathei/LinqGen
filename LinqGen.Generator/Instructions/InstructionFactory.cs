@@ -335,9 +335,12 @@ public static class InstructionFactory
             case "LastOrDefault":
                 return new LastEvaluation(expression, id, true);
 
-            // case "Single":
-            //     break;
-            //
+            case "Single":
+                return new SingleEvaluation(expression, id, false);
+
+            case "SingleOrDefault":
+                return new SingleEvaluation(expression, id, true);
+
             case "Sum":
                 return new SumEvaluation(expression, id);
 

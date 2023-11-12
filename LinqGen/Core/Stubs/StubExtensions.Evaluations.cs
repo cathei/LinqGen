@@ -43,6 +43,16 @@ namespace Cathei.LinqGen
             throw new NotImplementedException();
         }
 
+        public static T Single<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static T SingleOrDefault<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable)
+        {
+            throw new NotImplementedException();
+        }
+
         public static T Sum<T, TUp>(this IStub<IEnumerable<T>, TUp> enumerable)
         {
             throw new NotImplementedException();

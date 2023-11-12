@@ -411,6 +411,15 @@ public static class CodeGenUtils
             IdentifierName("ThrowInvalidOperation")));
     }
 
+    public static StatementSyntax ThrowInvalidOperationStatement(string message) {
+        return ExpressionStatement(InvocationExpression(
+                                                        IdentifierName("ExceptionUtils"),
+                                                        IdentifierName("ThrowInvalidOperation"))
+                                   .WithArgumentList(ArgumentList(SyntaxFactory
+                                                                  .LiteralExpression(SyntaxKind.StringLiteralExpression,
+                                                                           Literal(message)))));
+    }
+
     public static LiteralExpressionSyntax LiteralExpression(int value)
     {
         if (value < 0)

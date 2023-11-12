@@ -18,4 +18,13 @@ public static class Utils
             yield return rand.Next(0, 100);
         }
     }
+    public static IEnumerable<int> GenerateLarge(int seed, int count)
+    {
+        var rand = new Random(seed);
+
+        for (int i = 0; i < count; ++i)
+        {
+            yield return rand.Next(0, 1000000000);
+        }
+    }
 }
