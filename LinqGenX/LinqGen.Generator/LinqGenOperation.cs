@@ -12,7 +12,7 @@ public abstract class LinqGenOperation : LinqGenInstruction
 
     protected new LinqGenInstruction Upstream => base.Upstream!;
 
-    public override ExpressionSyntax GetCurrent(in ScanContext ctx)
+    public override ExpressionSyntax GetCurrent(ScanContext ctx)
     {
         return Upstream.GetCurrent(ctx);
     }
@@ -21,7 +21,7 @@ public abstract class LinqGenOperation : LinqGenInstruction
 
     public override bool SupportsCount => Upstream.SupportsCount;
 
-    public override ExpressionSyntax? GetCount(in ScanContext ctx)
+    public override ExpressionSyntax? GetCount(ScanContext ctx)
     {
         return Upstream.GetCount(ctx);
     }

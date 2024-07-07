@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace Cathei.LinqGen.Generator;
 
@@ -11,13 +12,8 @@ namespace Cathei.LinqGen.Hidden
     // Enumerable should be considered as anonymous type, thus it will be internal
     internal readonly partial struct _Enumerable_
     {
-        private readonly _Source_ source;
-    
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal _Enumerable_(in _Source_ source) : this()
-        {
-            this.source = source;
-        }
+        internal _Enumerable_() : this() {}
     }
 }
 
@@ -27,31 +23,25 @@ namespace Cathei.LinqGen
     internal static partial class _Extensions_
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static _Enumerable_ _Method_(this _Source_ source)
-        {
-            return new _Enumerable_(input);
-        }
+        public static _Enumerable_ _Method_() {}
     }
 }
 """);
 
-    public class Rewriter : CSharpSyntaxRewriter
+    private class Rewriter : CSharpSyntaxRewriter
     {
         private readonly IdentifierNameSyntax _methodName;
         private readonly IdentifierNameSyntax _enumerableName;
-        private readonly TypeSyntax _sourceType;
-        private readonly TypeSyntax _interfaceType;
+        private readonly GenerationInstruction _instruction;
 
         public Rewriter(
             IdentifierNameSyntax methodName,
             IdentifierNameSyntax enumerableName,
-            TypeSyntax sourceType,
-            TypeSyntax interfaceType)
+            GenerationInstruction instruction)
         {
             _methodName = methodName;
             _enumerableName = enumerableName;
-            _sourceType = sourceType;
-            _interfaceType = interfaceType;
+            _instruction = instruction;
         }
 
         public override SyntaxNode? VisitClassDeclaration(ClassDeclarationSyntax? node)
@@ -106,9 +96,6 @@ namespace Cathei.LinqGen
         {
             switch (node.Identifier.ValueText)
             {
-                case "_Source_":
-                    return _sourceType;
-
                 case "_Enumerable_":
                     return _enumerableName;
             }
@@ -120,23 +107,42 @@ namespace Cathei.LinqGen
         {
             return node
                 .WithIdentifier(Identifier($"LinqGenExtensions_{_enumerableName.Identifier.ValueText}"))
-                .WithBaseList(BaseList(SingletonSeparatedList<BaseTypeSyntax>(SimpleBaseType(_interfaceType))));
+                .WithBaseList(BaseList(SingletonSeparatedList<BaseTypeSyntax>(SimpleBaseType(_instruction.InterfaceType))));
         }
 
         private StructDeclarationSyntax RewriteEnumerableStruct(StructDeclarationSyntax node)
         {
-            node = node.WithIdentifier(_enumerableName.Identifier);
+            using (ListPool.Rent(out List<StatementSyntax> statements))
+            {
+                node = node.WithIdentifier(_enumerableName.Identifier)
+                    .AddMembers();
+
+
+
+
+
+                return node;
+            }
                 // .WithTypeParameterList(_instruction.GetTypeParameters())
                 // .WithConstraintClauses(_instruction.GetGenericConstraints())
                 // .AddMembers(_instruction.RenderEnumerableMembers().ToArray())
                 // .AddMembers(_instruction.GetFieldDeclarations(MemberKind.Enumerable).ToArray());
-
-            return node;
         }
 
         private ConstructorDeclarationSyntax? RewriteEnumerableConstructor(ConstructorDeclarationSyntax node)
         {
-            return node.WithIdentifier(_enumerableName.Identifier);
+            using (ListPool.Rent(out List<ParameterSyntax> parameters))
+            using (ListPool.Rent(out List<StatementSyntax> statements))
+            {
+                node = node.WithIdentifier(_enumerableName.Identifier);
+
+                _instruction.GetConstructorParameters(parameters);
+                parameters[0] = parameters[0].AddModifiers(InToken);
+                node = node.WithParameterList(ParameterList(parameters));
+
+                return node;
+            }
+
             //
             // var parameters = _instruction.GetParameters();
             // var assignments = _instruction.GetFieldAssignments(MemberKind.Enumerable, false);
@@ -164,7 +170,21 @@ namespace Cathei.LinqGen
 
         private MethodDeclarationSyntax? RewriteExtensionMethod(MethodDeclarationSyntax node)
         {
-            return node.WithIdentifier(_methodName.Identifier);
+            using (ListPool.Rent(out List<ParameterSyntax> parameters))
+            {
+                node = node.WithIdentifier(_methodName.Identifier);
+
+                _instruction.GetConstructorParameters(parameters);
+                parameters[0] = parameters[0].AddModifiers(ThisToken, InToken);
+                node = node.WithParameterList(ParameterList(parameters));
+
+                node = node.WithExpressionBody(ArrowExpressionClause(ObjectCreationExpression(
+                    _enumerableName,
+                    ArgumentList(parameters.Select(x => Argument(IdentifierName(x.Identifier)))),
+                    null)));
+
+                return node;
+            }
         }
     }
 
@@ -177,7 +197,7 @@ namespace Cathei.LinqGen
         var instruction = (GenerationInstruction)Upstream!;
         var enumerableName = IdentifierName($"{MethodName.Identifier.ValueText}_{UniqueId}");
 
-        var rewriter = new Rewriter(MethodName, enumerableName, instruction.SourceType, instruction.InterfaceType);
+        var rewriter = new Rewriter(MethodName, enumerableName, instruction);
         return (CompilationUnitSyntax)rewriter.Visit(Template.GetCompilationUnitRoot());
     }
 }

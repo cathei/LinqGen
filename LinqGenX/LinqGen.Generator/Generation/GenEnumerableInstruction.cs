@@ -13,6 +13,31 @@ public class GenEnumerableInstruction : GenerationInstruction
     {
         EnumeratorType = enumeratorType;
     }
+
+    protected override IEnumerable<MemberInfo> Parameters()
+    {
+        yield return new MemberInfo(SourceType, "source");
+    }
+
+    protected override IEnumerable<MemberInfo> LocalMembers(IterationContext ctx)
+    {
+        yield return new MemberInfo(EnumeratorType, "iter");
+    }
+
+    protected override IEnumerable<StatementSyntax> LocalStep(IterationContext ctx)
+    {
+        yield return IfStatement(
+            LogicalNotExpression(InvocationExpression(ctx.Member("iter"), IdentifierName("MoveNext"))),
+            BreakStatement());
+    }
+
+    public override ExpressionSyntax GetCurrent(ScanContext ctx)
+    {
+        return MemberAccessExpression(ctx.Member("iter"), IdentifierName("Current"));
+    }
+
+    public override bool SupportsPartition => false;
+    public override bool SupportsCount => false;
 }
 
 public class GenEnumerableNode : LinqGenNode

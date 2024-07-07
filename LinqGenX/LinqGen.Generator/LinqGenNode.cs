@@ -57,27 +57,3 @@ public class GetEnumeratorNode : LinqGenNode
         return null!;
     }
 }
-
-// public class SelectNode : LinqGenNode
-// {
-//     public SelectNode(IMethodSymbol methodSymbol) : base(methodSymbol) { }
-//
-//     protected override IEnumerable<LinqGenInstruction> Expand(in ExpansionContext ctx)
-//     {
-//     }
-// }
-//
-// public class SelectAtNode : LinqGenNode
-// {
-//     public SelectAtNode(IMethodSymbol methodSymbol) : base(methodSymbol) { }
-// }
-//
-// public class WhereNode : LinqGenNode
-// {
-//     public WhereNode(IMethodSymbol methodSymbol) : base(methodSymbol) { }
-// }
-//
-// public class WhereAtNode : LinqGenNode
-// {
-//     public WhereAtNode(IMethodSymbol methodSymbol) : base(methodSymbol) { }
-// }

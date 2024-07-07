@@ -128,13 +128,13 @@ public abstract class LinqGenInstruction : IEquatable<LinqGenInstruction>
     /// <summary>
     /// Will be added as Enumerator member.
     /// </summary>
-    protected virtual IEnumerable<MemberInfo> EnumeratorMembers(in IterationContext ctx)
+    protected virtual IEnumerable<MemberInfo> EnumeratorMembers(IterationContext ctx)
         => LocalMembers(ctx);
 
     /// <summary>
     /// Will be added as local evaluation member.
     /// </summary>
-    protected abstract IEnumerable<MemberInfo> LocalMembers(in IterationContext ctx);
+    protected abstract IEnumerable<MemberInfo> LocalMembers(IterationContext ctx);
 
     public readonly struct ScanContext
     {
@@ -153,7 +153,7 @@ public abstract class LinqGenInstruction : IEquatable<LinqGenInstruction>
         }
     }
 
-    public readonly struct IterationContext
+    public class IterationContext
     {
         public readonly ScanContext Context;
         public readonly ExpressionSyntax? SkipVar;
@@ -162,7 +162,7 @@ public abstract class LinqGenInstruction : IEquatable<LinqGenInstruction>
         public readonly ExpressionSyntax? CountVar;
 
         public IterationContext(
-            in ScanContext context,
+            ScanContext context,
             ExpressionSyntax? skipVar,
             ExpressionSyntax? takeVar,
             ExpressionSyntax currentVar,
@@ -193,30 +193,30 @@ public abstract class LinqGenInstruction : IEquatable<LinqGenInstruction>
     /// <summary>
     /// Apply statements after enumerator initialization.
     /// </summary>
-    protected virtual IEnumerable<StatementSyntax> EnumeratorPreparation(in IterationContext ctx)
+    protected virtual IEnumerable<StatementSyntax> EnumeratorPreparation(IterationContext ctx)
         => LocalPreparation(ctx);
 
     /// <summary>
     /// Apply statements after local initialization.
     /// </summary>
-    protected virtual IEnumerable<StatementSyntax> LocalPreparation(in IterationContext ctx)
+    protected virtual IEnumerable<StatementSyntax> LocalPreparation(IterationContext ctx)
         => Enumerable.Empty<StatementSyntax>();
 
     /// <summary>
     /// Statements for enumerator MoveNext.
     /// </summary>
-    protected virtual IEnumerable<StatementSyntax> EnumeratorStep(in IterationContext ctx)
+    protected virtual IEnumerable<StatementSyntax> EnumeratorStep(IterationContext ctx)
         => LocalStep(ctx);
 
     /// <summary>
     /// Statements for local MoveNext.
     /// </summary>
-    protected abstract IEnumerable<StatementSyntax> LocalStep(in IterationContext ctx);
+    protected abstract IEnumerable<StatementSyntax> LocalStep(IterationContext ctx);
 
     /// <summary>
     /// Get variable represents current value.
     /// </summary>
-    public abstract ExpressionSyntax GetCurrent(in ScanContext ctx);
+    public abstract ExpressionSyntax GetCurrent(ScanContext ctx);
 
     /// <summary>
     /// Does this instruction support partitioning?
@@ -224,17 +224,17 @@ public abstract class LinqGenInstruction : IEquatable<LinqGenInstruction>
     public abstract bool SupportsPartition { get; }
 
     /// <summary>
-    /// Modify skip variable, only called if partition is supported.
+    /// Modify skip variable, only meaningful if partition is supported.
     /// </summary>
-    protected virtual ExpressionSyntax? GetSkip(in IterationContext ctx)
+    protected virtual ExpressionSyntax? GetSkip(IterationContext ctx)
     {
         return ctx.SkipVar;
     }
 
     /// <summary>
-    /// Modify skip variable, only called if partition is supported.
+    /// Modify skip variable, only meaningful if partition is supported.
     /// </summary>
-    protected virtual ExpressionSyntax? GetTake(in IterationContext ctx)
+    protected virtual ExpressionSyntax? GetTake(IterationContext ctx)
     {
         return ctx.TakeVar;
     }
@@ -245,9 +245,17 @@ public abstract class LinqGenInstruction : IEquatable<LinqGenInstruction>
     public abstract bool SupportsCount { get; }
 
     /// <summary>
-    /// Modify count variable, only called if count is supported.
+    /// Modify count variable, only meaningful if count is supported.
     /// </summary>
-    public abstract ExpressionSyntax? GetCount(in ScanContext ctx);
+    public virtual ExpressionSyntax? GetCount(ScanContext ctx)
+    {
+        return LiteralExpression(0);
+    }
+
+    public void GetConstructorParameters(List<ParameterSyntax> parameters)
+    {
+        parameters.AddRange(Parameters().Select(x => Parameter(x.Type, Identifier(x.Name))));
+    }
 
     /// <summary>
     /// Recursively resolve preparation statements.

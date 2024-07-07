@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Cathei.LinqGen.Generator;
 
@@ -23,7 +24,6 @@ public class SelectNode : LinqGenNode
 
     protected override LinqGenRender Expand(in ExpansionContext ctx)
     {
-
     }
 }
 
